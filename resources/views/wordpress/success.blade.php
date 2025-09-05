@@ -1,0 +1,76 @@
+      @php
+          $title = 'Failed';
+          $heading = 'Request Failed Contact Admin';
+          $symbal = '✖';
+          $color = '#be0322;';
+          if ($success) {
+              $title = 'Success';
+              $heading = 'We received your request';
+              $symbal = '✓';
+              $color = 'green;';
+          }
+      @endphp
+      <!DOCTYPE html>
+      <html lang="en">
+
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <meta http-equiv="X-UA-Compatible" content="ie=edge">
+          <title>{{ $title }}</title>
+          <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700,900&display=swap" rel="stylesheet">
+          <style>
+              body {
+                  text-align: center;
+                  padding: 40px 0;
+                  background: #EBF0F5;
+              }
+
+              h1 {
+                  color: #88B04B;
+                  font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
+                  font-weight: 900;
+                  font-size: 40px;
+                  margin-bottom: 10px;
+              }
+
+              p {
+                  color: #404F5E;
+                  font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
+                  font-size: 20px;
+                  margin: 0;
+              }
+
+              i {
+                  color: #fff;
+                  font-size: 67px;
+                  margin-left: -15px;
+              }
+
+              .card {
+                  background: white;
+                  padding: 30px;
+                  border-radius: 4px;
+                  box-shadow: 0 2px 3px #C8D0D8;
+                  display: inline-block;
+                  margin: 0 auto;
+              }
+          </style>
+      </head>
+
+      <body>
+          <div class="card">
+              <div style="border-radius:50%; height:100px; width:100px; background: {{ $color }} margin:0 auto;">
+                  <i class="checkmark">{{ $symbal }}</i>
+              </div>
+              <h1>{{ $title }}</h1>
+              <p>{{ $heading }}<br /></p>
+              <p>{{ $order_id == null ? 'Failed to send request. Contact Admin!' : 'Request ID: ' . $order_id }}<br />
+              </p>
+              <a href="https://www.autolikerlive.com/{{ $path }}?id={{ $order_id }}#check-order-status">Check
+                  your order</a>
+          </div>
+
+      </body>
+
+      </html>
