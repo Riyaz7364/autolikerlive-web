@@ -85,6 +85,8 @@ if(!function_exists('miner')) {
 
 }
 
+if(!function_exists('loadUser')) {
+
 function loadUser($session){
 
     $user = $session;
@@ -102,7 +104,9 @@ function loadUser($session){
     return $json->user;
 
 }
+}
 
+if (!function_exists('getUserData')) {
 function getUserData($access_token){
     $api = "https://graph.facebook.com/graphql";
 
@@ -118,8 +122,9 @@ function getUserData($access_token){
 
     return $response->json();
 }
+}
 
-
+if (!function_exists('getUserIP')) {
 function getUserIP(Illuminate\Http\Request $request) {
     // Check if the request has X-Forwarded-For header
     if ($request->headers->has('X-Forwarded-For')) {
@@ -131,8 +136,9 @@ function getUserIP(Illuminate\Http\Request $request) {
     // If X-Forwarded-For header is not present, fallback to the remote address
     return $request->ip();
 }
+}
 
-
+if (!function_exists('toolbanner')) {
 function toolbanner($color = "text-light"){
     return "
     <div class=\"card-body\">
@@ -148,7 +154,9 @@ function toolbanner($color = "text-light"){
     </div>
 ";
 }
+}
 
+if (!function_exists('getIcon')) {
 function getIcon($name, $class = '') {
     // Handle size classes for better SVG scaling
     $sizeAttr = '';
@@ -303,7 +311,9 @@ function getIcon($name, $class = '') {
     // Return SVG content if the name exists in the map, otherwise return null
     return isset($svgIcons[$name]) ? $svgIcons[$name] : null;
 }
+}
 
+if (!function_exists('getCurl')) {
 function getCurl($link) {
     $curl = curl_init();
 
@@ -342,7 +352,9 @@ function getCurl($link) {
 
     return json_decode($response, true);
 }
+}
 
+if (!function_exists('shortcode_to_mediaid')) {
 function shortcode_to_mediaid($shortcode){
 
     $alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
@@ -354,9 +366,10 @@ function shortcode_to_mediaid($shortcode){
     }
 
     return $mediaid;
-
+}
 }
 
+if (!function_exists('generateUUID')) {
 function generateUUID() {
     return sprintf(
         '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
@@ -367,19 +380,18 @@ function generateUUID() {
         mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
     );
 }
+}
 
+if (!function_exists('quickRandom')) {
 function quickRandom($length = 16)
 {
     $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     return substr(str_shuffle(str_repeat($pool, 5)), 0, $length);
 }
+}
 
-
-
-
-
-
+if (!function_exists('timeAgo')) {
 function timeAgo($timestamp) {
     $time = strtotime($timestamp);
     $diff = time() - $time;
@@ -398,14 +410,16 @@ function timeAgo($timestamp) {
         return floor($diff / 31536000) . " years ago";
     }
 }
+}
 
-
-
+if (!function_exists('encrypt_string')) {
 function encrypt_string($string)
 {
     return Vinkla\Hashids\Facades\Hashids::encode($string);
 }
+}
 
+if (!function_exists('decode_hash')) {
 function decode_hash($hash)
 {
     $id = Vinkla\Hashids\Facades\Hashids::decode($hash);
@@ -415,4 +429,5 @@ function decode_hash($hash)
     }
 
     return false;
+}
 }
