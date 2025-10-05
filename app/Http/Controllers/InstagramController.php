@@ -192,8 +192,15 @@ class InstagramController extends Controller
                 }
             } else {
                 $userData = $this->api->getFB($link->username.'/posts/'.$link->link, 'fbpost');
-                $id64 = $userData['data']['comet_ufi_summary_and_actions_renderer-multi'][1]['feedback']['id'];
-                $postID = explode(':',base64_decode($id64))[1];
+                if(isset($userData['data']['comet_ufi_summary_and_actions_renderer-multi'])){
+                    $id64 = $userData['data']['comet_ufi_summary_and_actions_renderer-multi'][0]['feedback']['id'];
+                    $postID = explode(':',base64_decode($id64))[1];
+                }else{
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Failed to check action, try again!',
+                    ]);
+                }
                 $data['link'] = $postID;
                 $id = $userData['data']['props']['actorID'];
                 if($id != $user['uid']){
@@ -408,20 +415,33 @@ class InstagramController extends Controller
                 $userData = $this->api->getFB($post_id);
                 $id64 = $userData['data']['style_renderer']['collection']['id'];
                 $id = explode(':',base64_decode($id64))[1];
+                if(strlen($id) > 25){
+                    $id64 = $userData['data']['style_renderer']['collection']['app_section']['id'];
+                    $id = explode(':',base64_decode($id64))[1];
+                }
                 if($id == $user['uid']){
                      $data['edge_count'] = $userData['data']['style_renderer']['collection']['items']['count'];
                 }else{
+
                      toastr()->error("You can only get follow on ".$user['username']);
                      return redirect()->back();
                 }
             }else{
                 $uri = parse_url($post_id);
                 $userData = $this->api->getFB($uri['path'], 'fbpost');
-                $postID = $userData['data']['story_token'];
+                if(isset($userData['data']['story_token'])){
+                    $postID = $userData['data']['story_token'];
+                }elseif(isset($userData['data']['comet_ufi_summary_and_actions_renderer-multi'][0]['feedback']['id'])){
+                    $id64 = $userData['data']['comet_ufi_summary_and_actions_renderer-multi'][0]['feedback']['id'];
+                    $postID = explode(':',base64_decode($id64))[1];
+                }else{
+                    toastr()->error("Invalid or private post link");
+                    return redirect()->back();
+                }
                 $data['link'] = $postID;
                 $id = $userData['data']['props']['actorID'];
                 if($id == $user['uid']){
-                     $data['edge_count'] = $userData['data']['comet_ufi_summary_and_actions_renderer-multi'][1]['feedback']['reaction_count']['count'];
+                     $data['edge_count'] = $userData['data']['comet_ufi_summary_and_actions_renderer-multi'][0]['feedback']['reaction_count']['count'];
                 }else{
                      toastr()->error("You can only add a link posted by the ".$user['username']);
                      return redirect()->back();

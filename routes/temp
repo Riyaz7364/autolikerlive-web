@@ -1,21 +1,22 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ListingController;
-use App\Http\Controllers\SMSbomberController;
 use App\Http\Controllers\Wordpress;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\APIController;
 use App\Http\Controllers\WebAppController;
-use App\Http\Controllers\DownloaderController;
+use App\Http\Controllers\Bots\SmsBomberBot;
+use App\Http\Controllers\ListingController;
+use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\FacebookController;
 use App\Http\Controllers\CopyPagesController;
+use App\Http\Controllers\InstagramController;
+use App\Http\Controllers\SMSbomberController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\DownloaderController;
+
+use App\Http\Controllers\Bots\TiktokController;
 use App\Http\Controllers\TikTokeIframeController;
 use App\Http\Controllers\Bots\TelegramBotController;
-use App\Http\Controllers\Bots\TiktokController;
-use App\Http\Controllers\SitemapController;
-use App\Http\Controllers\Auth\LoginController;
-
-use App\Http\Controllers\InstagramController;
-use App\Http\Controllers\FacebookController;
 
 
 /*
@@ -110,7 +111,7 @@ Route::group(['prefix' => '{lang?}', 'where' => ['lang' => implode('|',$allowedL
 
 
     Route::prefix('sms-bomber-bot')->group(function () {
-        Route::get('/', [App\Http\Controllers\Bots\SmsBomberBot::class, 'index']);
+        Route::get('/', [SmsBomberBot::class, 'index']);
     });
 
     Route::prefix('free-services')->group(function () {

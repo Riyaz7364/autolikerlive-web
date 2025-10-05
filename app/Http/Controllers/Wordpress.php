@@ -299,7 +299,10 @@ class Wordpress extends Controller
     }
 
     public function checkOrder($id){
-
+        return [
+            'success' => false,
+            'message' => "This service is currently unavailable",
+        ];
         $linkData = UniqueLink::where('order_id', $id)->first();
         $query = array(
             'key'   => $linkData->data['key'],

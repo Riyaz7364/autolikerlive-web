@@ -79,6 +79,10 @@ class FacebookController extends Controller
         }
         $id64 = $response['data']['style_renderer']['collection']['id'];
         $id = explode(':',base64_decode($id64))[1];
+        if(strlen($id) > 25){
+             $id64 = $response['data']['style_renderer']['collection']['app_section']['id'];
+             $id = explode(':',base64_decode($id64))[1];
+        }
 
         $img = "https://graph.fb.me/".$id."/picture?type=large&access_token=257931075544071%7Ca19fbd5886d2081430fe02ba9e10ca7d";
         $response = Http::get($img);

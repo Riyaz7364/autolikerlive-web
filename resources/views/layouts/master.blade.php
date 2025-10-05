@@ -31,8 +31,6 @@
         ];
 
     @endphp
-    <script type='text/javascript' src='//pl24020620.profitableratecpm.com/01/3b/8c/013b8c8d4557a0ee5a5d3a6c4c34c131.js'>
-    </script>
 
     <meta charset="utf-8" />
     <meta name="monetag" content="81f11f1890e242b2ffa603ee1a3d9453">
@@ -89,16 +87,16 @@ auto liker, auto like, auto liker app, auto liker apk, auto reactions, facebook 
                 //     zone: 5865345,
                 //     path: '400'
                 // }, // InPage Push
-                {
-                    domain: 'groleegni.net',
-                    zone: 9273817,
-                    path: '401'
-                }, // InPage Interstitial
                 // {
-                //     domain: 'gizokraijaw.net',
-                //     zone: 9275621,
+                //     domain: 'groleegni.net',
+                //     zone: 9273817,
                 //     path: '401'
-                // } //  Vignette
+                // }, // InPage Interstitial
+                {
+                    domain: 'gizokraijaw.net',
+                    zone: 9275621,
+                    path: '401'
+                } //  Vignette
             ];
 
             ads.forEach(ad => {

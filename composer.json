@@ -19,11 +19,13 @@
         "laravel/sanctum": "^3.2",
         "laravel/socialite": "^5.10",
         "laravel/tinker": "^2.8",
-        "livewire/livewire": "^3.5",
+        "livewire/livewire": "^3.6",
         "php-webdriver/webdriver": "^1.15",
+        "phpseclib/phpseclib": "^3.0",
         "spatie/laravel-csp": "^2.10",
         "spatie/laravel-sitemap": "^7.3",
         "vinkla/hashids": "^11.0",
+        "webklex/laravel-imap": "^6.2",
         "yoeunes/toastr": "^2.3"
     },
     "require-dev": {

@@ -83,16 +83,7 @@
                 </li>
 
                 {{-- <li class="nav-item"><a class="nav-link" target="_blank" href="https://raje-liker.com/">Cheap SMM Services</a></li> --}}
-                <div class="dropdown">
-                    <button class="btn btn-dark dropdown-toggle" type="button" id="selectedLang"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        EN
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><button class="btn" onclick="safeSetLanguage('en')">English</button></li>
-                        <li><button class="btn" onclick="safeSetLanguage('bn')">বাংলা</button></li>
-                    </ul>
-                </div>
+
             </ul>
 
         </div>

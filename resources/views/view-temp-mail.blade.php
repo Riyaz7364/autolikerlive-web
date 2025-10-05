@@ -488,8 +488,8 @@
             border-radius: 10px;
             padding: 40px 30px;
             /*margin-right: auto;
-                                            margin-left: auto;
-                                            */
+                                                                margin-left: auto;
+                                                                */
             margin: 0 15px;
             -ms-flex-negative: 1;
             flex-shrink: 1;
@@ -788,10 +788,23 @@
                                         <div class="inbox-data-content-header">
                                             <div class="user-data-name 0">
 
-                                                <figure class="first-letters">{{ getInitials($email['from']) }}
+                                                <figure class="first-letters">
+                                                    @php
+                                                        \Log::debug(['email' => $email]);
+                                                        if (is_array($email)) {
+                                                            $from = isset($email['from']) ? $email['from'] : '';
+                                                            $fromEmail = isset($email['from_email'])
+                                                                ? $email['from_email']
+                                                                : '';
+                                                        } else {
+                                                            $from = is_string($email) ? $email : '';
+                                                            $fromEmail = '';
+                                                        }
+                                                    @endphp
+                                                    {{ e(getInitials($from)) }}
                                                 </figure>
-                                                <p class="from-name">{{ $email['from'] }}</p>
-                                                <p class="text-muted">{{ $email['from_email'] }}</p>
+                                                <p class="from-name">{{ $from }}</p>
+                                                <p class="text-muted">{{ $fromEmail }}</p>
                                             </div>
                                             <div class="text-muted">
                                                 <span class="date-time-text">Date: {{ $email['receivedAt'] }}</span>
@@ -834,27 +847,7 @@
 
                                 </div>
                             </div>
-                            <div class="row">
-                                <table border="1" class="table">
-                                    <tr>
-                                        <th>File Name</th>
-                                        <th>Download</th>
-                                    </tr>
 
-                                    @foreach ($email['attachments'] as $file)
-                                        <tr>
-                                            <td>{{ $file['name'] . '.' . $file['extension'] }} - {{ $file['size'] }}kb</td>
-                                            <td>
-                                                <a href="{{ $file['url'] }}"
-                                                    download="{{ $file['name'] . '.' . $file['extension'] }}"
-                                                    class="btn btn-primary">
-                                                    Download
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </table>
-                            </div>
                         </div>
                     </div>
 
@@ -960,146 +953,4 @@
             </div>
         </div>
     </section>
-
-    <!-- Bootstrap Toast -->
-    <div class="toast fixedToast" role="alert">
-        <div class="toast-body">
-            <strong class="mr-auto">Copied</strong>
-        </div>
-    </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            axios.post(`{{ route('mailbox') }}`)
-                .then(function(response) {
-                    // Update the content with the generated email
-                    $('#mailbox').val(response.data.email);
-                    $('#email_id').val(response.data.email);
-                    $('#email_id').prop('disabled', false);
-                })
-                .catch(function(error) {
-                    console.error(error);
-                });
-        });
-
-        function loadMessage() {
-            var messagelistItem = "";
-            var emailbox = $('#mailbox').val();
-            axios.post(`{{ route('message') }}`, {
-                    email: emailbox
-                })
-                .then(function(response) {
-                    // Update the content with the generated email
-                    const emailList = response.data.messages;
-                    emailList.reverse();
-                    if (emailList !== undefined) {
-                        emailList.forEach(email => {
-                            messagelistItem += `<a href="{{ url('') }}/message/view/${email.id}" class="viewLink d-flex mb-3">
-	                <div class="col-1 ${email.is_seen == 1 ? 'is-active' : 'is-not-active'} "></div>
-	                <div class="col-3 mx-2">
-	                	  <span class="d-flex text-dark">` + email.from + `</span>
-
-	                </div>
-	  				<div class="col-6 mx-2">
-	  					<small class="text-dark font-weight-bold">` + email.subject + `</small>
-                        <span class="d-flex text-muted"
-                        style="font-size: small;font-style: italic;"
-                        >` + email.from_email + `</span>
-	  				</div>
-	  				<div class="col-2 text-right text-muted" style="
-                        font-size: x-small;
-                        font-style: italic;
-                    ">
-	  					` + timeAgo(email.receivedAt) + `
-	  				</div>
-
-	            </a>
-		        	`
-                        });
-                    }
-                    showLoader();
-                    setTimeout(function() {
-                        hideLoader();
-                    }, 1000);
-                    if (messagelistItem != "")
-                        $('#messageList').html(messagelistItem)
-                })
-                .catch(function(error) {
-                    console.error(error);
-                });
-        }
-
-
-        $('#click-to-refresh').click(function() {
-            $(document).ready(function() {
-                loadMessage();
-            });
-        });
-
-        $('#click-to-change').click(function() {
-            $(document).ready(function() {
-                axios.post(`{{ route('mailbox') }}`, {
-                        refresh: true
-                    })
-                    .then(function(response) {
-                        // Update the content with the generated email
-
-                        $('#mailbox').val(response.data.email);
-                    })
-                    .catch(function(error) {
-                        console.error(error);
-                    });
-            });
-        });
-
-
-        function showLoader() {
-            const loader = document.querySelector('.pageLoader');
-            loader.style.height = '4px'
-            loader.style.width = '100%';
-
-        }
-
-        function hideLoader() {
-            const loader = document.querySelector('.pageLoader');
-            loader.style.width = '0';
-            loader.style.height = '0px'
-        }
-
-
-
-        setInterval(function() {
-            loadMessage();
-        }, 5000);
-
-
-
-
-        function copyToClipboard() {
-            // Select the text you want to copy
-            const textToCopy = $('#mailbox').val();
-
-            // Create a temporary textarea element to hold the text
-            const textArea = document.createElement("textarea");
-            textArea.value = textToCopy;
-
-            // Append the textarea to the document
-            document.body.appendChild(textArea);
-
-            // Select the text within the textarea
-            textArea.select();
-
-            // Execute the copy command
-            document.execCommand("copy");
-
-            // Remove the temporary textarea
-            document.body.removeChild(textArea);
-
-            $('.toast').toast('show')
-            // Set a timeout to hide the tooltip after a few seconds
-            setTimeout(function() {
-                $('.toast').toast('hide')
-            }, 1000);
-        }
-    </script>
 @stop

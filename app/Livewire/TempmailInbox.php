@@ -5,7 +5,8 @@ namespace App\Livewire;
 use Livewire\Component;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Session;
+use Illuminate\Support\Facades\Session;
+
 
 class TempmailInbox extends Component
 {
@@ -22,12 +23,13 @@ class TempmailInbox extends Component
     }
 
     public function checkInbox(){
-
+        // dd(Session::get('email'));
         $request = new Request([
             'email' => Session::get('email'),
         ]);
 
-        $data = app('App\Http\Controllers\APIController')->messages($request);
+         $data = app('App\Http\Controllers\TempMailController')->messages($request);
+
         $this->messages = collect($data);
         $this->dispatch('show-loader');
     }

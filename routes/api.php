@@ -4,13 +4,15 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Wordpress;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\APIController;
-use App\Http\Controllers\WebAppController;
 use App\Http\Controllers\TiktokController;
-use App\Http\Controllers\Bots\AutolikerLiveBot;
+use App\Http\Controllers\WebAppController;
 use App\Http\Controllers\Bots\SmsBomberBot;
-use App\Http\Controllers\DownloaderController;
 use App\Http\Controllers\TradingController;
+use App\Http\Controllers\TempMailController;
 use App\Http\Controllers\InstagramController;
+use App\Http\Controllers\DownloaderController;
+use App\Http\Controllers\Bots\AutolikerLiveBot;
+use App\Http\Controllers\AppController;
 
 
 /*
@@ -28,15 +30,33 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-    Route::post("/check-installer-license", function () {
-        $response = [
-            "status" => true,
-            "message" => "License key is valid.",
-            "license_key" => "8fe9afbd-2f23-43bf-a60c-1e262dfe2d1c",
-        ];
+// API Routes
+Route::prefix('app')->name('api.')->group(function () {
+    // App Configuration
+    Route::get('/config', [AppController::class, 'getConfig'])->name('config');
 
-        return response()->json($response);
-    });
+    // Authentication
+    Route::post('/auth/login', [AppController::class, 'apiLogin'])->name('auth.login');
+
+    // Reactions
+    Route::post('/reactions', [AppController::class, 'submitReaction'])->name('reactions.submit');
+
+    // Stats
+    Route::get('/stats', [AppController::class, 'getStats'])->name('stats');
+
+    Route::post('/test', [AppController::class, 'decryptFlutterToken'])->name('encrypt.test');
+
+});
+
+Route::post("/check-installer-license", function () {
+    $response = [
+        "status" => true,
+        "message" => "License key is valid.",
+        "license_key" => "8fe9afbd-2f23-43bf-a60c-1e262dfe2d1c",
+    ];
+
+    return response()->json($response);
+});
 
 Route::group(['prefix' => 'v1'], function () {
     Route::post('/activatePremium', [APIController::class,'activatePremium']);
@@ -51,6 +71,13 @@ Route::group(['prefix' => 'v1'], function () {
 
     // Check cookies
     Route::post('/checkCookies', [APIController::class, 'checkCookies']);
+
+
+    // Route::post('/delete-message',[APIController::class,'deleteMessage'])->name("delete-message");
+
+
+
+
 });
 
 Route::prefix('telegram')->group(function () {

@@ -34,7 +34,7 @@ return [
             'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
         ],
 
-        'alternative' => [
+        'mail' => [
             'salt' => 'theRiyazSaifi',
             'length' => 45,
             'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'

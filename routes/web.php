@@ -1,25 +1,27 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ListingController;
-use App\Http\Controllers\SMSbomberController;
 use App\Http\Controllers\Wordpress;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\APIController;
 use App\Http\Controllers\WebAppController;
-use App\Http\Controllers\DownloaderController;
-use App\Http\Controllers\CopyPagesController;
-use App\Http\Controllers\TikTokeIframeController;
-use App\Http\Controllers\Bots\TelegramBotController;
-use App\Http\Controllers\Bots\TiktokController;
+use App\Http\Controllers\Bots\SmsBomberBot;
+use App\Http\Controllers\ListingController;
+use App\Http\Controllers\DownloadController;
+use App\Http\Controllers\FacebookController;
+use App\Http\Controllers\TempMailController;
 
 use App\Http\Controllers\ContactUsController;
-use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\CopyPagesController;
 
 use App\Http\Controllers\InstagramController;
-use App\Http\Controllers\FacebookController;
-use Illuminate\Support\Facades\URL;
-use App\Http\Controllers\DownloadController;
-use Illuminate\Support\Facades\App;
+use App\Http\Controllers\SMSbomberController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\DownloaderController;
+use App\Http\Controllers\Bots\TiktokController;
+use App\Http\Controllers\TikTokeIframeController;
+use App\Http\Controllers\Bots\TelegramBotController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,14 +39,15 @@ Route::domain('www.autolikerlive.com')->group(function () {
 // Legal routes
 require __DIR__.'/legal.php';
 
+// App routes
+require __DIR__.'/app.php';
+
 Route::get('/download/apk', [DownloadController::class, 'apk'])
      ->name('apk.download');
 
 
 
-// Route::get('sw.js', function () {
-//     return response()->file(public_path('sw.js'));
-// });
+Route::get('/create-qr', [ListingController::class, 'createQR']);
 
 Route::get('/free-instagram-like', function () {
     return redirect()->route('free-instagram-likes', [], 301);
@@ -72,6 +75,9 @@ $allowedLangs = config('language.allowed_languages');
     Route::get('/services', [ListingController::class, 'services'])->name('services');
     Route::get('/contact', [ContactUsController::class, 'contactUs'])->name('contact');
     Route::post('api/sendMessage', [ContactUsController::class, 'sendMessage'])->name('sendMessage');
+
+    Route::get('/delete-account', [ContactUsController::class, 'deleteAccountForm'])->name('delete-account');
+    Route::post('/delete-account-request', [ContactUsController::class, 'deleteAccountRequest'])->name('delete-account-request');
 
     Route::get('/faq', function () {
         return view('faq');
@@ -104,13 +110,8 @@ $allowedLangs = config('language.allowed_languages');
     //  Find My FB ID
     Route::post('/findmyfbid',[WebAppController::class,'findmyfbid'])->name("searchFBID");
 
-    Route::post('/mailbox',[APIController::class,'mailbox'])->name("mailbox");
-    Route::post('/update-email',[APIController::class,'updateEmail'])->name("updateEmail");
-    Route::post('/message',[APIController::class,'messages'])->name("message");
-    Route::post('/delete-message',[APIController::class,'deleteMessage'])->name("delete-message");
-    Route::post('/delete-mail',[APIController::class,'deleteMail'])->name("deleteMail");
-    Route::get('/message/view/{id}',[APIController::class,'messageView'])->name("messageView");
 
+// Temp Mail
     Route::get('/temp-mail', function () {
         return view('temp-mail');
     })->name('temp-mail');
@@ -119,9 +120,15 @@ $allowedLangs = config('language.allowed_languages');
         return view('test.temp-mail');
     })->name('temp-mail-test');
 
+    Route::get('/mailbox',[TempMailController::class,'mailbox'])->name("mailbox");
+    Route::post('/all-messages',[TempMailController::class,'allMessages'])->name("allMessages");
+    Route::post('/update-email',[TempMailController::class,'updateEmail'])->name("updateEmail");
+    Route::post('/delete-mail',[TempMailController::class,'deleteMail'])->name("deleteMail");
+    Route::get('/message/view/{id}',[TempMailController::class,'messageView'])->name("messageView");
 
+// SMS Bomber Bot
     Route::prefix('sms-bomber-bot')->group(function () {
-        Route::get('/', [App\Http\Controllers\Bots\SmsBomberBot::class, 'index']);
+        Route::get('/', [SmsBomberBot::class, 'index']);
     });
 
 
@@ -260,6 +267,13 @@ $allowedLangs = config('language.allowed_languages');
     Route::get('yolikers', [CopyPagesController::class, 'yolikers'])->name('yolikers');
     Route::get('djliker', [CopyPagesController::class, 'djliker'])->name('djliker');
     Route::get('machineliker', [CopyPagesController::class, 'machineliker'])->name('machineliker');
+
+    // Facebook OAuth for Rajeliker - MOVED TO app.php
+    // Route::get('app/rajeliker', [CopyPagesController::class, 'rajeliker'])->name('rajeliker');
+    // Route::get('app/rajeliker/login', [CopyPagesController::class, 'redirectToFacebook'])->name('rajeliker.facebook.login');
+    // Route::get('app/rajeliker/callback', [CopyPagesController::class, 'handleFacebookCallback'])->name('rajeliker.facebook.callback');
+    // Route::get('app/rajeliker/logout', [CopyPagesController::class, 'facebookLogout'])->name('rajeliker.facebook.logout');
+    // Route::get('app/rajeliker/status', [CopyPagesController::class, 'getLoginStatus'])->name('rajeliker.status');
 
     // END
 

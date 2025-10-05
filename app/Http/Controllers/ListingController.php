@@ -68,7 +68,10 @@ class ListingController extends Controller
     }
 
 
+    public function createQr(Request $request){
+        return view('create-qr');
 
+    }
 
     public function download(Request $request){
 

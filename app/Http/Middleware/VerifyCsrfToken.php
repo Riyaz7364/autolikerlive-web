@@ -12,7 +12,9 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-
+        "/facebook/process-token",
+        "/app/facebook/process-token",
+        "all-messages",
 
     ];
 }

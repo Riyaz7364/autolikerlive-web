@@ -73,7 +73,7 @@
                                                 <td class="text-center">#{{ $link->id }}</td>
                                                 <td class="text-center">{{ $link->service }}</td>
                                                 <td class="text-center">
-                                                    <span>{{ $instagramUrl }}</span>
+                                                    <span>{{ Str::substr($instagramUrl, 0, 40) }}...</span>
                                                     <div class="btn">
                                                         <a href="{{ $instagramUrl }}" target="_blank"
                                                             rel="noopener noreferrer">

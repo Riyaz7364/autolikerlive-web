@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Session;
 use App\SmsManager;
 use App\CallManager;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Models\Bomber;
 use App\Models\BomberStatus;
-use Session;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
 class SMSbomberController extends Controller
 {
 
@@ -78,10 +79,16 @@ class SMSbomberController extends Controller
 
         $number = $request['number'];
         $input['number'] = $number;
-        Bomber::create($input);
 
-        Session::flash('message', 'Update Success');
+       try{
+        Bomber::create($input);
+        toastr()->success('Number Secured Successfully');
         return redirect()->back();
+       }catch(\Exception $e){
+           toastr()->success('Update Failed');
+           return redirect()->back();
+       }
+
     }
 
 }

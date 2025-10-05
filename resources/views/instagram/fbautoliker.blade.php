@@ -21,6 +21,7 @@
         }
     </style>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <x-mail-wrapper></x-mail-wrapper>
 @stop
@@ -85,6 +86,18 @@
                                             id="startsms_spinner" role="status" aria-hidden="true"></span>
                                         <span class="btn-text">Search Account</span></button>
                                 </div>
+
+                                <!-- App Download Highlight -->
+                                <div class="col-12 text-center mt-2 mb-3">
+                                    <div class="alert alert-info py-2 small">
+                                        📱 <strong>Faster on Mobile!</strong>
+                                        <a href="{{ route('download.page') }}"
+                                            class="alert-link text-decoration-underline ms-1">Download our
+                                            App</a>
+                                        for better performance
+                                    </div>
+                                </div>
+
                                 <!-- Temp Mail Center adsbygoogle -->
 
                             </div>
