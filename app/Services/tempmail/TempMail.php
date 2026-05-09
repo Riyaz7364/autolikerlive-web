@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Services\tempmail;
 
-use Carbon\Carbon;
-use App\Models\Profile;
-use App\Models\Tempmail;
-use App\Models\Statistic;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
+use App\Models\Tempmail;
+use App\Models\Profile;
+use App\Models\Statistic;
 use Webklex\PHPIMAP\ClientManager;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Validator;
 
-class TempMailController extends Controller
+class TempMailController
 {
 
    private $mailbox;
@@ -22,178 +21,22 @@ class TempMailController extends Controller
    protected $clientManager;
 
    function __construct(){
-        // $this->mailbox = '{82.180.146.92:993/imap/ssl/novalidate-cert}INBOX';
-        // $this->username = 'master@autolikerlive.com';
-        // $this->password = 'VaQGHUgqhjGWE8AQLLlnNiEjo';
+        $this->mailbox = '{82.180.146.92:993/imap/ssl/novalidate-cert}INBOX';
+        $this->username = 'master@autolikerlive.com';
+        $this->password = 'Riyaz@7364';
         $this->clientManager = new ClientManager(base_path('config/imap.php'));
    }
 
-   public function AuthTest(Request $request)
-   {
-           $client = $this->connection();
-           $folder = $client->getFolderByName('INBOX');
-           $mail = $folder->query()->to("adityakumar.2us0j@maildomain.shop")->get();
-            dd($mail);
-       return response()->json([
-           'status' => true,
-           'response' => '',
-       ], 200);
-   }
-
-
-    public function mailbox(Request $request){
-
-        $domains = Tempmail::where('status',1)->inRandomOrder()->get();
-        $profile = Profile::inRandomOrder()->first();
-
-        $isRefresh = $request->has('refresh') ? $request->get('refresh') : false;
-
-        if($isRefresh){
-            Session::forget('email');
-        }
-
-        $hasMail =Session::has('email');
-
-        if($hasMail){
-            $email = Session::get('email');
-            return response()->json([
-                'email' => $email,
-                'list'  => $domains,
-            ]);
-        }
-
-        // Check if the data is valid
-        if ($profile && $domains && !$hasMail) {
-            // Get a random domain
-            $randomDomain = $domains[0]['name'];
-
-            // Get a random name
-            $randomName = $profile['name'];
-
-            // Remove spaces and special characters from the name and make it lowercase
-            $randomName = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $randomName));
-
-            // Generate the email address
-            $email = $randomName . '.' . strtolower(quickRandom(5)) . '@' . $randomDomain;
-
-            Session::put('email', $email);
-
-            return response()->json([
-                'email' => $email,
-                'list'  => $domains,
-            ]);
-        } else {
-            echo "Invalid JSON data.";
-        }
-
-    }
-
-
-    public function messages(Request $request){
-        $validator = Validator::make($request->all(), [
-            'email'=>'required',
-        ]);
-
-
-        if($validator->fails()){
-            return response()->json([
-                'success'=>false,
-                'message'=> $validator->errors()
-            ]);
-        }
-        $email = $request['email'];
-
-
-
-        $allMessages = $this->allMessages($request);
-        return $allMessages;
-    }
-
-
-    public function messageView(Request $request, $id)
-    {
-        $id = $request->route()->parameters()['id'];
-
-        $email = $this->getMessage($request);
-
-        // Check if email is null or not an array (in case of errors)
-        if ($email == null || !is_array($email)) {
-            return redirect()->route('temp-mail')->with('error', 'Unable to load email message.');
-        }
-
-        return view('view-temp-mail', compact('email'));
-
-    }
-
-   public function updateEmail(Request $request){
-        $email = $request['email'];
-        $email = $this->extractEmail($email);
-        if(Tempmail::where('status',1)->where('name', $email['domain'])->exists()){
-            Session::put('email', $email['prefix'].'@'.$email['domain']);
-            return response()->json([
-                'success'   => true,
-            ], 200);
-        }else{
-            return response()->json(
-            [
-                'success' => false,
-                'message' => "Invalid Domain",
-            ], 422);
-        }
-
-   }
-
-
-    public function deleteMail(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email'=>'required',
-        ]);
-
-        if($validator->fails()){
-            return response()->json([
-                'success'=>false,
-                'message'=> $validator->errors()
-            ]);
-        }
-        $email = $request['email'];
-
-        // $connection = imap_open($this->mailbox, $this->username, $this->password);
-        if (true) {
-            // $email_ids = imap_search($connection, 'TO "'.$email.'"');
-            // if ($email_ids) {
-            //     foreach ($email_ids as $email_id) {
-            //         imap_delete($connection, $email_id);
-            //     }
-            // }
-            // imap_expunge($connection);
-            // imap_close($connection);
-            Session::forget('email');
-
-            toastr()->success('Mail deleted successfully');
-            return redirect()->back();
-    }else{
-        return response()->json([
-            'success'=>false,
-            'message'=> "Unable to connect to mail server"
-        ]);
-    }
-
-}
-
-
-
    public function connection()
    {
-    $imapConfig = config('imap.accounts.default');
-    $client = $this->clientManager->make([
-           'protocol'      => $imapConfig['protocol'],
-           'host' => $imapConfig['host'],
-           'port' =>$imapConfig['port'],
+       $client = $this->clientManager->make([
+           'protocol'      => 'imap',
+           'host' => '82.180.146.92',
+           'port' => '993',
            'encryption' => 'ssl',
            'validate_cert' => false,
-           'username' =>$imapConfig['username'],
-           'password' =>$imapConfig['password'],
+           'username' => 'master@autolikerlive.com',
+           'password' => 'Riyaz@7364',
            'authentication' => null,
        ]);
 
@@ -245,7 +88,7 @@ class TempMailController extends Controller
        try {
            $client = $this->connection();
            $folder = $client->getFolderByName('INBOX');
-
+           dd($client);
            $messages = $time == 0
                ? $folder->query()->to($email)->get()
                : $folder->query()->to($email)->since(Carbon::now()->subDays($time)->format('d-M-Y'))->get();
@@ -253,15 +96,15 @@ class TempMailController extends Controller
            return $this->formatResponse($email, $messages, $domainPrefix, $prefix, $client);
        } catch (\Exception $e) {
            return [
-               'status' => false,
-               'mailbox' => "Unable to retrieve emails at this time. Please try Again",
-               'messages' => $e->getMessage(),
-               'trace' => $e->getTraceAsString()
+                'status' => false,
+                'mailbox' => "Unable to retrieve emails at this time. Please try Again",
+                'messages' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'stack' => $e->getTraceAsString(),
            ];
        }
    }
-
-
 
    protected function formatResponse($email, $messages, $domainPrefix, $prefix, $client)
     {
@@ -271,7 +114,6 @@ class TempMailController extends Controller
             'email_token' => $this->encrypt_email($email),
             'messages' => []
         ];
-
 
         for ($i=0; $i < count($messages); $i++) {
 
@@ -307,9 +149,9 @@ class TempMailController extends Controller
         return rtrim(strtr(base64_encode($encrypted), '+/', '-_'), '=');
     }
 
-    function encode_hash($id)
+    function encode_hash($id, $connection = "main")
     {
-        return Hashids::encode($id);
+        return Hashids::connection($connection)->encode($id);
     }
 
 
@@ -317,7 +159,7 @@ class TempMailController extends Controller
     {
         $id = $message->getAttributes()["uid"];
 
-        $hash_id = $this->encode_hash($id);
+        $hash_id = $this->encode_hash($id, 'mail') .'0';
 
         return Cache::remember($hash_id, 10000 * 60, function () use ($message, $hash_id, $domainPrefix, $prefix) {
 
@@ -434,54 +276,59 @@ class TempMailController extends Controller
 
 
 
-//    protected function handleAttachments($message, $hash_id, $domainPrefix, $prefix)
-//    {
-//        $attachmentsData = [];
+   protected function handleAttachments($message, $hash_id, $domainPrefix, $prefix)
+   {
+       $attachmentsData = [];
 
-//        if ($message->hasAttachments()) {
-//             $attachments = $message->getAttachments();
+       if ($message->hasAttachments()) {
+            $attachments = $message->getAttachments();
 
-//             $directory = $this->getDirectoryPath($hash_id, $domainPrefix, $prefix);
-//             $download = $this->getDownloadPath($hash_id, $domainPrefix, $prefix);
+            $directory = $this->getDirectoryPath($hash_id, $domainPrefix, $prefix);
+            $download = $this->getDownloadPath($hash_id, $domainPrefix, $prefix);
 
-//            foreach ($attachments as $attachment) {
-//                if ($attachment->getAttributes()['disposition'] == 'attachment') {
-//                    $processedAttachment = $this->processAttachment($attachment, $directory, $download);
-//                    if (!empty($processedAttachment)) {
-//                        $attachmentsData[] = $processedAttachment;
-//                    }
-//                }
-//            }
-//        }
+           foreach ($attachments as $attachment) {
+               if ($attachment->getAttributes()['disposition'] == 'attachment') {
+                   $processedAttachment = $this->processAttachment($attachment, $directory, $download);
+                   if (!empty($processedAttachment)) {
+                       $attachmentsData[] = $processedAttachment;
+                   }
+               }
+           }
+       }
 
-//        return $attachmentsData;
-//    }
+       return $attachmentsData;
+   }
 
-//    public function download($hash_id, $file)
-//    {
-//     return $message = Cache::remember($hash_id, $this->cacheExpired(), function () use ($hash_id) {
-//         return $this->getMessage($hash_id);
-//     });
+   public function download($hash_id, $file)
+   {
+       if (true) {
+
+           $message = Cache::remember($hash_id, $this->cacheExpired(), function () use ($hash_id) {
+               return $this->getMessage($hash_id);
+           });
 
 
-//     $email = $message['to'];
+           $email = $message['to'];
 
-//     $extractEmail = $this->extractEmail($email);
+           $extractEmail = $this->extractEmail($email);
 
-//     $domainPrefix = $extractEmail['domainPrefix'];
-//     $prefix = $extractEmail['prefix'];
+           $domainPrefix = $extractEmail['domainPrefix'];
+           $prefix = $extractEmail['prefix'];
 
-//     $path = 'temp/attachments/' . $domainPrefix . '/' . $prefix . '/' . $hash_id . '/' . $file;
+           $path = 'temp/attachments/' . $domainPrefix . '/' . $prefix . '/' . $hash_id . '/' . $file;
 
-//     $directory = url('').'/storage/'.$path;
-//     $storage_path = storage_path('app/public/'.$path);
+           $directory = url('').'/storage/'.$path;
+           $storage_path = storage_path('app/public/'.$path);
 
-//     if (file_exists($storage_path)) {
-//         return response()->download($storage_path);
-//     } else {
-//         abort(404);
-//     }
-//    }
+           if (file_exists($storage_path)) {
+               return response()->download($storage_path);
+           } else {
+               abort(404);
+           }
+       } else {
+           abort(403);
+       }
+   }
 
    protected function getDirectoryPath($hash_id, $domainPrefix, $prefix)
    {
@@ -527,15 +374,14 @@ class TempMailController extends Controller
 
    public function getMessage(Request $request)
    {
-    $hash_id = $request['id'];
-
+    $hash_id = $request['hash_id'];
        try {
 
            //return Cache::remember($hash_id, 10000 * 60, function () use ($message, $hash_id, $domainPrefix, $prefix) {
            //return $this->extractMessageData($message, $hash_id, $domainPrefix, $prefix);
 
 
-           $id = $this->decode_hash($hash_id);
+           $id = $this->decode_hash(substr($hash_id, 0, 45), 'mail');
 
            $imap_id = substr($hash_id, 45);
 
@@ -554,28 +400,15 @@ class TempMailController extends Controller
            return $this->extractMessageData($message, $hash_id, $domainPrefix, $prefix, $client, true);
            //});
        } catch (\Exception $e) {
-           // Log the error for debugging
-           \Log::error('Error retrieving email message: ' . $e->getMessage());
 
-           // Return a default array structure instead of the error message string
-           return [
-               'subject' => 'Error Loading Email',
-               'from' => 'System',
-               'from_email' => 'system@example.com',
-               'to' => '',
-               'receivedAt' => now()->toDateTimeString(),
-               'id' => $hash_id,
-               'html' => false,
-               'content' => 'An error occurred while loading this email. Please try again later.',
-               'attachments' => []
-           ];
+           return $e->getMessage();
        }
    }
 
 
-   function decode_hash($hash)
+   function decode_hash($hash, $connection = "main")
    {
-       $id = Hashids::decode($hash);
+       $id = Hashids::connection($connection)->decode($hash);
 
        if (is_array($id) && count($id) > 0) {
            return $id[0];
@@ -606,5 +439,72 @@ class TempMailController extends Controller
            $email_lifetime =  $email_lifetime *  60;
        }
        return $email_lifetime * 1;
+   }
+
+   public function fetchDomains(Request $request){
+
+        $mails = Tempmail::where('status',1)->get();
+        $profiles = Profile::inRandomOrder()->limit(20)->get();
+
+        return response()->json([
+            'success'   => true,
+            'message'   => 'Email List',
+            'data'      => $mails,
+            'profiles'  => $profiles,
+        ]);
+
+   }
+
+   public function updateEmail(Request $request){
+        $email = $request['email'];
+        $email = $this->extractEmail($email);
+        if(Tempmail::where('status',1)->where('name', $email['domain'])->exists()){
+            return response()->json([
+                'success'   => true,
+            ], 200);
+        }else{
+            return response()->json(
+            [
+                'success' => false,
+                'message' => "Invalid Domain",
+            ], 422);
+        }
+
+   }
+
+
+
+
+
+
+
+   public function deleteAllMail(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'email'=>'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'success'=>false,
+                'message'=> $validator->errors()
+            ]);
+        }
+        $email = $request['email'];
+        $connection = imap_open($this->mailbox, $this->username, $this->password);
+        if ($connection) {
+            $email_ids = imap_search($connection, 'TO "'.$email.'"');
+            if ($email_ids) {
+                foreach ($email_ids as $email_id) {
+                    imap_delete($connection, $email_id);
+                }
+            }
+            imap_expunge($connection);
+            imap_close($connection);
+            return response()->json([
+                'success'=> true,
+                'message'=>'Emails Deleted',
+                ]);
+            }
    }
 }

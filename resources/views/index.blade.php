@@ -8,7 +8,7 @@
     $title3 = isset($keyword) ? $title2 : 'Facebook Auto Follow';
 @endphp
 
-@section('title', __('messages.index.meta_title', ['title' => Str::ucfirst($title)]))
+@section('title', Str::ucfirst($title))
 @section('description',
     __('messages.index.meta_desc', [
     'title' =>
@@ -528,15 +528,23 @@
                             <div class="card-body p-4 bg-dark">
                                 @php
                                     if (is_array($posts)) {
-                                        $posts = $default_post;
+                                        $posts = $default_post ?? null;
                                     }
                                 @endphp
 
-                                <h2 class="card-title mb-3 text-white">{{ $posts->title }}</h2>
+                                @if($posts)
+                                    <h2 class="card-title mb-3 text-white">{{ $posts->title }}</h2>
 
-                                <!-- AdSense-Compliant Content -->
-                                <div class="mb-5 text-white-75">
-                                    {!! $posts->content !!}
+                                    <!-- AdSense-Compliant Content -->
+                                    <div class="mb-5 text-white-75">
+                                        {!! $posts->content !!}
+                                @else
+                                    <h2 class="card-title mb-3 text-white">Welcome to AutolikerLive</h2>
+
+                                    <!-- AdSense-Compliant Content -->
+                                    <div class="mb-5 text-white-75">
+                                        <p>Get authentic social media engagement with our premium tools and services.</p>
+                                @endif
 
                                     <div class="mt-4 p-3 bg-dark border border-light rounded">
                                         <h4 class="text-primary">Safe and Reliable Social Media Growth</h4>

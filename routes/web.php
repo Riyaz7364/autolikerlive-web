@@ -6,15 +6,16 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\APIController;
 use App\Http\Controllers\WebAppController;
+use App\Http\Middleware\DetectFakeTraffic;
 use App\Http\Controllers\Bots\SmsBomberBot;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\FacebookController;
+
 use App\Http\Controllers\TempMailController;
-
 use App\Http\Controllers\ContactUsController;
-use App\Http\Controllers\CopyPagesController;
 
+use App\Http\Controllers\CopyPagesController;
 use App\Http\Controllers\InstagramController;
 use App\Http\Controllers\SMSbomberController;
 use App\Http\Controllers\Auth\LoginController;
@@ -120,7 +121,7 @@ $allowedLangs = config('language.allowed_languages');
         return view('test.temp-mail');
     })->name('temp-mail-test');
 
-    Route::get('/mailbox',[TempMailController::class,'mailbox'])->name("mailbox");
+    Route::get('/mailbox',[TempMailController::class,'mailbox'])->name("mailbox")->middleware(DetectFakeTraffic::class);
     Route::post('/all-messages',[TempMailController::class,'allMessages'])->name("allMessages");
     Route::post('/update-email',[TempMailController::class,'updateEmail'])->name("updateEmail");
     Route::post('/delete-mail',[TempMailController::class,'deleteMail'])->name("deleteMail");
@@ -229,9 +230,6 @@ $allowedLangs = config('language.allowed_languages');
     ////// Tools
 
 
-    Route::get('/call-bomber', function () {
-        return view('call-bomber');
-    })->name('call-bomber');
 
 
     Route::get('/youtube-auto-liker', function () {
@@ -256,6 +254,9 @@ $allowedLangs = config('language.allowed_languages');
     Route::get('/sms-bomber', [SMSbomberController::class, 'index'])->name("sms-bomber");
     Route::post('/send-bomber', [SMSbomberController::class, 'sendSMS'])->name('send-bomber');
     Route::post('/save-bomber', [SMSbomberController::class, 'secureNumber'])->name('save-bomber');
+    Route::get('/call-bomber', [SMSbomberController::class, 'callbomber'])->name('call-bomber');
+
+
 
     Route::prefix('submit')->group(function () {
         Route::post('free-service', [TiktokController::class, 'createShortLink'])->name('submit.free-service');
@@ -332,11 +333,11 @@ $allowedLangs = config('language.allowed_languages');
 
 
 // Redirect if a language is set in the URL
-Route::get('{lang}/{any}', function ($lang, $any) use ($allowedLangs) {
-    if (in_array($lang, $allowedLangs)) {
+
+Route::get('{lang}/{any}', function ($lang = null, $any = null) use ($allowedLangs) {
+    if ($lang && in_array($lang, $allowedLangs)) {
         return redirect("/{$any}", 301);
     }
-
     abort(404);
 })->where([
     'lang' => implode('|', $allowedLangs),

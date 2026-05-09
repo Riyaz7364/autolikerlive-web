@@ -87,8 +87,8 @@
 
                 <div class="mail-selection mb-3">
                     <div class="row">
-                        <h2 class="card-title mb-3 text-dark">{{ $posts->title }}</h2>
-                        <div class="col-12 mb-5 wordpress">{!! $posts->content !!}</div>
+                        <h2 class="card-title mb-3 text-dark">{{ isset($posts->title) ? $posts->title : '' }}</h2>
+                        <div class="col-12 mb-5 wordpress">{!! isset($posts->content) ? $posts->content : '' !!}</div>
                     </div>
                     <div class="ad ad-250xNull">
                         <!-- Temp Mail Right -->

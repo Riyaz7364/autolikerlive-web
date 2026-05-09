@@ -2,17 +2,9 @@
 <html lang="en">
 
 <head>
+{{-- <script async src="https://js.onclckmn.com/static/onclicka.js" data-admpid="415541"></script> --}}
 
     <link rel="canonical" href="{{ url()->current() }}" />
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script>
-        window.OneSignalDeferred = window.OneSignalDeferred || [];
-        OneSignalDeferred.push(async function(OneSignal) {
-            await OneSignal.init({
-                appId: "e1480241-9e3c-4823-92ef-918947916fee",
-            });
-        });
-    </script>
 
     @php
         $routes = [
@@ -79,38 +71,36 @@ auto liker, auto like, auto liker app, auto liker apk, auto reactions, facebook 
     @stack('styles')
 
     @yield('javascripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const ads = [
-                // {
-                //     domain: 'vemtoutcheeg.com',
-                //     zone: 5865345,
-                //     path: '400'
-                // }, // InPage Push
-                // {
-                //     domain: 'groleegni.net',
-                //     zone: 9273817,
-                //     path: '401'
-                // }, // InPage Interstitial
-                {
-                    domain: 'gizokraijaw.net',
-                    zone: 9275621,
-                    path: '401'
-                } //  Vignette
-            ];
+{{-- <script>(function(s){s.dataset.zone='10482447',s.src='https://gizokraijaw.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script> --}}
 
-            ads.forEach(ad => {
-                const s = document.createElement('script');
-                s.src = `https://${ad.domain}/${ad.path}/${ad.zone}`;
-                s.async = true;
-                s.defer = true;
-                s.onerror = function(e) {
-                    console.error('Ad script load failed:', s.src, e);
-                };
-                (document.body || document.documentElement).appendChild(s);
-            });
-        });
-    </script>
+{{-- <script data-cfasync="false" type="text/javascript" id="clever-core">
+/* <![CDATA[ */
+    (function (document, window) {
+        var a, c = document.createElement("script"), f = window.frameElement;
+
+        c.id = "CleverCoreLoader99494";
+        c.src = "https://scripts.cleverwebserver.com/ac8966c4ae58297b6e4841e100b070ca.js";
+
+        c.async = !0;
+        c.type = "text/javascript";
+        c.setAttribute("data-target", window.name || (f && f.getAttribute("id")));
+        c.setAttribute("data-callback", "put-your-callback-function-here");
+        c.setAttribute("data-callback-url-click", "put-your-click-macro-here");
+        c.setAttribute("data-callback-url-view", "put-your-view-macro-here");
+
+        try {
+            a = parent.document.getElementsByTagName("script")[0] || document.getElementsByTagName("script")[0];
+        } catch (e) {
+            a = !1;
+        }
+
+        a || (a = document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]);
+        a.parentNode.insertBefore(c, a);
+    })(document, window);
+/* ]]> */
+</script> --}}
+
+
 
 </head>
 

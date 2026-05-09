@@ -9,298 +9,371 @@
     <style>
         body {
             font-family: 'Poppins', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
         }
 
-        .bg-light p,
-        h2 {
-            color: black !important;
+        .hero-section {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9)),
+                        url('https://images.unsplash.com/photo-1611224923853-80b023f02d71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80') center/cover;
+            color: white;
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .play-store-btn {
+            background: #fff;
+            color: #333;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin: 20px 0;
+        }
+
+        .play-store-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            color: #333;
+        }
+
+        .play-store-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .features-section {
+            background: #fff;
+            padding: 80px 0;
+            margin-top: -50px;
+            border-radius: 20px 20px 0 0;
+            position: relative;
+            z-index: 3;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            border: none;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .step-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .info-cards {
+            margin-top: 60px;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 30px;
+            height: 100%;
+        }
+
+        .info-card .card-header {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .emoji-grid {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+
+        .emoji-item {
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .emoji-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
         }
 
         .emoji-size {
-            width: 3rem;
+            width: 40px;
+            height: 40px;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #764ba2, #667eea);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .btn-modern {
+            border-radius: 25px;
+            padding: 15px 30px;
+            font-weight: 600;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            background: #fff;
+            color: #667eea;
+        }
+
+        .btn-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-modern:hover::before {
+            left: 100%;
+        }
+
+        .btn-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 60px 0;
+            }
+
+            .feature-card {
+                margin-bottom: 20px;
+            }
+
+            .emoji-grid {
+                gap: 15px;
+            }
+
+            .emoji-size {
+                width: 35px;
+                height: 35px;
+            }
         }
     </style>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <x-mail-wrapper></x-mail-wrapper>
 @stop
 
 @section('content')
     <x-navbar></x-navbar>
-    @php
-        $reactions = [
-            'like' => 1,
-            'love' => 2,
-            'care' => 16,
-            'haha' => 4,
-            'wow' => 3,
-            'sad' => 7,
-            'engry' => 8,
-        ];
-    @endphp
-    <header class="bg-dark py-5">
-        <div class="container pxc-5">
 
-            <h1 class="justify-content-center text-center ">Facebook Auto Liker 1000 Likes</h1>
-            <h2 class="h6 text-center text-white justify-content-center text-muted">
-                Instantly boost your Facebook posts with up to 1000 real likes. Fast, safe, and free Facebook Auto Liker
-                service. No login required.</h2>
-            <div class="mail-wrapper">
-
-
-                <div class="mail-selection mb-3">
-                    <div class="card text-center fw-bold">
-                        <div class="card-header facebook-btn">
-                            Login with Facebook Username/ID
-                        </div>
-                    </div>
-                    <div class="border-dashes p-3 justify-content-center ">
-
-
-                        <h5>Login Method</h5>
-                        <p>
-                            {!! getIcon('bi-heart-pulse-fill', 'text-success') !!} Reactions &nbsp;
-                            {!! getIcon('bi-play-fill', 'text-success') !!} Views &nbsp;
-                            {!! getIcon('facebook', 'text-success') !!} Followers
-                        </p>
-                        <form method="post" action="{{ route('login.facebook') }}" id="form">
-                            @csrf
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        <li>{{ $errors->first() }}</li>
-                                    </ul>
-                                </div>
-                            @endif
-                            <div class="row">
-                                <div class="col-12">
-                                    <input type="text" name="username" class="form-control" placeholder="Username Here"
-                                        aria-label="Search your Facebook username" aria-describedby="basic-addon2">
-                                </div>
-                                <div class="cf-turnstile my-2" data-sitekey="0x4AAAAAABUvrkxDbOApMo7H"></div>
-
-                                <div class="col-12 text-center">
-                                    <button class="btn btn-primary mb-2" id="submitBtn" type="submit">
-                                        <span class="spinner-border spinner-border-sm text-light d-none"
-                                            id="startsms_spinner" role="status" aria-hidden="true"></span>
-                                        <span class="btn-text">Search Account</span></button>
-                                </div>
-
-                                <!-- App Download Highlight -->
-                                <div class="col-12 text-center mt-2 mb-3">
-                                    <div class="alert alert-info py-2 small">
-                                        📱 <strong>Faster on Mobile!</strong>
-                                        <a href="{{ route('download.page') }}"
-                                            class="alert-link text-decoration-underline ms-1">Download our
-                                            App</a>
-                                        for better performance
-                                    </div>
-                                </div>
-
-                                <!-- Temp Mail Center adsbygoogle -->
-
-                            </div>
-
-                        </form>
-                    </div>
-                    <div class="row pt-4 px-5 text-center">
-                        @foreach ($reactions as $key => $value)
-                            <div class="col">
-                                <img class="img-responsive emoji-size"
-                                    src="https://www.autolikerlive.com/reaction/{{ $key }}.png">
-                            </div>
-                        @endforeach
-                    </div>
-                    <div class="temp-emailbox-text text-center my-2">
-                        <p class="text-dark pt-2 text-white">I Understand and Agree with <a class="link"
-                                href="{{ url('privacy') }}">Privacy Policy</a> and <a class="link"
-                                href="{{ url('terms') }}">Terms of Uses</a></p>
-                    </div>
-
-                </div>
-
-
-            </div>
-        </div>
-    </header>
-
-    <section class="bg-light" data-ad-ignore="true">
-        <div class="border rounded border-primary">
-            {!! toolbanner('text-dark') !!}
-        </div>
-
+    <!-- Hero Section -->
+    <section class="hero-section">
         <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center hero-content">
+                    <h1 class="display-4 fw-bold mb-4">Facebook Auto Liker 1000 Likes</h1>
+                    <p class="lead mb-4">Instantly boost your Facebook posts with up to 1000 real likes. Fast, safe, and free Facebook Auto Liker service. No login required.</p>
 
-            <div class="text-center p-5">
-                <h2 class="text-dark">{{ __('messages.freeService.howItsWork') }}</h2>
-                <p><strong>Facebook Auto Liker 1000 Likes</strong> is a simple and efficient tool designed to help you
-                    increase
-                    engagement on your Facebook posts effortlessly. Unlike other tools, it does not require any tokens or
-                    cookies, ensuring a safer and more secure experience.
-                </p>
-                <h2>How to Use Auto FB Liker?</h2>
-                <p>Follow these easy steps to get started:</p>
-            </div>
-            <div class="row">
-                <div class="col-md-3 col-lg-3 col-sm-12 card border border-white" style="background:#F5F2F2">
-                    <div class="card-body m-3">
-                        <h1 class="card-title"
-                            style="
-                            color: #DADADA;
-                            font-family: Helvetica, Sans-serif;
-                            font-size: 85px;
-                            font-weight: 600;">
-                            01.</h1>
-                        <h6 class="card-subtitle mb-2"
-                            style="
-              color: #000000;
-              font-family: Roboto, Sans-serif;
-              font-size: 18px;
-              font-weight: 700;
-              line-height: 20px;">
-                            Open Auto FB Liker</h6>
-                        <p class="card-text">
-                            Visit our platform from your preferred device. Get free Facebook Followers, Likes, and Views!
-                            Visit www.autolikerlive.com
-                        </p>
+                    <!-- Play Store Button - Repositioned -->
+                    <div class="d-flex justify-content-center mb-4">
+                        <a href="https://play.google.com/store/apps/details?id=com.rajeliker" target="_blank" class="play-store-btn">
+                            <svg class="play-store-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.61 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.53 20.75,12C20.75,12.47 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+                            </svg>
+                            <div>
+                                <div class="small text-muted">Download</div>
+                                <div class="fw-bold">Google Play</div>
+                            </div>
+                        </a>
                     </div>
-                </div>
 
-                <div class="col-md-3 col-lg-3 col-sm-12 card border border-white" style="background:#F5F2F2">
-                    <div class="card-body m-3">
-                        <h1 class="card-title"
-                            style="
-                            color: #DADADA;
-                            font-family: Helvetica, Sans-serif;
-                            font-size: 85px;
-                            font-weight: 600;">
-                            02.</h1>
-                        <h6 class="card-subtitle mb-2"
-                            style="
-              color: #000000;
-              font-family: Roboto, Sans-serif;
-              font-size: 18px;
-              font-weight: 700;
-              line-height: 20px;">
-                            Log in Securely</h6>
-                        <p class="card-text">Unlike other platforms that ask for sensitive data, our login process is 100%
-                            safe. You can log in using a secure method without providing tokens, cookies, or personal
-                            details. This ensures your Facebook account remains safe from bans or unauthorized access.</p>
-                    </div>
-                </div>
-                <div class="col-md-3 col-lg-3 col-sm-12 card border border-white" style="background:#F5F2F2">
-                    <div class="card-body m-3">
-                        <h1 class="card-title"
-                            style="
-                            color: #DADADA;
-                            font-family: Helvetica, Sans-serif;
-                            font-size: 85px;
-                            font-weight: 600;">
-                            03.</h1>
-                        <h6 class="card-subtitle mb-2"
-                            style="
-              color: #000000;
-              font-family: Roboto, Sans-serif;
-              font-size: 18px;
-              font-weight: 700;
-              line-height: 20px;">
-                            Earn Credits (Easy & Free)</h6>
-                        <p class="card-text">
-                            Once logged in, you can earn credits by completing simple tasks like:
-                        <ul>
-                            <li>Liking other posts</li>
-                            <li>Following users</li>
-                            <li>Watching short videos</li>
-                        </ul>
-                        The more credits you earn, the more engagement you can get! No hidden charges, just a fair exchange
-                        system.
-
-                        </p>
-                    </div>
-                </div>
-                <div class="col-md-3 col-lg-3 col-sm-12 card border border-white" style="background:#F5F2F2">
-                    <div class="card-body m-3">
-                        <h1 class="card-title"
-                            style="
-                            color: #DADADA;
-                            font-family: Helvetica, Sans-serif;
-                            font-size: 85px;
-                            font-weight: 600;">
-                            04.</h1>
-                        <h6 class="card-subtitle mb-2"
-                            style="
-              color: #000000;
-              font-family: Roboto, Sans-serif;
-              font-size: 18px;
-              font-weight: 700;
-              line-height: 20px;">
-                            Get Free Likes, Followers & Views</h6>
-                        <p class="card-text">
-                            Use your earned credits to increase likes, followers, and views on your Facebook posts or
-                            profile. Our system delivers engagement organically and instantly, ensuring real interactions
-                            with no bots or fake accounts.
-                        </p>
-                    </div>
-                </div>
-
-            </div>
-            <div class="row">
-                <div class="col-sm-6">
-
-                    <div class="card border-primary mb-3">
-                        <div class="card-header bg-primary">
-                            <h2 class="text-white">Auto Liker Facebook</h2>
+                    <!-- Reaction Emojis -->
+                    <div class="emoji-grid">
+                        <div class="emoji-item">
+                            <img class="emoji-size" src="https://www.autolikerlive.com/reaction/like.png" alt="Like">
                         </div>
-                        <div class="card-body">
-                            <p class="card-text">
-                                (No Token, No Cookies Required – 100% Safe and Secure) ! Are you searching for a trustworthy
-                                Auto Liker for Facebook? Through our platform, you can enhance your Facebook engagement
-                                without jeopardizing your account. In contrast to other tools, we do not ask for any tokens,
-                                passwords, or cookies. We provide a safe and secure experience.
-                            </p>
+                        <div class="emoji-item">
+                            <img class="emoji-size" src="https://www.autolikerlive.com/reaction/love.png" alt="Love">
+                        </div>
+                        <div class="emoji-item">
+                            <img class="emoji-size" src="https://www.autolikerlive.com/reaction/care.png" alt="Care">
+                        </div>
+                        <div class="emoji-item">
+                            <img class="emoji-size" src="https://www.autolikerlive.com/reaction/haha.png" alt="Haha">
+                        </div>
+                        <div class="emoji-item">
+                            <img class="emoji-size" src="https://www.autolikerlive.com/reaction/wow.png" alt="Wow">
+                        </div>
+                        <div class="emoji-item">
+                            <img class="emoji-size" src="https://www.autolikerlive.com/reaction/sad.png" alt="Sad">
+                        </div>
+                        <div class="emoji-item">
+                            <img class="emoji-size" src="https://www.autolikerlive.com/reaction/engry.png" alt="Angry">
                         </div>
                     </div>
-
-                </div>
-                <div class="col-sm-6">
-
-                    <div class="card border-primary mb-3">
-                        <div class="card-header bg-primary">
-                            <h2 class="text-white">Free Facebook Likes</h2>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text fs15">
-                                Getting free Facebook Views is easy, specially from free Facebook Views. You get 100 free
-                                Facebook Views every 5 mins through.
-                                You have to visit our page
-                                {{-- <a href="{{ route('free-Facebook-views') }}"> --}}
-                                Free
-                                Facebook Likes</a> and follow 4 simple steps to earn it.
-                                Getting free Facebook likes on that page, You don't need any credit or token. It has a cool
-                                down timer, So you have to wait for the cooldown the page to submit your link again.
-                            </p>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>
     </section>
 
-    <script>
-        document.getElementById('submitBtn').addEventListener('click', function() {
-            const form = document.getElementById('form');
-            form.submit();
-            const btn = this;
-            const spinner = btn.querySelector('.spinner-border');
-            const text = btn.querySelector('.btn-text');
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold text-gradient mb-3">How It Works</h2>
+                <p class="lead text-muted">Facebook Auto Liker 1000 Likes is a simple and efficient tool designed to help you increase engagement on your Facebook posts effortlessly.</p>
+            </div>
 
-            btn.disabled = true;
-            spinner.classList.remove('d-none');
-            text.textContent = 'Searching...';
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card text-center">
+                        <div class="step-icon">01</div>
+                        <h5 class="fw-bold mb-3">Open Auto FB Liker</h5>
+                        <p class="text-muted">Visit our platform from your preferred device. Get free Facebook Followers, Likes, and Views! Visit www.autolikerlive.com</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card text-center">
+                        <div class="step-icon">02</div>
+                        <h5 class="fw-bold mb-3">Log in Securely</h5>
+                        <p class="text-muted">Unlike other platforms that ask for sensitive data, our login process is 100% safe. No tokens, cookies, or personal details required.</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card text-center">
+                        <div class="step-icon">03</div>
+                        <h5 class="fw-bold mb-3">Earn Credits (Easy & Free)</h5>
+                        <p class="text-muted">Earn credits by completing simple tasks like liking posts, following users, or watching short videos. No hidden charges!</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card text-center">
+                        <div class="step-icon">04</div>
+                        <h5 class="fw-bold mb-3">Get Free Likes & Engagement</h5>
+                        <p class="text-muted">Use your earned credits to increase likes, followers, and views on your Facebook posts. Real interactions, no bots!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Cards -->
+            <div class="row info-cards g-4">
+                <div class="col-lg-6">
+                    <div class="info-card">
+                        <div class="card-header">
+                            <h3 class="mb-0">🚀 Auto Liker Facebook</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-0">No Token, No Cookies Required – 100% Safe and Secure! Are you searching for a trustworthy Auto Liker for Facebook? Through our platform, you can enhance your Facebook engagement without jeopardizing your account.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="info-card">
+                        <div class="card-header">
+                            <h3 class="mb-0">💝 Free Facebook Likes</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-0">Getting free Facebook likes is easy! You get credits every few minutes and can use them to boost your posts. No credit card required, just follow simple steps to earn and use your credits.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="display-5 fw-bold mb-4">Ready to Boost Your Facebook Engagement?</h2>
+            <p class="lead mb-4">Join thousands of users who are already increasing their social media presence with our safe and effective tools.</p>
+            <a href="{{ route('app.index') }}" class="btn btn-modern">Get Started Now</a>
+        </div>
+    </section>
+
+    <script>
+        // Add smooth scrolling and animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate feature cards on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.feature-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
         });
     </script>
-
-
 @endsection

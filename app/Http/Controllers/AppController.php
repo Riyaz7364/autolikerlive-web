@@ -14,11 +14,12 @@ use Laravel\Socialite\Facades\Socialite;
 class AppController extends Controller
 {
     private $baseUrl;
-
-    function __construct(){
-        $this->baseUrl = "http://127.0.0.1:3000/api/v1/";
+    private $graphQLApi;
+    function __construct()
+    {
+        $this->baseUrl = 'https://www.autolikerlive.com/api/app/v1/';
+        $this->graphQLApi = 'https://graph.facebook.com/graphql';
     }
-
 
     // App Configuration
     private $appConfig = [
@@ -26,49 +27,48 @@ class AppController extends Controller
         'maintenanceMode' => false,
         'useRealFacebookLogin' => false,
         'serverUrl' => 'https://www.autolikerlive.com/app/rajeliker',
-        'facebookLoginUrl' => 'https://m.facebook.com/login.php',
-        'permissionUrl' => 'https://www.autolikerlive.com/app/permission'
+        'facebookLoginUrl' => 'https://m.facebook.com',
+        'permissionUrl' => 'https://www.autolikerlive.com/app/permission',
     ];
-
 
     // Make Fake session
-public function makeSession(Request $request){
-    // Example data, you can replace it with real API response
-    $facebookUser = [
-        'id' => '100026711401432',
-        'name' => 'Riyaz Saifi',
-        'picture' => [
-            'data' => [
-                'url' => 'https://graph.fb.me/100026711401432/picture?type=large&access_token=257931075544071%7Ca19fbd5886d2081430fe02ba9e10ca7d'
-            ]
-        ],
-        'email' => null
-    ];
+    public function makeSession(Request $request)
+    {
+        // Example data, you can replace it with real API response
+        $facebookUser = [
+            'id' => '100026711401432',
+            'name' => 'Riyaz Saifi',
+            'picture' => [
+                'data' => [
+                    'url' => 'https://graph.fb.me/100026711401432/picture?type=large&access_token=257931075544071%7Ca19fbd5886d2081430fe02ba9e10ca7d',
+                ],
+            ],
+            'email' => null,
+        ];
 
-    $appType = 'autoliker';
-    $accessToken = 'EAAF029yFLCkBPhFJAdd9WZBVfV6m95o24IzsJXHw3GVy4IZBZAIqTiCGCpmW8MXgX9eI1eqMuCzrJZB555ctLXZCM3R001Cw2G72lvCpTq83chea7okQ8daUaEpmy9dmspQcVsidHfLY8PTh9j5qoD2HNo67aTHBZAl5g66bkqIouoYaQK9Ql4Re5DVe8ZAGkdgEjtu';
-    $session = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIwMTk5OWE0YS0zYmNhLTcwMDAtOTJiNi03OWUzNGQwZWQ0MDMiLCJpYXQiOjE3NTkyMzAxODAsImV4cCI6MTc1OTI0ODE4MH0.QZmI7GtFn5-Xre4zPYJxHPDjRjDBBpqIt9-x_D3eeEs';
+        $appType = 'autoliker';
+        $accessToken = 'EAAF029yFLCkBP7sAIDFTADSKmhRUlgxDQNdFCJAM9uUSRaNPPpE9UZCx5iFj7t5KSvDEyU7r3EFlxTaXNmZAcGZAj6vKw5kh9OC5Gv2swjOvTtuiRYYqNPfqD7MnREcL8pSJygYBBVP95H0GRYTPinK2hsmxmfqaIjPdfMZB6n9913PvspcaQDcC70PxkLZBM3lZBYM4My9tKZB';
+        $session = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIwMTliYWU0MS05NDdmLTcwMDAtYTVjNi0zYzBmY2ZlZTU5MDEiLCJpYXQiOjE3NjgxNTUwOTIsImV4cCI6MTc2ODE3MzA5Mn0.dxi2IQEiSuXfQzaRu9MfQcty-MpE7mX2hIATBc3DP_c';
 
-    // Save to session
-    Session::put('facebook_user', [
-        'id' => $facebookUser['id'],
-        'name' => $facebookUser['name'],
-        'email' => $facebookUser['email'] ?? 'No email provided',
-        'avatar' => $facebookUser['picture']['data']['url'] ?? null,
-        'app_type' => $appType,
-        'logged_in_at' => now(),
-        'session' => $session,
-        'token' => $accessToken,
-        'ip_address' => $request->ip(),
-    ]);
+        // Save to session
+        Session::put('facebook_user', [
+            'id' => $facebookUser['id'],
+            'name' => $facebookUser['name'],
+            'email' => $facebookUser['email'] ?? 'No email provided',
+            'avatar' => $facebookUser['picture']['data']['url'] ?? null,
+            'app_type' => $appType,
+            'logged_in_at' => now(),
+            'session' => $session,
+            'token' => $accessToken,
+            'ip_address' => $request->ip(),
+        ]);
 
-    return response()->json([
-        'status' => 'success',
-        'message' => 'Session created',
-        'data' => Session::get('facebook_user')
-    ]);
-}
-
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Session created',
+            'data' => Session::get('facebook_user'),
+        ]);
+    }
 
     /**
      * Health check endpoint
@@ -78,26 +78,69 @@ public function makeSession(Request $request){
         return response()->json([
             'message' => 'RajeLiker Server is running with Laravel! 🚀',
             'version' => '1.0.0',
-            'timestamp' => now()->toISOString()
+            'timestamp' => now()->toISOString(),
         ]);
     }
 
-    private function httpRequest($path){
+    private function httpRequest($path)
+    {
         $session = Session::get('facebook_user')['session'] ?? null;
-           \Log::alert($session);
-        if(!$session) return;
 
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.$session,
-            'Content-Type' => 'application/json',
-        ])->post($this->baseUrl.$path);
-
-        if($response->failed()){
-            Session::flush();
-            return null;
+        if (!$session) {
+            return;
         }
 
-        return $response->json(); // or $response->json() if JSON response
+        try {
+            $response = Http::timeout(10)
+                ->connectTimeout(5)
+                ->withHeaders([
+                    'Authorization' => 'Bearer ' . $session,
+                    'Content-Type' => 'application/json',
+                ])->post($this->baseUrl . $path);
+
+            if ($response->failed()) {
+                Log::warning('Backend API request failed', [
+                    'path' => $path,
+                    'status' => $response->status(),
+                    'body' => $response->body()
+                ]);
+                Session::flush();
+                return null;
+            }
+
+            return $response->json();
+        } catch (\Exception $e) {
+            Log::error('Backend API connection error', [
+                'path' => $path,
+                'error' => $e->getMessage()
+            ]);
+            // Don't flush session on connection errors, might be temporary
+            return null;
+        }
+    }
+
+    private function getGraphUser($id, $token)
+    {
+        $queryParams = [
+            'av' => $id,
+            '__user' => $id,
+            'fb_api_caller_class' => 'RelayModern',
+            'fb_api_req_friendly_name' => 'CometHovercardQueryRendererQuery',
+            'server_timestamps' => 'true',
+            'doc_id' => '25382378271347839',
+            'variables' => '{"actionBarRenderLocation":"WWW_COMET_HOVERCARD","context":"DEFAULT","entityID":"' . $id . '","scale":1,"__relay_internal__pv__WorkCometIsEmployeeGKProviderrelayprovider":false}',
+            'access_token' => $token,
+        ];
+
+        $response = Http::asForm()->post($this->graphQLApi, $queryParams);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            if (isset($data['errors'])) {
+                return null;
+            }
+            return $data['data']['node']['comet_hovercard_renderer']['user'];
+        }
     }
 
     /**
@@ -106,32 +149,19 @@ public function makeSession(Request $request){
     public function rajeliker()
     {
         $user = Session::get('facebook_user');
-
+        $hasSession = Session::has('facebook_user');
         // Check if user should be redirected to AutoLiker dashboard
         if ($user && isset($user['token']) && isset($user['app_type']) && $user['app_type'] === 'autoliker') {
-
-            $token = $user['token'];
-            $response = Http::get(
-                'https://graph.facebook.com/me',
-                [
-                    'access_token' => $token,
-                ]
-            );
-
-            if($response->successful()) {
-                $userData = $response->json();
-                if(isset($userData['id'])) {
-                    // Valid token, redirect to AutoLiker dashboard
-                    return redirect('/app/autoliker');
-                }
+            $response = $this->getGraphUser($user['id'], $user['token']);
+            if ($response) {
+                return redirect('/app/autoliker');
             }
         }
-
-
-
-
+        if($hasSession) {
+            \Log::debug("Line: 144 - RajeLiker ", ['user' => $user]);
+        }
         $config = $this->appConfig;
-        return view('app.rajeliker', compact('config'));
+        return view('app.rajeliker', compact(['config', 'hasSession']));
     }
 
     /**
@@ -141,12 +171,23 @@ public function makeSession(Request $request){
     {
         $user = Session::get('facebook_user');
 
-        $credits = $this->httpRequest('getCredits');
-
         // Only allow EAAF token users
-        if (!$user || !isset($user['app_type']) || $user['app_type'] !== 'autoliker' || !$credits) {
+        if (!$user || !isset($user['app_type']) || $user['app_type'] !== 'autoliker') {
             return redirect('/app/rajeliker');
         }
+
+        $credits = $this->httpRequest('getCredits');
+
+        // If credits API fails, use default values instead of redirecting
+        if (!$credits) {
+            Log::warning('Failed to fetch credits, using defaults', ['user_id' => $user['id']]);
+            $credits = [
+                'storage' => 0,
+                'limit' => 1000,
+                'remainingTime' => 600, // 10 minutes default
+            ];
+        }
+
         $session = Session::get('facebook_user')['session'] ?? null;
 
         return view('app.autoliker', compact(['user', 'credits', 'session']));
@@ -157,39 +198,60 @@ public function makeSession(Request $request){
      */
     public function permission(Request $request)
     {
+        try {
+            $token = $request->query('code', null);
+            $headers = $request->headers->all();
+            $sec_ch_token = $headers['sec-ch-token'][0] ?? '';
+            $userAgent = $headers['user-agent'][0] ?? '';
 
-        $token = $request->query('code', null);
-        $headers = $request->headers->all();
-        $sec_ch_token = $headers['sec-ch-token'][0] ?? '';
-        $userAgent = $headers['user-agent'][0] ?? '';
-
-        if(!$token){
-          return response("
-        <script>
-
-            if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
-
-                window.flutter_inappwebview.callHandler('errorFailed', 'Access denied. Missing token.');
+            if (!$token) {
+                return response("
+                <script>
+                    if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
+                        window.flutter_inappwebview.callHandler('errorFailed', 'Access denied. Missing token.');
+                    }
+                </script>
+                ")->header('Content-Type', 'text/html');
             }
-        </script>
-        ")->header('Content-Type', 'text/html');
-            return redirect()->route('app.index')->with('error', 'Access denied. Missing token.');
+
+            $original = $this->decryptFlutterToken($sec_ch_token);
+            if ($original->exception != null) {
+                Log::error('❌ Decrypt Flutter token error', ['error' => $original->exception]);
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Failed to decrypt Flutter token. Please try again. #1',
+                    ],
+                    500,
+                );
+            }
+
+            $cookies = $this->decryptFlutterToken($sec_ch_token)->original['decrypted'];
+            $user_id = preg_match('/c_user=([0-9]+)/', $cookies, $matches) ? $matches[1] : null;
+            $user = $this->getGraphUser($user_id, $token);
+            if (!$user) {
+                \Log::info('Line: 212 🔐 GraphQL request failed, returning error response');
+                return response("
+                <script>
+                    if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
+                        window.flutter_inappwebview.callHandler('errorFailed', 'Access denied. Invalid token.');
+                    }
+                </script>
+                ")->header('Content-Type', 'text/html');
+            }
+
+
+            return view('app.permission', compact(['user', 'sec_ch_token', 'userAgent', 'token']));
+        } catch (\Exception $e) {
+            \Log::error('Line: 226 ❌ Permission error', ['error' => $e->getMessage()]);
+            return response("
+            <script>
+                if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
+                    window.flutter_inappwebview.callHandler('errorFailed', 'Internal server error. Please try again.');
+                }
+            </script>
+            ")->header('Content-Type', 'text/html');
         }
-
-        $api = "https://graph.facebook.com/v2.6/me?access_token=".$token;
-        $request = Http::get($api);
-        if($request->failed()){
-        return "<script>
-          if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
-            window.flutter_inappwebview.callHandler('errorFailed', 'Access denied. Missing token.');
-         }
-        </script>";
-            return redirect()->route('app.index')->with('error', 'Access denied. Invalid token.');
-        }
-
-        $user = ($request->json());
-
-        return view('app.permission', compact(['user', 'sec_ch_token', 'userAgent', 'token']));
     }
 
     /**
@@ -197,7 +259,6 @@ public function makeSession(Request $request){
      */
     public function getConfig()
     {
-        Log::info('📋 Config requested');
         return response()->json($this->appConfig);
     }
 
@@ -210,7 +271,7 @@ public function makeSession(Request $request){
             $request->validate([
                 'useRealFacebookLogin' => 'boolean',
                 'facebookLoginUrl' => 'url',
-                'serverUrl' => 'url'
+                'serverUrl' => 'url',
             ]);
 
             if ($request->has('useRealFacebookLogin')) {
@@ -231,14 +292,17 @@ public function makeSession(Request $request){
             return response()->json([
                 'success' => true,
                 'message' => 'Configuration updated',
-                'config' => $this->appConfig
+                'config' => $this->appConfig,
             ]);
         } catch (\Exception $e) {
             Log::error('❌ Config update error', ['error' => $e->getMessage()]);
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 500);
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                ],
+                500,
+            );
         }
     }
 
@@ -262,7 +326,6 @@ public function makeSession(Request $request){
     public function handleFacebookCallback(Request $request)
     {
         return view('app.facebook-callback');
-
     }
 
     /**
@@ -275,12 +338,9 @@ public function makeSession(Request $request){
                 'access_token' => 'required|string',
             ]);
 
-            // dd(Session::get('facebook_user'));
-
-
             $accessToken = $request->access_token;
-            $longLivedToken = $request->long_lived_token ?? "";
-            $ua = $request->agent ?? "";
+            $longLivedToken = $request->long_lived_token ?? '';
+            $ua = $request->agent ?? '';
 
             // Detect app type based on token prefix
             $appType = 'unknown';
@@ -289,91 +349,81 @@ public function makeSession(Request $request){
             if (str_starts_with($accessToken, 'EAA') && !str_starts_with($accessToken, 'EAAF')) {
                 $appType = 'rajeliker';
                 $dashboardUrl = '/app/'; // Analytics Dashboard
-                Log::info('🔵 RajeLiker App Token Detected', ['token_prefix' => 'EAA']);
+                \Log::debug("Line 323 ", ['access_token' => $accessToken]);
             } elseif (str_starts_with($accessToken, 'EAAF')) {
                 $appType = 'autoliker';
                 $dashboardUrl = '/app/autoliker'; // AutoLiker Dashboard
-                Log::info('🟢 AutoLiker App Token Detected', ['token_prefix' => 'EAAF']);
             } else {
                 Log::warning('🟡 Unknown Token Type', ['token_prefix' => substr($accessToken, 0, 10)]);
             }
 
-            Log::info('🔑 Processing Facebook token', [
-                'token_length' => strlen($accessToken),
-                'app_type' => $appType,
-                'dashboard_url' => $dashboardUrl
-            ]);
+            if ($appType == 'rajeliker') {
+                $response = Http::get('https://graph.facebook.com/v2.6/me', [
+                    'access_token' => $accessToken,
+                    'fields' => 'id,name',
+                ]);
 
-            // Get user info from Facebook Graph API
-            $response = Http::get('https://graph.facebook.com/me', [
-                'access_token' => $accessToken,
-                'fields' => 'id,name,email,picture.type(large)'
-            ]);
-
-            if (!$response->successful()) {
-                Log::error('❌ Facebook API error', ['response' => $response->body()]);
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Failed to get user info from Facebook'
-                ], 400);
+                $facebookUser = $response->json();
+            } else {
+                $facebookUser = $request['user'];
             }
 
-            $facebookUser = $response->json();
             $headers = $request->headers->all();
             $cookies = $headers['x-flutter-token'][0] ?? '';
             $userAgent = $headers['user-agent'][0] ?? '';
-
-
+            $profilePic = 'https://graph.fb.me/' . $facebookUser['id'] . '/picture?type=large&access_token=257931075544071%7Ca19fbd5886d2081430fe02ba9e10ca7d';
 
             // Store in cache for API access
             $userData = [
                 'id' => $facebookUser['id'],
                 'name' => $facebookUser['name'],
-                'profilePic' => $facebookUser['picture']['data']['url'] ?? null,
+                'profilePic' => $profilePic,
                 'token' => $accessToken,
                 'cookies' => $cookies,
                 'app_type' => $appType,
                 'loginType' => 'fb',
                 'fcm' => '001',
-                "refer_id" => "",
-                "ua" => $userAgent,
+                'refer_id' => '',
+                'ua' => $userAgent,
                 'loginTime' => now(),
-                'lastActivity' => now()
+                'lastActivity' => now(),
             ];
 
-            $session = "";
-            if ($appType == "autoliker") {
+            $session = '';
+            if ($appType == 'autoliker') {
                 $original = $this->decryptFlutterToken($cookies);
-                if($original->exception != null){
+                if ($original->exception != null) {
                     Log::error('❌ Decrypt Flutter token error', ['error' => $original->exception]);
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Failed to decrypt Flutter token. Please try again. #1'
-                    ], 500);
+                    return response()->json(
+                        [
+                            'success' => false,
+                            'message' => 'Failed to decrypt Flutter token. Please try again. #1',
+                        ],
+                        500,
+                    );
                 }
 
                 $cookies = $this->decryptFlutterToken($cookies)->original['decrypted'];
 
-
-                $api = $this->baseUrl."login";
+                $api = $this->baseUrl . 'login';
                 $apiResponse = Http::asForm()->post($api, $userData);
                 $session = $apiResponse->body();
                 if ($apiResponse->successful()) {
                     $loginData = $apiResponse->json();
 
-
                     if (isset($loginData['session'])) {
                         $session = $loginData['session'];
-
-                    }else{
-                          return response()->json([
-                            'success' => false,
-                            'message' => 'Login failed. Please try again. #2'
-                        ], 500);
+                    } else {
+                        return response()->json(
+                            [
+                                'success' => false,
+                                'message' => 'Login failed. Please try again. #2',
+                            ],
+                            500,
+                        );
                     }
                 }
             }
-
 
             // Log successful login
             Log::debug('✅ Facebook Login Successful', [
@@ -385,13 +435,12 @@ public function makeSession(Request $request){
                 'cookies' => $cookies,
             ]);
 
-
             Session::put('facebook_user', [
                 'id' => $facebookUser['id'],
                 'name' => $facebookUser['name'],
                 'email' => $facebookUser['email'] ?? 'No email provided',
-                'avatar' => $facebookUser['picture']['data']['url'] ?? null,
-                'app_type' => $appType, // Track which app the token came from
+                'avatar' => $profilePic ?? null,
+                'app_type' => $appType,
                 'logged_in_at' => now(),
                 'session' => $session,
                 'token' => $accessToken,
@@ -408,16 +457,22 @@ public function makeSession(Request $request){
                     'id' => $facebookUser['id'],
                     'name' => $facebookUser['name'],
                     'email' => $facebookUser['email'] ?? 'No email provided',
-                    'avatar' => $facebookUser['picture']['data']['url'] ?? null,
-                    'app_type' => $appType
-                ]
+                    'avatar' => $profilePic ?? null,
+                    'app_type' => $appType,
+                ],
             ]);
         } catch (\Exception $e) {
-            Log::error('❌ Facebook token processing error', ['error' => $e->getMessage()]);
-            return response()->json([
-                'success' => false,
-                'message' => 'Login failed. Please try again. #3'
-            ], 500);
+            Log::error('❌ Facebook token processing error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Login failed. Please try again. #3',
+                ],
+                500,
+            );
         }
     }
     /**
@@ -438,7 +493,7 @@ public function makeSession(Request $request){
             Log::info('Facebook Logout', [
                 'facebook_id' => $facebookUser['id'],
                 'name' => $facebookUser['name'],
-                'ip' => $request->ip()
+                'ip' => $request->ip(),
             ]);
         }
 
@@ -456,13 +511,15 @@ public function makeSession(Request $request){
         if ($request->expectsJson()) {
             return response()->json([
                 'logged_in' => $isLoggedIn,
-                'user' => $isLoggedIn ? [
-                    'id' => $user['id'],
-                    'name' => $user['name'],
-                    'email' => $user['email'],
-                    'avatar' => $user['avatar'],
-                    'logged_in_at' => $user['logged_in_at']
-                ] : null
+                'user' => $isLoggedIn
+                    ? [
+                        'id' => $user['id'],
+                        'name' => $user['name'],
+                        'email' => $user['email'],
+                        'avatar' => $user['avatar'],
+                        'logged_in_at' => $user['logged_in_at'],
+                    ]
+                    : null,
             ]);
         }
 
@@ -482,7 +539,7 @@ public function makeSession(Request $request){
                 'encodedCookies' => 'required|string',
                 'loginType' => 'string',
                 'timestamp' => 'required',
-                'userAgent' => 'string'
+                'userAgent' => 'string',
             ]);
 
             Log::info('🔐 API Login attempt for user', ['userId' => $request->userId]);
@@ -490,10 +547,13 @@ public function makeSession(Request $request){
             // Decode cookies (base64 encoded)
             $decodedCookies = base64_decode($request->encodedCookies);
             if (!$decodedCookies) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Invalid cookie data'
-                ], 400);
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Invalid cookie data',
+                    ],
+                    400,
+                );
             }
 
             // Store user data in cache
@@ -506,7 +566,7 @@ public function makeSession(Request $request){
                 'loginType' => $request->loginType ?? 'api',
                 'loginTime' => Carbon::parse($request->timestamp),
                 'userAgent' => $request->userAgent,
-                'lastActivity' => now()
+                'lastActivity' => now(),
             ];
 
             Cache::put("user_{$request->userId}", $userData, 3600);
@@ -514,7 +574,7 @@ public function makeSession(Request $request){
             Log::info('✅ API User logged in successfully', [
                 'userId' => $request->userId,
                 'name' => $request->name,
-                'loginType' => $request->loginType
+                'loginType' => $request->loginType,
             ]);
 
             return response()->json([
@@ -525,15 +585,18 @@ public function makeSession(Request $request){
                     'name' => $request->name,
                     'profilePic' => $request->profilePic,
                     'loginType' => $request->loginType,
-                    'loginTime' => $request->timestamp
-                ]
+                    'loginTime' => $request->timestamp,
+                ],
             ]);
         } catch (\Exception $e) {
             Log::error('❌ API Login error', ['error' => $e->getMessage()]);
-            return response()->json([
-                'success' => false,
-                'message' => 'Internal server error'
-            ], 500);
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Internal server error',
+                ],
+                500,
+            );
         }
     }
 
@@ -546,10 +609,13 @@ public function makeSession(Request $request){
             $user = Cache::get("user_{$userId}");
 
             if (!$user) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'User not found'
-                ], 404);
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'User not found',
+                    ],
+                    404,
+                );
             }
 
             // Return only non-sensitive data
@@ -561,15 +627,18 @@ public function makeSession(Request $request){
                     'profilePic' => $user['profilePic'] ?? null,
                     'loginType' => $user['loginType'],
                     'loginTime' => $user['loginTime'],
-                    'lastActivity' => $user['lastActivity']
-                ]
+                    'lastActivity' => $user['lastActivity'],
+                ],
             ]);
         } catch (\Exception $e) {
             Log::error('❌ Get user error', ['error' => $e->getMessage()]);
-            return response()->json([
-                'success' => false,
-                'message' => 'Internal server error'
-            ], 500);
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Internal server error',
+                ],
+                500,
+            );
         }
     }
 
@@ -583,22 +652,25 @@ public function makeSession(Request $request){
                 'postUrl' => 'required|url',
                 'reaction' => 'required|in:LIKE,LOVE,CARE,HAHA,WOW,SAD,ANGRY',
                 'cookies' => 'string',
-                'userAgent' => 'string'
+                'userAgent' => 'string',
             ]);
 
             $authHeader = $request->header('Authorization');
 
             Log::info('👍 Reaction request', [
                 'postUrl' => $request->postUrl,
-                'reaction' => $request->reaction
+                'reaction' => $request->reaction,
             ]);
 
             // Validate authorization
             if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Invalid authorization'
-                ], 401);
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Invalid authorization',
+                    ],
+                    401,
+                );
             }
 
             $token = str_replace('Bearer ', '', $authHeader);
@@ -616,18 +688,24 @@ public function makeSession(Request $request){
             }
 
             if (!$user) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Invalid token'
-                ], 401);
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Invalid token',
+                    ],
+                    401,
+                );
             }
 
             // Validate Facebook post URL
             if (!preg_match('/^https?:\/\/(www\.)?(facebook\.com|m\.facebook\.com|fb\.watch)\/.+/i', $request->postUrl)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Invalid Facebook post URL'
-                ], 400);
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Invalid Facebook post URL',
+                    ],
+                    400,
+                );
             }
 
             // Simulate processing time
@@ -644,7 +722,7 @@ public function makeSession(Request $request){
                 'reaction' => $request->reaction,
                 'timestamp' => now(),
                 'userAgent' => $request->userAgent,
-                'status' => 'completed'
+                'status' => 'completed',
             ];
 
             Cache::put("reaction_{$reactionId}", $reactionData, 3600);
@@ -657,7 +735,7 @@ public function makeSession(Request $request){
             Log::info('✅ Reaction processed', [
                 'reactionId' => $reactionId,
                 'reaction' => $request->reaction,
-                'userId' => $user['userId']
+                'userId' => $user['userId'],
             ]);
 
             // Simulate 90% success rate
@@ -668,20 +746,26 @@ public function makeSession(Request $request){
                     'success' => true,
                     'message' => "{$request->reaction} reaction added successfully!",
                     'reactionId' => $reactionId,
-                    'timestamp' => now()->toISOString()
+                    'timestamp' => now()->toISOString(),
                 ]);
             } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Failed to add reaction. Post might be private or deleted.'
-                ], 400);
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Failed to add reaction. Post might be private or deleted.',
+                    ],
+                    400,
+                );
             }
         } catch (\Exception $e) {
             Log::error('❌ Reaction error', ['error' => $e->getMessage()]);
-            return response()->json([
-                'success' => false,
-                'message' => 'Internal server error'
-            ], 500);
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Internal server error',
+                ],
+                500,
+            );
         }
     }
 
@@ -709,14 +793,17 @@ public function makeSession(Request $request){
             return response()->json([
                 'success' => true,
                 'reactions' => $reactions,
-                'count' => count($reactions)
+                'count' => count($reactions),
             ]);
         } catch (\Exception $e) {
             Log::error('❌ Get reactions error', ['error' => $e->getMessage()]);
-            return response()->json([
-                'success' => false,
-                'message' => 'Internal server error'
-            ], 500);
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Internal server error',
+                ],
+                500,
+            );
         }
     }
 
@@ -741,17 +828,20 @@ public function makeSession(Request $request){
                 'activeUsers' => $activeUsers,
                 'recentReactions' => $recentReactions,
                 'serverUptime' => $this->getServerUptime(),
-                'timestamp' => now()->toISOString()
+                'timestamp' => now()->toISOString(),
             ];
 
             Log::info('📊 Stats requested', $stats);
             return response()->json($stats);
         } catch (\Exception $e) {
             Log::error('❌ Get stats error', ['error' => $e->getMessage()]);
-            return response()->json([
-                'success' => false,
-                'message' => 'Internal server error'
-            ], 500);
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Internal server error',
+                ],
+                500,
+            );
         }
     }
 
@@ -775,30 +865,36 @@ public function makeSession(Request $request){
             $user = Session::get('facebook_user');
 
             if (!$user || $user['app_type'] !== 'autoliker') {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'AutoLiker app token required'
-                ], 401);
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'AutoLiker app token required',
+                    ],
+                    401,
+                );
             }
 
             $request->validate([
                 'post_url' => 'required|url',
-                'reaction_type' => 'required|in:1,2,3,4,7,8,16'
+                'reaction_type' => 'required|in:1,2,3,4,7,8,16',
             ]);
 
             // Validate Facebook post URL
             if (!preg_match('/^https?:\/\/(www\.)?(facebook\.com|m\.facebook\.com|fb\.watch)\/.+/i', $request->post_url)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Invalid Facebook post URL'
-                ], 400);
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Invalid Facebook post URL',
+                    ],
+                    400,
+                );
             }
 
-            \Log::info('🎯 AutoLiker Reaction Request', [
+            \Log::info(' Line: 882 🎯 AutoLiker Reaction Request', [
                 'user_id' => $user['id'],
                 'post_url' => $request->post_url,
                 'reaction' => $request->reaction_type,
-                'user' => $user
+                'user' => $user,
             ]);
 
             // TODO: Call steam bun API for chunk data
@@ -814,7 +910,7 @@ public function makeSession(Request $request){
                 'reaction_type' => $request->reaction_type,
                 'timestamp' => now(),
                 'app_type' => 'autoliker',
-                'status' => 'completed'
+                'status' => 'completed',
             ];
 
             Cache::put("autoliker_reaction_{$reactionId}", $reactionData, 7200); // Store for 2 hours
@@ -831,7 +927,7 @@ public function makeSession(Request $request){
             if ($success) {
                 Log::info('✅ AutoLiker Reaction Successful', [
                     'reaction_id' => $reactionId,
-                    'user_id' => $user['id']
+                    'user_id' => $user['id'],
                 ]);
 
                 return response()->json([
@@ -839,20 +935,26 @@ public function makeSession(Request $request){
                     'message' => 'Reaction added successfully!',
                     'reaction_id' => $reactionId,
                     'reaction_type' => $request->reaction_type,
-                    'timestamp' => now()->toISOString()
+                    'timestamp' => now()->toISOString(),
                 ]);
             } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Failed to add reaction. Please try again.'
-                ], 400);
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Failed to add reaction. Please try again.',
+                    ],
+                    400,
+                );
             }
         } catch (\Exception $e) {
             Log::error('❌ AutoLiker reaction error', ['error' => $e->getMessage()]);
-            return response()->json([
-                'success' => false,
-                'message' => 'Internal server error'
-            ], 500);
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Internal server error',
+                ],
+                500,
+            );
         }
     }
 
@@ -865,10 +967,13 @@ public function makeSession(Request $request){
             $user = Session::get('facebook_user');
 
             if (!$user || $user['app_type'] !== 'autoliker') {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'AutoLiker app token required'
-                ], 401);
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'AutoLiker app token required',
+                    ],
+                    401,
+                );
             }
 
             $userReactions = Cache::get("autoliker_reactions_{$user['id']}", []);
@@ -882,7 +987,7 @@ public function makeSession(Request $request){
                 'HAHA' => 0,
                 'WOW' => 0,
                 'SAD' => 0,
-                'ANGRY' => 0
+                'ANGRY' => 0,
             ];
 
             $todayCount = 0;
@@ -919,23 +1024,25 @@ public function makeSession(Request $request){
                         'name' => $user['name'],
                         'id' => $user['id'],
                         'avatar' => $user['avatar'],
-                        'app_type' => 'AutoLiker Pro'
-                    ]
-                ]
+                        'app_type' => 'AutoLiker Pro',
+                    ],
+                ],
             ]);
         } catch (\Exception $e) {
             Log::error('❌ AutoLiker stats error', ['error' => $e->getMessage()]);
-            return response()->json([
-                'success' => false,
-                'message' => 'Internal server error'
-            ], 500);
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Internal server error',
+                ],
+                500,
+            );
         }
     }
 
     /**
      * Extract post ID from Facebook URL
      */
-
 
     /**
      * Get Facebook profile analytics using access token
@@ -946,24 +1053,30 @@ public function makeSession(Request $request){
             $user = Session::get('facebook_user');
 
             if (!$user || !$user['token']) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'User not authenticated'
-                ], 401);
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'User not authenticated',
+                    ],
+                    401,
+                );
             }
 
             // Get user profile from Facebook Graph API with basic permissions only
-            $response = Http::get('https://graph.facebook.com/me', [
+            $response = Http::get('https://graph.facebook.com/v2.6/me', [
                 'access_token' => $user['token'],
-                'fields' => 'id,name,email,picture.type(large)'
+                'fields' => 'id,name,email,picture.type(large)',
             ]);
 
             if (!$response->successful()) {
                 Log::error('Facebook API Error', ['response' => $response->body()]);
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Failed to fetch Facebook data'
-                ], 400);
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'Failed to fetch Facebook data',
+                    ],
+                    400,
+                );
             }
 
             $facebookData = $response->json();
@@ -971,10 +1084,10 @@ public function makeSession(Request $request){
             // Try to get posts count (may fail due to permissions)
             $postsCount = 0;
             try {
-                $postsResponse = Http::get('https://graph.facebook.com/me/posts', [
+                $postsResponse = Http::get('https://graph.facebook.com/v2.6/me/posts', [
                     'access_token' => $user['token'],
                     'limit' => 0,
-                    'summary' => 'true'
+                    'summary' => 'true',
                 ]);
 
                 if ($postsResponse->successful()) {
@@ -994,15 +1107,18 @@ public function makeSession(Request $request){
                     'email' => $facebookData['email'] ?? null,
                     'picture' => $facebookData['picture']['data']['url'],
                     'friends_count' => 0, // Not available with basic permissions
-                    'posts_count' => $postsCount
-                ]
+                    'posts_count' => $postsCount,
+                ],
             ]);
         } catch (\Exception $e) {
             Log::error('Facebook profile fetch error', ['error' => $e->getMessage()]);
-            return response()->json([
-                'success' => false,
-                'message' => 'Internal server error'
-            ], 500);
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => 'Internal server error',
+                ],
+                500,
+            );
         }
     }
 
@@ -1015,25 +1131,27 @@ public function makeSession(Request $request){
             $user = Session::get('facebook_user');
 
             if (!$user || !$user['token']) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'User not authenticated'
-                ], 401);
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'User not authenticated',
+                    ],
+                    401,
+                );
             }
 
             // Try to get pages managed by user (requires pages_manage_metadata permission)
-            $response = Http::get('https://graph.facebook.com/me/accounts', [
+            $response = Http::get('https://graph.facebook.com/v2.6/me/accounts', [
                 'access_token' => $user['token'],
-                'fields' => 'id,name,picture,fan_count,talking_about_count,category'
+                'fields' => 'id,name,picture,fan_count,talking_about_count,category',
             ]);
 
             // This will likely fail for personal accounts or without proper permissions
             if (!$response->successful()) {
-                Log::info('Pages access denied or not available', ['response' => $response->body()]);
                 return response()->json([
                     'success' => true,
                     'pages' => [],
-                    'message' => 'No pages available or permission denied'
+                    'message' => 'No pages available or permission denied',
                 ]);
             }
 
@@ -1041,14 +1159,14 @@ public function makeSession(Request $request){
 
             return response()->json([
                 'success' => true,
-                'pages' => $pagesData['data'] ?? []
+                'pages' => $pagesData['data'] ?? [],
             ]);
         } catch (\Exception $e) {
             Log::error('Facebook pages fetch error', ['error' => $e->getMessage()]);
             return response()->json([
                 'success' => true,
                 'pages' => [],
-                'message' => 'Personal account - no pages to manage'
+                'message' => 'Personal account - no pages to manage',
             ]);
         }
     }
@@ -1062,21 +1180,23 @@ public function makeSession(Request $request){
             $user = Session::get('facebook_user');
 
             if (!$user || !$user['token']) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'User not authenticated'
-                ], 401);
+                return response()->json(
+                    [
+                        'success' => false,
+                        'message' => 'User not authenticated',
+                    ],
+                    401,
+                );
             }
 
             // Try to get recent posts - this often fails due to privacy restrictions
-            $response = Http::get('https://graph.facebook.com/me/posts', [
+            $response = Http::get('https://graph.facebook.com/v2.6/me/posts', [
                 'access_token' => $user['token'],
                 'fields' => 'id,message,created_time,likes.summary(true),comments.summary(true),reactions.summary(true)',
-                'limit' => 25
+                'limit' => 25,
             ]);
 
             if (!$response->successful()) {
-                Log::info('Posts access denied', ['response' => $response->body()]);
                 return response()->json([
                     'success' => true,
                     'posts' => [],
@@ -1088,9 +1208,9 @@ public function makeSession(Request $request){
                         'total_reactions' => 0,
                         'avg_likes_per_post' => 0,
                         'avg_comments_per_post' => 0,
-                        'engagement_rate' => 0
+                        'engagement_rate' => 0,
                     ],
-                    'message' => 'Posts are private or permission not granted'
+                    'message' => 'Posts are private or permission not granted',
                 ]);
             }
 
@@ -1121,8 +1241,8 @@ public function makeSession(Request $request){
                     'total_reactions' => $totalReactions,
                     'avg_likes_per_post' => count($posts) > 0 ? round($totalLikes / count($posts), 2) : 0,
                     'avg_comments_per_post' => count($posts) > 0 ? round($totalComments / count($posts), 2) : 0,
-                    'engagement_rate' => count($posts) > 0 ? round(($totalReactions / count($posts)) * 100, 2) : 0
-                ]
+                    'engagement_rate' => count($posts) > 0 ? round(($totalReactions / count($posts)) * 100, 2) : 0,
+                ],
             ]);
         } catch (\Exception $e) {
             Log::error('Facebook posts insights error', ['error' => $e->getMessage()]);
@@ -1137,65 +1257,66 @@ public function makeSession(Request $request){
                     'total_reactions' => 0,
                     'avg_likes_per_post' => 0,
                     'avg_comments_per_post' => 0,
-                    'engagement_rate' => 0
+                    'engagement_rate' => 0,
                 ],
-                'message' => 'Unable to access posts data'
+                'message' => 'Unable to access posts data',
             ]);
         }
     }
 
-
     // Save User credits to storage
-    public function saveCredits(Request $request){
+    public function saveCredits(Request $request)
+    {
         //send request to server
-        try{
+        try {
             $response = $this->httpRequest('storeCredits');
-            if($response['success']){
-                toastr()->success("Credits stored success!");
+            \Log::info(' Credits Store Response', ['response' => $response]);
+            if (isset($response['success'])) {
+                toastr()->success('Credits stored success!');
                 return redirect()->back();
             }
-        }catch(Exception $error){
-            \Log::error(json_encode([
-                "source"  => "saveCredits",
-                "message" => $error->getMessage(),
-            ]));
+        } catch (Exception $error) {
+            \Log::error(
+                json_encode([
+                    'source' => 'saveCredits',
+                    'message' => $error->getMessage(),
+                ]),
+            );
 
             toastr()->error($error->getMessage());
             return redirect()->back();
         }
-
     }
 
+    private function decryptFlutterToken($token)
+    {
+        if (!$token) {
+            return response()->json(['error' => 'Missing token'], 400);
+        }
 
-private function decryptFlutterToken($token)
-{
-    if (!$token) {
-        return response()->json(['error' => 'Missing token'], 400);
+        $key = 'p9X7mZ4tQ2fS6uV8yB1cE3hJ5kN7rT0w'; // must be 32 chars
+
+        $data = base64_decode($token);
+        if ($data === false) {
+            return response()->json(['error' => 'Invalid base64 token'], 400);
+        }
+
+        // Extract IV (first 16 bytes) and ciphertext
+        $iv = substr($data, 0, 16);
+        $ciphertext = substr($data, 16);
+
+        $aes = new AES('cbc');
+        $aes->setKey($key);
+        $aes->setIV($iv);
+
+        try {
+            $decrypted = $aes->decrypt($ciphertext);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Decryption failed', 'details' => $e->getMessage()], 400);
+        }
+
+        return response()->json([
+            'decrypted' => $decrypted,
+        ]);
     }
-
-    $key = 'p9X7mZ4tQ2fS6uV8yB1cE3hJ5kN7rT0w'; // must be 32 chars
-
-    $data = base64_decode($token);
-    if ($data === false) {
-        return response()->json(['error' => 'Invalid base64 token'], 400);
-    }
-
-    // Extract IV (first 16 bytes) and ciphertext
-    $iv = substr($data, 0, 16);
-    $ciphertext = substr($data, 16);
-
-    $aes = new AES('cbc');
-    $aes->setKey($key);
-    $aes->setIV($iv);
-
-    try {
-        $decrypted = $aes->decrypt($ciphertext);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Decryption failed', 'details' => $e->getMessage()], 400);
-    }
-
-    return response()->json([
-        'decrypted' => $decrypted,
-    ]);
-}
 }

@@ -790,7 +790,7 @@
 
                                                 <figure class="first-letters">
                                                     @php
-                                                        \Log::debug(['email' => $email]);
+
                                                         if (is_array($email)) {
                                                             $from = isset($email['from']) ? $email['from'] : '';
                                                             $fromEmail = isset($email['from_email'])
@@ -807,18 +807,24 @@
                                                 <p class="text-muted">{{ $fromEmail }}</p>
                                             </div>
                                             <div class="text-muted">
-                                                <span class="date-time-text">Date: {{ $email['receivedAt'] }}</span>
+                                                <span class="date-time-text">Date: {{ is_array($email) && isset($email['receivedAt']) ? $email['receivedAt'] : 'N/A' }}</span>
 
                                             </div>
 
                                         </div>
                                         <div class="h5 text-dark">
                                             <small><span class="text-muted">Subject:</span>
-                                                {{ $email['subject'] }}</small>
+                                                {{ is_array($email) && isset($email['subject']) ? $email['subject'] : 'No Subject' }}</small>
                                         </div>
                                         <div class="inbox-data-content-intro">
                                             @php
-                                                $emailBody = $email['content'];
+                                                $emailBody = '';
+                                                if (is_array($email) && isset($email['content'])) {
+                                                    $emailBody = $email['content'];
+                                                } elseif (is_string($email)) {
+                                                    $emailBody = $email;
+                                                }
+
                                                 $pattern =
                                                     '/Content-Type:\s*image\/[a-z]+;\s*name="([^"]+)"(.*?)Content-Disposition:\s*inline;\s*filename="([^"]+)"(.*?)Content-Transfer-Encoding:\s*base64\s*Content-ID:\s*<([^>]+)>(.*?)X-Attachment-Id: [^\s]+\s+([\s\S]+?)(?=\nContent-Type|\n*$)/s';
                                                 if (preg_match_all($pattern, $emailBody, $matches, PREG_SET_ORDER)) {

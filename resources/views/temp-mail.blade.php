@@ -14,6 +14,8 @@
 
 
 @section('javascripts')
+<script async src="https://js.onclckmn.com/static/onclicka.js" data-admpid="415541"></script>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
     <script></script>
@@ -368,7 +370,7 @@
         <div class="container pxc-5">
             <div class="mail-wrapper">
                 <div class="ad ad-250x250">
-                    <!-- Temp Mail Left adsbygoogle -->
+                   <div class="admoloBanner" data-publisher="eyJpdiI6IjB0TlRYb0I4ekQxR2pHYzJjSEM5K2c9PSIsInZhbHVlIjoiR1p1MXh5NEhna2s4Wkk0UkJvditpQT09IiwibWFjIjoiMWVkMzNiMTA1ZTFhNTFhNDg5NjNiMDgzOTQ2NjQxNTRlNGUzYzMzOGJmMjYxY2ZiMTE0OGE0MjVkYmVmZWZiOSIsInRhZyI6IiJ9" data-adsize="320x50"></div>
 
                 </div>
 
@@ -417,8 +419,9 @@
                 </div>
                 <div class="ad ad-250x250">
                     <!-- Temp Mail Right adsbygoogle -->
+                <div data-banner-id="6107284"></div>
 
-                </div>
+            </div>
             </div>
 
 
@@ -470,9 +473,10 @@
 
     <section class="bg-light">
         <div class="container">
-            <!-- Temp Mail Center adsbygoogle -->
+            <!-- Horizontal banner ads -->
 
-            <div class="row">
+
+<div class="row">
                 <div class="col-md-2 col-lg-2"></div>
                 <div class="col-md-8 col-lg-8 col-xl-8 col-sm-12 p-1 my-3">
                     <div class="card border-r-1">
@@ -729,5 +733,7 @@
                 }, 1000);
             });
         });
+
+
     </script>
 @stop

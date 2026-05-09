@@ -433,54 +433,115 @@
     </div>
 
     <script>
-        function continueAsUser() {
+        async function continueAsUser() {
             // Show loading
             document.getElementById('loadingDiv').classList.add('show');
             document.getElementById('continueBtn').disabled = true;
 
-            // Prepare data for callback processing
-            const processData = {
-                access_token: '{{ $token }}',
+            const maxRetries = 3;
+            const retryDelay = 1000; // 1 second
+            let currentAttempt = 0;
 
+            // Function to create fetch request with timeout
+            const fetchWithTimeout = (url, options, timeout = 15000) => {
+                return Promise.race([
+                    fetch(url, options),
+                    new Promise((_, reject) =>
+                        setTimeout(() => reject(new Error('Request timeout')), timeout)
+                    )
+                ]);
             };
 
-            // Process token through callback
-            fetch("{{ route('app.facebook.process') }}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'X-Flutter-Token': '{{ $sec_ch_token }}',
-                        'user-agent': '{{ $userAgent }}'
-                    },
-                    body: JSON.stringify(processData)
-                })
-                .then(response => response.json())
-                .then(data => {
+            // Retry function
+            const attemptRequest = async () => {
+                currentAttempt++;
+                console.log(`🔄 Attempt ${currentAttempt}/${maxRetries}`);
+
+                try {
+                    // Prepare data for callback processing
+                    const processData = {
+                        access_token: '{{ $token }}',
+                        user: @json($user)
+                    };
+
+                    // Process token through callback with timeout
+                    const response = await fetchWithTimeout("{{ route('app.facebook.process') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'X-Flutter-Token': '{{ $sec_ch_token }}',
+                            'user-agent': '{{ $userAgent }}'
+                        },
+                        body: JSON.stringify(processData)
+                    }, 15000); // 15 second timeout
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+
                     if (data.success) {
                         console.log('✅ Token processed successfully');
 
                         if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
-
                             window.flutter_inappwebview.callHandler('loginSuccess', 'Login Success');
                         } else {
                             window.location.href = data.dashboard_url || '{{ route('app.index') }}';
+                        }
+                        return; // Success, exit function
+                    } else {
+                        throw new Error(data.message || 'Server returned error');
+                    }
 
+                } catch (error) {
+                    console.error(`❌ Attempt ${currentAttempt} failed:`, error.message);
+
+                    // If this was the last attempt, show error
+                    if (currentAttempt >= maxRetries) {
+                        console.error('❌ All attempts failed');
+
+                        let errorMessage = 'Login failed. ';
+                        if (error.message.includes('timeout')) {
+                            errorMessage += 'Connection timeout. Please check your internet connection and try again.';
+                        } else if (error.message.includes('Failed to fetch')) {
+                            errorMessage += 'Network error. Please check your internet connection and try again.';
+                        } else {
+                            errorMessage += error.message || 'Please try again.';
                         }
 
-                    } else {
-                        console.error('❌ Token processing failed:', data.message);
-                        alert('Login failed: ' + (data.message || 'Please try again'));
+                        alert(errorMessage);
+                        return;
                     }
-                })
-                .catch(error => {
-                    console.error('❌ Processing error:', error);
-                    alert('An error occurred. Please try again.');
-                })
-                .finally(() => {
-                    document.getElementById('loadingDiv').classList.remove('show');
-                    document.getElementById('continueBtn').disabled = false;
-                });
+
+                    // Wait before retrying
+                    console.log(`⏳ Retrying in ${retryDelay}ms...`);
+                    await new Promise(resolve => setTimeout(resolve, retryDelay));
+
+                    // Update loading text to show retry
+                    const loadingDiv = document.getElementById('loadingDiv');
+                    if (loadingDiv) {
+                        loadingDiv.innerHTML = `<div class="spinner"></div>Retrying... (${currentAttempt}/${maxRetries})`;
+                    }
+
+                    return attemptRequest(); // Recursive retry
+                }
+            };
+
+            try {
+                await attemptRequest();
+            } finally {
+                // Always reset UI state
+                document.getElementById('loadingDiv').classList.remove('show');
+                document.getElementById('continueBtn').disabled = false;
+
+                // Reset loading text
+                const loadingDiv = document.getElementById('loadingDiv');
+                if (loadingDiv) {
+                    loadingDiv.innerHTML = '<div class="spinner"></div>Getting your information...';
+                }
+            }
         }
 
         function cancelPermission() {

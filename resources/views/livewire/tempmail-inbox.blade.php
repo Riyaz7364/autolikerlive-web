@@ -31,7 +31,7 @@
         </div>
     @else
         @foreach (collect($this->messages['messages'])->sortByDesc('receivedAt') as $message)
-            <a href="{{ url('') }}/message/view/{{ $message['id'] }}" class="viewLink d-flex mb-3">
+            <a href="{{ url('') }}/message/view/{{ is_array($message) ? $message['id'] : (is_object($message) ? $message->id : '')  }}" class="viewLink d-flex mb-3">
                 <div class="col-1 {{ $message['is_seen'] ? 'is-not-active' : 'is-active' }}"></div>
                 <div class="col-3 mx-2">
                     <span class="d-flex text-dark">{{ $message['from'] }}</span>

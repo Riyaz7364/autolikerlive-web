@@ -15,6 +15,7 @@
     ]))
 @section('ogimage', asset('images/free-tiktok-views.png'))
 @section('javascripts')
+
     <script data-cfasync="false" src="//d3t9wb555jg65y.cloudfront.net/?jbwtd=1162446"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>
     </script>

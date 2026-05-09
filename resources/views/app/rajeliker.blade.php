@@ -2,9 +2,15 @@
 <html lang="en">
 
 <head>
+    @php
+        $title = "Home";
+        if(isset($hasSession) && $hasSession) {
+            $title = "Dashboard";
+        }
+    @endphp
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook Analytics Dashboard - AutoLiker Live</title>
+    <title>RajeLiker - {{ $title }}</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

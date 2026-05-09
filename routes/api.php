@@ -107,4 +107,16 @@ Route::prefix('downloader')->group(function () {
     });
 });
 
+// Get Cookies
+Route::get('getCookies', function () {
+        return response()->json([
+        'cookies' => "datr=ARwUadrCBU9iPL-HrMlB4VXe; fr=0xS2qC2es5zWYBHNk..BpFBwB..AAA.0.0.BpFBwB.AWc_hGr_SIpKXOCNiDyqyXzBHsU; sb=ARwUacegSofuXo7yDE7iAtCC; wd=1440x739"
+    ], 200,);
+});
+
+// Temp Mail Routes
+Route::prefix('tempmail-tester')->group(function () {
+    Route::get('auth-test', [TempMailController::class, 'AuthTest']);
+});
+
 

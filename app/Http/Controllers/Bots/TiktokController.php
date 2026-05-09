@@ -117,12 +117,12 @@ class TiktokController extends Controller
 
             switch ($request['type']) {
                 case 'TIKTOK_LIKES':
-                    $query['service'] = 4572;
+                    $query['service'] = 5236;
                     $query['quantity'] = 10;
                     $wait = 15;
                     break;
                 case 'FREE_TIKTOK':
-                    $query['service'] = 4931;
+                    $query['service'] = 875;
                     $query['quantity'] = 100;
                     $wait = 10;
                     break;
@@ -132,7 +132,7 @@ class TiktokController extends Controller
                     $wait = 10;
                     break;
                 case 'INSTA_LIKES':
-                    $query['service'] = 4425;
+                    $query['service'] = 5393;
                     $query['quantity'] = 10;
                     $wait = 10;
                     break;

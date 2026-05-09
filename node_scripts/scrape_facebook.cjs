@@ -83,7 +83,7 @@ function findValuesByKeys(obj, keys, result = {}) {
     });
 
     const cookieString =
-        "datr=KPHhaPdLwziEMfFWwEts5uS7; sb=KPHhaLWGJZfVqa7t8WasntON; wd=784x739";
+        "datr=nVQZac9chgtGmK90TJeAHYLs; sb=nVQZaVFsCI9_wCUgw2io3vta; ps_l=1; ps_n=1";
     const cookies = cookieString.split("; ").map((cookie) => {
         const [name, value] = cookie.split("=");
         return { name, value, domain: ".facebook.com" };

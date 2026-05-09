@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RajeLiker - Dashboard</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8426510303593933"
+     crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -248,10 +250,12 @@
         }
 
         .submit-btn:disabled {
-            background: #ccc;
+            background: #ccc !important;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
+            opacity: 0.6;
+            color: #666 !important;
         }
 
         .stats-section {
@@ -430,6 +434,71 @@
             align-content: center;
         }
 
+        /* Tab Styles */
+        .tabs-container {
+            background: white;
+            margin: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .tabs-navigation {
+            display: flex;
+            background: #f5f5f5;
+            padding: 15px 15px 0 15px;
+            gap: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px 20px;
+            background: #e8e8e8;
+            border: none;
+            border-radius: 12px 12px 0 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            border: 2px solid #d0d0d0;
+            border-bottom: none;
+            margin-bottom: -2px;
+        }
+
+        .tab-btn:hover {
+            background: #f0f0f0;
+            color: #4CAF50;
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            color: #4CAF50;
+            background: white;
+            border-color: #4CAF50;
+            border-bottom-color: white;
+            transform: translateY(0);
+        }
+
+        .tab-btn.followers-tab.active {
+            color: #667eea;
+            border-color: #667eea;
+        }
+
+        .tab-btn.followers-tab:hover {
+            color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         /* SHow Model */
           /* Overlay background */
             .modal-overlay {
@@ -519,6 +588,45 @@ button {
   color: white;
 }
 
+/* Support Section */
+.support-section {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+}
+
+.support-section h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.support-section p {
+    font-size: 16px;
+    margin: 0;
+}
+
+.telegram-btn {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 700;
+    transition: all 0.3s;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    font-size: 16px;
+}
+
+.telegram-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+}
+
     </style>
 </head>
 
@@ -592,85 +700,150 @@ button {
         </div>
 
 
-        <!-- Liker Panel -->
-        <div class="liker-panel">
-            <div class="panel-header">
-                <h2><i class="fas fa-magic"></i> Liker Panel</h2>
-                <p>Enter public post link to add reactions</p>
+        <!-- Tabs Container -->
+        <div class="tabs-container">
+            <!-- Tabs Navigation -->
+            <div class="tabs-navigation">
+                <button class="tab-btn active" data-tab="reactions">
+                    <i class="fas fa-magic"></i> Reactions
+                </button>
+                <button class="tab-btn followers-tab" data-tab="followers">
+                    <i class="fas fa-user-plus"></i> Followers
+                </button>
             </div>
 
-            <div class="form-section">
-                <div class="note">
-                    <i class="fas fa-info-circle"></i> <strong>Note:</strong> Make sure the post you are submitting must
-                    be "Public" else likes will be failed!
+            <!-- Reactions Tab Content -->
+            <div class="tab-content active" id="reactions-tab">
+                <div class="panel-header">
+                    <h2><i class="fas fa-magic"></i> Liker Panel</h2>
+                    <p>Enter public post link to add reactions</p>
                 </div>
 
-                <form id="reactionForm">
-                    <div class="form-group">
-                        <label for="postUrl">
-                            <i class="fas fa-link"></i> Enter Public Post Link!
-                        </label>
-                        <input type="text" id="postUrl" class="url-input" placeholder="Your Public Post Link Or ID"
-                            required>
+                <div class="form-section">
+                    <div class="note">
+                        <i class="fas fa-info-circle"></i> <strong>Note:</strong> Make sure the post you are submitting must
+                        be "Public" else likes will be failed!
                     </div>
 
-                    <div class="form-group">
-                        <label>Choose Reaction:</label>
-                        <div class="reaction-options">
-                            <div class="reaction-item reaction-btn selected" data-reaction="1">
-                                <div>👍</div>
-                                <div class="reaction-label">LIKE</div>
-                            </div>
-                            <div class="reaction-item reaction-btn" data-reaction="2">
-                                <div>❤️</div>
-                                <div class="reaction-label">LOVE</div>
-                            </div>
-                            {{-- <div class="reaction-item" data-reaction="16">
-                                <div>🤗</div>
-                                <div class="reaction-label">CARE</div>
-                            </div> --}}
-                            <div class="reaction-item reaction-btn" data-reaction="4">
-                                <div>😂</div>
-                                <div class="reaction-label">HAHA</div>
-                            </div>
-                            <div class="reaction-item reaction-btn" data-reaction="3">
-                                <div>😮</div>
-                                <div class="reaction-label">WOW</div>
-                            </div>
-                            <div class="reaction-item reaction-btn" data-reaction="7">
-                                <div>😢</div>
-                                <div class="reaction-label">SAD</div>
-                            </div>
-                            <div class="reaction-item reaction-btn" data-reaction="8">
-                                <div>😡</div>
-                                <div class="reaction-label">ANGRY</div>
+                    <form id="reactionForm">
+                        <div class="form-group">
+                            <label for="postUrl">
+                                <i class="fas fa-link"></i> Enter Public Post Link!
+                            </label>
+                            <input type="text" id="postUrl" class="url-input" placeholder="Your Public Post Link Or ID"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Choose Reaction:</label>
+                            <div class="reaction-options">
+                                <div class="reaction-item reaction-btn selected" data-reaction="1">
+                                    <div>👍</div>
+                                    <div class="reaction-label">LIKE</div>
+                                </div>
+                                <div class="reaction-item reaction-btn" data-reaction="2">
+                                    <div>❤️</div>
+                                    <div class="reaction-label">LOVE</div>
+                                </div>
+                                {{-- <div class="reaction-item" data-reaction="16">
+                                    <div>🤗</div>
+                                    <div class="reaction-label">CARE</div>
+                                </div> --}}
+                                <div class="reaction-item reaction-btn" data-reaction="4">
+                                    <div>😂</div>
+                                    <div class="reaction-label">HAHA</div>
+                                </div>
+                                <div class="reaction-item reaction-btn" data-reaction="3">
+                                    <div>😮</div>
+                                    <div class="reaction-label">WOW</div>
+                                </div>
+                                <div class="reaction-item reaction-btn" data-reaction="7">
+                                    <div>😢</div>
+                                    <div class="reaction-label">SAD</div>
+                                </div>
+                                <div class="reaction-item reaction-btn" data-reaction="8">
+                                    <div>😡</div>
+                                    <div class="reaction-label">ANGRY</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                  <div class="form-group">
-                        <label>Choose Method:</label>
-                        <div class="reaction-options">
-                            <div class="reaction-item send-method selected" data-reaction="timer">
-                                <div><i class="fa-solid fa-clock fa-spin"></i></div>
-                                <div class="reaction-label">TIMER <strong class="countdown" data-timer="{{ $credits['remainingTime'] }}"></strong></div>
+                        <div class="form-group">
+                            <label>Choose Method:</label>
+                            <div class="reaction-options">
+                                <div class="reaction-item send-method selected" data-reaction="timer">
+                                    <div><i class="fa-solid fa-clock fa-spin"></i></div>
+                                    <div class="reaction-label">TIMER <strong class="countdown" data-timer="{{ $credits['remainingTime'] }}"></strong></div>
+                                </div>
+                                <div class="reaction-item send-method" data-reaction="storage">
+                                    <div><i class="fa-solid fa-warehouse"></i></div>
+                                    <div class="reaction-label">STORAGE Credits {{ $credits['storage'] }}</div>
+                                </div>
                             </div>
-                            <div class="reaction-item send-method" data-reaction="storage">
-                                <div><i class="fa-solid fa-warehouse"></i></div>
-                                <div class="reaction-label">STORAGE Credits {{ $credits['storage'] }}</div>
-                            </div>
-
                         </div>
-                    </div>
 
+                        <button type="submit" class="submit-btn" id="submitBtn">
+                            <i class="fa-solid fa-paper-plane fa-shake"></i> Send
+                        </button>
+                    </form>
 
-
-                    <button type="submit" class="submit-btn" id="submitBtn">
-                        <i class="fa-solid fa-paper-plane fa-shake"></i> Send
-                    </button>
-                </form>
-
-                <div id="responseMessage"></div>
+                    <div id="responseMessage"></div>
+                </div>
             </div>
+
+            <!-- Followers Tab Content -->
+            <div class="tab-content" id="followers-tab">
+                <div class="panel-header" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                    <h2><i class="fas fa-user-plus"></i> Followers Tool</h2>
+                    <p>Enter profile link to gain followers</p>
+                </div>
+
+                <div class="form-section">
+                    <div class="note">
+                        <i class="fas fa-info-circle"></i> <strong>Note:</strong> Make sure the profile you are submitting must
+                        be "Public" else followers will be failed!
+                    </div>
+
+                    <div class="note" style="background: #ffe0b2; color: #e65100; border-left-color: #ff9800;">
+                        <i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong> Followers cost <strong>3x more</strong> than reactions!
+                    </div>
+
+                    <form id="followersForm">
+                        <div class="form-group">
+                            <label for="profileUrl">
+                                <i class="fas fa-user"></i> Enter Public Profile Link!
+                            </label>
+                            <input type="text" id="profileUrl" class="url-input" placeholder="Your Public Profile Link Or ID"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Choose Method:</label>
+                            <div class="reaction-options">
+                                <div class="reaction-item send-method-followers selected" data-reaction="timer">
+                                    <div><i class="fa-solid fa-clock fa-spin"></i></div>
+                                    <div class="reaction-label">TIMER <strong class="countdown" data-timer="{{ $credits['remainingTime'] }}"></strong></div>
+                                </div>
+                                <div class="reaction-item send-method-followers" data-reaction="storage">
+                                    <div><i class="fa-solid fa-warehouse"></i></div>
+                                    <div class="reaction-label">STORAGE Credits {{ $credits['storage'] }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-btn" id="submitFollowersBtn" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                            <i class="fa-solid fa-user-plus fa-shake"></i> Send Followers
+                        </button>
+                    </form>
+
+                    <div id="followersResponseMessage"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Support Section -->
+        <div class="support-section">
+            <h3><i class="fab fa-telegram"></i> Support</h3>
+            <p>Connect us on Telegram: <a href="https://t.me/autolikerlive" target="_blank" class="telegram-btn">@autolikerlive</a></p>
         </div>
 
         <!-- Stats Section -->
@@ -710,14 +883,32 @@ button {
     <script>
         let selectedReaction = 1;
         let selectedMethod = 'timer';
+        let selectedMethodFollowers = 'timer';
         let userStats = {};
+        let storageCredits = {{ $credits['storage'] }};
 
         $(document).ready(function() {
             loadUserStats();
             setupReactionHandlers();
             setupMethodHandlers();
+            setupFollowersMethodHandlers();
+            setupTabs();
             updateTimer();
         });
+
+        function setupTabs() {
+            $('.tab-btn').click(function() {
+                const tabName = $(this).data('tab');
+
+                // Remove active class from all tabs and contents
+                $('.tab-btn').removeClass('active');
+                $('.tab-content').removeClass('active');
+
+                // Add active class to clicked tab and corresponding content
+                $(this).addClass('active');
+                $(`#${tabName}-tab`).addClass('active');
+            });
+        }
 
         $('#watchRewardedAd').on('click', function(e) {
             if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
@@ -728,6 +919,7 @@ button {
 
         const timerEl = document.querySelector(".timer");
         const sendButtonEL = document.getElementById('submitBtn');
+        const sendFollowersButtonEL = document.getElementById('submitFollowersBtn');
         const storeButtonEL = document.getElementById('storeCreditsBtn');
 
         const countdownEls = document.querySelectorAll("[data-timer]");
@@ -739,16 +931,28 @@ button {
 
 
             countdownEls.forEach((countdown) => {
-                countdown.textContent = ('0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2);
+                if (timeLeft <= 0) {
+                    countdown.textContent = 'Ready';
+                } else {
+                    countdown.textContent = ('0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2);
+                }
             });
 
             if (timeLeft <= 0) {
                 sendButtonEL.disabled = false;
+                sendFollowersButtonEL.disabled = false;
                 storeButtonEL.disabled = false;
                 timerEl.innerHTML = '⸜(｡˃ ᵕ ˂ )⸝♡';
             } else {
-                if(selectedMethod !="storage"){
+                if(selectedMethod == "storage"){
+                    sendButtonEL.disabled = storageCredits <= 0;
+                } else {
                     sendButtonEL.disabled = true;
+                }
+                if(selectedMethodFollowers == "storage"){
+                    sendFollowersButtonEL.disabled = storageCredits <= 0;
+                } else {
+                    sendFollowersButtonEL.disabled = true;
                 }
                 storeButtonEL.disabled = true;
                 timeLeft--;
@@ -790,6 +994,89 @@ button {
             });
         }
 
+        function setupFollowersMethodHandlers() {
+            const sendFollowersButtonEL = document.getElementById('submitFollowersBtn');
+
+            // Method selection for followers
+            $('.send-method-followers').click(function() {
+                if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
+                    window.flutter_inappwebview.callHandler('showInterstitialAd');
+                }
+
+                $('.send-method-followers').removeClass('selected');
+                $(this).addClass('selected');
+                selectedMethodFollowers = $(this).data('reaction');
+
+                if(selectedMethodFollowers == "storage"){
+                    sendFollowersButtonEL.disabled = storageCredits <= 0;
+                    sendFollowersButtonEL.innerHTML = `<i class="fa-solid fa-warehouse fa-shake"></i> Send Followers`;
+                }else if(timeLeft > 0){
+                    sendFollowersButtonEL.disabled = true;
+                    sendFollowersButtonEL.innerHTML = `<i class="fa-solid fa-user-plus fa-shake"></i> Send Followers`;
+                }else{
+                    sendFollowersButtonEL.disabled = false;
+                    sendFollowersButtonEL.innerHTML = `<i class="fa-solid fa-user-plus fa-shake"></i> Send Followers`;
+                }
+            });
+        }
+
+        $('#submitFollowersBtn').on('click', async function(e) {
+            e.preventDefault();
+
+            if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
+                window.flutter_inappwebview.callHandler('showInterstitialAd');
+            }
+
+            const sendFollowersButtonEL = document.getElementById('submitFollowersBtn');
+            sendFollowersButtonEL.disabled = true;
+            const profileId = $('#profileUrl').val();
+
+            const ws = new WebSocket("wss://www.autolikerlive.com/api/v1/send", ['{{$session}}'], {
+                headers: {
+                    "Authorization": "{{$session}}",
+                }
+            });
+
+            ws.onopen = () => {
+                ws.send(JSON.stringify({
+                    "link": profileId,
+                    "reaction": 1,  // Default reaction parameter for followers
+                    "method": selectedMethodFollowers,
+                    "type": "follow"
+                }));
+            };
+
+            ws.onmessage = (event) => {
+                try {
+                    data = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
+                    if(data.success != null){
+                        if(data.success){
+                            console.log("Followers Task Completed");
+                            setTimeout(function() {
+                                window.location.reload();
+                            }, 2000);
+                        }else{
+                            alert(data.message)
+                        }
+                        sendFollowersButtonEL.disabled = false;
+                    }else{
+                        showFollowersResult(data.totalSuccess);
+                    }
+                    console.log(data);
+                } catch (err) {
+                    console.error('Invalid JSON:', event.data);
+                }
+            };
+
+            ws.onclose = () => {
+                sendFollowersButtonEL.disabled = false;
+                console.log("Followers Task Completed");
+                setTimeout(function() {
+                    window.location.reload();
+                }, 2000);
+            }
+        });
+
         $('#submitBtn').on('click', async function(e) {
             e.preventDefault();
 
@@ -812,6 +1099,7 @@ button {
                     "link": postId,
                     "reaction": selectedReaction,
                     "method": selectedMethod,
+                    "type" : "like"
                 }));
             };
 
@@ -921,6 +1209,68 @@ requestAnimationFrame(() => {
         card.style.opacity = "0";
         card.style.transform = "translateY(-20px)";
         setTimeout(() => card.remove(), 400);
+    }, 3000);
+}
+
+function showFollowersResult(success = 0) {
+    const card = document.createElement("div");
+    card.innerHTML = `
+        <div style="
+            display: flex;
+            align-items: center;
+            gap: 10px;">
+            <span style="font-size: 20px;">👥</span>
+            <span><b>Followers Success: ${success}</b></span>
+        </div>
+    `;
+
+    // Create overlay to block clicks
+    const overlay = document.createElement("div");
+    Object.assign(overlay.style, {
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        background: "rgba(0,0,0,0)", // fully transparent
+        zIndex: 9998,
+        cursor: "not-allowed"
+    });
+    document.body.appendChild(overlay);
+
+    Object.assign(card.style, {
+        position: "fixed",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%) scale(0.8)",
+        background: success ? "#667eea" : "#E53935",
+        color: "white",
+        padding: "20px 30px",
+        borderRadius: "12px",
+        fontSize: "16px",
+        fontWeight: "500",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+        zIndex: 9999,
+        opacity: "0",
+        transition: "opacity 0.4s ease, transform 0.4s ease"
+    });
+
+    document.body.appendChild(card);
+
+    // Animate in
+    requestAnimationFrame(() => {
+        card.style.opacity = "1";
+        card.style.transform = "translate(-50%, -50%) scale(1)";
+    });
+
+    // Auto hide
+    setTimeout(() => {
+        card.style.opacity = "0";
+        card.style.transform = "translateY(-20px)";
+        setTimeout(() => {
+            card.remove();
+            overlay.remove();
+        }, 400);
     }, 3000);
 }
 

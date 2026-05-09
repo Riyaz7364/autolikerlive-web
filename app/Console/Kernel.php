@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('app:reset-premium')->hourly();
         $schedule->command('sitemap:generate')->daily();
+        $schedule->command('blog:publish-daily')->dailyAt('09:15')->withoutOverlapping();
     }
 
     /**

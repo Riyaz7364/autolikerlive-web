@@ -26,6 +26,12 @@ class SMSbomberController extends Controller
         $status = BomberStatus::all();
         return view('sms-bomber',compact('status'));
     }
+    public function callbomber(){
+        $status = BomberStatus::all();
+        return view('call-bomber',compact('status'));
+    }
+
+
 
     public function sendSMS(Request $request){
         $validator = Validator::make($request->all(),[

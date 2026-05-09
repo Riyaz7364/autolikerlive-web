@@ -28,6 +28,8 @@
                 bottom: 0;
                 background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
                 opacity: 0.1;
+                pointer-events: none;
+                z-index: 0;
             }
 
             .download-hero::after {
@@ -122,7 +124,7 @@
                 background-size: 200% 200%;
                 border: none;
                 border-radius: 50px;
-                padding: 15px 40px;
+                padding: 15px 15px;
                 font-weight: bold;
                 font-size: 1.2rem;
                 transition: all 0.4s ease;
@@ -290,6 +292,61 @@
                 -webkit-text-fill-color: transparent;
                 background-clip: text;
             }
+
+            .market-btn {
+                display: inline-block;
+                padding: 0.3125rem 0.875rem;
+                padding-left: 2.8125rem;
+                -webkit-transition: border-color 0.25s ease-in-out, background-color 0.25s ease-in-out;
+                transition: border-color 0.25s ease-in-out, background-color 0.25s ease-in-out;
+                border: 1px solid #e7e7e7;
+                background-position: center left 0.75rem;
+                background-color: #fff;
+                background-size: 1.5rem 1.5rem;
+                background-repeat: no-repeat;
+                text-decoration: none;
+            }
+
+            .market-btn .market-button-title {
+                display: block;
+                color: #222;
+                font-size: 1.125rem;
+            }
+
+            .market-btn .market-button-subtitle {
+                display: block;
+                margin-bottom: -0.25rem;
+                color: #888;
+                font-size: 0.75rem;
+            }
+
+            .market-btn:hover {
+                background-color: #f7f7f7;
+                text-decoration: none;
+            }
+
+            .google-btn {
+                background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeD0iMHB4IiB5PSIwcHgiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgd2lkdGg9IjUxMnB4IiBoZWlnaHQ9IjUxMnB4Ij4KPHBvbHlnb24gc3R5bGU9ImZpbGw6IzVDREFERDsiIHBvaW50cz0iMjkuNTMsMCAyOS41MywyNTEuNTA5IDI5LjUzLDUxMiAyOTkuMDA0LDI1MS41MDkgIi8+Cjxwb2x5Z29uIHN0eWxlPSJmaWxsOiNCREVDQzQ7IiBwb2ludHM9IjM2OS4wNjcsMTgwLjU0NyAyNjIuMTc1LDExOS40NjcgMjkuNTMsMCAyOTkuMDA0LDI1MS41MDkgIi8+Cjxwb2x5Z29uIHN0eWxlPSJmaWxsOiNEQzY4QTE7IiBwb2ludHM9IjI5LjUzLDUxMiAyOS41Myw1MTIgMjYyLjE3NSwzODMuNTUxIDM2OS4wNjcsMzIyLjQ3IDI5OS4wMDQsMjUxLjUwOSAiLz4KPHBhdGggc3R5bGU9ImZpbGw6I0ZGQ0E5NjsiIGQ9Ik0zNjkuMDY3LDE4MC41NDdsLTcwLjA2Myw3MC45NjFsNzAuMDYzLDcwLjk2MWwxMDguNjg4LTYyLjg3N2M2LjI4OC0zLjU5Myw2LjI4OC0xMS42NzcsMC0xNS4yNyAgTDM2OS4wNjcsMTgwLjU0N3oiLz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPGc+CjwvZz4KPC9zdmc+Cg==);
+                border-radius: 10px;
+            }
+
+
+            .market-btn-light {
+                border-color: rgba(255, 255, 255, 0.14);
+                background-color: rgba(0, 0, 0, 0);
+            }
+
+            .market-btn-light .market-button-title {
+                color: #fff;
+            }
+
+            .market-btn-light .market-button-subtitle {
+                color: rgba(255, 255, 255, 0.6);
+            }
+
+            .market-btn-light:hover {
+                background-color: rgba(255, 255, 255, 0.06);
+            }
         </style>
     @endpush
 @section('content')
@@ -313,16 +370,25 @@
                                 </h1>
                                 <p class="lead mb-4 fs-5">{{ __('messages.download.useLatest') }}</p>
                                 <div
-                                    class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
+                                    class="d-flex flex-column flex-sm-row gap-3 flex-wrap align-items-center justify-content-center justify-content-lg-start">
+
+
+                                    <!-- Google Play button -->
+                                    <a href="https://play.google.com/store/apps/details?id=com.rajeliker" target="_blank"
+                                        class="market-btn google-btn" role="button">
+                                        <span class="market-button-subtitle">Download on the</span>
+                                        <span class="market-button-title">Google Play</span>
+                                    </a>
+
+
+
+
+
                                     <button type="button" data-timer="5" class="btn download-btn text-white"
                                         id="download-btn">
-                                        <i class="bi bi-cloud-download me-2"></i>Download
-                                        {{ str_replace('.apk', '', $json->link) }}
+                                        <i class="bi bi-cloud-download me-2"></i>
+                                        Direct {{ str_replace('.apk', '', $json->link) }}
                                     </button>
-                                    <div class="d-flex align-items-center text-white-50 small">
-                                        <i class="bi bi-shield-check me-2"></i>
-                                        <span>Secure & Verified Download</span>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -619,3 +685,4 @@
     <x-ads></x-ads>
     <x-bottom-ad></x-bottom-ad>
 @stop
+{{-- <a href="mailto:rajeliker+subscribe@googlegroups.com?Subject=Subscription Request">Subscribe</a> --}}
