@@ -24,6 +24,7 @@ use App\Http\Controllers\Bots\TiktokController;
 use App\Http\Controllers\TikTokeIframeController;
 use App\Http\Controllers\Bots\TelegramBotController;
 
+use App\Services\DailyBlogResearchPublisher;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -34,6 +35,15 @@ use App\Http\Controllers\Bots\TelegramBotController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/get_text_comment', function () {
+    $comment = app(DailyBlogResearchPublisher::class)->writeComment();
+    return response()->json(['comment' => $comment]);
+});
+
+Route::get('/abuse-filter/{text}', function ($text = "Very Nice!") {
+    $comment = app(DailyBlogResearchPublisher::class)->abuseFilter($text);
+    return response()->json($comment);
+});
 
 Route::domain('www.autolikerlive.com')->group(function () {
 

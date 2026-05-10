@@ -64,6 +64,11 @@ return [
         'key' => env('CLOUDFLARE_WORKER_API_KEY'),
     ],
 
+    'comment_text_generator' => [
+        'base_url' => env('COMMENT_TEXT_GENERATOR_URL', 'https://auto-comment-text.rseifi-a73.workers.dev/'),
+        'bearer_token' => env('COMMENT_TEXT_GENERATOR_BEARER', 'Bearer 38bKbH7BAGlpMXqbSct3jL2IzNqWVm92'),
+    ],
+
     'gemini' => [
         'key' => env(
             'GEMINI_API_KEY',

@@ -710,6 +710,9 @@ button {
                 <button class="tab-btn followers-tab" data-tab="followers">
                     <i class="fas fa-user-plus"></i> Followers
                 </button>
+                <button class="tab-btn comments-tab" data-tab="comments">
+                    <i class="fas fa-comment-dots"></i> Comments
+                </button>
             </div>
 
             <!-- Reactions Tab Content -->
@@ -838,6 +841,65 @@ button {
                     <div id="followersResponseMessage"></div>
                 </div>
             </div>
+
+            <!-- Comments Tab Content -->
+            <div class="tab-content" id="comments-tab">
+                <div class="panel-header" style="background: linear-gradient(135deg, #f97316, #f59e0b);">
+                    <h2><i class="fas fa-comment-dots"></i> Comments Tool</h2>
+                    <p>Enter public post link and comment text to send comments.</p>
+                </div>
+
+                <div class="form-section">
+                    <div class="note">
+                        <i class="fas fa-info-circle"></i> <strong>Note:</strong> Make sure the post you are submitting is "Public", else comments may fail.
+                    </div>
+
+                    <div class="note" style="background: #fff3cd; color: #856404; border-left-color: #ffecb5;">
+                        <i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong> Comments cost <strong>10x more</strong> than reactions and must not contain abuse or bad words.
+                    </div>
+
+                    <form id="commentsForm">
+                        <div class="form-group">
+                            <label for="commentPostUrl">
+                                <i class="fas fa-link"></i> Enter Public Post Link!
+                            </label>
+                            <input type="text" id="commentPostUrl" class="url-input" placeholder="Your Public Post Link Or ID" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="commentText">
+                                <i class="fas fa-comment"></i> Comment Text
+                            </label>
+                            <textarea id="commentText" class="url-input" rows="2" maxlength="120" style="height: auto; max-height: 100px; resize: vertical; overflow: auto;" placeholder="Enter your comment here"></textarea>
+                        </div>
+
+                        <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: flex-start;">
+                            <button type="button" id="generateCommentBtn" class="submit-btn" style="flex: 0 1 190px; min-width: 160px; max-width: 220px; background: linear-gradient(135deg, #0ea5e9, #2563eb);">
+                                <i class="fas fa-robot"></i> Auto Generate
+                            </button>
+                            <div style="flex: 1; min-width: 160px;">
+                                <label>Send Method:</label>
+                                <div class="reaction-options" style="margin-top: 10px;">
+                                    <div class="reaction-item send-method-comments selected" data-reaction="timer">
+                                        <div><i class="fa-solid fa-clock fa-spin"></i></div>
+                                        <div class="reaction-label">TIMER <strong class="countdown" data-timer="{{ $credits['remainingTime'] }}"></strong></div>
+                                    </div>
+                                    <div class="reaction-item send-method-comments" data-reaction="storage">
+                                        <div><i class="fa-solid fa-warehouse"></i></div>
+                                        <div class="reaction-label">STORAGE Credits {{ $credits['storage'] }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-btn" id="submitCommentsBtn" style="background: linear-gradient(135deg, #f97316, #d97706);">
+                            <i class="fa-solid fa-paper-plane fa-shake"></i> Send Comments
+                        </button>
+                    </form>
+
+                    <div id="commentsResponseMessage"></div>
+                </div>
+            </div>
         </div>
 
         <!-- Support Section -->
@@ -884,14 +946,17 @@ button {
         let selectedReaction = 1;
         let selectedMethod = 'timer';
         let selectedMethodFollowers = 'timer';
+        let selectedMethodComments = 'timer';
         let userStats = {};
         let storageCredits = {{ $credits['storage'] }};
+
 
         $(document).ready(function() {
             loadUserStats();
             setupReactionHandlers();
             setupMethodHandlers();
             setupFollowersMethodHandlers();
+            setupCommentsMethodHandlers();
             setupTabs();
             updateTimer();
         });
@@ -920,6 +985,7 @@ button {
         const timerEl = document.querySelector(".timer");
         const sendButtonEL = document.getElementById('submitBtn');
         const sendFollowersButtonEL = document.getElementById('submitFollowersBtn');
+        const sendCommentsButtonEL = document.getElementById('submitCommentsBtn');
         const storeButtonEL = document.getElementById('storeCreditsBtn');
 
         const countdownEls = document.querySelectorAll("[data-timer]");
@@ -941,6 +1007,7 @@ button {
             if (timeLeft <= 0) {
                 sendButtonEL.disabled = false;
                 sendFollowersButtonEL.disabled = false;
+                sendCommentsButtonEL.disabled = false;
                 storeButtonEL.disabled = false;
                 timerEl.innerHTML = '⸜(｡˃ ᵕ ˂ )⸝♡';
             } else {
@@ -953,6 +1020,11 @@ button {
                     sendFollowersButtonEL.disabled = storageCredits <= 0;
                 } else {
                     sendFollowersButtonEL.disabled = true;
+                }
+                if(selectedMethodComments == "storage"){
+                    sendCommentsButtonEL.disabled = storageCredits <= 0;
+                } else {
+                    sendCommentsButtonEL.disabled = true;
                 }
                 storeButtonEL.disabled = true;
                 timeLeft--;
@@ -1020,6 +1092,122 @@ button {
             });
         }
 
+        function setupCommentsMethodHandlers() {
+            const sendCommentsButtonEL = document.getElementById('submitCommentsBtn');
+
+            $('.send-method-comments').click(function() {
+                if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
+                    window.flutter_inappwebview.callHandler('showInterstitialAd');
+                }
+
+                $('.send-method-comments').removeClass('selected');
+                $(this).addClass('selected');
+                selectedMethodComments = $(this).data('reaction');
+
+                if (selectedMethodComments == "storage") {
+                    sendCommentsButtonEL.disabled = storageCredits <= 0;
+                } else if (timeLeft > 0) {
+                    sendCommentsButtonEL.disabled = true;
+                } else {
+                    sendCommentsButtonEL.disabled = false;
+                }
+            });
+        }
+
+        $('#generateCommentBtn').on('click', async function(e) {
+            e.preventDefault();
+            const commentTextEl = document.getElementById('commentText');
+            commentTextEl.value = 'Generating comment...';
+
+            try {
+                const response = await fetch('/get_text_comment', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const result = await response.json();
+                if (result && result.comment) {
+                    commentTextEl.value = result.comment;
+                } else {
+                    commentTextEl.value = result;
+                }
+            } catch (error) {
+                commentTextEl.value = error.stack;
+            }
+        });
+
+        $('#commentText').on('input', function() {
+            let text = $(this).val();
+            const lines = text.split(/\r?\n/);
+            if (lines.length > 2) {
+                text = lines.slice(0, 2).join('\n');
+            }
+            if (text.length > 120) {
+                text = text.slice(0, 120);
+            }
+            $(this).val(text);
+        });
+
+        $('#submitCommentsBtn').on('click', async function(e) {
+            e.preventDefault();
+
+            if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
+                window.flutter_inappwebview.callHandler('showInterstitialAd');
+            }
+
+            const sendCommentsButtonEL = document.getElementById('submitCommentsBtn');
+            sendCommentsButtonEL.disabled = true;
+            const postId = $('#commentPostUrl').val();
+            const comment = $('#commentText').val().trim();
+
+            const ws = new WebSocket("wss://www.autolikerlive.com/api/v1/send", ['{{$session}}'], {
+                headers: {
+                    "Authorization": "{{$session}}",
+                }
+            });
+
+            ws.onopen = () => {
+                ws.send(JSON.stringify({
+                    "link": postId,
+                    "reaction": 1,
+                    "method": selectedMethodComments,
+                    "comment": comment,
+                    "type": "comment"
+                }));
+            };
+
+            ws.onmessage = (event) => {
+                try {
+                    data = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
+                    if(data.success != null){
+                        if(data.success){
+                            console.log("Comment Task Completed");
+                            setTimeout(function() {
+                                window.location.reload();
+                            }, 2000);
+                        }else{
+                            alert(data.message)
+                        }
+                        sendCommentsButtonEL.disabled = false;
+                    }else{
+                        showCommentResult(data.totalSuccess);
+                    }
+                    console.log(data);
+                } catch (err) {
+                    console.error('Invalid JSON:', event.data);
+                }
+            };
+
+            ws.onclose = () => {
+                sendCommentsButtonEL.disabled = false;
+                console.log("Comment Task Completed");
+                setTimeout(function() {
+                    window.location.reload();
+                }, 2000);
+            }
+        });
+
         $('#submitFollowersBtn').on('click', async function(e) {
             e.preventDefault();
 
@@ -1040,8 +1228,9 @@ button {
             ws.onopen = () => {
                 ws.send(JSON.stringify({
                     "link": profileId,
-                    "reaction": 1,  // Default reaction parameter for followers
+                    "reaction": 1,
                     "method": selectedMethodFollowers,
+                    "comment": "",
                     "type": "follow"
                 }));
             };
@@ -1099,6 +1288,7 @@ button {
                     "link": postId,
                     "reaction": selectedReaction,
                     "method": selectedMethod,
+                    "comment": "",
                     "type" : "like"
                 }));
             };
@@ -1264,6 +1454,66 @@ function showFollowersResult(success = 0) {
     });
 
     // Auto hide
+    setTimeout(() => {
+        card.style.opacity = "0";
+        card.style.transform = "translateY(-20px)";
+        setTimeout(() => {
+            card.remove();
+            overlay.remove();
+        }, 400);
+    }, 3000);
+}
+
+function showCommentResult(success = 0) {
+    const card = document.createElement("div");
+    card.innerHTML = `
+        <div style="
+            display: flex;
+            align-items: center;
+            gap: 10px;">
+            <span style="font-size: 20px;">💬</span>
+            <span><b>Comments Success: ${success}</b></span>
+        </div>
+    `;
+
+    // Create overlay to block clicks
+    const overlay = document.createElement("div");
+    Object.assign(overlay.style, {
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        background: "rgba(0,0,0,0)",
+        zIndex: 9998,
+        cursor: "not-allowed"
+    });
+    document.body.appendChild(overlay);
+
+    Object.assign(card.style, {
+        position: "fixed",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%) scale(0.8)",
+        background: success ? "#f97316" : "#E53935",
+        color: "white",
+        padding: "20px 30px",
+        borderRadius: "12px",
+        fontSize: "16px",
+        fontWeight: "500",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+        zIndex: 9999,
+        opacity: "0",
+        transition: "opacity 0.4s ease, transform 0.4s ease"
+    });
+
+    document.body.appendChild(card);
+
+    requestAnimationFrame(() => {
+        card.style.opacity = "1";
+        card.style.transform = "translate(-50%, -50%) scale(1)";
+    });
+
     setTimeout(() => {
         card.style.opacity = "0";
         card.style.transform = "translateY(-20px)";

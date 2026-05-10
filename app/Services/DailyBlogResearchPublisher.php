@@ -201,6 +201,144 @@ class DailyBlogResearchPublisher
         return $title;
     }
 
+    public function abuseFilter(string $text)
+    {
+   $apiKey = config('services.aicredit.key');
+        if (! $apiKey) {
+            throw new RuntimeException('AICREDIT_API_KEY is missing.');
+        }
+
+        $internalLinks = array_values(array_filter(array_map(
+            'trim',
+            explode('|', (string) config('services.daily_blog.internal_links'))
+        )));
+
+        $json = $this->chatText([
+            [
+                'role' => 'system',
+                'content' => '
+You are an advanced multilingual toxicity and profanity detection AI.
+
+Your task:
+- Detect abusive, offensive, toxic, hateful, sexual, violent, discriminatory, or harassing language.
+- Detect hidden profanity using symbols, stars, hashes, spaces, repeated letters, or leetspeak.
+- Detect censored words like:
+  - f***
+  - b!tch
+  - n1gg4
+  - a$$hole
+  - idi0t
+  - fk u
+  - stfu
+  - k.y.s
+- Detect slang, short forms, romanized abuse, mixed-language insults, and coded harassment.
+- Detect religion-based abuse, communal slurs, casteist insults, extremist slogans, and targeted hate speech.
+- Detect offensive nicknames or derogatory variations used against religious groups, communities, or identities.
+- Detect abuse targeting public figures including politicians, actors, influencers, streamers, celebrities, and social personalities.
+- Detect Indian political hate terms, communal insults, propaganda slurs, and abusive references toward political leaders or supporters.
+- Detect toxic references written in Hindi, Hinglish, Urdu, Bengali, Tamil, Telugu, Punjabi, Marathi, and other regional languages using Roman script.
+- Detect intentionally misspelled or hidden abusive words using symbols, repeated letters, spaces, dots, stars, or leetspeak.
+- Understand context and intent, not only exact keyword matches.
+- Avoid flagging neutral educational, journalistic, or factual mentions unless used abusively.
+- Understand context instead of exact words only.
+- If abuse is about an person replace person name with 💩.
+- Support all languages.
+
+Rules:
+- Return ONLY valid JSON.
+- Do not explain.
+- Do not add markdown.
+
+Response format:
+{
+  "safe": true/false,
+  "toxicity": 0-100,
+  "detected": ["word1", "word2"],
+  "categories": ["hate", "harassment", "sexual", "violence"],
+  "cleaned_text": "sanitized sentence"
+}
+
+If text is safe:
+- safe = true
+- toxicity = low score
+- detected = []
+- categories = []
+
+Replace offensive words in cleaned_text with ❤️,
+                ',
+            ],
+            [
+                'role' => 'user',
+                'content' => $text,
+            ],
+        ], 3000);
+
+        $article = $this->decodeArticlePayload((string) $json);
+        return $article['cleaned_text'];
+
+        if (! is_array($article) || empty($article['comment'])) {
+            throw new RuntimeException('AI Credits did not return a valid article payload.');
+        }
+        
+
+        return $article['comment'];
+    }
+
+    public function writeComment(){
+
+            $apiKey = config('services.aicredit.key');
+        if (! $apiKey) {
+            throw new RuntimeException('AICREDIT_API_KEY is missing.');
+        }
+
+        $internalLinks = array_values(array_filter(array_map(
+            'trim',
+            explode('|', (string) config('services.daily_blog.internal_links'))
+        )));
+
+        $json = $this->chatText([
+            [
+                'role' => 'system',
+                'content' => '
+                You are a viral social media comment generator.
+
+STRICT RULES:
+- Generate ONLY ONE comment.
+- Maximum 55 characters.
+- Human-like.
+- Random every time.
+- Short social media style.
+- Emojis allowed.
+- No hashtags.
+- No markdown.
+- No quotes.
+- No explanation.
+- No JSON formatting mistakes.
+
+Return ONLY valid JSON.
+
+Format:
+{"comment":"text here"}
+                ',
+            ],
+            [
+                'role' => 'user',
+                'content' => '',
+            ],
+        ], 3000);
+
+        $article = $this->decodeArticlePayload((string) $json);
+        // return $article;
+
+        if (! is_array($article) || empty($article['comment'])) {
+            throw new RuntimeException('AI Credits did not return a valid article payload.');
+        }
+        
+
+        return $article['comment'];
+
+    }
+
     protected function writeArticle(string $topic, array $sources, string $brief = ''): array
     {
         $apiKey = config('services.aicredit.key');
@@ -224,13 +362,13 @@ class DailyBlogResearchPublisher
             ],
         ], 3000);
 
-        $article = $this->decodeArticlePayload((string) $json);
+        $comment = $this->decodeArticlePayload((string) $json);
 
-        if (! is_array($article) || empty($article['title']) || empty($article['html'])) {
-            throw new RuntimeException('AI Credits did not return a valid article payload.');
+        if (! is_array($comment) || empty($comment['comment'])) {
+            throw new RuntimeException('AI Credits did not return a valid comment payload.');
         }
 
-        return $article;
+        return $comment['comment'];
     }
 
     protected function chatText(array $messages, int $maxTokens = 1500): string
