@@ -74,8 +74,8 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{{ route('services') }}">Services</a></li>
-                        <li><a class="dropdown-item" rel="nofollow noopener"
-                                href="https://www.freelancer.com/hireme/tRSstudios">Freelancer</a></li>
+                        {{-- <li><a class="dropdown-item" rel="nofollow noopener"
+                                href="https://www.freelancer.com/hireme/tRSstudios">Freelancer</a></li> --}}
 
                     </ul>
                 </div>

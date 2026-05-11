@@ -17,6 +17,7 @@
 @section('javascripts')
 
     <script data-cfasync="false" src="//d3t9wb555jg65y.cloudfront.net/?jbwtd=1162446"></script>
+   <script>(function(s){s.dataset.zone='10482447',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>
     </script>
     <x-mail-wrapper></x-mail-wrapper>

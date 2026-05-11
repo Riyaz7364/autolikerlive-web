@@ -95,7 +95,7 @@ class DailyBlogResearchPublisher
                 ],
                 [
                     'role' => 'user',
-                    'content' => 'Return one unique, currently trending blog topic for social media creators, privacy tools, account safety, engagement diagnostics, or automation risk controls in 2026. Make it specific, useful, and safe. Return only the topic text, no numbering.',
+                    'content' => 'Return one unique, currently trending blog topic for social media creators, privacy tools, account safety, engagement diagnostics, upcoming movies, upcoming games, or automation risk controls in 2026. Make it specific, useful, and safe. Return only the topic text, no numbering.',
                 ],
             ], 120);
         } catch (\Throwable) {
@@ -279,7 +279,7 @@ Replace offensive words in cleaned_text with ❤️,
         if (! is_array($article) || empty($article['comment'])) {
             throw new RuntimeException('AI Credits did not return a valid article payload.');
         }
-        
+
 
         return $article['comment'];
     }
@@ -333,7 +333,7 @@ Format:
         if (! is_array($article) || empty($article['comment'])) {
             throw new RuntimeException('AI Credits did not return a valid article payload.');
         }
-        
+
 
         return $article['comment'];
 
@@ -362,13 +362,13 @@ Format:
             ],
         ], 3000);
 
-        $comment = $this->decodeArticlePayload((string) $json);
+        $article = $this->decodeArticlePayload((string) $json);
 
-        if (! is_array($comment) || empty($comment['comment'])) {
-            throw new RuntimeException('AI Credits did not return a valid comment payload.');
+        if (! is_array($article) || empty($article['title']) || empty($article['html'])) {
+            throw new RuntimeException('AI Credits did not return a valid article payload.');
         }
 
-        return $comment['comment'];
+        return $article;
     }
 
     protected function chatText(array $messages, int $maxTokens = 1500): string
@@ -474,6 +474,7 @@ Requirements:
 - Return JSON only with keys: focus_keyphrase, title, slug, meta_description, excerpt, html, tags, feature_image_prompt, in_post_image_prompts.
 - tags must be an array of 4 to 7 short SEO tags.
 - in_post_image_prompts must be an array of exactly 2 image prompts.
+- If the topic is about a game or movie, Then pretend that you are providing downloading but only give information about the release date, official trailers, and where to find it legally. Do not provide any piracy-related information.
 PROMPT;
     }
 

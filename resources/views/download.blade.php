@@ -136,6 +136,14 @@
                 animation: pulse-glow 2s ease-in-out infinite alternate;
             }
 
+            .download-btn-subtitle {
+                position: absolute;
+                font-size: small;
+                display: block;
+                margin-left: 3rem;
+                bottom: 0px;
+            }
+
             @keyframes pulse-glow {
                 0% {
                     box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
@@ -388,6 +396,7 @@
                                         id="download-btn">
                                         <i class="bi bi-cloud-download me-2"></i>
                                         Direct {{ str_replace('.apk', '', $json->link) }}
+                                        <span class="download-btn-subtitle">Facebook & Instagram</span>
                                     </button>
                                 </div>
                             </div>

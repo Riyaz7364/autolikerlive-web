@@ -13,7 +13,7 @@
                             <li class="nav-item"><a class="nav-link" href="{{ url('faq') }}">FAQ</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ url('blog') }}">Blog</a></li>
                             {{-- <li class="nav-item"><a class="nav-link" href="https://raje-liker.com/">SMM PANEL</a></li> --}}
-                            <li class="nav-item"><a class="nav-link" href="https://www.freelancer.in/u/tRSstudios?page=portfolio">Portfolio</a></li>
+                            {{-- <li class="nav-item"><a class="nav-link" href="https://www.freelancer.in/u/tRSstudios?page=portfolio">Portfolio</a></li> --}}
                         </ul>
                     </div>
                 </div>
