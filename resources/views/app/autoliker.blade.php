@@ -949,6 +949,9 @@ button {
         let selectedMethodComments = 'timer';
         let userStats = {};
         let storageCredits = {{ $credits['storage'] }};
+        let isReactionTaskRunning = false;
+        let isFollowersTaskRunning = false;
+        let isCommentsTaskRunning = false;
 
 
         $(document).ready(function() {
@@ -1005,24 +1008,24 @@ button {
             });
 
             if (timeLeft <= 0) {
-                sendButtonEL.disabled = false;
-                sendFollowersButtonEL.disabled = false;
-                sendCommentsButtonEL.disabled = false;
+                sendButtonEL.disabled = isReactionTaskRunning;
+                sendFollowersButtonEL.disabled = isFollowersTaskRunning;
+                sendCommentsButtonEL.disabled = isCommentsTaskRunning;
                 storeButtonEL.disabled = false;
                 timerEl.innerHTML = '⸜(｡˃ ᵕ ˂ )⸝♡';
             } else {
                 if(selectedMethod == "storage"){
-                    sendButtonEL.disabled = storageCredits <= 0;
+                    sendButtonEL.disabled = storageCredits <= 0 || isReactionTaskRunning;
                 } else {
                     sendButtonEL.disabled = true;
                 }
                 if(selectedMethodFollowers == "storage"){
-                    sendFollowersButtonEL.disabled = storageCredits <= 0;
+                    sendFollowersButtonEL.disabled = storageCredits <= 0 || isFollowersTaskRunning;
                 } else {
                     sendFollowersButtonEL.disabled = true;
                 }
                 if(selectedMethodComments == "storage"){
-                    sendCommentsButtonEL.disabled = storageCredits <= 0;
+                    sendCommentsButtonEL.disabled = storageCredits <= 0 || isCommentsTaskRunning;
                 } else {
                     sendCommentsButtonEL.disabled = true;
                 }
@@ -1054,13 +1057,13 @@ button {
                 $(this).addClass('selected');
                 selectedMethod = $(this).data('reaction');
                 if(selectedMethod == "storage"){
-                    sendButtonEL.disabled = false;
+                    sendButtonEL.disabled = storageCredits <= 0 || isReactionTaskRunning;
                     sendButtonEL.innerHTML = `<i class="fa-solid fa-warehouse fa-shake"></i> Send`;
                 }else if(timeLeft > 0){
                     sendButtonEL.disabled = true;
                     sendButtonEL.innerHTML = `<i class="fa-solid fa-paper-plane fa-shake"></i> Send`;
                 }else{
-                    sendButtonEL.disabled = false;
+                    sendButtonEL.disabled = isReactionTaskRunning;
                     sendButtonEL.innerHTML = `<i class="fa-solid fa-paper-plane fa-shake"></i> Send`;
                 }
             });
@@ -1080,13 +1083,13 @@ button {
                 selectedMethodFollowers = $(this).data('reaction');
 
                 if(selectedMethodFollowers == "storage"){
-                    sendFollowersButtonEL.disabled = storageCredits <= 0;
+                    sendFollowersButtonEL.disabled = storageCredits <= 0 || isFollowersTaskRunning;
                     sendFollowersButtonEL.innerHTML = `<i class="fa-solid fa-warehouse fa-shake"></i> Send Followers`;
                 }else if(timeLeft > 0){
                     sendFollowersButtonEL.disabled = true;
                     sendFollowersButtonEL.innerHTML = `<i class="fa-solid fa-user-plus fa-shake"></i> Send Followers`;
                 }else{
-                    sendFollowersButtonEL.disabled = false;
+                    sendFollowersButtonEL.disabled = isFollowersTaskRunning;
                     sendFollowersButtonEL.innerHTML = `<i class="fa-solid fa-user-plus fa-shake"></i> Send Followers`;
                 }
             });
@@ -1105,11 +1108,11 @@ button {
                 selectedMethodComments = $(this).data('reaction');
 
                 if (selectedMethodComments == "storage") {
-                    sendCommentsButtonEL.disabled = storageCredits <= 0;
+                    sendCommentsButtonEL.disabled = storageCredits <= 0 || isCommentsTaskRunning;
                 } else if (timeLeft > 0) {
                     sendCommentsButtonEL.disabled = true;
                 } else {
-                    sendCommentsButtonEL.disabled = false;
+                    sendCommentsButtonEL.disabled = isCommentsTaskRunning;
                 }
             });
         }
@@ -1158,19 +1161,21 @@ button {
 
             const sendCommentsButtonEL = document.getElementById('submitCommentsBtn');
             sendCommentsButtonEL.disabled = true;
+            isCommentsTaskRunning = true;
             const postId = $('#commentPostUrl').val();
             const comment = $('#commentText').val().trim();
 
             const ws = new WebSocket("wss://www.autolikerlive.com/api/v1/send", ['{{$session}}'], {
                 headers: {
                     "Authorization": "{{$session}}",
+                    "sec-websocket-protocol": "{{$session}}",
                 }
             });
 
             ws.onopen = () => {
                 ws.send(JSON.stringify({
                     "link": postId,
-                    "reaction": 1,
+                    "reaction": 0,
                     "method": selectedMethodComments,
                     "comment": comment,
                     "type": "comment"
@@ -1189,7 +1194,6 @@ button {
                         }else{
                             alert(data.message)
                         }
-                        sendCommentsButtonEL.disabled = false;
                     }else{
                         showCommentResult(data.totalSuccess);
                     }
@@ -1200,7 +1204,11 @@ button {
             };
 
             ws.onclose = () => {
-                sendCommentsButtonEL.disabled = false;
+                isCommentsTaskRunning = false;
+                sendCommentsButtonEL.disabled = selectedMethodComments !== "storage" && timeLeft > 0;
+                if (selectedMethodComments == "storage") {
+                    sendCommentsButtonEL.disabled = storageCredits <= 0;
+                }
                 console.log("Comment Task Completed");
                 setTimeout(function() {
                     window.location.reload();

@@ -61,36 +61,18 @@ const puppeteer = require("puppeteer");
                     }
                 });
 
-                await page.goto(
-                    "https://www.facebook.com/ajax/pagelet/generic.php/LitestandTailLoadPagelet?__a=1",
-                    {
-                        waitUntil: "domcontentloaded",
-                    },
-                );
+                await page.goto("https://graph.facebook.com", {
+                    waitUntil: "domcontentloaded",
+                });
 
                 const isLoggedIn = await page.evaluate(() => {
-                    const body = document.body.innerHTML.toLowerCase();
-
-                    const hasLoginForm =
-                        document.querySelector("#login_form") ||
-                        document.querySelector('button[name="login"]');
-
-                    const hasCheckpoint =
-                        body.includes("/checkpoint/") ||
-                        body.includes("redirectpageto");
-
-                    return !hasLoginForm && !hasCheckpoint;
+                    return !document.querySelector('button[name="login"]');
                 });
-                const body = await page.content();
-                const url = await page.url();
+
                 results.push({
                     cookieIndex: index,
                     success: isLoggedIn,
                     status: isLoggedIn ? 200 : 401,
-                    cookies: cookieString,
-                    url: url,
-                    user_id:
-                        cookies.find((c) => c.name === "c_user")?.value || null,
                 });
             } catch (e) {
                 results.push({

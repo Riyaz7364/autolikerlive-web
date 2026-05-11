@@ -72,6 +72,9 @@ Route::group(['prefix' => 'v1'], function () {
     // Check cookies
     Route::post('/checkCookies', [APIController::class, 'checkCookies']);
 
+    // Clear Cookies
+    Route::post('/clearCookies', [APIController::class, 'clearCookies']);
+
 
     // Route::post('/delete-message',[APIController::class,'deleteMessage'])->name("delete-message");
 
