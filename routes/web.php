@@ -1,0 +1,416 @@
+<?php
+
+use App\Http\Controllers\Wordpress;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+use App\Http\Controllers\APIController;
+use App\Http\Controllers\WebAppController;
+use App\Http\Middleware\DetectFakeTraffic;
+use App\Http\Controllers\Bots\SmsBomberBot;
+use App\Http\Controllers\ListingController;
+use App\Http\Controllers\DownloadController;
+use App\Http\Controllers\FacebookController;
+
+use App\Http\Controllers\TempMailController;
+use App\Http\Controllers\ContactUsController;
+
+use App\Http\Controllers\CopyPagesController;
+use App\Http\Controllers\InstagramController;
+use App\Http\Controllers\SMSbomberController;
+use App\Http\Controllers\DownloaderController;
+use App\Http\Controllers\Bots\TiktokController;
+use App\Http\Controllers\TikTokeIframeController;
+use App\Http\Controllers\Bots\TelegramBotController;
+use App\Http\Controllers\SessionController;
+use App\Http\Controllers\GameController;
+
+use App\Services\DailyBlogResearchPublisher;
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+Route::get('/phpinfo', function () {
+    phpinfo();
+});
+
+Route::get('/get_text_comment', function () {
+    $comment = app(DailyBlogResearchPublisher::class)->writeComment();
+    return response()->json(['comment' => $comment]);
+});
+
+Route::get('/abuse-filter/{text}', function ($text = "Very Nice!") {
+    $comment = app(DailyBlogResearchPublisher::class)->abuseFilter($text);
+    return response()->json($comment);
+});
+
+// Route::domain('www.autolikerlive.com')->group(function () {
+
+// Legal routes
+require __DIR__.'/legal.php';
+
+// App routes
+require __DIR__.'/app.php';
+
+Route::get('/download/apk', [DownloadController::class, 'apk'])
+     ->name('apk.download');
+
+
+Route::get('/gsc/oauth2callback', function (Request $request) {
+    $hasCode = $request->filled('code');
+    $hasError = $request->filled('error');
+
+    return response(
+        view('gsc.oauth2callback', [
+            'hasCode' => $hasCode,
+            'hasError' => $hasError,
+            'error' => $request->query('error'),
+            'errorDescription' => $request->query('error_description'),
+        ])
+    );
+})->name('gsc.oauth2callback');
+
+
+
+Route::get('/create-qr', [ListingController::class, 'createQR']);
+
+Route::get('/free-instagram-like', function () {
+    return redirect()->route('free-instagram-likes', [], 301);
+});
+
+Route::prefix('free-services')->group(function () {
+    Route::get('select-service', [TiktokController::class, 'selectService'])->name('select-service-bot');
+    Route::get('free-tiktok-likes/{user_id}', [TiktokController::class, 'freeTikTokLikes'])->name('free-tiktok-likes-bot');
+    Route::get('free-tiktok-views/{user_id}', [TiktokController::class, 'freeTikTokViews'])->name('free-tiktok-views-bot');
+    Route::get('free-instagram-likes/{user_id}', [TiktokController::class, 'freeInstagramLikes'])->name('free-instagram-likes-bot');
+});
+
+
+$allowedLangs = config('language.allowed_languages');
+
+    Route::prefix('extensions')->group(function () {
+        Route::get('get_token_cookie', [ListingController::class, 'get_token_cookie'])->name('get_token_cookie');
+    });
+
+
+    Route::get('/about', function () {
+        return view('about');
+    })->name('about');
+
+    Route::get('/services', [ListingController::class, 'services'])->name('services');
+    Route::get('/contact', [ContactUsController::class, 'contactUs'])->name('contact');
+    Route::post('api/sendMessage', [ContactUsController::class, 'sendMessage'])->name('sendMessage');
+
+    Route::get('/delete-account', [ContactUsController::class, 'deleteAccountForm'])->name('delete-account');
+    Route::post('/delete-account-request', [ContactUsController::class, 'deleteAccountRequest'])->name('delete-account-request');
+
+    Route::get('/faq', function () {
+        return view('faq');
+    })->name('faq');
+
+    Route::get('/privacy', function () {
+        return view('privacy');
+    })->name('privacy');
+
+    Route::get('/terms', function () {
+        return view('terms');
+    })->name('terms');
+
+    Route::get('/download',[ListingController::class,'download'])->name('download.page');
+
+
+    Route::get('/returnpolicy', function () {
+        return view('returnpolicy');
+    })->name('returnpolicy');
+
+
+    Route::get('/youtube_thumbnail_extractor', [APIController::class, 'youtubeTEV'])->name('youtube_thumbnail_extractor');
+
+
+
+    Route::get('/findmyfbid', function () {
+        return view('findmyfbid');
+    })->name('findmyfbid');
+
+    //  Find My FB ID
+    Route::post('/findmyfbid',[WebAppController::class,'findmyfbid'])->name("searchFBID");
+
+    // BJP Nagrikta Card (Meme Page)
+    Route::get('/bjp-nagrikta-card', function () {
+        return view('bjp-nagrikta-card');
+    })->name('bjp.nagrikta.card');
+
+    Route::post('/bjp-nagrikta-card',[WebAppController::class,'generateBJPCard'])->name('bjp.nagrikta.card.generate');
+
+    Route::get('/bjp-nagrikta-card/shared/{hash}', [WebAppController::class, 'showSharedCard'])->name('bjp.nagrikta.card.shared');
+
+    Route::get('/bjp-nagrikta-card/gd-editor', function () {
+        return view('bjp-gd-editor-livewire');
+    })->name('bjp.nagrikta.card.gd.editor');
+
+    // Image Games (New Feature)
+    Route::get('/session/login', [SessionController::class, 'loginPage'])->name('session.login');
+    Route::post('/session/login-fb', [SessionController::class, 'loginFb'])->name('session.login.fb');
+    Route::post('/session/login-manual', [SessionController::class, 'loginManual'])->name('session.login.manual');
+    Route::get('/session/logout', [SessionController::class, 'logout'])->name('session.logout');
+
+    Route::get('/my-images', [GameController::class, 'myImages'])->name('game.my-images');
+
+    Route::get('/game/{slug}', [GameController::class, 'show'])->name('game.show');
+    Route::post('/game/{slug}/play', [GameController::class, 'play'])->name('game.play');
+    Route::get('/game/{slug}/shared/{hash}', [GameController::class, 'shared'])->name('game.shared');
+
+    Route::middleware('admin')->group(function () {
+        Route::get('/editor/games', [GameController::class, 'editorList'])->name('game.editor.list');
+        Route::get('/editor/games/create', [GameController::class, 'editorCreate'])->name('game.editor.create');
+        Route::post('/editor/games/create', [GameController::class, 'editorStore'])->name('game.editor.store');
+        Route::get('/editor/games/{id}/edit-info', [GameController::class, 'editorEditInfo'])->name('game.editor.edit-info');
+        Route::post('/editor/games/{id}/edit-info', [GameController::class, 'editorUpdateInfo'])->name('game.editor.update-info');
+        Route::get('/editor/games/{id}/edit', [GameController::class, 'editorEdit'])->name('game.editor.edit');
+        Route::delete('/editor/games/{id}', [GameController::class, 'editorDelete'])->name('game.editor.delete');
+    });
+
+// Temp Mail
+    Route::get('/temp-mail', function () {
+        return view('temp-mail');
+    })->name('temp-mail');
+
+    Route::get('/temp-mail-test', function () {
+        return view('test.temp-mail');
+    })->name('temp-mail-test');
+
+    Route::get('/mailbox',[TempMailController::class,'mailbox'])->name("mailbox")->middleware(DetectFakeTraffic::class);
+    Route::post('/all-messages',[TempMailController::class,'allMessages'])->name("allMessages");
+    Route::post('/update-email',[TempMailController::class,'updateEmail'])->name("updateEmail");
+    Route::post('/delete-mail',[TempMailController::class,'deleteMail'])->name("deleteMail");
+    Route::get('/message/view/{id}',[TempMailController::class,'messageView'])->name("messageView");
+
+// SMS Bomber Bot
+    Route::prefix('sms-bomber-bot')->group(function () {
+        Route::get('/', [SmsBomberBot::class, 'index']);
+    });
+
+
+
+    Route::group(['prefix' => 'web-app'], function() {
+        Route::get('/', function (){
+
+            return view('web-app.index');
+        })->name('fblogin');
+
+        Route::get('/wait-skip-ad', function(){
+            return view('web-app.skip_ad');
+        });
+
+        Route::post('/checkTokenLink', [WebAppController::class, 'checkTokenLink'])->name("checkTokenLink");
+
+        Route::get('/getDevideCode', [WebAppController::class, 'getDevideCode']);
+        Route::post('/checkLogin', [WebAppController::class, 'checkLogin']);
+
+        Route::get('/load_splash', [WebAppController::class, 'loadSplash'])
+        ->name('load_splash');
+
+        Route::post('/create_account', [TelegramBotController::class, 'createAccount'])
+        ->name('create_account');
+
+        Route::get('/dashboard', [WebAppController::class, 'dashboard'])
+        ->name('dashboard')->middleware('checkFBToken');
+
+        Route::get('/time_bonus', [WebAppController::class, 'timeBonusPage'])
+        ->name('time_bonus');
+
+        Route::get('/time_bonus_claim', [WebAppController::class, 'claimTimeBonus'])
+        ->name('claimTimeBonus');
+
+        Route::get('/referral', [WebAppController::class, 'referral'])
+        ->name('referral');
+
+        Route::post('/referral_claim', [WebAppController::class, 'referralClaim'])
+        ->name('referral_claim');
+
+        Route::get('/send_likes', [WebAppController::class, 'selectPost'])
+        ->name('send_likes');
+        Route::post('/send_likes_post', [WebAppController::class, 'sendLikes'])
+        ->name('send_likes_post');
+
+        Route::post('/add-job', [WebAppController::class, 'checkLink'])->name('addjob');
+
+        Route::post('/edit-job', [WebAppController::class, 'editlink'])->name('editjob');
+        Route::post('/delete-job', [WebAppController::class, 'deleteLink'])->name('deletejob');
+
+        // Daily Bonus
+        Route::get('/daily-check-in', [WebAppController::class, 'dailyCheckIn'])->name('daily_check_in');
+        Route::post('/claim-daily-reward', [WebAppController::class, 'claimDailyReward'])->name('claim_daily_reward');
+
+        Route::post('/earn-credits', [WebAppController::class, 'earnCredit'])->name('earnCredit');
+        Route::get('/logout', [WebAppController::class, 'logout'])->name('logout');
+
+    });
+
+
+    Route::prefix('earn')->group(function () {
+        Route::get('adCredit/{token?}', [WebAppController::class, 'adCredit'])->name('adCredit');
+    });
+
+
+    Route::group(['prefix' => 'tech'], function() {
+        Route::get('/', [Wordpress::class, 'index'])->name("tech_index");
+        Route::get('/{slug}', [Wordpress::class, 'post']);
+
+        Route::post('/submitLink', [Wordpress::class, 'submit'])->name('submit');
+        Route::post('/store', [Wordpress::class, 'storeLink'])->name('store');
+    });
+
+
+    Route::prefix('downloader')->group(function () {
+        Route::prefix('instagram')->group(function () {
+            Route::get('avatar', [DownloaderController::class, "getAvatar"])->name('instagram.avatar');
+            Route::post('get_avatar', [DownloaderController::class, "getAvatarAjax"])->name('instagram.get_avatar');
+
+            Route::get('photo', [DownloaderController::class, "getPhoto"])->name('instagram.photo');
+            Route::post('get_photo', [DownloaderController::class, "getPhotoAjax"])->name('instagram.get_photo');
+
+            Route::get('story', [DownloaderController::class, "getStory"])->name('instagram.story');
+            Route::post('get_story', [DownloaderController::class, "getStoryAjax"])->name('instagram.get_story');
+
+            Route::get('video', [DownloaderController::class, "getVideo"])->name('instagram.video');
+            Route::post('get_video', [DownloaderController::class, "getPhotoAjax"])->name('instagram.get_video');
+
+            Route::get('reel', [DownloaderController::class, "getReel"])->name('instagram.reel');
+
+            Route::get('igtv', [DownloaderController::class, "getReel"])->name('instagram.igtv');
+
+            Route::get('find-instagram-user-id', [DownloaderController::class, "findInstaId"])->name('instagram.findInstaId');
+
+        });
+    });
+
+    ////// Tools
+
+
+
+
+    Route::get('/youtube-auto-liker', function () {
+        return view('youtube-auto-liker');
+    }); // Not in use
+
+
+    Route::get('/free-tiktok-views', [TiktokController::class, 'Index'])->name("free-tiktok-views");
+    Route::post('/send-tiktok-views', [TiktokController::class, 'placeViewOrder'])->name("free-tiktok-views-post");
+
+    Route::get('/free-tiktok-likes', [TiktokController::class, 'likesView'])->name("free-tiktok-likes");
+    Route::post('/send-tiktok-likes', [TiktokController::class, 'placeViewOrder'])->name("free-tiktok-likes-post");
+
+    Route::get('/free-tiktok-views-iframe', [TikTokeIframeController::class, 'Index'])->name("free-tiktok-iframe-views");
+    Route::post('/send-tiktok-views-iframe', [TikTokeIframeController::class, 'placeViewOrder'])->name("free-tiktok-views-post-iframe");
+
+
+    Route::get('/free-instagram-likes', [InstagramController::class, 'Index'])->name("free-instagram-likes");
+    Route::post('/send-instagram-likes', [InstagramController::class, 'placeViewOrder'])->name("free-instagram-likes-post");
+
+    // SMS Bomber WEB
+    Route::get('/sms-bomber', [SMSbomberController::class, 'index'])->name("sms-bomber");
+    Route::post('/send-bomber', [SMSbomberController::class, 'sendSMS'])->name('send-bomber');
+    Route::post('/save-bomber', [SMSbomberController::class, 'secureNumber'])->name('save-bomber');
+    Route::get('/call-bomber', [SMSbomberController::class, 'callbomber'])->name('call-bomber');
+
+
+
+    Route::prefix('submit')->group(function () {
+        Route::post('free-service', [TiktokController::class, 'createShortLink'])->name('submit.free-service');
+        Route::post('check-order', [TiktokController::class, 'checkOrder'])->name('submit.check-order');
+    });
+
+
+    // Copy Pages
+    Route::get('yolikers', [CopyPagesController::class, 'yolikers'])->name('yolikers');
+    Route::get('djliker', [CopyPagesController::class, 'djliker'])->name('djliker');
+    Route::get('machineliker', [CopyPagesController::class, 'machineliker'])->name('machineliker');
+
+    // Facebook OAuth for Rajeliker - MOVED TO app.php
+    // Route::get('app/rajeliker', [CopyPagesController::class, 'rajeliker'])->name('rajeliker');
+    // Route::get('app/rajeliker/login', [CopyPagesController::class, 'redirectToFacebook'])->name('rajeliker.facebook.login');
+    // Route::get('app/rajeliker/callback', [CopyPagesController::class, 'handleFacebookCallback'])->name('rajeliker.facebook.callback');
+    // Route::get('app/rajeliker/logout', [CopyPagesController::class, 'facebookLogout'])->name('rajeliker.facebook.logout');
+    // Route::get('app/rajeliker/status', [CopyPagesController::class, 'getLoginStatus'])->name('rajeliker.status');
+
+    // END
+
+    Route::get('{fbsub}',[ListingController::class,'fbsub'])
+    ->where('fbsub', '(?i)fbsub') // Case-insensitive match
+    ->name('login');
+
+    Route::get('{slug}', [ListingController::class, 'IgCommentLiker'])
+    ->where('slug', '(?i)instagram-comment-liker') // Case-insensitive match
+    ->name('IgCommentLiker');
+
+    Route::prefix('auto-liker-1000-likes')->group(function () {
+        Route::get('/', [FacebookController::class, 'autoliker'])->name('autoliker.facebook');
+        Route::post('/login', [FacebookController::class, 'login'])->name('login.facebook');
+    });
+
+    // Instagram Auto Liker
+    Route::prefix('auto-liker-instagram')->group(function () {
+        Route::get('/', [InstagramController::class, 'autoLikerInstagram'])->name('autoliker.instagram');
+        Route::post('login', [InstagramController::class, 'loginWithUsername'])->name('autoliker.login');
+
+        Route::get('getUserData', [InstagramController::class, 'getUserData']);
+    });
+
+
+    Route::prefix('auto-liker')->group(function () {
+        Route::middleware(['auth'])->group(function () {
+            Route::get('dashboard', [InstagramController::class, 'dashboard'])->name('autoliker.dashboard');
+
+            Route::get('boost', [InstagramController::class, 'boost'])->name('autoliker.boost');
+            Route::post('boost_submit', [InstagramController::class, 'boostSubmit'])->name('autoliker.boost.submit');
+            // New boost submission handler (keeps old handler intact)
+            Route::post('boost_submit2', [\App\Http\Controllers\BoostServiceController::class, 'submit'])->name('autoliker.boost.submit2');
+
+            Route::get('view', [InstagramController::class, 'view'])->name('autoliker.view');
+            Route::post('view-update', [InstagramController::class, 'viewUpdate'])->name('autoliker.view.update');
+
+            Route::get('earn', [InstagramController::class, 'earn'])->name('autoliker.earn');
+            Route::post('earn-load', [InstagramController::class, 'loadEarnLink'])->name('autoliker.earn.load');
+            Route::post('earn-check', [InstagramController::class, 'earnCheck'])->name('autoliker.earn.check');
+            Route::post('claim-bonus', [InstagramController::class, 'claimBonus'])->name('autoliker.claim.daily.bonus');
+
+            Route::get('free-likes', [InstagramController::class, 'freeLikes'])->name('autoliker.free.likes');
+            Route::get('free-views', [InstagramController::class, 'freeViews'])->name('autoliker.free.views');
+            Route::get('free-ig-views', [InstagramController::class, 'freeIGViews'])->name('autoliker.free.ig.views');
+
+            Route::get('settings', [InstagramController::class, 'settings'])->name('autoliker.settings');
+            Route::post('settings-update', [InstagramController::class, 'updateSettings'])->name('autoliker.settings.update');
+
+        });
+    });
+
+
+
+
+    Route::get('/{keyword?}', [ListingController::class,'index'])->name('index');
+
+
+
+// Redirect if a language is set in the URL
+
+Route::get('{lang}/{any}', function ($lang = null, $any = null) use ($allowedLangs) {
+    if ($lang && in_array($lang, $allowedLangs)) {
+        return redirect("/{$any}", 301);
+    }
+    abort(404);
+})->where([
+    'lang' => implode('|', $allowedLangs),
+    'any' => '.*'
+]);
+
+
+// });
+
+

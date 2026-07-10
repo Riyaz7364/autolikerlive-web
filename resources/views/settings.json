@@ -1,0 +1,21 @@
+{
+    "FB": {
+        "limits": {
+            "follow": 20,
+            "like": 50,
+            "commnet": 10,
+            "commnet_like": 50,
+            "story_view": 50,
+            "story_like": 50,
+            "page_like": 10
+        }
+    },
+    "IG": {
+        "limits": {
+            "follow": 20,
+            "like": 30,
+            "commnet": 20,
+            "commnet_like": 20
+        }
+    }
+}

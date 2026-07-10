@@ -1,0 +1,346 @@
+@extends('layouts.master')
+
+@section('title', 'Free Views - Autolikerlive.com')
+@section('description',
+    'Easily view Facebook profile pictures in full size with our Facebook dp download. Enter a
+    public profile URL to see high-resolution profile photos. Free and easy to use!')
+
+@section('javascripts')
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>
+
+
+    <x-mail-wrapper></x-mail-wrapper>
+@endsection
+
+@section('content')
+    <main class="bg-light">
+        <div class="container mt-5">
+            <div class="row">
+                <h1 class="text-center">Free FB Views</h1>
+
+
+                <x-instagram.logout :username="$user['username']" :logintype="$user['loginType']"></x-instagram.logout>
+
+                <x-instagram.options :logintype="$user['loginType']" :earntype="$user['earnType']"></x-instagram.options>
+
+
+                <div class="mail-wrapper">
+                    <div class="mail-selection mb-3">
+                        <div class="border-dashes p-3 justify-content-center">
+                            <h1 class="h5 justify-content-center text-center">
+                                {{ __('messages.freeService.title', ['amount' => '100', 'service' => 'Facebook Views', 'timer' => '10']) }}
+                            </h1>
+                            <h2 class="h6 text-center text-white justify-content-center p-3 text-muted">
+                                {!! __('messages.freeService.subTitle', [
+                                    'service' => 'Facebook',
+                                    'amount' => '100',
+                                    'type' => 'Views',
+                                    'timer' => '10',
+                                ]) !!}</h2>
+                            <form method="post" action="{{ route('free-tiktok-views-post') }}" id="form">
+                                @csrf
+                                <input type="hidden" name="type" value="FB_VIEWS">
+                                @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            <li>{{ $errors->first() }}</li>
+                                        </ul>
+                                    </div>
+                                @endif
+                                <div class="mb-3 flex gap-2 items-start">
+                                    <input type="text" name="link" class="border rounded px-3 py-2 w-full"
+                                        placeholder="Paste your video link" aria-label="Paste your video link"
+                                        aria-describedby="basic-addon2">
+
+                                    <div>
+                                        <button class="g-recaptcha inline-flex items-center gap-2 bg-[var(--fb-blue)] text-white px-4 py-2 rounded-md font-semibold"
+                                            data-sitekey="6LcMdZwpAAAAADRSp8xPjwzKPzAGKT6qkL17Ybdu" data-callback='onSubmit'
+                                            data-action='submit' id="sendViewsBtn" type="submit">Send Views</button>
+                                    </div>
+                                </div>
+
+                            </form>
+                                <div class="flex flex-wrap pt-4 px-5 text-center">
+                                {!! getIcon('facebook', 'feature p-1 tiktokIcon') !!}
+                                {!! getIcon('facebook', 'feature p-2 tiktokIcon') !!}
+                                {!! getIcon('facebook', 'feature p-3 tiktokIcon') !!}
+
+                                <div id="countdown" class="col bg-green-600 text-white rounded px-4 py-2 uppercase text-center">
+                                    Ready
+                                </div>
+
+                                <div class="cf-turnstile" data-sitekey="0x4AAAAAABUvrkxDbOApMo7H"></div>
+
+
+                            </div>
+
+                            @if (Session::has('sucess'))
+                                <div class="alert alert-success">
+                                    <ul>
+                                        <li>{{ Session::get('sucess') }}</li>
+                                    </ul>
+                                </div>
+                                <!-- Share Modal -->
+                                <div class="modal fade show" id="shareModal" tabindex="-1"
+                                    aria-labelledby="shareModalLabel" style="display: block;" aria-modal="true"
+                                    role="dialog">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title text-dark">Thank You for Your Support! ❤️</h5>
+                                                <button type="button" class="btn-close"
+                                                    onclick="document.querySelector('#shareModal').classList.remove('show')"></button>
+                                            </div>
+                                            <div class="modal-body text-center">
+                                                <p>We appreciate you using our service! Please share and help us grow. 🙏
+                                                </p>
+                                                <p class="h4 text-danger">(っ◔◡◔)っ ♥ share ♥</p>
+                                                <!-- Social Share Buttons -->
+                                                <div class="flex flex-wrap justify-center gap-2">
+                                                    <a href="#" target="_blank" id="facebookShare" class="inline-flex items-center gap-2 bg-[var(--fb-blue)] text-white px-3 py-2 rounded-md">Facebook</a>
+                                                    <a href="#" target="_blank" id="twitterShare" class="inline-flex items-center gap-2 bg-sky-500 text-white px-3 py-2 rounded-md">Twitter</a>
+                                                    <a href="#" target="_blank" id="whatsappShare" class="inline-flex items-center gap-2 bg-green-600 text-white px-3 py-2 rounded-md">WhatsApp</a>
+                                                    <a href="#" target="_blank" id="telegramShare" class="inline-flex items-center gap-2 bg-gray-200 text-black px-3 py-2 rounded-md">Telegram</a>
+                                                    <a href="#" target="_blank" id="pinterestShare" class="inline-flex items-center gap-2 bg-red-600 text-white px-3 py-2 rounded-md">Pinterest</a>
+                                                    <a href="#" target="_blank" id="redditShare" class="inline-flex items-center gap-2 bg-yellow-400 text-black px-3 py-2 rounded-md">Reddit</a>
+                                                    <a href="#" target="_blank" id="snapchatShare" class="inline-flex items-center gap-2 bg-gray-800 text-white px-3 py-2 rounded-md">Snapchat</a>
+                                                </div>
+                                                <a href="https://telegram.me/autolikerlive" class="inline-flex items-center gap-2 mt-5 bg-[#0088cc] text-white rounded px-3 py-2 font-semibold">{!! getIcon('telegram', 'telegramIcon') !!} Join Telegram Channel</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="temp-emailbox-text text-center my-2">
+                            <p class="text-dark pt-2">I Understand and Agree with <a class="link"
+                                    href="{{ url('privacy') }}">Privacy Policy</a> and <a class="link"
+                                    href="{{ url('terms') }}">Terms of Uses</a></p>
+                        </div>
+
+                    </div>
+
+                    <div class="ad ad-250x250">
+                        <!-- Temp Mail Right adsbygoogle -->
+
+                    </div>
+                </div>
+            </div>
+
+            <section class="bg-light" id="no-ads-in-steps">
+
+                <div class="text-center p-5">
+                    <h2 class="text-dark">{{ __('messages.freeService.howItsWork') }}</h2>
+                    <p>{{ __('messages.freeService.howItsWork_p1', ['service' => 'Facebook Views', 'timer' => '10', 'amount' => '100']) }}
+                    </p>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 col-lg-3 col-sm-12 card border border-white" style="background:#F5F2F2">
+                        <div class="card-body m-3">
+                            <h1 class="card-title"
+                                style="
+                                color: #DADADA;
+                                font-family: Helvetica, Sans-serif;
+                                font-size: 85px;
+                                font-weight: 600;">
+                                01.</h1>
+                            <h6 class="card-subtitle mb-2"
+                                style="
+                  color: #000000;
+                  font-family: Roboto, Sans-serif;
+                  font-size: 18px;
+                  font-weight: 700;
+                  line-height: 10px;">
+                                {{ __('messages.freeService.tour.step1') }}</h6>
+                            <p class="card-text">
+                                {{ __('messages.freeService.tour.step1_p1', ['service' => 'Views', 'service' => 'Facebook video']) }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 col-lg-3 col-sm-12 card border border-white" style="background:#F5F2F2">
+                        <div class="card-body m-3">
+                            <h1 class="card-title"
+                                style="
+                                color: #DADADA;
+                                font-family: Helvetica, Sans-serif;
+                                font-size: 85px;
+                                font-weight: 600;">
+                                02.</h1>
+                            <h6 class="card-subtitle mb-2"
+                                style="
+                  color: #000000;
+                  font-family: Roboto, Sans-serif;
+                  font-size: 18px;
+                  font-weight: 700;
+                  line-height: 10px;">
+                                {{ __('messages.freeService.tour.step2') }}</h6>
+                            <p class="card-text">
+                                {{ __('messages.freeService.tour.step2_p1', ['service' => 'Facebook video']) }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-lg-3 col-sm-12 card border border-white" style="background:#F5F2F2">
+                        <div class="card-body m-3">
+                            <h1 class="card-title"
+                                style="
+                                color: #DADADA;
+                                font-family: Helvetica, Sans-serif;
+                                font-size: 85px;
+                                font-weight: 600;">
+                                03.</h1>
+                            <h6 class="card-subtitle mb-2"
+                                style="
+                  color: #000000;
+                  font-family: Roboto, Sans-serif;
+                  font-size: 18px;
+                  font-weight: 700;
+                  line-height: 10px;">
+                                {{ __('messages.freeService.tour.step3') }}</h6>
+                            <p class="card-text">{{ __('messages.freeService.tour.step3_p1') }} </p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-lg-3 col-sm-12 card border border-white" style="background:#F5F2F2">
+                        <div class="card-body m-3">
+                            <h1 class="card-title"
+                                style="
+                                color: #DADADA;
+                                font-family: Helvetica, Sans-serif;
+                                font-size: 85px;
+                                font-weight: 600;">
+                                04.</h1>
+                            <h6 class="card-subtitle mb-2"
+                                style="
+                  color: #000000;
+                  font-family: Roboto, Sans-serif;
+                  font-size: 18px;
+                  font-weight: 700;
+                  line-height: 10px;">
+                                {{ __('messages.freeService.tour.step4', ['type' => 'Likes']) }}</h6>
+                            <p class="card-text">{{ __('messages.freeService.tour.step4_p1', ['type' => 'Likes']) }}</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row text-center p-5">
+
+                    <div class="col-md-4">
+                        <i class="bi bi-balloon-heart-fill infoicon"></i>
+                        <h4>{{ __('messages.freeService.howItsWork2') }}</h4>
+                        <p>
+                            {{ __('messages.freeService.howItsWork2_p1', [
+                                'service_name' => 'Facebook video',
+                                'service' => 'Facebook Views',
+                                'timer' => '10',
+                            ]) }}
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <i class="bi bi-unlock-fill infoicon"></i>
+                        <h4>{{ __('messages.freeService.whyChooseUs') }}</h4>
+                        <p>
+                            {{ __('messages.freeService.whyChooseUs_p1', ['service_name' => 'Facebook']) }}
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <i class="bi bi-trophy-fill infoicon"></i>
+                        <h4>{{ __('messages.freeService.ourServices') }}</h4>
+                        <p>
+                            {!! __('messages.freeService.ourServices_p1', ['service' => 'Facebook Views']) !!}
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+
+
+    <script data-cfasync="false">
+        // Assuming $timeLeft is the total seconds
+        var timeLeft = {{ $timeLeft }};
+        var sendViewsBtn = document.getElementById('sendViewsBtn');
+
+        function updateTimer() {
+            var minutes = Math.floor(timeLeft / 60);
+            var seconds = timeLeft % 60;
+
+            var formattedTime = ('0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2);
+
+            document.getElementById('countdown').innerHTML = formattedTime;
+
+            if (timeLeft <= 0) {
+                document.getElementById('countdown').innerHTML = 'Ready';
+                sendViewsBtn.disabled = false; // Enable the button when the timer is finished
+            } else {
+                timeLeft--;
+                sendViewsBtn.disabled = true; // Disable the button while the timer is running
+                setTimeout(updateTimer, 1000);
+            }
+        }
+
+        var mytimeLeft = 30;
+
+        function successMsg() {
+            var minutes = Math.floor(mytimeLeft / 60);
+            var seconds = mytimeLeft % 60;
+
+            var formattedTime = ('0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2);
+
+            document.getElementById('sendViewsBtn').innerHTML = formattedTime;
+
+            if (mytimeLeft <= 0) {
+                document.getElementById('sendViewsBtn').innerHTML = `Ready`;
+                sendViewsBtn.disabled = false; // Enable the button when the timer is finished
+            } else {
+                mytimeLeft--;
+                sendViewsBtn.disabled = true; // Disable the button while the timer is running
+                setTimeout(successMsg, 1000);
+            }
+        }
+
+        function onSubmit(token) {
+            document.getElementById("form").submit();
+        }
+        successMsg();
+        updateTimer();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                const pageUrl = encodeURIComponent(window.location.href);
+                const message = encodeURIComponent(
+                    "Facebook Auto Likes - Get Unlimited Free Facebook Views every 5 minutes 🚀🔥");
+                const hashtags = encodeURIComponent("autolikerlive,freeInstaLikes,freeLikes");
+                const imageUrl = encodeURIComponent("https://www.autolikerlive.com/images/graphic.webp");
+
+                // Set Share URLs with null checks
+                setShareLink("facebookShare", `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`);
+                setShareLink("twitterShare",
+                    `https://twitter.com/intent/tweet?url=${pageUrl}&text=${message}&hashtags=${hashtags}`);
+                setShareLink("whatsappShare", `https://api.whatsapp.com/send?text=${message} ${pageUrl}`);
+                setShareLink("telegramShare", `https://t.me/share/url?url=${pageUrl}&text=${message}`);
+                setShareLink("pinterestShare",
+                    `https://pinterest.com/pin/create/button/?url=${pageUrl}&media=${imageUrl}&description=${message}`
+                );
+                setShareLink("redditShare", `https://www.reddit.com/submit?url=${pageUrl}&title=${message}`);
+                setShareLink("snapchatShare", `https://www.snapchat.com/scan?attachmentUrl=${pageUrl}`);
+            } catch (error) {
+                console.error("Error setting up share links:", error);
+            }
+        });
+
+
+
+        function setShareLink(elementId, url) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.href = url;
+            } else {
+                console.warn(`Element with ID ${elementId} not found`);
+            }
+        }
+    </script>
+
+@endsection

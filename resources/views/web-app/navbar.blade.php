@@ -1,0 +1,6 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container px-5">
+        <a class="navbar-brand" href="./">FBSUB Live</a>
+
+    </div>
+</nav>
