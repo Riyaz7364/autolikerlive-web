@@ -1,13 +1,14 @@
 @extends('layouts.game')
 
-@section('title', 'Fun Games')
-@section('description', 'Create and share fun Facebook image games with your friends. Free entertainment games.')
+@section('title', 'AutoLikerLive - Free Facebook Image Games & Profile Picture Maker')
+@section('description', 'Create fun Facebook image games, profile picture frames & viral photo cards. Share with friends and see results. Free online Facebook image game maker.')
+@section('keywords', 'facebook image games, facebook profile picture maker, photo frame maker, facebook fun games, viral image games, profile photo card, image game maker, facebook game online')
 
 @section('content')
 <div class="pb-20">
     <div class="page-header mb-16">
-        <h1>🎮 Fun Image Games</h1>
-        <p>Create & share fun images with your Facebook friends</p>
+        <h1>Free Facebook Image Games & Profile Picture Maker</h1>
+        <p>Create fun image games, profile picture frames & viral photo cards for Facebook. Play free, share with friends!</p>
     </div>
 
     @if (count($games) > 0)

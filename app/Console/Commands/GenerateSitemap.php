@@ -92,6 +92,72 @@ class GenerateSitemap extends Command
             )
             ->startCrawling($domain);
 
+        Crawler::create()
+            ->setCrawlObserver(
+                new class ($sitemap, $domain, $seen) extends CrawlObserver {
+
+                    public function __construct(
+                        protected Sitemap $sitemap,
+                        protected string  $domain,
+                        protected object  $seen
+                    ) {}
+
+                    public function crawled(
+                        UriInterface      $url,
+                        ResponseInterface $response,
+                        ?UriInterface     $foundOnUrl = null,
+                        ?string           $linkText   = null
+                    ): void {
+                        if ($response->getStatusCode() !== 200) {
+                            return;
+                        }
+
+                        $rawPath = parse_url((string) $url, PHP_URL_PATH) ?? '/';
+
+                        if (Str::startsWith(Str::lower($rawPath), '/blog/') && $rawPath !== '/blog/') {
+                            $rawPath = Str::finish($rawPath, '/');
+                        } else {
+                            $rawPath = rtrim($rawPath, '/');
+                        }
+
+                        if (preg_match('/\.[a-z0-9]{2,5}$/i', $rawPath)) {
+                            return;
+                        }
+
+                        $path = Str::of($rawPath)->start('/')->lower();
+                        $isHome = in_array($rawPath, ['/', '', '/blog']);
+
+                        $canonical = "{$this->domain}{$path}";
+
+                        if (isset($this->seen->urls[$canonical])) {
+                            return;
+                        }
+                        $this->seen->urls[$canonical] = true;
+
+                        $priority = $isHome ? 1.0 : 0.8;
+
+                        $this->sitemap->add(
+                            Url::create($canonical)
+                                ->setLastModificationDate(now())
+                                ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
+                                ->setPriority($priority)
+                        );
+                    }
+
+                    public function finishedCrawling(): void {}
+                }
+            )
+            ->setCrawlProfile(
+                new class ($domain) extends \Spatie\Crawler\CrawlProfiles\CrawlProfile {
+                    public function __construct(protected string $domain) {}
+                    public function shouldCrawl(UriInterface $url): bool
+                    {
+                        return str_starts_with((string) $url, $this->domain);
+                    }
+                }
+            )
+            ->startCrawling($domain . '/blog/');
+
         $this->line('Crawler finished. Adding database pages...');
 
         // Published games

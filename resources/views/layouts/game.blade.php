@@ -9,9 +9,9 @@
     <meta name="author" content="AutolikerLive" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="canonical" href="{{ url()->current() }}" />
-    <title>@yield('title') - Fun Facebook Image Games</title>
-    <meta name="description" content="@yield('description', 'Create and share fun Facebook image games. Free entertainment games for Facebook users.')">
-    <meta name="keywords" content="@hasSection('keywords')@yield('keywords')@else facebook games, fun games, image games, facebook photo maker, entertainment games @endif">
+    <title>@yield('title') - AutoLikerLive</title>
+    <meta name="description" content="@yield('description', 'Create fun Facebook image games, profile picture frames & viral photo cards. Free online image game maker for Facebook.')">
+    <meta name="keywords" content="@hasSection('keywords')@yield('keywords')@else facebook image games, profile picture maker, photo frame maker, facebook fun games, viral image games, image game maker @endif">
 
     <meta property="og:url" content="{{ Request::url() }}" />
     <meta property="og:type" content="website" />
