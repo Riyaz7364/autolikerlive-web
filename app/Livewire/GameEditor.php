@@ -264,7 +264,7 @@ class GameEditor extends Component
 
                     if (!empty($src)) {
                         $overlay = $this->imageService->loadOverlay($src);
-                            dd($overlay);
+                           
                         if ($overlay) {
                             if ($layer['w'] && $layer['h']) {
                                 $overlay->resize((int)$layer['w'], (int)$layer['h']);
