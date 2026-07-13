@@ -2,6 +2,9 @@
 
 @section('title', $game->title)
 @section('description', $game->description)
+@if($game->thumbnail)
+@section('ogimage', asset('storage/' . $game->thumbnail))
+@endif
 
 @push('styles')
 <style>

@@ -2,15 +2,17 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Game;
+use App\Models\Listing;
+use App\Models\Tag;
 use Illuminate\Console\Command;
-use Spatie\Sitemap\Sitemap;
-use Spatie\Sitemap\SitemapIndex;
-use Spatie\Sitemap\Tags\Url;
-use Spatie\Crawler\Crawler;
 use Illuminate\Support\Str;
-use Psr\Http\Message\UriInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\UriInterface;
+use Spatie\Crawler\Crawler;
 use Spatie\Crawler\CrawlObservers\CrawlObserver;
+use Spatie\Sitemap\Sitemap;
+use Spatie\Sitemap\Tags\Url;
 
 class GenerateSitemap extends Command
 {
@@ -19,25 +21,19 @@ class GenerateSitemap extends Command
 
     public function handle(): void
     {
-        $domain        = 'https://www.autolikerlive.com';
-        $languages     = array_filter(config('language.allowed_languages'));
-        $defaultLang   = config('app.fallback_locale', 'en');
-        $manualPaths   = ['/blog', '/web-tools'];
-
+        $domain  = 'https://www.autolikerlive.com';
         $sitemap = Sitemap::create();
+        $seen    = new \stdClass();
+        $seen->urls = [];
 
         Crawler::create()
             ->setCrawlObserver(
-                new class (
-                    $sitemap,
-                    $domain,
-                    $manualPaths
-                ) extends CrawlObserver {
+                new class ($sitemap, $domain, $seen) extends CrawlObserver {
 
                     public function __construct(
                         protected Sitemap $sitemap,
                         protected string  $domain,
-                        protected array   $manualPaths
+                        protected object  $seen
                     ) {}
 
                     public function crawled(
@@ -46,6 +42,10 @@ class GenerateSitemap extends Command
                         ?UriInterface     $foundOnUrl = null,
                         ?string           $linkText   = null
                     ): void {
+                        if ($response->getStatusCode() !== 200) {
+                            return;
+                        }
+
                         $rawPath = parse_url((string) $url, PHP_URL_PATH) ?? '/';
 
                         if (Str::startsWith(Str::lower($rawPath), '/blog/') && $rawPath !== '/blog/') {
@@ -59,30 +59,26 @@ class GenerateSitemap extends Command
                         }
 
                         $path = Str::of($rawPath)->start('/')->lower();
-                        $isHome = $rawPath === '/' || $rawPath === '' || $rawPath === '/blog';
+                        $isHome = in_array($rawPath, ['/', '', '/blog']);
 
                         $canonical = "{$this->domain}{$path}";
 
-                        static $seen = [];
-                        if (isset($seen[$canonical])) {
+                        if (isset($this->seen->urls[$canonical])) {
                             return;
                         }
-                        $seen[$canonical] = true;
+                        $this->seen->urls[$canonical] = true;
 
                         $priority = $isHome ? 1.0 : 0.8;
 
-                        $urlEntry = Url::create($canonical)
-                            ->setLastModificationDate(now())
-                            ->setChangeFrequency(Url::CHANGE_FREQUENCY_YEARLY)
-                            ->setPriority($priority);
-
-                        $this->sitemap->add($urlEntry);
+                        $this->sitemap->add(
+                            Url::create($canonical)
+                                ->setLastModificationDate(now())
+                                ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
+                                ->setPriority($priority)
+                        );
                     }
 
-                    public function finishedCrawling(): void
-                    {
-                        // Will be saved from main handle()
-                    }
+                    public function finishedCrawling(): void {}
                 }
             )
             ->setCrawlProfile(
@@ -96,7 +92,64 @@ class GenerateSitemap extends Command
             )
             ->startCrawling($domain);
 
-        $sitemap->writeToFile('../public_html/sitemap.xml');
-        $this->info("✔ sitemap.xml generated.");
+        $this->line('Crawler finished. Adding database pages...');
+
+        // Published games
+        Game::where('status', 'published')->each(function (Game $game) use ($sitemap, $domain, $seen) {
+            $url = "{$domain}/game/{$game->slug}";
+            if (!isset($seen->urls[$url])) {
+                $seen->urls[$url] = true;
+                $sitemap->add(
+                    Url::create($url)
+                        ->setLastModificationDate($game->updated_at ?? $game->created_at)
+                        ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
+                        ->setPriority(0.8)
+                );
+                $this->line("  + /game/{$game->slug}");
+            }
+        });
+
+        // Listings
+        Listing::select('name')->get()->each(function ($listing) use ($sitemap, $domain, $seen) {
+            $slug = str_replace(' ', '-', strtolower($listing->name));
+            $url = "{$domain}/{$slug}";
+            if (!isset($seen->urls[$url])) {
+                $seen->urls[$url] = true;
+                $sitemap->add(
+                    Url::create($url)
+                        ->setLastModificationDate(now())
+                        ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
+                        ->setPriority(0.6)
+                );
+                $this->line("  + /{$slug}");
+            }
+        });
+
+        // Tags
+        Tag::select('name')->get()->each(function ($tag) use ($sitemap, $domain, $seen) {
+            $slug = str_replace(' ', '-', strtolower($tag->name));
+            $url = "{$domain}/{$slug}";
+            if (!isset($seen->urls[$url])) {
+                $seen->urls[$url] = true;
+                $sitemap->add(
+                    Url::create($url)
+                        ->setLastModificationDate(now())
+                        ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
+                        ->setPriority(0.6)
+                );
+                $this->line("  + /{$slug}");
+            }
+        });
+
+        $sitemap->writeToFile(public_path('sitemap.xml'));
+
+        $prodPath = '../public_html/sitemap.xml';
+        $prodDir  = dirname($prodPath);
+        if (is_dir($prodDir)) {
+            $sitemap->writeToFile($prodPath);
+            $this->info("✔ Written to public/ and public_html/");
+        } else {
+            $this->info("✔ Written to public/ (public_html/ not found, skipped)");
+        }
     }
 }

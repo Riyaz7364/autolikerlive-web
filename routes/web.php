@@ -58,6 +58,9 @@ require __DIR__.'/legal.php';
 // App routes
 require __DIR__.'/app.php';
 
+// Sitemap routes
+require __DIR__.'/sitemaps.php';
+
 Route::get('/download/apk', [DownloadController::class, 'apk'])
      ->name('apk.download');
 
