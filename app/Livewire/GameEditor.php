@@ -237,7 +237,7 @@ class GameEditor extends Component
 
                     $fontFile = $layer['font_family'] && file_exists($layer['font_family'])
                         ? $layer['font_family']
-                        : 'C:/Windows/Fonts/arialbd.ttf';
+                        : public_path('fonts/arialbd.ttf');
 
                     $image->text($text, (int)$layer['x'], (int)$layer['y'], function ($font) use ($layer, $fontFile) {
                         $font->file($fontFile);

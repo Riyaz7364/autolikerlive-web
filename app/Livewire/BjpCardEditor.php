@@ -64,11 +64,11 @@ class BjpCardEditor extends Component
                 $card->place($profilePic, 'top-left', (int)$this->pp_x, (int)$this->pp_y);
             }
 
-            $fontPath = 'C:/Windows/Fonts/arialbd.ttf';
+            $fontPath = public_path('fonts/arialbd.ttf');
             $today = Carbon::now()->format('d/m/Y');
 
             $card->text($id, (int)$this->id_x, (int)$this->id_y, function ($font) {
-                $font->file('C:/Windows/Fonts/arialbd.ttf');
+                $font->file(public_path('fonts/arialbd.ttf'));
                 $font->size((int)$this->id_size);
                 $font->color('#000000');
                 $font->align('left');
@@ -76,7 +76,7 @@ class BjpCardEditor extends Component
             });
 
             $card->text($today, (int)$this->date_x, (int)$this->date_y, function ($font) {
-                $font->file('C:/Windows/Fonts/arialbd.ttf');
+                $font->file(public_path('fonts/arialbd.ttf'));
                 $font->size((int)$this->date_size);
                 $font->color('#000000');
                 $font->align('left');

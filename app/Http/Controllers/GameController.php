@@ -232,7 +232,7 @@ class GameController extends Controller
         if ($fontFamily && file_exists($fontFamily)) {
             return $fontFamily;
         }
-        return 'C:/Windows/Fonts/arialbd.ttf';
+        return public_path('fonts/arialbd.ttf');
     }
 
     public function editorList()
