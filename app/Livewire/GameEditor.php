@@ -7,11 +7,20 @@ use App\Models\Game;
 use App\Models\GameLayer;
 use App\Models\GameSession;
 use App\Services\FacebookService;
+use App\Services\ImageService;
+use App\Services\ShapeFilterService;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Laravel\Facades\Image;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
+use Intervention\Image\ImageManager;
+use Intervention\Image\Laravel\Facades\Image;
+use Intervention\Image\Drivers\Gd\Driver;
+
+
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
 class GameEditor extends Component
 {
     use WithFileUploads;
@@ -28,10 +37,14 @@ class GameEditor extends Component
     public $error = null;
 
     protected FacebookService $fbService;
+    protected ShapeFilterService $shapeFilter;
+    protected ImageService $imageService;
 
-    public function boot(FacebookService $fbService)
+    public function boot(FacebookService $fbService, ShapeFilterService $shapeFilter, ImageService $imageService)
     {
         $this->fbService = $fbService;
+        $this->shapeFilter = $shapeFilter;
+        $this->imageService = $imageService;
     }
 
     public function mount($gameId = null)
@@ -66,6 +79,7 @@ class GameEditor extends Component
                     'fail_behavior' => $layer->fail_behavior ?? 'show_error',
                     'sort_order' => $layer->sort_order,
                     'visible' => $layer->visible,
+                    'shape_filter' => $layer->shape_filter ?? null,
                 ];
             }
         }
@@ -117,6 +131,7 @@ class GameEditor extends Component
                 'fail_behavior' => 'show_error',
                 'sort_order' => count($this->layers),
                 'visible' => true,
+                'shape_filter' => null,
             ];
         } else {
             $layer = [
@@ -140,6 +155,7 @@ class GameEditor extends Component
                 'fail_behavior' => 'show_error',
                 'sort_order' => count($this->layers),
                 'visible' => true,
+                'shape_filter' => null,
             ];
         }
         $this->layers[] = $layer;
@@ -177,7 +193,7 @@ class GameEditor extends Component
             $bgPath = null;
             $canvasW = 800;
             $canvasH = 600;
-
+         
             if ($this->savedBgImage) {
                 $bgPath = $this->savedBgImage;
                 $fullPath = Storage::disk('public')->path($bgPath);
@@ -186,6 +202,8 @@ class GameEditor extends Component
                 }
             }
 
+
+   
             $image = Image::create($canvasW, $canvasH);
             $image->fill($this->bg_color ?? '#ffffff');
             if ($bgPath && file_exists(Storage::disk('public')->path($bgPath))) {
@@ -194,6 +212,7 @@ class GameEditor extends Component
             }
 
             $session = $this->resolvePreviewSession();
+            
             $methodController = app(GameMethodController::class);
 
             foreach ($this->layers as $layer) {
@@ -230,6 +249,7 @@ class GameEditor extends Component
                 } elseif ($layerType === 'image') {
                     if ($layer['source_type'] === 'auto' && $layer['method_name']) {
                         $src = $this->callMethodForPreview($methodController, $layer['method_name'], $session);
+                       
                         if (empty($src) || !str_starts_with($src, 'http')) {
                             $src = public_path('default-avatar.png');
                             if (!file_exists($src)) {
@@ -243,10 +263,14 @@ class GameEditor extends Component
                     }
 
                     if (!empty($src)) {
-                        $overlay = $this->loadImageOverlay($src);
+                        $overlay = $this->imageService->loadOverlay($src);
+                            dd($overlay);
                         if ($overlay) {
                             if ($layer['w'] && $layer['h']) {
                                 $overlay->resize((int)$layer['w'], (int)$layer['h']);
+                            }
+                            if (!empty($layer['shape_filter'])) {
+                                $overlay = $this->shapeFilter->apply($overlay, $layer['shape_filter']);
                             }
                             $image->place($overlay, 'top-left', (int)$layer['x'], (int)$layer['y']);
                         }
@@ -376,38 +400,12 @@ class GameEditor extends Component
                 'fail_behavior' => $layer['fail_behavior'] ?? 'show_error',
                 'sort_order' => $layer['sort_order'] ?? 0,
                 'visible' => $layer['visible'] ?? true,
+                'shape_filter' => $layer['shape_filter'] ?? null,
             ]);
         }
 
         $this->dispatch('saved', gameId: $game->id);
         session()->flash('success', 'Canvas saved successfully!');
-    }
-
-    protected function loadImageOverlay($source): ?\Intervention\Image\Image
-    {
-        if (empty($source)) return null;
-
-        if (preg_match('#^https?://#', $source)) {
-            $tempDir = storage_path('app/public/game_temp');
-            if (!is_dir($tempDir)) {
-                mkdir($tempDir, 0755, true);
-            }
-            $tempFile = $tempDir . '/' . md5($source) . '.png';
-            if (!file_exists($tempFile)) {
-                $ctx = stream_context_create(['http' => ['timeout' => 10, 'user_agent' => 'Mozilla/5.0']]);
-                $data = @file_get_contents($source, false, $ctx);
-                if ($data === false) return null;
-                file_put_contents($tempFile, $data);
-            }
-            return Image::read($tempFile);
-        }
-
-        $localPath = Storage::disk('public')->path($source);
-        if (file_exists($localPath)) {
-            return Image::read($localPath);
-        }
-
-        return null;
     }
 
     protected function getMethodLabel($methodName): ?string

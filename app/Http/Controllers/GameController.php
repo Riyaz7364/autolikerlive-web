@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Game;
 use App\Models\GameSession;
 use App\Services\FacebookService;
+use App\Services\ImageService;
+use App\Services\ShapeFilterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -14,10 +16,14 @@ use Illuminate\Support\Facades\Validator;
 class GameController extends Controller
 {
     protected FacebookService $fb;
+    protected ShapeFilterService $shapeFilter;
+    protected ImageService $imageService;
 
-    public function __construct(FacebookService $fb)
+    public function __construct(FacebookService $fb, ShapeFilterService $shapeFilter, ImageService $imageService)
     {
         $this->fb = $fb;
+        $this->shapeFilter = $shapeFilter;
+        $this->imageService = $imageService;
     }
 
     public function show($slug)
@@ -177,10 +183,13 @@ class GameController extends Controller
                         continue;
                     }
 
-                    $overlay = $this->loadImageOverlay($source);
+                    $overlay = $this->imageService->loadOverlay($source);
                     if ($overlay) {
                         if ($layer->w && $layer->h) {
                             $overlay->resize((int)$layer->w, (int)$layer->h);
+                        }
+                        if ($layer->shape_filter) {
+                            $overlay = $this->shapeFilter->apply($overlay, $layer->shape_filter);
                         }
                         $image->place($overlay, 'top-left', (int)$layer->x, (int)$layer->y);
                     }
@@ -200,33 +209,6 @@ class GameController extends Controller
         }
 
         return $image;
-    }
-
-    protected function loadImageOverlay($source): ?\Intervention\Image\Image
-    {
-        if (empty($source)) return null;
-
-        if (preg_match('#^https?://#', $source)) {
-            $tempDir = storage_path('app/public/game_temp');
-            if (!is_dir($tempDir)) {
-                mkdir($tempDir, 0755, true);
-            }
-            $tempFile = $tempDir . '/' . md5($source) . '.png';
-            if (!file_exists($tempFile)) {
-                $ctx = stream_context_create(['http' => ['timeout' => 10, 'user_agent' => 'Mozilla/5.0']]);
-                $data = @file_get_contents($source, false, $ctx);
-                if ($data === false) return null;
-                file_put_contents($tempFile, $data);
-            }
-            return Image::read($tempFile);
-        }
-
-        $localPath = storage_path('app/public/' . $source);
-        if (file_exists($localPath)) {
-            return Image::read($localPath);
-        }
-
-        return null;
     }
 
     protected function storeUserImage($file): string

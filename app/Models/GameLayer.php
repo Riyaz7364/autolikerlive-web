@@ -31,6 +31,7 @@ class GameLayer extends Model
         'fail_behavior',
         'sort_order',
         'visible',
+        'shape_filter',
     ];
 
     public function game(): BelongsTo

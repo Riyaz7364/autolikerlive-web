@@ -113,6 +113,13 @@
                                     <input wire:model="layers.{{ $index }}.h" type="number" class="fb-input" style="font-size:0.7rem;padding:4px 6px;" placeholder="auto">
                                 </div>
                             </div>
+                            <div style="margin-top:4px;">
+                                <label style="font-size:0.6rem;color:var(--fb-text-secondary);">Shape Filter</label>
+                                <select wire:model="layers.{{ $index }}.shape_filter" class="fb-input" style="font-size:0.7rem;padding:4px 6px;">
+                                    <option value="">None</option>
+                                    <option value="circle">Circle</option>
+                                </select>
+                            </div>
                             @endif
 
                             <div class="editor-grid-4" style="gap:4px;margin-top:4px;">
