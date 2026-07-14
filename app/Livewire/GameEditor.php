@@ -272,6 +272,9 @@ class GameEditor extends Component
                             if (!empty($layer['shape_filter'])) {
                                 $overlay = $this->shapeFilter->apply($overlay, $layer['shape_filter']);
                             }
+                            if (!empty($layer['rotation'])) {
+                                $overlay->rotate((int)$layer['rotation'], 'transparent');
+                            }
                             $image->place($overlay, 'top-left', (int)$layer['x'], (int)$layer['y']);
                         }
                     }
