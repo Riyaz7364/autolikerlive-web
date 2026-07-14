@@ -45,6 +45,7 @@
                         <button wire:click="addLayer('text', 'auto')" class="fb-btn fb-btn-xs" title="Auto text">+T</button>
                         <button wire:click="addLayer('text', 'manual')" class="fb-btn fb-btn-xs" style="background:#e4e6eb;color:var(--fb-text);" title="User text input">+T✏️</button>
                         <button wire:click="addLayer('text', 'dob')" class="fb-btn fb-btn-xs" style="background:#fff3e0;color:#e65100;" title="Date of birth">+T📅</button>
+                        <button wire:click="addLayer('text', 'ai')" class="fb-btn fb-btn-xs" style="background:#ede7f6;color:#4527a0;" title="AI Prediction">+T🤖</button>
                         <button wire:click="addLayer('image', 'auto')" class="fb-btn fb-btn-xs fb-btn-green" title="Auto image">+I</button>
                         <button wire:click="addLayer('image', 'user')" class="fb-btn fb-btn-xs" style="background:#e8f5e9;color:#2e7d32;" title="User upload image">+I📷</button>
                     </div>
@@ -87,6 +88,21 @@
                                     <div style="display:flex;align-items:center;gap:6px;margin-top:4px;">
                                         <span style="font-size:0.65rem;color:var(--fb-text-secondary);white-space:nowrap;">User enters:</span>
                                         <input wire:model="layers.{{ $index }}.content" type="text" class="fb-input" placeholder="Sample value for preview" style="font-size:0.75rem;flex:1;padding:4px 6px;">
+                                    </div>
+                                @elseif ($layer['source_type'] === 'ai')
+                                    <select wire:model="layers.{{ $index }}.method_name" class="fb-input" style="margin-bottom:4px;font-size:0.8rem;">
+                                        <option value="">Select AI method...</option>
+                                        @foreach ($aiMethods as $key => $label)
+                                            <option value="{{ $key }}">{{ $label }}</option>
+                                        @endforeach
+                                    </select>
+                                    <div style="font-size:0.6rem;color:#4527a0;background:#ede7f6;padding:4px 8px;border-radius:4px;margin-bottom:4px;">
+                                        At play time, user will enter: Name, DOB, Marriage Date
+                                    </div>
+                                    <div style="font-size:0.55rem;color:#666;margin-bottom:2px;font-weight:600;">Test Data (for preview):</div>
+                                    <div class="editor-grid-2" style="gap:4px;">
+                                        <input wire:model="layers.{{ $index }}.ai_test_dob" type="date" class="fb-input" style="font-size:0.7rem;padding:4px 6px;">
+                                        <input wire:model="layers.{{ $index }}.ai_test_marriage_date" type="date" class="fb-input" style="font-size:0.7rem;padding:4px 6px;">
                                     </div>
                                 @endif
                             @elseif ($layer['type'] === 'image')
@@ -148,7 +164,23 @@
                                 </div>
                                 @endif
                             </div>
-                        </div>
+                            @if ($layer['type'] !== 'image')
+                            <div class="editor-grid-3" style="gap:4px;margin-top:4px;">
+                                <div>
+                                    <label style="font-size:0.6rem;color:var(--fb-text-secondary);">Wrap Width (px)</label>
+                                    <input wire:model="layers.{{ $index }}.wrap_width" type="number" class="fb-input" style="font-size:0.7rem;padding:4px 6px;" placeholder="no wrap">
+                                </div>
+                                <div>
+                                    <label style="font-size:0.6rem;color:var(--fb-text-secondary);">Align</label>
+                                    <select wire:model="layers.{{ $index }}.text_align" class="fb-input" style="font-size:0.7rem;padding:4px 6px;">
+                                        <option value="left">Left</option>
+                                        <option value="center">Center</option>
+                                        <option value="right">Right</option>
+                                    </select>
+                                </div>
+                            </div>
+                            @endif
+                            </div>
                     @endforeach
                 </div>
             </div>

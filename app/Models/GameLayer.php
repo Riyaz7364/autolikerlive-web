@@ -25,6 +25,7 @@ class GameLayer extends Model
         'font_size',
         'font_color',
         'text_align',
+        'wrap_width',
         'method_name',
         'method_label',
         'fallback_text',

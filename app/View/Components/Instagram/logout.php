@@ -6,6 +6,11 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
+use App\Models\Game;
+use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
+use App\Models\GameSession;
+use App\Models\GameLayer;
 class logout extends Component
 {
     /**

@@ -93,13 +93,19 @@
             @csrf
             @foreach ($userInputLayers as $layer)
                 <div class="modal-field">
-                    <label>{{ $layer->prompt_label ?? ($layer->source_type === 'dob' ? 'Date of Birth' : ($layer->source_type === 'manual' ? 'Text' : 'Upload Photo')) }}</label>
-                    @if ($layer->source_type === 'dob')
-                        <input type="date" name="user_input[{{ $layer->id }}]" class="fb-input" required>
-                    @elseif ($layer->source_type === 'manual')
-                        <input type="text" name="user_input[{{ $layer->id }}]" class="fb-input" placeholder="{{ $layer->prompt_label ?? 'Enter value' }}" required>
-                    @elseif ($layer->source_type === 'user')
-                        <input type="file" name="user_images[{{ $layer->id }}]" accept="image/*" required>
+                    @if ($layer->source_type === 'ai')
+                        <label style="margin-bottom:8px;">{{ $layer->prompt_label ?? 'Enter your details for prediction' }}</label>
+                        <input type="date" name="user_input[{{ $layer->id }}_dob]" class="fb-input" placeholder="Date of Birth" required style="margin-bottom:6px;">
+                        <input type="date" name="user_input[{{ $layer->id }}_marriage_date]" class="fb-input" placeholder="Marriage Date" required>
+                    @else
+                        <label>{{ $layer->prompt_label ?? ($layer->source_type === 'dob' ? 'Date of Birth' : ($layer->source_type === 'manual' ? 'Text' : 'Upload Photo')) }}</label>
+                        @if ($layer->source_type === 'dob')
+                            <input type="date" name="user_input[{{ $layer->id }}]" class="fb-input" required>
+                        @elseif ($layer->source_type === 'manual')
+                            <input type="text" name="user_input[{{ $layer->id }}]" class="fb-input" placeholder="{{ $layer->prompt_label ?? 'Enter value' }}" required>
+                        @elseif ($layer->source_type === 'user')
+                            <input type="file" name="user_images[{{ $layer->id }}]" accept="image/*" required>
+                        @endif
                     @endif
                 </div>
             @endforeach

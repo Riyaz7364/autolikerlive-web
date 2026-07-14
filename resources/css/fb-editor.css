@@ -19,10 +19,12 @@
 
 /* Editor form grid */
 .editor-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.editor-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
 .editor-grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 6px; }
 
 @media (max-width: 600px) {
     .editor-grid-2 { grid-template-columns: 1fr; }
+    .editor-grid-3 { grid-template-columns: 1fr 1fr; }
     .editor-grid-4 { grid-template-columns: 1fr 1fr; }
 }
 

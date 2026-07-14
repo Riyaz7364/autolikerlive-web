@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Game;
 use App\Models\GameSession;
+use App\Services\AiGameService;
 use App\Services\FacebookService;
 use App\Services\ImageService;
 use App\Services\ShapeFilterService;
@@ -18,12 +19,14 @@ class GameController extends Controller
     protected FacebookService $fb;
     protected ShapeFilterService $shapeFilter;
     protected ImageService $imageService;
+    protected AiGameService $aiGame;
 
-    public function __construct(FacebookService $fb, ShapeFilterService $shapeFilter, ImageService $imageService)
+    public function __construct(FacebookService $fb, ShapeFilterService $shapeFilter, ImageService $imageService, AiGameService $aiGame)
     {
         $this->fb = $fb;
         $this->shapeFilter = $shapeFilter;
         $this->imageService = $imageService;
+        $this->aiGame = $aiGame;
     }
 
     public function show($slug)
@@ -34,7 +37,7 @@ class GameController extends Controller
 
         $userInputLayers = $game->visibleLayers->filter(function ($layer) {
             $st = $layer->source_type ?? 'auto';
-            return in_array($st, ['dob', 'manual']) || ($st === 'user');
+            return in_array($st, ['dob', 'manual', 'user', 'ai']);
         });
 
         $hasUserInput = $userInputLayers->isNotEmpty();
@@ -152,6 +155,11 @@ class GameController extends Controller
                 if ($layerType === 'text') {
                     if ($sourceType === 'auto' && $layer->method_name) {
                         $content = $this->callDynamicMethod($layer->method_name, $session);
+                    } elseif ($sourceType === 'ai') {
+                        $dob = $userInput[$layer->id . '_dob'] ?? $session->dob ?? '';
+                        $marriageDate = $userInput[$layer->id . '_marriage_date'] ?? '';
+                        $methodName = $layer->method_name ?? 'aiMarriageFuture';
+                        $content = $this->callAiMethod($methodName, $session->name, $dob, $marriageDate);
                     } elseif (in_array($sourceType, ['dob', 'manual'])) {
                         $content = $userInput[$layer->id] ?? $userInput[$layer->sort_order] ?? '';
                         if ($sourceType === 'dob' && $content && preg_match('/^\d{4}-\d{2}-\d{2}$/', $content)) {
@@ -168,6 +176,9 @@ class GameController extends Controller
                         $font->color($layer->font_color ?: '#000000');
                         $font->align($layer->text_align ?: 'left');
                         $font->valign('top');
+                        if (!empty($layer->wrap_width)) {
+                            $font->wrap((int)$layer->wrap_width);
+                        }
                     });
                 } elseif ($layerType === 'image') {
                     if ($sourceType === 'auto' && $layer->method_name) {
@@ -206,6 +217,9 @@ class GameController extends Controller
                         $font->color($layer->font_color ?: '#000000');
                         $font->align($layer->text_align ?: 'left');
                         $font->valign('top');
+                        if (!empty($layer->wrap_width)) {
+                            $font->wrap((int)$layer->wrap_width);
+                        }
                     });
                 }
             }
@@ -228,6 +242,14 @@ class GameController extends Controller
         }
 
         return $controller->$methodName($session);
+    }
+
+    protected function callAiMethod(string $methodName, string $sessionName, string $dob, string $marriageDate): string
+    {
+        return match ($methodName) {
+            'aiMarriageFuture' => $this->aiGame->marriageFuture($sessionName, $dob, $marriageDate),
+            default => $this->aiGame->generalFuture($sessionName, $dob, $methodName),
+        };
     }
 
     protected function resolveFont($fontFamily): string

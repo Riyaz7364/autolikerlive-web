@@ -39,12 +39,14 @@ class GameEditor extends Component
     protected FacebookService $fbService;
     protected ShapeFilterService $shapeFilter;
     protected ImageService $imageService;
+    protected \App\Services\AiGameService $aiGame;
 
-    public function boot(FacebookService $fbService, ShapeFilterService $shapeFilter, ImageService $imageService)
+    public function boot(FacebookService $fbService, ShapeFilterService $shapeFilter, ImageService $imageService, \App\Services\AiGameService $aiGame)
     {
         $this->fbService = $fbService;
         $this->shapeFilter = $shapeFilter;
         $this->imageService = $imageService;
+        $this->aiGame = $aiGame;
     }
 
     public function mount($gameId = null)
@@ -73,6 +75,7 @@ class GameEditor extends Component
                     'font_size' => $layer->font_size,
                     'font_color' => $layer->font_color,
                     'text_align' => $layer->text_align,
+                    'wrap_width' => $layer->wrap_width,
                     'method_name' => $layer->method_name,
                     'method_label' => $layer->method_label,
                     'fallback_text' => $layer->fallback_text,
@@ -80,6 +83,8 @@ class GameEditor extends Component
                     'sort_order' => $layer->sort_order,
                     'visible' => $layer->visible,
                     'shape_filter' => $layer->shape_filter ?? null,
+                    'ai_test_dob' => '',
+                    'ai_test_marriage_date' => '',
                 ];
             }
         }
@@ -149,13 +154,16 @@ class GameEditor extends Component
                 'font_size' => 24,
                 'font_color' => '#000000',
                 'text_align' => 'left',
-                'method_name' => $sourceType === 'auto' ? 'getName' : null,
+                'wrap_width' => null,
+                'method_name' => $sourceType === 'auto' ? 'getName' : ($sourceType === 'ai' ? 'aiMarriageFuture' : null),
                 'method_label' => null,
                 'fallback_text' => null,
                 'fail_behavior' => 'show_error',
                 'sort_order' => count($this->layers),
                 'visible' => true,
                 'shape_filter' => null,
+                'ai_test_dob' => '',
+                'ai_test_marriage_date' => '',
             ];
         }
         $this->layers[] = $layer;
@@ -226,6 +234,19 @@ class GameEditor extends Component
                         $text = $this->callMethodForPreview($methodController, $layer['method_name'], $session);
                     } elseif ($layer['source_type'] === 'auto' && !$layer['method_name'] && $layer['content']) {
                         $text = $layer['content'];
+                    } elseif ($layer['source_type'] === 'ai') {
+                        $testDob = trim($layer['ai_test_dob'] ?? '');
+                        $testMarriage = trim($layer['ai_test_marriage_date'] ?? '');
+                        if ($testDob && $testMarriage) {
+                            try {
+                                $text = $this->aiGame->marriageFuture($session->name, $testDob, $testMarriage);
+                            } catch (\Exception $e) {
+                                $text = '[AI Error: ' . $e->getMessage() . ']';
+                            }
+                        } else {
+                            $aiLabel = $this->getAiMethods()[$layer['method_name']] ?? 'AI Prediction';
+                            $text = '[Fill test data: ' . $aiLabel . ']';
+                        }
                     } elseif ($layer['source_type'] === 'dob') {
                         $raw = $layer['content'] ?? '';
                         $text = $raw && preg_match('/^\d{4}-\d{2}-\d{2}$/', $raw)
@@ -245,6 +266,9 @@ class GameEditor extends Component
                         $font->color($layer['font_color'] ?: '#000000');
                         $font->align($layer['text_align'] ?: 'left');
                         $font->valign('top');
+                        if (!empty($layer['wrap_width'])) {
+                            $font->wrap((int)$layer['wrap_width']);
+                        }
                     });
                 } elseif ($layerType === 'image') {
                     if ($layer['source_type'] === 'auto' && $layer['method_name']) {
@@ -397,6 +421,7 @@ class GameEditor extends Component
                 'font_size' => $layer['font_size'] ?? 24,
                 'font_color' => $layer['font_color'] ?? '#000000',
                 'text_align' => $layer['text_align'] ?? 'left',
+                'wrap_width' => !empty($layer['wrap_width']) ? (int)$layer['wrap_width'] : null,
                 'method_name' => $layer['method_name'] ?? null,
                 'method_label' => $layer['method_label'] ?? null,
                 'fallback_text' => $layer['fallback_text'] ?? null,
@@ -420,7 +445,8 @@ class GameEditor extends Component
     public function render()
     {
         $availableMethods = $this->getAvailableMethods();
-        return view('livewire.game-editor', compact('availableMethods'));
+        $aiMethods = $this->getAiMethods();
+        return view('livewire.game-editor', compact('availableMethods', 'aiMethods'));
     }
 
     protected function getAvailableMethods(): array
@@ -436,6 +462,13 @@ class GameEditor extends Component
             'uppercaseName' => 'Uppercase Name',
             'randomRating' => 'Random Rating %',
             'randomNumber' => 'Random Number',
+        ];
+    }
+
+    protected function getAiMethods(): array
+    {
+        return [
+            'aiMarriageFuture' => 'AI Marriage Future',
         ];
     }
 }
