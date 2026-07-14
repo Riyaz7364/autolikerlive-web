@@ -94,9 +94,21 @@
             @foreach ($userInputLayers as $layer)
                 <div class="modal-field">
                     @if ($layer->source_type === 'ai')
-                        <label style="margin-bottom:8px;">{{ $layer->prompt_label ?? 'Enter your details for prediction' }}</label>
-                        <input type="date" name="user_input[{{ $layer->id }}_dob]" class="fb-input" placeholder="Date of Birth" required style="margin-bottom:6px;">
-                        <input type="date" name="user_input[{{ $layer->id }}_marriage_date]" class="fb-input" placeholder="Marriage Date" required>
+                        <label style="margin-bottom:8px;">{{ $layer->prompt_label ?? 'Enter your details' }}</label>
+                        @foreach ($layer->aiFields->sortBy('sort_order') as $field)
+                            <div style="margin-bottom:6px;">
+                                <label style="font-size:0.8rem;font-weight:500;margin-bottom:2px;">{{ $field->field_label }}</label>
+                                @if ($field->field_type === 'dob')
+                                    <input type="date" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" class="fb-input" placeholder="{{ $field->field_placeholder }}" {{ $field->field_default ? '' : 'required' }}>
+                                @elseif ($field->field_type === 'number')
+                                    <input type="number" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" class="fb-input" placeholder="{{ $field->field_placeholder }}" value="{{ $field->field_default }}" {{ $field->field_default ? '' : 'required' }}>
+                                @elseif ($field->field_type === 'file')
+                                    <input type="file" name="user_images[{{ $layer->id }}_{{ $field->field_key }}]" accept="image/*" {{ $field->field_default ? '' : 'required' }}>
+                                @else
+                                    <input type="text" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" class="fb-input" placeholder="{{ $field->field_placeholder }}" value="{{ $field->field_default }}" {{ $field->field_default ? '' : 'required' }}>
+                                @endif
+                            </div>
+                        @endforeach
                     @else
                         <label>{{ $layer->prompt_label ?? ($layer->source_type === 'dob' ? 'Date of Birth' : ($layer->source_type === 'manual' ? 'Text' : 'Upload Photo')) }}</label>
                         @if ($layer->source_type === 'dob')

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class GameLayer extends Model
 {
@@ -26,6 +27,9 @@ class GameLayer extends Model
         'font_color',
         'text_align',
         'wrap_width',
+        'line_height',
+        'ai_role',
+        'ai_prompt',
         'method_name',
         'method_label',
         'fallback_text',
@@ -38,5 +42,10 @@ class GameLayer extends Model
     public function game(): BelongsTo
     {
         return $this->belongsTo(Game::class);
+    }
+
+    public function aiFields(): HasMany
+    {
+        return $this->hasMany(GameAiField::class, 'game_layer_id');
     }
 }

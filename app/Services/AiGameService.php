@@ -21,60 +21,79 @@ class AiGameService
         ]);
     }
 
+    /**
+     * Generate AI text using a dynamic role + prompt template + field values.
+     *
+     * @param string $role      The AI persona/system role
+     * @param string $prompt    Prompt template with {field_key} placeholders
+     * @param array  $fields    [['key' => 'name', 'label' => 'Your Name', 'value' => 'John'], ...]
+     * @param int    $maxTokens
+     */
+    public function generate(string $role, string $prompt, array $fields, int $maxTokens = 300): string
+    {
+        $replacements = [];
+        foreach ($fields as $field) {
+            $key = $field['key'] ?? $field['field_key'] ?? '';
+            $value = $field['value'] ?? $field['field_value'] ?? '';
+            $label = $field['label'] ?? $field['field_label'] ?? $key;
+            $replacements['{' . $key . '}'] = $value ?: "[{$label}]";
+        }
+
+        $filledPrompt = str_replace(array_keys($replacements), array_values($replacements), $prompt);
+
+        return $this->chat($role, $filledPrompt, $maxTokens);
+    }
+
     public function marriageFuture(string $sessionName, string $dob, string $marriageDate): string
     {
         $age = $dob ? $this->calculateAge($dob) : 'unknown age';
         $marriageYear = $marriageDate ? date('Y', strtotime($marriageDate)) : date('Y');
         $marriedDuration = $marriageDate ? $this->marriageDuration($marriageDate) : 'just married';
 
-        $prompt = <<<PROMPT
-        You are a fun, slightly savage fortune teller for a game called "Your Future After Marriage".
-        The player: {$sessionName}, age {$age}, married/s marrying in {$marriageYear} ({$marriedDuration} married so far).
+        $role = 'You are a savage, hilarious fortune teller for a game called "Your Future After Marriage". You mix dark humor with actual good predictions.';
 
-        Generate a FUNNY, ENTERTAINING marriage future prediction in 2-3 short sentences.
-        Mix BOTH good fortunes AND horrible/funny misfortunes together.
+        $prompt = "The player: {$sessionName}, age {$age}, marrying in {$marriageYear} ({$marriedDuration}).
 
-        Good examples: "You will live in a mansion with a personal chef", "Your spouse will give you foot massages every night"
-        Horrible examples: "You will end up sleeping on the couch for 3 years", "You will fight over the AC remote every summer"
+Generate a FUNNY, SAVAGE marriage future prediction.
+Answer MUST be exactly 10-15 words total. Short and punchy.
+Do NOT use any emojis.
 
-        Rules:
-        - Be creative, humorous, and specific
-        - Use the player's name naturally
-        - Keep it 2-3 sentences max, suitable for an image overlay
-        - Do NOT be generic — make it feel personal and fun
-        - Do NOT include any labels, prefixes, or quotes — just the prediction text
-        - Make it feel like a social media viral game result
-        PROMPT;
+MIX good fortunes AND dark misfortunes — contrast is what makes it funny.
 
-        return $this->chat($prompt, 200);
+EXAMPLES (follow this vibe, create your own):
+You will be found in a blue drum if you don't listen wife
+You will be happy until mountain trip with in-laws
+Wife will love you until best friend gets married
+You will own a mansion! It is in-laws spare room
+You will get 5-star meals from mother-in-law restaurant bill
+
+CRITICAL RULES:
+- NEVER use: kill, murder, dead, death, emojis
+- You MAY use: bury, finish, gone, blue drum, mountain trip, finished
+- Reference viral incidents subtly
+- Answer must be 10-15 words ONLY
+- Use the player's name naturally
+- Do NOT include labels, prefixes, quotes, or emojis
+- Each result should feel unique and personal";
+
+        return $this->chat($role, $prompt, 200);
     }
 
-    public function generalFuture(string $sessionName, string $dob, string $topic): string
-    {
-        $age = $dob ? $this->calculateAge($dob) : 'unknown age';
-
-        $prompt = <<<PROMPT
-        You are a fun fortune teller for a social media game. The player is {$sessionName}, age {$age}.
-        Generate a short, fun, entertaining future prediction about: {$topic}.
-        Mix good and funny/horrible outcomes. 2-3 sentences max.
-        Use the player's name. Be creative and viral-worthy.
-        Do NOT include labels, prefixes, or quotes — just the prediction text.
-        PROMPT;
-
-        return $this->chat($prompt, 200);
-    }
-
-    protected function chat(string $prompt, int $maxTokens = 200): string
+    protected function chat(string $role, string $prompt, int $maxTokens = 300): string
     {
         $model = config('services.aicredit.model');
         $baseUrl = rtrim((string) config('services.aicredit.base_url'), '/');
 
+        $messages = [];
+        if (!empty($role)) {
+            $messages[] = ['role' => 'system', 'content' => $role];
+        }
+        $messages[] = ['role' => 'user', 'content' => $prompt];
+
         $response = $this->http->post("{$baseUrl}/chat/completions", [
             'json' => [
                 'model' => $model,
-                'messages' => [
-                    ['role' => 'user', 'content' => $prompt],
-                ],
+                'messages' => $messages,
                 'temperature' => 0.9,
                 'max_tokens' => $maxTokens,
             ],

@@ -31,7 +31,11 @@ class GameController extends Controller
 
     public function show($slug)
     {
-        $game = Game::where('slug', $slug)->where('status', 'published')->firstOrFail();
+        $game = Game::with(['layers' => function ($q) {
+            $q->with('aiFields');
+        }, 'visibleLayers' => function ($q) {
+            $q->with('aiFields');
+        }])->where('slug', $slug)->where('status', 'published')->firstOrFail();
 
         $session = $this->getSession();
 
@@ -156,10 +160,19 @@ class GameController extends Controller
                     if ($sourceType === 'auto' && $layer->method_name) {
                         $content = $this->callDynamicMethod($layer->method_name, $session);
                     } elseif ($sourceType === 'ai') {
-                        $dob = $userInput[$layer->id . '_dob'] ?? $session->dob ?? '';
-                        $marriageDate = $userInput[$layer->id . '_marriage_date'] ?? '';
-                        $methodName = $layer->method_name ?? 'aiMarriageFuture';
-                        $content = $this->callAiMethod($methodName, $session->name, $dob, $marriageDate);
+                        $aiFields = $layer->aiFields()->orderBy('sort_order')->get();
+                        $fields = [];
+                        foreach ($aiFields as $field) {
+                            $value = $userInput[$layer->id . '_' . $field->field_key] ?? '';
+                            $fields[] = [
+                                'key' => $field->field_key,
+                                'label' => $field->field_label,
+                                'value' => $value,
+                            ];
+                        }
+                        $role = $layer->ai_role ?? 'You are a fun, entertaining AI fortune teller for a social media game.';
+                        $prompt = $layer->ai_prompt ?? 'Generate a fun prediction for this person.';
+                        $content = $this->aiGame->generate($role, $prompt, $fields);
                     } elseif (in_array($sourceType, ['dob', 'manual'])) {
                         $content = $userInput[$layer->id] ?? $userInput[$layer->sort_order] ?? '';
                         if ($sourceType === 'dob' && $content && preg_match('/^\d{4}-\d{2}-\d{2}$/', $content)) {
@@ -178,6 +191,9 @@ class GameController extends Controller
                         $font->valign('top');
                         if (!empty($layer->wrap_width)) {
                             $font->wrap((int)$layer->wrap_width);
+                        }
+                        if (!empty($layer->line_height)) {
+                            $font->lineHeight((int)$layer->line_height);
                         }
                     });
                 } elseif ($layerType === 'image') {
@@ -242,14 +258,6 @@ class GameController extends Controller
         }
 
         return $controller->$methodName($session);
-    }
-
-    protected function callAiMethod(string $methodName, string $sessionName, string $dob, string $marriageDate): string
-    {
-        return match ($methodName) {
-            'aiMarriageFuture' => $this->aiGame->marriageFuture($sessionName, $dob, $marriageDate),
-            default => $this->aiGame->generalFuture($sessionName, $dob, $methodName),
-        };
     }
 
     protected function resolveFont($fontFamily): string

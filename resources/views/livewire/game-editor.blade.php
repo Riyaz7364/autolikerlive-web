@@ -90,20 +90,44 @@
                                         <input wire:model="layers.{{ $index }}.content" type="text" class="fb-input" placeholder="Sample value for preview" style="font-size:0.75rem;flex:1;padding:4px 6px;">
                                     </div>
                                 @elseif ($layer['source_type'] === 'ai')
-                                    <select wire:model="layers.{{ $index }}.method_name" class="fb-input" style="margin-bottom:4px;font-size:0.8rem;">
-                                        <option value="">Select AI method...</option>
-                                        @foreach ($aiMethods as $key => $label)
-                                            <option value="{{ $key }}">{{ $label }}</option>
-                                        @endforeach
-                                    </select>
-                                    <div style="font-size:0.6rem;color:#4527a0;background:#ede7f6;padding:4px 8px;border-radius:4px;margin-bottom:4px;">
-                                        At play time, user will enter: Name, DOB, Marriage Date
+                                    <div style="margin-bottom:4px;">
+                                        <label style="font-size:0.6rem;color:var(--fb-text-secondary);">AI Role (system prompt)</label>
+                                        <textarea wire:model="layers.{{ $index }}.ai_role" class="fb-input" style="font-size:0.7rem;padding:4px 6px;min-height:36px;resize:vertical;" placeholder="You are a fun fortune teller for a social media game..."></textarea>
                                     </div>
-                                    <div style="font-size:0.55rem;color:#666;margin-bottom:2px;font-weight:600;">Test Data (for preview):</div>
-                                    <div class="editor-grid-2" style="gap:4px;">
-                                        <input wire:model="layers.{{ $index }}.ai_test_dob" type="date" class="fb-input" style="font-size:0.7rem;padding:4px 6px;">
-                                        <input wire:model="layers.{{ $index }}.ai_test_marriage_date" type="date" class="fb-input" style="font-size:0.7rem;padding:4px 6px;">
+                                    <div style="margin-bottom:4px;">
+                                        <label style="font-size:0.6rem;color:var(--fb-text-secondary);">AI Prompt (use {field_key} for values)</label>
+                                        <textarea wire:model="layers.{{ $index }}.ai_prompt" class="fb-input" style="font-size:0.7rem;padding:4px 6px;min-height:48px;resize:vertical;" placeholder="Predict the future for {name} born on {dob}. Be funny and creative."></textarea>
                                     </div>
+                                    <div style="display:flex;justify-content:space-between;align-items:center;margin:4px 0 2px;">
+                                        <span style="font-size:0.6rem;color:var(--fb-text-secondary);font-weight:600;">Fields shown to user</span>
+                                        <button wire:click="addAiField({{ $index }})" type="button" class="fb-btn fb-btn-xs" style="font-size:0.6rem;padding:1px 6px;">+ Add Field</button>
+                                    </div>
+                                    @foreach ($layer['ai_fields'] as $fi => $field)
+                                    <div style="display:grid;grid-template-columns:1fr 70px;gap:3px;margin-bottom:3px;padding:4px;background:#f0f0f0;border-radius:4px;">
+                                        <div style="display:flex;gap:3px;">
+                                            <input wire:model="layers.{{ $index }}.ai_fields.{{ $fi }}.field_key" type="text" class="fb-input" style="font-size:0.65rem;padding:3px 5px;" placeholder="key (e.g. name)">
+                                            <input wire:model="layers.{{ $index }}.ai_fields.{{ $fi }}.field_label" type="text" class="fb-input" style="font-size:0.65rem;padding:3px 5px;" placeholder="Label">
+                                        </div>
+                                        <div style="display:flex;gap:3px;align-items:center;">
+                                            <select wire:model="layers.{{ $index }}.ai_fields.{{ $fi }}.field_type" class="fb-input" style="font-size:0.65rem;padding:3px 5px;">
+                                                <option value="text">Text</option>
+                                                <option value="dob">Date</option>
+                                                <option value="number">Number</option>
+                                                <option value="file">File</option>
+                                            </select>
+                                            <button wire:click="removeAiField({{ $index }}, {{ $fi }})" type="button" style="background:none;border:none;color:#dc3545;cursor:pointer;font-size:0.8rem;">×</button>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                    @if (!empty($layer['ai_fields']))
+                                    <div style="font-size:0.55rem;color:#666;margin-top:2px;font-weight:600;">Test values (for preview):</div>
+                                    @foreach ($layer['ai_fields'] as $fi => $field)
+                                        <div style="display:flex;gap:4px;margin-top:2px;align-items:center;">
+                                            <span style="font-size:0.6rem;color:#888;min-width:60px;">{{ $field['field_label'] ?: ($field['field_key'] ?: 'Field '.($fi+1)) }}</span>
+                                            <input wire:model="layers.{{ $index }}.ai_test_values.{{ $fi }}" type="{{ $field['field_type'] === 'dob' ? 'date' : ($field['field_type'] === 'number' ? 'number' : 'text') }}" class="fb-input" style="font-size:0.65rem;padding:3px 5px;flex:1;" placeholder="test value">
+                                        </div>
+                                    @endforeach
+                                    @endif
                                 @endif
                             @elseif ($layer['type'] === 'image')
                                 @if ($layer['source_type'] === 'auto')
@@ -169,6 +193,10 @@
                                 <div>
                                     <label style="font-size:0.6rem;color:var(--fb-text-secondary);">Wrap Width (px)</label>
                                     <input wire:model="layers.{{ $index }}.wrap_width" type="number" class="fb-input" style="font-size:0.7rem;padding:4px 6px;" placeholder="no wrap">
+                                </div>
+                                <div>
+                                    <label style="font-size:0.6rem;color:var(--fb-text-secondary);">Line Height (px)</label>
+                                    <input wire:model="layers.{{ $index }}.line_height" type="number" class="fb-input" style="font-size:0.7rem;padding:4px 6px;" placeholder="auto">
                                 </div>
                                 <div>
                                     <label style="font-size:0.6rem;color:var(--fb-text-secondary);">Align</label>

@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Http\Controllers\GameMethodController;
 use App\Models\Game;
+use App\Models\GameAiField;
 use App\Models\GameLayer;
 use App\Models\GameSession;
 use App\Services\FacebookService;
@@ -52,7 +53,9 @@ class GameEditor extends Component
     public function mount($gameId = null)
     {
         if ($gameId) {
-            $game = Game::with('layers')->findOrFail($gameId);
+            $game = Game::with(['layers' => function ($q) {
+                $q->with('aiFields');
+            }])->findOrFail($gameId);
             $this->gameId = $game->id;
             $this->bg_color = $game->bg_color ?? '#ffffff';
             $this->savedBgImage = $game->bg_image;
@@ -60,6 +63,16 @@ class GameEditor extends Component
 
             foreach ($game->layers as $layer) {
                 $normalizedType = $layer->type === 'dynamic' ? 'text' : $layer->type;
+                $aiFields = [];
+                foreach ($layer->aiFields->sortBy('sort_order') as $field) {
+                    $aiFields[] = [
+                        'field_key' => $field->field_key,
+                        'field_type' => $field->field_type,
+                        'field_label' => $field->field_label,
+                        'field_placeholder' => $field->field_placeholder,
+                        'field_default' => $field->field_default,
+                    ];
+                }
                 $this->layers[] = [
                     'id' => $layer->id,
                     'type' => $normalizedType,
@@ -76,6 +89,9 @@ class GameEditor extends Component
                     'font_color' => $layer->font_color,
                     'text_align' => $layer->text_align,
                     'wrap_width' => $layer->wrap_width,
+                    'line_height' => $layer->line_height,
+                    'ai_role' => $layer->ai_role,
+                    'ai_prompt' => $layer->ai_prompt,
                     'method_name' => $layer->method_name,
                     'method_label' => $layer->method_label,
                     'fallback_text' => $layer->fallback_text,
@@ -83,8 +99,8 @@ class GameEditor extends Component
                     'sort_order' => $layer->sort_order,
                     'visible' => $layer->visible,
                     'shape_filter' => $layer->shape_filter ?? null,
-                    'ai_test_dob' => '',
-                    'ai_test_marriage_date' => '',
+                    'ai_test_values' => [],
+                    'ai_fields' => $aiFields,
                 ];
             }
         }
@@ -155,6 +171,7 @@ class GameEditor extends Component
                 'font_color' => '#000000',
                 'text_align' => 'left',
                 'wrap_width' => null,
+                'line_height' => null,
                 'method_name' => $sourceType === 'auto' ? 'getName' : ($sourceType === 'ai' ? 'aiMarriageFuture' : null),
                 'method_label' => null,
                 'fallback_text' => null,
@@ -162,11 +179,32 @@ class GameEditor extends Component
                 'sort_order' => count($this->layers),
                 'visible' => true,
                 'shape_filter' => null,
-                'ai_test_dob' => '',
-                'ai_test_marriage_date' => '',
+                'ai_role' => $sourceType === 'ai' ? 'You are a savage, hilarious fortune teller for a game called "Your Future After Marriage". You mix dark humor with actual good predictions.' : null,
+                'ai_prompt' => $sourceType === 'ai' ? "Predict the married life future for {name} born on {dob} who is marrying on {marriage_date}. Answer MUST be 10-15 words ONLY. No emojis. Mix good fortunes and dark misfortunes. Never say kill or murder. You may say bury, finish, or blue drum." : null,
+                'ai_test_values' => [],
+                'ai_fields' => [],
             ];
         }
         $this->layers[] = $layer;
+    }
+
+    public function addAiField($layerIndex)
+    {
+        if (!isset($this->layers[$layerIndex])) return;
+        $this->layers[$layerIndex]['ai_fields'][] = [
+            'field_key' => '',
+            'field_type' => 'text',
+            'field_label' => '',
+            'field_placeholder' => '',
+            'field_default' => '',
+        ];
+    }
+
+    public function removeAiField($layerIndex, $fieldIndex)
+    {
+        if (!isset($this->layers[$layerIndex])) return;
+        unset($this->layers[$layerIndex]['ai_fields'][$fieldIndex]);
+        $this->layers[$layerIndex]['ai_fields'] = array_values($this->layers[$layerIndex]['ai_fields']);
     }
 
     public function removeLayer($index)
@@ -235,17 +273,24 @@ class GameEditor extends Component
                     } elseif ($layer['source_type'] === 'auto' && !$layer['method_name'] && $layer['content']) {
                         $text = $layer['content'];
                     } elseif ($layer['source_type'] === 'ai') {
-                        $testDob = trim($layer['ai_test_dob'] ?? '');
-                        $testMarriage = trim($layer['ai_test_marriage_date'] ?? '');
-                        if ($testDob && $testMarriage) {
-                            try {
-                                $text = $this->aiGame->marriageFuture($session->name, $testDob, $testMarriage);
-                            } catch (\Exception $e) {
-                                $text = '[AI Error: ' . $e->getMessage() . ']';
-                            }
-                        } else {
-                            $aiLabel = $this->getAiMethods()[$layer['method_name']] ?? 'AI Prediction';
-                            $text = '[Fill test data: ' . $aiLabel . ']';
+                        $fields = [];
+                        $hasValues = false;
+                        foreach ($layer['ai_fields'] ?? [] as $fi => $field) {
+                            $key = $field['field_key'] ?? "field_{$fi}";
+                            $value = trim($layer['ai_test_values'][$fi] ?? '');
+                            $fields[] = [
+                                'key' => $key,
+                                'label' => $field['field_label'] ?? $key,
+                                'value' => $value,
+                            ];
+                            if ($value) $hasValues = true;
+                        }
+                        try {
+                            $role = $layer['ai_role'] ?? 'You are a savage, hilarious fortune teller.';
+                                $prompt = $layer['ai_prompt'] ?? 'Generate a funny savage 10-15 word prediction. No emojis. Never say kill or murder. You may say bury, finish, or blue drum.';
+                            $text = $this->aiGame->generate($role, $prompt, $fields);
+                        } catch (\Exception $e) {
+                            $text = '[AI Error: ' . $e->getMessage() . ']';
                         }
                     } elseif ($layer['source_type'] === 'dob') {
                         $raw = $layer['content'] ?? '';
@@ -268,6 +313,9 @@ class GameEditor extends Component
                         $font->valign('top');
                         if (!empty($layer['wrap_width'])) {
                             $font->wrap((int)$layer['wrap_width']);
+                        }
+                        if (!empty($layer['line_height'])) {
+                            $font->lineHeight((int)$layer['line_height']);
                         }
                     });
                 } elseif ($layerType === 'image') {
@@ -406,7 +454,7 @@ class GameEditor extends Component
 
         foreach ($this->layers as $layer) {
             $normalizedType = $layer['type'] === 'dynamic' ? 'text' : $layer['type'];
-            GameLayer::create([
+            $savedLayer = GameLayer::create([
                 'game_id' => $game->id,
                 'type' => $normalizedType,
                 'source_type' => $layer['source_type'] ?? 'auto',
@@ -422,6 +470,9 @@ class GameEditor extends Component
                 'font_color' => $layer['font_color'] ?? '#000000',
                 'text_align' => $layer['text_align'] ?? 'left',
                 'wrap_width' => !empty($layer['wrap_width']) ? (int)$layer['wrap_width'] : null,
+                'line_height' => !empty($layer['line_height']) ? (int)$layer['line_height'] : null,
+                'ai_role' => $layer['ai_role'] ?? null,
+                'ai_prompt' => $layer['ai_prompt'] ?? null,
                 'method_name' => $layer['method_name'] ?? null,
                 'method_label' => $layer['method_label'] ?? null,
                 'fallback_text' => $layer['fallback_text'] ?? null,
@@ -430,6 +481,20 @@ class GameEditor extends Component
                 'visible' => $layer['visible'] ?? true,
                 'shape_filter' => $layer['shape_filter'] ?? null,
             ]);
+
+            if (($layer['source_type'] ?? '') === 'ai' && !empty($layer['ai_fields'])) {
+                foreach ($layer['ai_fields'] as $i => $field) {
+                    GameAiField::create([
+                        'game_layer_id' => $savedLayer->id,
+                        'field_key' => $field['field_key'] ?? '',
+                        'field_type' => $field['field_type'] ?? 'text',
+                        'field_label' => $field['field_label'] ?? '',
+                        'field_placeholder' => $field['field_placeholder'] ?? '',
+                        'field_default' => $field['field_default'] ?? '',
+                        'sort_order' => $i,
+                    ]);
+                }
+            }
         }
 
         $this->dispatch('saved', gameId: $game->id);
@@ -445,8 +510,7 @@ class GameEditor extends Component
     public function render()
     {
         $availableMethods = $this->getAvailableMethods();
-        $aiMethods = $this->getAiMethods();
-        return view('livewire.game-editor', compact('availableMethods', 'aiMethods'));
+        return view('livewire.game-editor', compact('availableMethods'));
     }
 
     protected function getAvailableMethods(): array
@@ -462,13 +526,6 @@ class GameEditor extends Component
             'uppercaseName' => 'Uppercase Name',
             'randomRating' => 'Random Rating %',
             'randomNumber' => 'Random Number',
-        ];
-    }
-
-    protected function getAiMethods(): array
-    {
-        return [
-            'aiMarriageFuture' => 'AI Marriage Future',
         ];
     }
 }

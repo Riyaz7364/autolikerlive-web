@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use App\Models\GameSession;
 use App\Models\GameLayer;
+use App\Models\GameAiField;
 class logout extends Component
 {
     /**
