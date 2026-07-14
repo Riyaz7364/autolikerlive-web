@@ -31,31 +31,23 @@ export default defineConfig({
         },
     },
     build: {
-        // Add this configuration to generate separate modern and legacy bundles
         target: 'es2015',
         polyfillDynamicImport: false,
-        assetsDir: 'assets',
-        outDir: 'public',
-        manifest: true,
         minify: true,
         sourcemap: false,
         rollupOptions: {
-            output: {
-                manualChunks: undefined,
-            },
             plugins: [
-                commonjs(), // Enable commonjs plugin to support importing CommonJS modules
+                commonjs(),
                 terser({
                     compress: {
                         keep_infinity: true,
-                        drop_console: true, // Remove console.log statements
+                        drop_console: true,
                     },
                     format: {
-                        comments: false, // Remove comments
+                        comments: false,
                     },
                 }),
             ],
         },
-
     },
 });
