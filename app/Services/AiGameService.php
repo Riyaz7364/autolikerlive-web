@@ -44,41 +44,6 @@ class AiGameService
         return $this->chat($role, $filledPrompt, $maxTokens);
     }
 
-    public function marriageFuture(string $sessionName, string $dob, string $marriageDate): string
-    {
-        $age = $dob ? $this->calculateAge($dob) : 'unknown age';
-        $marriageYear = $marriageDate ? date('Y', strtotime($marriageDate)) : date('Y');
-        $marriedDuration = $marriageDate ? $this->marriageDuration($marriageDate) : 'just married';
-
-        $role = 'You are a savage, hilarious fortune teller for a game called "Your Future After Marriage". You mix dark humor with actual good predictions.';
-
-        $prompt = "The player: {$sessionName}, age {$age}, marrying in {$marriageYear} ({$marriedDuration}).
-
-Generate a FUNNY, SAVAGE marriage future prediction.
-Answer MUST be exactly 10-15 words total. Short and punchy.
-Do NOT use any emojis.
-
-MIX good fortunes AND dark misfortunes — contrast is what makes it funny.
-
-EXAMPLES (follow this vibe, create your own):
-You will be found in a blue drum if you don't listen wife
-You will be happy until mountain trip with in-laws
-Wife will love you until best friend gets married
-You will own a mansion! It is in-laws spare room
-You will get 5-star meals from mother-in-law restaurant bill
-
-CRITICAL RULES:
-- NEVER use: kill, murder, dead, death, emojis
-- You MAY use: bury, finish, gone, blue drum, mountain trip, finished
-- Reference viral incidents subtly
-- Answer must be 10-15 words ONLY
-- Use the player's name naturally
-- Do NOT include labels, prefixes, quotes, or emojis
-- Each result should feel unique and personal";
-
-        return $this->chat($role, $prompt, 200);
-    }
-
     protected function chat(string $role, string $prompt, int $maxTokens = 300): string
     {
         $model = config('services.aicredit.model');
@@ -119,31 +84,5 @@ CRITICAL RULES:
         }
 
         return $text;
-    }
-
-    protected function calculateAge(string $dob): int
-    {
-        try {
-            $birth = new \Carbon\Carbon($dob);
-            return (int) $birth->age;
-        } catch (\Exception $e) {
-            return 0;
-        }
-    }
-
-    protected function marriageDuration(string $marriageDate): string
-    {
-        try {
-            $married = new \Carbon\Carbon($marriageDate);
-            $now = now();
-            $years = $married->diffInYears($now);
-            $months = $married->diffInMonths($now) % 12;
-            if ($years > 0) {
-                return "{$years} year" . ($years > 1 ? 's' : '') . ($months > 0 ? " and {$months} month" . ($months > 1 ? 's' : '') : '');
-            }
-            return "{$months} month" . ($months > 1 ? 's' : '');
-        } catch (\Exception $e) {
-            return 'a short time';
-        }
     }
 }

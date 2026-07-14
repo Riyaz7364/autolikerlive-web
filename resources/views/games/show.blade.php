@@ -32,9 +32,7 @@
 <div class="pb-20">
     <div class="game-header">
         <h1>{{ $game->title }}</h1>
-        @if ($game->description)
-            <p>{{ $game->description }}</p>
-        @endif
+
     </div>
 
     <div class="preview-frame">
@@ -125,12 +123,16 @@
         </form>
     </div>
 </div>
+
+@if ($game->description)
+    <p>{{ $game->description }}</p>
+@endif
+
 @stop
 
 @section('sidebar')
     <div class="widget">
         <h3>🎮 {{ $game->title }}</h3>
-        <p class="mb-8">{{ $game->description ?? 'Create your own fun image and share it with friends!' }}</p>
         <a href="{{ route('game.show', $game->slug) }}" class="fb-btn w-full">Play Now</a>
     </div>
 
@@ -146,7 +148,7 @@
 
     <div class="widget">
         <h3>📱 AutoLiker App</h3>
-        <p style="font-size:0.85rem;color:var(--fb-text-secondary);margin:0 0 8px;">Get the official AutoLiker Android app</p>
+        <p style="font-size:0.85rem;margin:0 0 8px;">Get the official AutoLiker Android app</p>
         <a href="{{ url('/download') }}" class="fb-btn w-full" style="display:flex;align-items:center;justify-content:center;gap:6px;">
             ⬇️ Download AutoLiker app
         </a>

@@ -179,8 +179,8 @@ class GameEditor extends Component
                 'sort_order' => count($this->layers),
                 'visible' => true,
                 'shape_filter' => null,
-                'ai_role' => $sourceType === 'ai' ? 'You are a savage, hilarious fortune teller for a game called "Your Future After Marriage". You mix dark humor with actual good predictions.' : null,
-                'ai_prompt' => $sourceType === 'ai' ? "Predict the married life future for {name} born on {dob} who is marrying on {marriage_date}. Answer MUST be 10-15 words ONLY. No emojis. Mix good fortunes and dark misfortunes. Never say kill or murder. You may say bury, finish, or blue drum." : null,
+                'ai_role' => null,
+                'ai_prompt' => null,
                 'ai_test_values' => [],
                 'ai_fields' => [],
             ];
@@ -286,8 +286,8 @@ class GameEditor extends Component
                             if ($value) $hasValues = true;
                         }
                         try {
-                            $role = $layer['ai_role'] ?? 'You are a savage, hilarious fortune teller.';
-                                $prompt = $layer['ai_prompt'] ?? 'Generate a funny savage 10-15 word prediction. No emojis. Never say kill or murder. You may say bury, finish, or blue drum.';
+                                $role = $layer['ai_role'] ?? '';
+                                $prompt = $layer['ai_prompt'] ?? '';
                             $text = $this->aiGame->generate($role, $prompt, $fields);
                         } catch (\Exception $e) {
                             $text = '[AI Error: ' . $e->getMessage() . ']';

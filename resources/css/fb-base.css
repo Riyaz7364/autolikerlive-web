@@ -84,7 +84,7 @@ ul, ol { padding-left: 0; list-style: none; }
     letter-spacing: 0.5px;
     margin-bottom: 12px;
 }
-.widget p, .widget a { font-size: 0.85rem; color: var(--fb-text-secondary); }
+.widget p, .widget a { font-size: 0.85rem; }
 .widget-link {
     display: block; padding: 8px 0;
     border-bottom: 1px solid var(--fb-border-light);
