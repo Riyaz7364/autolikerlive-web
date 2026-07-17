@@ -301,9 +301,7 @@ class GameEditor extends Component
                         $text = $layer['content'] ?: ('[' . ($layer['prompt_label'] ?: 'Text') . ']');
                     }
 
-                    $fontFile = $layer['font_family'] && file_exists($layer['font_family'])
-                        ? $layer['font_family']
-                        : public_path('fonts/arialbd.ttf');
+                    $fontFile = $this->resolveFontPath($layer['font_family']);
 
                     $image->text($text, (int)$layer['x'], (int)$layer['y'], function ($font) use ($layer, $fontFile) {
                         $font->file($fontFile);
@@ -510,7 +508,41 @@ class GameEditor extends Component
     public function render()
     {
         $availableMethods = $this->getAvailableMethods();
-        return view('livewire.game-editor', compact('availableMethods'));
+        $availableFonts = $this->getAvailableFonts();
+        return view('livewire.game-editor', compact('availableMethods', 'availableFonts'));
+    }
+
+    protected function getAvailableFonts(): array
+    {
+        return [
+            '' => 'Default (Arial)',
+            'arial.ttf' => 'Arial',
+            'arialbd.ttf' => 'Arial Bold',
+            'NotoSans.ttf' => 'Noto Sans (Latin)',
+            'NotoSansDevanagari.ttf' => 'Noto Sans Devanagari (Hindi)',
+            'NotoSansDevanagari-Bold.ttf' => 'Noto Sans Devanagari Bold (Hindi)',
+            'Hind.ttf' => 'Hind (Hindi)',
+            'Hind-Bold.ttf' => 'Hind Bold (Hindi)',
+            'Poppins.ttf' => 'Poppins (Hindi + Latin)',
+            'Poppins-Bold.ttf' => 'Poppins Bold (Hindi + Latin)',
+            'Poppins-SemiBold.ttf' => 'Poppins SemiBold (Hindi + Latin)',
+            'TiroDevanagariHindi.ttf' => 'Tiro Devanagari (Hindi)',
+            'YatraOne.ttf' => 'Yatra One (Hindi Display)',
+        ];
+    }
+
+    protected function resolveFontPath($fontFamily): string
+    {
+        if ($fontFamily && file_exists($fontFamily)) {
+            return $fontFamily;
+        }
+
+        $fontPath = public_path('fonts/' . $fontFamily);
+        if ($fontFamily && file_exists($fontPath)) {
+            return $fontPath;
+        }
+
+        return public_path('fonts/arialbd.ttf');
     }
 
     protected function getAvailableMethods(): array

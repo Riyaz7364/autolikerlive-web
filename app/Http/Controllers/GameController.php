@@ -266,9 +266,21 @@ class GameController extends Controller
 
     protected function resolveFont($fontFamily): string
     {
-        if ($fontFamily && file_exists($fontFamily)) {
+        if (!$fontFamily) {
+            return public_path('fonts/arialbd.ttf');
+        }
+
+        // Full path provided
+        if (file_exists($fontFamily)) {
             return $fontFamily;
         }
+
+        // Named font — check public/fonts/
+        $fontPath = public_path('fonts/' . $fontFamily);
+        if (file_exists($fontPath)) {
+            return $fontPath;
+        }
+
         return public_path('fonts/arialbd.ttf');
     }
 

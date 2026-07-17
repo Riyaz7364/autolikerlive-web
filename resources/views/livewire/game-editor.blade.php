@@ -178,6 +178,14 @@
                                     <input wire:model="layers.{{ $index }}.y" type="number" class="fb-input" style="font-size:0.7rem;padding:4px 6px;">
                                 </div>
                                 @if ($layer['type'] !== 'image')
+                                <div style="grid-column: 1 / -1;">
+                                    <label style="font-size:0.6rem;color:var(--fb-text-secondary);">Font</label>
+                                    <select wire:model="layers.{{ $index }}.font_family" class="fb-input" style="font-size:0.7rem;padding:4px 6px;width:100%;">
+                                        @foreach($availableFonts as $file => $label)
+                                            <option value="{{ $file }}">{{ $label }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div>
                                     <label style="font-size:0.6rem;color:var(--fb-text-secondary);">Size</label>
                                     <input wire:model="layers.{{ $index }}.font_size" type="number" class="fb-input" style="font-size:0.7rem;padding:4px 6px;">
