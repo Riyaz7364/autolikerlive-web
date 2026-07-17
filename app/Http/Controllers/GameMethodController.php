@@ -212,7 +212,83 @@ class GameMethodController extends Controller
         return sprintf('%02d/%02d/%d', $bsDay, $bsMonth, $bsYear);
     }
 
-    public function getZodiacWithIcon($dob): string | null
+    public function getZodiacWithIcon(GameSession $session): string
+    {
+        $dob = $session->dob ?? '';
+        if (!$dob) {
+            $dob = now()->subYears(25)->format('Y-m-d');
+        }
+
+        $date = date('m-d', strtotime($dob));
+
+        $zodiacs = [
+            ['name' => 'capricorn', 'start' => '12-22', 'end' => '01-19'],
+            ['name' => 'aquarius', 'start' => '01-20', 'end' => '02-18'],
+            ['name' => 'pisces', 'start' => '02-19', 'end' => '03-20'],
+            ['name' => 'aries', 'start' => '03-21', 'end' => '04-19'],
+            ['name' => 'taurus', 'start' => '04-20', 'end' => '05-20'],
+            ['name' => 'gemini', 'start' => '05-21', 'end' => '06-20'],
+            ['name' => 'cancer', 'start' => '06-21', 'end' => '07-22'],
+            ['name' => 'leo', 'start' => '07-23', 'end' => '08-22'],
+            ['name' => 'virgo', 'start' => '08-23', 'end' => '09-22'],
+            ['name' => 'libra', 'start' => '09-23', 'end' => '10-22'],
+            ['name' => 'scorpio', 'start' => '10-23', 'end' => '11-21'],
+            ['name' => 'sagittarius', 'start' => '11-22', 'end' => '12-21'],
+        ];
+
+        foreach ($zodiacs as $zodiac) {
+            if ($zodiac['name'] === 'capricorn') {
+                if ($date >= '12-22' || $date <= '01-19') {
+                    return "https://api.iconify.design/fluent-emoji-flat/{$zodiac['name']}.svg";
+                }
+            } else {
+                if ($date >= $zodiac['start'] && $date <= $zodiac['end']) {
+                    return "https://api.iconify.design/fluent-emoji-flat/{$zodiac['name']}.svg";
+                }
+            }
+        }
+
+        return "https://api.iconify.design/fluent-emoji-flat/aquarius.svg";
+    }
+
+
+
+    public function getZodiacSign(GameSession $session): string
+    {
+        $dob = $session->dob ?? '';
+        if (!$dob) {
+            return 'aquarius';
+        }
+        return $this->resolveZodiacNameFromDOB($dob);
+    }
+
+    public function generateDailyHoroscope(GameSession $session): string
+    {
+        $name = $session->name ?? $session->username ?? 'Friend';
+        $todayDate = now()->format('d/m/Y');
+        $hinduDate = $this->convertToBS(now()->format('Y-m-d'));
+        $rashi = $this->getZodiacSign($session);
+
+        $role = 'You are an experienced Hindi horoscope writer. Write the horoscope in English but with a spiritual, Vedic astrology tone. Keep it concise (2-4 sentences) and positive.';
+
+        $prompt = "Today's Date: {$todayDate}
+
+Hindu Date: {$hinduDate}
+
+Name: {$name}
+
+Rashi: {$rashi}
+
+Generate today's horoscope for this person. Write it as a short, spiritual daily prediction with a positive and mystical tone. Mention lucky color, lucky number, and a brief prediction for love, career, and health.";
+
+        try {
+            return $this->aiGame->generate($role, $prompt, [], 400);
+        } catch (\Exception $e) {
+            return "Stars align for {$name} today! Lucky number: " . rand(1, 9) . ". A new opportunity awaits in your career path. Stay positive and trust your intuition.";
+        }
+    }
+
+    private function resolveZodiacNameFromDOB(string $dob): string
     {
         $date = date('m-d', strtotime($dob));
 
@@ -232,23 +308,19 @@ class GameMethodController extends Controller
         ];
 
         foreach ($zodiacs as $zodiac) {
-
-            if ($zodiac['name'] == 'capricorn') {
+            if ($zodiac['name'] === 'capricorn') {
                 if ($date >= '12-22' || $date <= '01-19') {
-                    return "https://api.iconify.design/fluent-emoji-flat/{$zodiac['name']}.svg";
+                    return $zodiac['name'];
                 }
             } else {
                 if ($date >= $zodiac['start'] && $date <= $zodiac['end']) {
-                    return 
-                        "https://api.iconify.design/fluent-emoji-flat/{$zodiac['name']}.svg";
+                    return $zodiac['name'];
                 }
             }
         }
 
-        return null;
+        return 'aquarius';
     }
-
-
 
     // backward-compatible aliases for old method names
     public function fbUserName(GameSession $session): string { return $this->getName($session); }

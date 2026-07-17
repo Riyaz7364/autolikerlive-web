@@ -159,7 +159,7 @@ class GameEditor extends Component
                 'id' => null,
                 'type' => 'text',
                 'source_type' => $sourceType,
-                'prompt_label' => $sourceType === 'dob' ? 'Enter your date of birth' : ($sourceType === 'manual' ? 'Enter text' : null),
+                'prompt_label' => $sourceType === 'dob' ? 'Enter your date of birth' : ($sourceType === 'manual' ? 'Enter text' : ($sourceType === 'hidden' ? 'User input fields' : null)),
                 'content' => '',
                 'x' => 10,
                 'y' => 10 + (count($this->layers) * 40),
@@ -262,11 +262,40 @@ class GameEditor extends Component
             $methodController = app(GameMethodController::class);
 
             foreach ($this->layers as $layer) {
+                if ($layer['source_type'] === 'hidden' && !empty($layer['ai_fields'])) {
+                    foreach ($layer['ai_fields'] as $fi => $field) {
+                        $key = $field['field_key'] ?? '';
+                        $default = $field['field_default'] ?? '';
+                        if ($key && $default) {
+                            $ydm = null;
+                            if ($field['field_type'] === 'dob' && preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $default)) {
+                                $parts = explode('/', $default);
+                                $ydm = $parts[2] . '-' . $parts[1] . '-' . $parts[0];
+                            } elseif ($field['field_type'] === 'dob' && preg_match('/^\d{4}-\d{2}-\d{2}$/', $default)) {
+                                $ydm = $default;
+                            }
+                            if ($key === 'dob' && $ydm && !$session->dob) {
+                                $session->dob = $ydm;
+                                $session->save();
+                            }
+                            if ($key === 'name' && $default && !$session->name) {
+                                $session->name = $default;
+                                $session->save();
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach ($this->layers as $layer) {
                 if (!$layer['visible']) continue;
 
                 $layerType = $layer['type'] === 'dynamic' ? 'text' : $layer['type'];
 
                 if ($layerType === 'text') {
+                    if ($layer['source_type'] === 'hidden') {
+                        continue;
+                    }
                     $text = 'Sample Text';
                     if ($layer['source_type'] === 'auto' && $layer['method_name']) {
                         $text = $this->callMethodForPreview($methodController, $layer['method_name'], $session);
@@ -391,7 +420,7 @@ class GameEditor extends Component
             'name' => 'John Doe',
             'username' => 'johndoe',
             'profile_pic' => '',
-            'dob' => '15/08/1990',
+            'dob' => '1990-08-15',
         ]);
     }
 
@@ -480,7 +509,7 @@ class GameEditor extends Component
                 'shape_filter' => $layer['shape_filter'] ?? null,
             ]);
 
-            if (($layer['source_type'] ?? '') === 'ai' && !empty($layer['ai_fields'])) {
+            if (in_array(($layer['source_type'] ?? ''), ['ai', 'hidden']) && !empty($layer['ai_fields'])) {
                 foreach ($layer['ai_fields'] as $i => $field) {
                     GameAiField::create([
                         'game_layer_id' => $savedLayer->id,
@@ -556,6 +585,8 @@ class GameEditor extends Component
             'currentDateBS' => 'Current Date (Bikram Sambat)',
             'currentTime' => 'Current Time',
             'getZodiacWithIcon' => 'Zodiac Icon (Image URL)',
+            'getZodiacSign' => 'Zodiac Sign Name',
+            'generateDailyHoroscope' => 'Daily Horoscope (AI)',
             'randomQuote' => 'Random Quote',
             'uppercaseName' => 'Uppercase Name',
             'randomRating' => 'Random Rating %',

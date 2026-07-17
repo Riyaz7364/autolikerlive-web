@@ -97,7 +97,23 @@
                             <div style="margin-bottom:6px;">
                                 <label style="font-size:0.8rem;font-weight:500;margin-bottom:2px;">{{ $field->field_label }}</label>
                                 @if ($field->field_type === 'dob')
-                                    <input type="date" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" class="fb-input" placeholder="{{ $field->field_placeholder }}" {{ $field->field_default ? '' : 'required' }}>
+                                    <input type="text" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" class="fb-input" placeholder="DD/MM/YYYY" pattern="\d{2}/\d{2}/\d{4}" maxlength="10" {{ $field->field_default ? '' : 'required' }}>
+                                @elseif ($field->field_type === 'number')
+                                    <input type="number" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" class="fb-input" placeholder="{{ $field->field_placeholder }}" value="{{ $field->field_default }}" {{ $field->field_default ? '' : 'required' }}>
+                                @elseif ($field->field_type === 'file')
+                                    <input type="file" name="user_images[{{ $layer->id }}_{{ $field->field_key }}]" accept="image/*" {{ $field->field_default ? '' : 'required' }}>
+                                @else
+                                    <input type="text" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" class="fb-input" placeholder="{{ $field->field_placeholder }}" value="{{ $field->field_default }}" {{ $field->field_default ? '' : 'required' }}>
+                                @endif
+                            </div>
+                        @endforeach
+                    @elseif ($layer->source_type === 'hidden')
+                        <label style="margin-bottom:8px;">{{ $layer->prompt_label ?? 'Enter your details' }}</label>
+                        @foreach ($layer->aiFields->sortBy('sort_order') as $field)
+                            <div style="margin-bottom:6px;">
+                                <label style="font-size:0.8rem;font-weight:500;margin-bottom:2px;">{{ $field->field_label }}</label>
+                                @if ($field->field_type === 'dob')
+                                    <input type="text" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" class="fb-input" placeholder="DD/MM/YYYY" pattern="\d{2}/\d{2}/\d{4}" maxlength="10" {{ $field->field_default ? '' : 'required' }}>
                                 @elseif ($field->field_type === 'number')
                                     <input type="number" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" class="fb-input" placeholder="{{ $field->field_placeholder }}" value="{{ $field->field_default }}" {{ $field->field_default ? '' : 'required' }}>
                                 @elseif ($field->field_type === 'file')
@@ -110,7 +126,7 @@
                     @else
                         <label>{{ $layer->prompt_label ?? ($layer->source_type === 'dob' ? 'Date of Birth' : ($layer->source_type === 'manual' ? 'Text' : 'Upload Photo')) }}</label>
                         @if ($layer->source_type === 'dob')
-                            <input type="date" name="user_input[{{ $layer->id }}]" class="fb-input" required>
+                            <input type="text" name="user_input[{{ $layer->id }}]" class="fb-input" placeholder="DD/MM/YYYY" pattern="\d{2}/\d{2}/\d{4}" maxlength="10" required>
                         @elseif ($layer->source_type === 'manual')
                             <input type="text" name="user_input[{{ $layer->id }}]" class="fb-input" placeholder="{{ $layer->prompt_label ?? 'Enter value' }}" required>
                         @elseif ($layer->source_type === 'user')

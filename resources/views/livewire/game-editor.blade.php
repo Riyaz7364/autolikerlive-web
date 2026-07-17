@@ -46,6 +46,7 @@
                         <button wire:click="addLayer('text', 'manual')" class="fb-btn fb-btn-xs" style="background:#e4e6eb;color:var(--fb-text);" title="User text input">+T✏️</button>
                         <button wire:click="addLayer('text', 'dob')" class="fb-btn fb-btn-xs" style="background:#fff3e0;color:#e65100;" title="Date of birth">+T📅</button>
                         <button wire:click="addLayer('text', 'ai')" class="fb-btn fb-btn-xs" style="background:#ede7f6;color:#4527a0;" title="AI Prediction">+T🤖</button>
+                        <button wire:click="addLayer('text', 'hidden')" class="fb-btn fb-btn-xs" style="background:#e3f2fd;color:#0d47a1;" title="Hidden input (collects data, no canvas text)">+T🔒</button>
                         <button wire:click="addLayer('image', 'auto')" class="fb-btn fb-btn-xs fb-btn-green" title="Auto image">+I</button>
                         <button wire:click="addLayer('image', 'user')" class="fb-btn fb-btn-xs" style="background:#e8f5e9;color:#2e7d32;" title="User upload image">+I📷</button>
                     </div>
@@ -128,6 +129,31 @@
                                         </div>
                                     @endforeach
                                     @endif
+                                @elseif ($layer['source_type'] === 'hidden')
+                                    <div style="margin-bottom:4px;">
+                                        <label style="font-size:0.6rem;color:var(--fb-text-secondary);">Hidden Input Layer — collects user input for other methods (not printed on canvas)</label>
+                                    </div>
+                                    <div style="display:flex;justify-content:space-between;align-items:center;margin:4px 0 2px;">
+                                        <span style="font-size:0.6rem;color:var(--fb-text-secondary);font-weight:600;">Fields shown to user</span>
+                                        <button wire:click="addAiField({{ $index }})" type="button" class="fb-btn fb-btn-xs" style="font-size:0.6rem;padding:1px 6px;">+ Add Field</button>
+                                    </div>
+                                    @foreach ($layer['ai_fields'] as $fi => $field)
+                                    <div style="display:grid;grid-template-columns:1fr 70px;gap:3px;margin-bottom:3px;padding:4px;background:#e3f2fd;border-radius:4px;">
+                                        <div style="display:flex;gap:3px;">
+                                            <input wire:model="layers.{{ $index }}.ai_fields.{{ $fi }}.field_key" type="text" class="fb-input" style="font-size:0.65rem;padding:3px 5px;" placeholder="key (e.g. dob)">
+                                            <input wire:model="layers.{{ $index }}.ai_fields.{{ $fi }}.field_label" type="text" class="fb-input" style="font-size:0.65rem;padding:3px 5px;" placeholder="Label">
+                                        </div>
+                                        <div style="display:flex;gap:3px;align-items:center;">
+                                            <select wire:model="layers.{{ $index }}.ai_fields.{{ $fi }}.field_type" class="fb-input" style="font-size:0.65rem;padding:3px 5px;">
+                                                <option value="text">Text</option>
+                                                <option value="dob">Date</option>
+                                                <option value="number">Number</option>
+                                                <option value="file">File</option>
+                                            </select>
+                                            <button wire:click="removeAiField({{ $index }}, {{ $fi }})" type="button" style="background:none;border:none;color:#dc3545;cursor:pointer;font-size:0.8rem;">×</button>
+                                        </div>
+                                    </div>
+                                    @endforeach
                                 @endif
                             @elseif ($layer['type'] === 'image')
                                 @if ($layer['source_type'] === 'auto')

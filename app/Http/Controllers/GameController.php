@@ -41,7 +41,7 @@ class GameController extends Controller
 
         $userInputLayers = $game->visibleLayers->filter(function ($layer) {
             $st = $layer->source_type ?? 'auto';
-            return in_array($st, ['dob', 'manual', 'user', 'ai']);
+            return in_array($st, ['dob', 'manual', 'user', 'ai', 'hidden']);
         });
 
         $hasUserInput = $userInputLayers->isNotEmpty();
@@ -155,12 +155,43 @@ class GameController extends Controller
             }
         }
 
+        // PASS 1: Process hidden layers — collect field values, store in session
+        foreach ($game->visibleLayers as $layer) {
+            if (($layer->source_type ?? '') === 'hidden') {
+                $fields = $layer->aiFields()->orderBy('sort_order')->get();
+                foreach ($fields as $field) {
+                    $value = $userInput[$layer->id . '_' . $field->field_key] ?? $field->field_default ?? '';
+                    if (!$value) continue;
+
+                    if ($field->field_type === 'dob' && preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $value)) {
+                        $parts = explode('/', $value);
+                        $value = $parts[2] . '-' . $parts[1] . '-' . $parts[0];
+                    }
+
+                    if ($field->field_key === 'dob' && !$session->dob) {
+                        $session->dob = $value;
+                        $session->save();
+                    }
+                    if ($field->field_key === 'name' && !$session->name) {
+                        $session->name = $value;
+                        $session->save();
+                    }
+
+                    session()->put('game_field_' . $field->field_key, $value);
+                }
+            }
+        }
+
+        // PASS 2: Process all layers
         foreach ($game->visibleLayers as $layer) {
             try {
                 $layerType = $layer->type === 'dynamic' ? 'text' : $layer->type;
                 $sourceType = $layer->source_type ?? 'auto';
 
                 if ($layerType === 'text') {
+                    if ($sourceType === 'hidden') {
+                        continue;
+                    }
                     if ($sourceType === 'auto' && $layer->method_name) {
                         $content = $this->callDynamicMethod($layer->method_name, $session);
                     } elseif ($sourceType === 'ai') {
@@ -173,13 +204,60 @@ class GameController extends Controller
                                 'label' => $field->field_label,
                                 'value' => $value,
                             ];
+                            if ($value) {
+                                if ($field->field_type === 'dob' && preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $value)) {
+                                    $parts = explode('/', $value);
+                                    $value = $parts[2] . '-' . $parts[1] . '-' . $parts[0];
+                                }
+                                if ($field->field_key === 'dob' && $value && !$session->dob) {
+                                    $session->dob = $value;
+                                    $session->save();
+                                }
+                                if ($field->field_key === 'name' && $value && !$session->name) {
+                                    $session->name = $value;
+                                    $session->save();
+                                }
+                                session()->put('game_field_' . $field->field_key, $value);
+                            }
                         }
                         $role = $layer->ai_role ?? 'You are a fun, entertaining AI fortune teller for a social media game.';
                         $prompt = $layer->ai_prompt ?? 'Generate a fun prediction for this person.';
+
+                        preg_match_all('/\{(\w+)\}/', $prompt, $matches);
+                        if (!empty($matches[1])) {
+                            foreach ($matches[1] as $key) {
+                                $replacement = '';
+                                if ($session && $key === 'dob' && $session->dob) {
+                                    $replacement = $session->dob;
+                                } elseif ($session && $key === 'name' && $session->name) {
+                                    $replacement = $session->name;
+                                } elseif ($session && $key === 'username' && $session->username) {
+                                    $replacement = $session->username;
+                                } elseif (session()->has('game_field_' . $key)) {
+                                    $replacement = session('game_field_' . $key);
+                                }
+                                if ($replacement !== '') {
+                                    $prompt = str_replace('{' . $key . '}', $replacement, $prompt);
+                                }
+                            }
+                        }
+
                         $content = $this->aiGame->generate($role, $prompt, $fields);
                     } elseif (in_array($sourceType, ['dob', 'manual'])) {
                         $content = $userInput[$layer->id] ?? $userInput[$layer->sort_order] ?? '';
-                        if ($sourceType === 'dob' && $content && preg_match('/^\d{4}-\d{2}-\d{2}$/', $content)) {
+                        if ($sourceType === 'dob' && $content && preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $content)) {
+                            $parts = explode('/', $content);
+                            $ydm = $parts[2] . '-' . $parts[1] . '-' . $parts[0];
+                            if (!$session->dob) {
+                                $session->dob = $ydm;
+                                $session->save();
+                            }
+                            $content = $content;
+                        } elseif ($sourceType === 'dob' && $content && preg_match('/^\d{4}-\d{2}-\d{2}$/', $content)) {
+                            if (!$session->dob) {
+                                $session->dob = $content;
+                                $session->save();
+                            }
                             $content = \Carbon\Carbon::parse($content)->format('d/m/Y');
                         }
                     } else {
