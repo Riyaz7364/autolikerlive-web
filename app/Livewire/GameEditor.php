@@ -265,21 +265,23 @@ class GameEditor extends Component
                 if ($layer['source_type'] === 'hidden' && !empty($layer['ai_fields'])) {
                     foreach ($layer['ai_fields'] as $fi => $field) {
                         $key = $field['field_key'] ?? '';
+                        $testVal = trim($layer['ai_test_values'][$fi] ?? '');
                         $default = $field['field_default'] ?? '';
-                        if ($key && $default) {
+                        $value = $testVal ?: $default;
+                        if ($key && $value) {
                             $ydm = null;
-                            if ($field['field_type'] === 'dob' && preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $default)) {
-                                $parts = explode('/', $default);
+                            if ($field['field_type'] === 'dob' && preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $value)) {
+                                $parts = explode('/', $value);
                                 $ydm = $parts[2] . '-' . $parts[1] . '-' . $parts[0];
-                            } elseif ($field['field_type'] === 'dob' && preg_match('/^\d{4}-\d{2}-\d{2}$/', $default)) {
-                                $ydm = $default;
+                            } elseif ($field['field_type'] === 'dob' && preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
+                                $ydm = $value;
                             }
                             if ($key === 'dob' && $ydm && !$session->dob) {
                                 $session->dob = $ydm;
                                 $session->save();
                             }
-                            if ($key === 'name' && $default && !$session->name) {
-                                $session->name = $default;
+                            if ($key === 'name' && $value && !$session->name) {
+                                $session->name = $value;
                                 $session->save();
                             }
                         }

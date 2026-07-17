@@ -154,6 +154,15 @@
                                         </div>
                                     </div>
                                     @endforeach
+                                    @if (!empty($layer['ai_fields']))
+                                    <div style="font-size:0.55rem;color:#666;margin-top:2px;font-weight:600;">Test values (for preview):</div>
+                                    @foreach ($layer['ai_fields'] as $fi => $field)
+                                        <div style="display:flex;gap:4px;margin-top:2px;align-items:center;">
+                                            <span style="font-size:0.6rem;color:#888;min-width:60px;">{{ $field['field_label'] ?: ($field['field_key'] ?: 'Field '.($fi+1)) }}</span>
+                                            <input wire:model="layers.{{ $index }}.ai_test_values.{{ $fi }}" type="{{ $field['field_type'] === 'dob' ? 'date' : ($field['field_type'] === 'number' ? 'number' : 'text') }}" class="fb-input" style="font-size:0.65rem;padding:3px 5px;flex:1;" placeholder="test value">
+                                        </div>
+                                    @endforeach
+                                    @endif
                                 @endif
                             @elseif ($layer['type'] === 'image')
                                 @if ($layer['source_type'] === 'auto')
