@@ -176,11 +176,6 @@ class GameMethodController extends Controller
         return $this->convertToBS($now->format('Y-m-d'));
     }
 
-    public function getZodiacSign(GameSession $session): string
-    {
-        $name = $session->name ?? $session->username ?? 'unknown';
-        return $this->calculateZodiacFromName($name);
-    }
 
     private function convertToBS(string $adDate): string
     {
@@ -217,35 +212,43 @@ class GameMethodController extends Controller
         return sprintf('%02d/%02d/%d', $bsDay, $bsMonth, $bsYear);
     }
 
-    private function calculateZodiacFromName(string $name): string
+    public function getZodiacWithIcon($dob): string | null
     {
-        $signs = [
-            'Aries', 'Taurus', 'Gemini', 'Cancer',
-            'Leo', 'Virgo', 'Libra', 'Scorpio',
-            'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'
+        $date = date('m-d', strtotime($dob));
+
+        $zodiacs = [
+            ['name' => 'capricorn', 'start' => '12-22', 'end' => '01-19'],
+            ['name' => 'aquarius', 'start' => '01-20', 'end' => '02-18'],
+            ['name' => 'pisces', 'start' => '02-19', 'end' => '03-20'],
+            ['name' => 'aries', 'start' => '03-21', 'end' => '04-19'],
+            ['name' => 'taurus', 'start' => '04-20', 'end' => '05-20'],
+            ['name' => 'gemini', 'start' => '05-21', 'end' => '06-20'],
+            ['name' => 'cancer', 'start' => '06-21', 'end' => '07-22'],
+            ['name' => 'leo', 'start' => '07-23', 'end' => '08-22'],
+            ['name' => 'virgo', 'start' => '08-23', 'end' => '09-22'],
+            ['name' => 'libra', 'start' => '09-23', 'end' => '10-22'],
+            ['name' => 'scorpio', 'start' => '10-23', 'end' => '11-21'],
+            ['name' => 'sagittarius', 'start' => '11-22', 'end' => '12-21'],
         ];
 
-        $descriptions = [
-            'Aries' => 'Bold and ambitious. A natural leader with fiery passion.',
-            'Taurus' => 'Patient and dependable. Loves beauty and comfort.',
-            'Gemini' => 'Gentle and affectionate. Curious and communicative.',
-            'Cancer' => 'Tenacious and highly imaginative. Deeply loyal.',
-            'Leo' => 'Creative and passionate. Born to shine and lead.',
-            'Virgo' => 'Logical and practical. A hardworking perfectionist.',
-            'Libra' => 'Cooperative and diplomatic. A seeker of harmony.',
-            'Scorpio' => 'Resourceful and brave. Intensely passionate.',
-            'Sagittarius' => 'Generous and idealistic. A free-spirited explorer.',
-            'Capricorn' => 'Disciplined and responsible. A natural manager.',
-            'Aquarius' => 'Progressive and original. An independent thinker.',
-            'Pisces' => 'Compassionate and artistic. Deeply intuitive.',
-        ];
+        foreach ($zodiacs as $zodiac) {
 
-        $hash = crc32(strtolower(trim($name)));
-        $index = abs($hash) % 12;
-        $sign = $signs[$index];
+            if ($zodiac['name'] == 'capricorn') {
+                if ($date >= '12-22' || $date <= '01-19') {
+                    return "https://api.iconify.design/fluent-emoji-flat/{$zodiac['name']}.svg";
+                }
+            } else {
+                if ($date >= $zodiac['start'] && $date <= $zodiac['end']) {
+                    return 
+                        "https://api.iconify.design/fluent-emoji-flat/{$zodiac['name']}.svg";
+                }
+            }
+        }
 
-        return $sign . ': ' . ($descriptions[$sign] ?? '');
+        return null;
     }
+
+
 
     // backward-compatible aliases for old method names
     public function fbUserName(GameSession $session): string { return $this->getName($session); }
