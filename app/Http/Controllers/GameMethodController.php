@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\GameSession;
 use App\Services\AiGameService;
 
+use Carbon\Carbon;
+use App\Models\Game;
+use Illuminate\Support\Facades\Storage;
+use App\Models\GameLayer;
+use App\Models\GameAiField;
 class GameMethodController extends Controller
 {
     protected AiGameService $aiGame;
@@ -174,34 +179,7 @@ class GameMethodController extends Controller
     public function getZodiacSign(GameSession $session): string
     {
         $name = $session->name ?? $session->username ?? 'unknown';
-        $sign = $this->resolveZodiacName($name);
-        return "https://api.iconify.design/fluent-emoji-flat/" . strtolower($sign) . ".svg";
-    }
-
-    public function generateDailyHoroscope(GameSession $session): string
-    {
-        $name = $session->name ?? $session->username ?? 'Friend';
-        $todayDate = now()->format('d/m/Y');
-        $hinduDate = $this->convertToBS(now()->format('Y-m-d'));
-        $rashi = $this->resolveZodiacName($name);
-
-        $role = 'You are an experienced Hindi horoscope writer. Write the horoscope in English but with a spiritual, Vedic astrology tone. Keep it concise (2-4 sentences) and positive.';
-
-        $prompt = "Today's Date: {$todayDate}
-
-Hindu Date: {$hinduDate}
-
-Name: {$name}
-
-Rashi: {$rashi}
-
-Generate today's horoscope for this person. Write it as a short, spiritual daily prediction with a positive and mystical tone. Mention lucky color, lucky number, and a brief prediction for love, career, and health.";
-
-        try {
-            return $this->aiGame->generate($role, $prompt, [], 400);
-        } catch (\Exception $e) {
-            return "Stars align for {$name} today! Lucky number: " . rand(1, 9) . ". A new opportunity awaits in your career path. Stay positive and trust your intuition.";
-        }
+        return $this->calculateZodiacFromName($name);
     }
 
     private function convertToBS(string $adDate): string
@@ -239,7 +217,7 @@ Generate today's horoscope for this person. Write it as a short, spiritual daily
         return sprintf('%02d/%02d/%d', $bsDay, $bsMonth, $bsYear);
     }
 
-    private function resolveZodiacName(string $name): string
+    private function calculateZodiacFromName(string $name): string
     {
         $signs = [
             'Aries', 'Taurus', 'Gemini', 'Cancer',
@@ -247,10 +225,26 @@ Generate today's horoscope for this person. Write it as a short, spiritual daily
             'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'
         ];
 
+        $descriptions = [
+            'Aries' => 'Bold and ambitious. A natural leader with fiery passion.',
+            'Taurus' => 'Patient and dependable. Loves beauty and comfort.',
+            'Gemini' => 'Gentle and affectionate. Curious and communicative.',
+            'Cancer' => 'Tenacious and highly imaginative. Deeply loyal.',
+            'Leo' => 'Creative and passionate. Born to shine and lead.',
+            'Virgo' => 'Logical and practical. A hardworking perfectionist.',
+            'Libra' => 'Cooperative and diplomatic. A seeker of harmony.',
+            'Scorpio' => 'Resourceful and brave. Intensely passionate.',
+            'Sagittarius' => 'Generous and idealistic. A free-spirited explorer.',
+            'Capricorn' => 'Disciplined and responsible. A natural manager.',
+            'Aquarius' => 'Progressive and original. An independent thinker.',
+            'Pisces' => 'Compassionate and artistic. Deeply intuitive.',
+        ];
+
         $hash = crc32(strtolower(trim($name)));
         $index = abs($hash) % 12;
+        $sign = $signs[$index];
 
-        return $signs[$index];
+        return $sign . ': ' . ($descriptions[$sign] ?? '');
     }
 
     // backward-compatible aliases for old method names
