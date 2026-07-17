@@ -93,7 +93,6 @@
                 <div class="modal-field">
                     @if ($layer->source_type === 'ai')
                         <label style="margin-bottom:8px;">{{ $layer->prompt_label ?? 'Enter your details' }}</label>
-                        @php $allFilled = true; @endphp
                         @foreach ($layer->aiFields->sortBy('sort_order') as $field)
                             @php
                                 $sessionKey = 'game_field_' . $field->field_key;
@@ -101,7 +100,6 @@
                                 if ($field->field_key === 'dob') $existingVal = $session->dob ?? '';
                                 elseif ($field->field_key === 'name') $existingVal = $session->name ?? '';
                                 else $existingVal = session($sessionKey, '');
-                                if (!$existingVal) $allFilled = false;
                             @endphp
                             @if ($existingVal)
                                 <input type="hidden" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" value="{{ $existingVal }}">
@@ -120,12 +118,8 @@
                                 </div>
                             @endif
                         @endforeach
-                        @if ($allFilled)
-                            <p style="font-size:0.75rem;color:#888;margin-top:4px;">Your details are already saved.</p>
-                        @endif
                     @elseif ($layer->source_type === 'hidden')
                         <label style="margin-bottom:8px;">{{ $layer->prompt_label ?? 'Enter your details' }}</label>
-                        @php $allFilled = true; @endphp
                         @foreach ($layer->aiFields->sortBy('sort_order') as $field)
                             @php
                                 $sessionKey = 'game_field_' . $field->field_key;
@@ -133,7 +127,6 @@
                                 if ($field->field_key === 'dob') $existingVal = $session->dob ?? '';
                                 elseif ($field->field_key === 'name') $existingVal = $session->name ?? '';
                                 else $existingVal = session($sessionKey, '');
-                                if (!$existingVal) $allFilled = false;
                             @endphp
                             @if ($existingVal)
                                 <input type="hidden" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" value="{{ $existingVal }}">
@@ -152,9 +145,6 @@
                                 </div>
                             @endif
                         @endforeach
-                        @if ($allFilled)
-                            <p style="font-size:0.75rem;color:#888;margin-top:4px;">Your details are already saved.</p>
-                        @endif
                     @else
                         @php
                             $existingVal = '';
@@ -162,8 +152,6 @@
                         @endphp
                         @if ($existingVal && $layer->source_type === 'dob')
                             <input type="hidden" name="user_input[{{ $layer->id }}]" value="{{ $existingVal }}">
-                            <label>{{ $layer->prompt_label ?? 'Date of Birth' }}</label>
-                            <p style="font-size:0.75rem;color:#888;">Your date of birth is already saved.</p>
                         @else
                             <label>{{ $layer->prompt_label ?? ($layer->source_type === 'dob' ? 'Date of Birth' : ($layer->source_type === 'manual' ? 'Text' : 'Upload Photo')) }}</label>
                             @if ($layer->source_type === 'dob')
@@ -237,7 +225,13 @@
 <script>
 function startGame() {
     @if ($hasUserInput)
-        document.getElementById('inputModal').classList.add('active');
+        const form = document.getElementById('inputForm');
+        const hasEmpty = form.querySelector('input[type=date]:not([type=hidden]), input[type=text]:not([type=hidden]):not([name=csrf_token]), input[type=number]:not([type=hidden]), input[type=file]');
+        if (!hasEmpty) {
+            submitWithInput(new Event('submit'));
+        } else {
+            document.getElementById('inputModal').classList.add('active');
+        }
     @else
         callPlayApi(null);
     @endif
