@@ -351,7 +351,7 @@ class GameEditor extends Component
                     if ($layer['source_type'] === 'auto' && $layer['method_name']) {
                         $src = $this->callMethodForPreview($methodController, $layer['method_name'], $session);
                        
-                        if (empty($src) || !str_starts_with($src, 'http')) {
+                        if (!empty($src) && !str_starts_with($src, 'http') && !file_exists(public_path($src))) {
                             $src = public_path('default-avatar.png');
                             if (!file_exists($src)) {
                                 $src = 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png';
@@ -573,7 +573,7 @@ class GameEditor extends Component
             return $fontPath;
         }
 
-        return public_path('fonts/arialbd.ttf');
+        return public_path('fonts/Poppins.ttf');
     }
 
     protected function getAvailableMethods(): array

@@ -16,19 +16,15 @@ class ImageService
                 $relativePath = preg_replace('#^/storage/#', '', $path);
                 $localPath = storage_path('app/public/' . $relativePath);
                 if (file_exists($localPath)) {
-                    return $this->readImage($localPath);
+                    return Image::read($localPath);
                 }
             }
-
-            $isSvg = str_ends_with(strtolower($path), '.svg') || str_contains($source, 'iconify');
 
             $tempDir = storage_path('app/public/game_temp');
             if (!is_dir($tempDir)) {
                 mkdir($tempDir, 0755, true);
             }
-
-            $ext = $isSvg ? '.svg' : '.tmp';
-            $tempFile = $tempDir . '/' . md5($source) . $ext;
+            $tempFile = $tempDir . '/' . md5($source) . '.tmp';
 
             if (!file_exists($tempFile)) {
                 $ch = curl_init($source);
@@ -46,63 +42,19 @@ class ImageService
                 file_put_contents($tempFile, $data);
             }
 
-            if ($isSvg && extension_loaded('imagick')) {
-                $pngFile = $tempDir . '/' . md5($source) . '.png';
-                if (!file_exists($pngFile)) {
-                    $configPath = 'C:\\tools\\php84\\config_imagemagick';
-                    if (!is_dir($configPath)) {
-                        $configPath = 'C:\\xampp\\php\\config_imagemagick';
-                    }
-                    if (is_dir($configPath)) {
-                        putenv("MAGICK_CONFIGURE_PATH={$configPath}");
-                    }
-                    $imagick = new \Imagick();
-                    $imagick->setBackgroundColor(new \ImagickPixel('transparent'));
-                    $imagick->readImage($tempFile);
-                    $imagick->setImageFormat('png32');
-                    $imagick->resizeImage(256, 256, \Imagick::FILTER_LANCZOS, 1);
-                    $imagick->writeImage($pngFile);
-                    $imagick->clear();
-                }
-                return Image::read($pngFile);
-            }
-
-            return $this->readImage($tempFile);
+            return Image::read($tempFile);
         }
 
-        $localPath = storage_path('app/public/' . ltrim($source, '/'));
-        if (file_exists($localPath)) {
-            return $this->readImage($localPath);
+        $publicPath = public_path($source);
+        if (file_exists($publicPath)) {
+            return Image::read($publicPath);
+        }
+
+        $storagePath = storage_path('app/public/' . ltrim($source, '/'));
+        if (file_exists($storagePath)) {
+            return Image::read($storagePath);
         }
 
         return null;
-    }
-
-    protected function readImage(string $path): ?\Intervention\Image\Image
-    {
-        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-
-        if ($ext === 'svg' && extension_loaded('imagick')) {
-            $pngFile = storage_path('app/public/game_temp') . '/' . md5($path) . '.png';
-            if (!file_exists($pngFile)) {
-                $configPath = 'C:\\tools\\php84\\config_imagemagick';
-                if (!is_dir($configPath)) {
-                    $configPath = 'C:\\xampp\\php\\config_imagemagick';
-                }
-                if (is_dir($configPath)) {
-                    putenv("MAGICK_CONFIGURE_PATH={$configPath}");
-                }
-                $imagick = new \Imagick();
-                $imagick->setBackgroundColor(new \ImagickPixel('transparent'));
-                $imagick->readImage($path);
-                $imagick->setImageFormat('png32');
-                $imagick->resizeImage(256, 256, \Imagick::FILTER_LANCZOS, 1);
-                $imagick->writeImage($pngFile);
-                $imagick->clear();
-            }
-            return Image::read($pngFile);
-        }
-
-        return Image::read($path);
     }
 }

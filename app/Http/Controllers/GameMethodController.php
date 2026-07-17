@@ -239,11 +239,11 @@ class GameMethodController extends Controller
         foreach ($zodiacs as $zodiac) {
             if ($zodiac['name'] === 'capricorn') {
                 if ($date >= '12-22' || $date <= '01-19') {
-                    return "https://api.iconify.design/fluent-emoji-flat/{$zodiac['name']}.svg";
+                    return "zodiac_signs/{$zodiac['name']}.png";
                 }
             } else {
                 if ($date >= $zodiac['start'] && $date <= $zodiac['end']) {
-                    return "https://api.iconify.design/fluent-emoji-flat/{$zodiac['name']}.svg";
+                    return "zodiac_signs/{$zodiac['name']}.png";
                 }
             }
         }

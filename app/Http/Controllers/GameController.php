@@ -345,7 +345,7 @@ class GameController extends Controller
     protected function resolveFont($fontFamily): string
     {
         if (!$fontFamily) {
-            return public_path('fonts/arialbd.ttf');
+            return public_path('fonts/Poppins.ttf');
         }
 
         // Full path provided
@@ -359,7 +359,7 @@ class GameController extends Controller
             return $fontPath;
         }
 
-        return public_path('fonts/arialbd.ttf');
+        return public_path('fonts/Poppins.ttf');
     }
 
     public function editorList()

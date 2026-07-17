@@ -640,7 +640,7 @@ class WebAppController extends Controller
                 $card->place($profilePic, 'top-left', 50, 265);
             }
 
-            $fontPath = public_path('fonts/arialbd.ttf');
+            $fontPath = public_path('fonts/Poppins.ttf');
 
             $today = Carbon::now()->format('d/m/Y');
 

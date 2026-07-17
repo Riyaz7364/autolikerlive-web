@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Services\tempmail;
+namespace App\Services\tempmail;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
