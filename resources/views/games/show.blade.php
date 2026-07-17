@@ -93,44 +93,86 @@
                 <div class="modal-field">
                     @if ($layer->source_type === 'ai')
                         <label style="margin-bottom:8px;">{{ $layer->prompt_label ?? 'Enter your details' }}</label>
+                        @php $allFilled = true; @endphp
                         @foreach ($layer->aiFields->sortBy('sort_order') as $field)
-                            <div style="margin-bottom:6px;">
-                                <label style="font-size:0.8rem;font-weight:500;margin-bottom:2px;">{{ $field->field_label }}</label>
-                                @if ($field->field_type === 'dob')
-                                    <input type="text" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" class="fb-input" placeholder="DD/MM/YYYY" pattern="\d{2}/\d{2}/\d{4}" maxlength="10" {{ $field->field_default ? '' : 'required' }}>
-                                @elseif ($field->field_type === 'number')
-                                    <input type="number" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" class="fb-input" placeholder="{{ $field->field_placeholder }}" value="{{ $field->field_default }}" {{ $field->field_default ? '' : 'required' }}>
-                                @elseif ($field->field_type === 'file')
-                                    <input type="file" name="user_images[{{ $layer->id }}_{{ $field->field_key }}]" accept="image/*" {{ $field->field_default ? '' : 'required' }}>
-                                @else
-                                    <input type="text" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" class="fb-input" placeholder="{{ $field->field_placeholder }}" value="{{ $field->field_default }}" {{ $field->field_default ? '' : 'required' }}>
-                                @endif
-                            </div>
+                            @php
+                                $sessionKey = 'game_field_' . $field->field_key;
+                                $existingVal = '';
+                                if ($field->field_key === 'dob') $existingVal = $session->dob ?? '';
+                                elseif ($field->field_key === 'name') $existingVal = $session->name ?? '';
+                                else $existingVal = session($sessionKey, '');
+                                if (!$existingVal) $allFilled = false;
+                            @endphp
+                            @if ($existingVal)
+                                <input type="hidden" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" value="{{ $existingVal }}">
+                            @else
+                                <div style="margin-bottom:6px;">
+                                    <label style="font-size:0.8rem;font-weight:500;margin-bottom:2px;">{{ $field->field_label }}</label>
+                                    @if ($field->field_type === 'dob')
+                                        <input type="date" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" class="fb-input" max="{{ date('Y-m-d') }}" required>
+                                    @elseif ($field->field_type === 'number')
+                                        <input type="number" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" class="fb-input" placeholder="{{ $field->field_placeholder }}" value="{{ $field->field_default }}" required>
+                                    @elseif ($field->field_type === 'file')
+                                        <input type="file" name="user_images[{{ $layer->id }}_{{ $field->field_key }}]" accept="image/*" required>
+                                    @else
+                                        <input type="text" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" class="fb-input" placeholder="{{ $field->field_placeholder }}" value="{{ $field->field_default }}" required>
+                                    @endif
+                                </div>
+                            @endif
                         @endforeach
+                        @if ($allFilled)
+                            <p style="font-size:0.75rem;color:#888;margin-top:4px;">Your details are already saved.</p>
+                        @endif
                     @elseif ($layer->source_type === 'hidden')
                         <label style="margin-bottom:8px;">{{ $layer->prompt_label ?? 'Enter your details' }}</label>
+                        @php $allFilled = true; @endphp
                         @foreach ($layer->aiFields->sortBy('sort_order') as $field)
-                            <div style="margin-bottom:6px;">
-                                <label style="font-size:0.8rem;font-weight:500;margin-bottom:2px;">{{ $field->field_label }}</label>
-                                @if ($field->field_type === 'dob')
-                                    <input type="text" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" class="fb-input" placeholder="DD/MM/YYYY" pattern="\d{2}/\d{2}/\d{4}" maxlength="10" {{ $field->field_default ? '' : 'required' }}>
-                                @elseif ($field->field_type === 'number')
-                                    <input type="number" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" class="fb-input" placeholder="{{ $field->field_placeholder }}" value="{{ $field->field_default }}" {{ $field->field_default ? '' : 'required' }}>
-                                @elseif ($field->field_type === 'file')
-                                    <input type="file" name="user_images[{{ $layer->id }}_{{ $field->field_key }}]" accept="image/*" {{ $field->field_default ? '' : 'required' }}>
-                                @else
-                                    <input type="text" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" class="fb-input" placeholder="{{ $field->field_placeholder }}" value="{{ $field->field_default }}" {{ $field->field_default ? '' : 'required' }}>
-                                @endif
-                            </div>
+                            @php
+                                $sessionKey = 'game_field_' . $field->field_key;
+                                $existingVal = '';
+                                if ($field->field_key === 'dob') $existingVal = $session->dob ?? '';
+                                elseif ($field->field_key === 'name') $existingVal = $session->name ?? '';
+                                else $existingVal = session($sessionKey, '');
+                                if (!$existingVal) $allFilled = false;
+                            @endphp
+                            @if ($existingVal)
+                                <input type="hidden" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" value="{{ $existingVal }}">
+                            @else
+                                <div style="margin-bottom:6px;">
+                                    <label style="font-size:0.8rem;font-weight:500;margin-bottom:2px;">{{ $field->field_label }}</label>
+                                    @if ($field->field_type === 'dob')
+                                        <input type="date" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" class="fb-input" max="{{ date('Y-m-d') }}" required>
+                                    @elseif ($field->field_type === 'number')
+                                        <input type="number" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" class="fb-input" placeholder="{{ $field->field_placeholder }}" value="{{ $field->field_default }}" required>
+                                    @elseif ($field->field_type === 'file')
+                                        <input type="file" name="user_images[{{ $layer->id }}_{{ $field->field_key }}]" accept="image/*" required>
+                                    @else
+                                        <input type="text" name="user_input[{{ $layer->id }}_{{ $field->field_key }}]" class="fb-input" placeholder="{{ $field->field_placeholder }}" value="{{ $field->field_default }}" required>
+                                    @endif
+                                </div>
+                            @endif
                         @endforeach
+                        @if ($allFilled)
+                            <p style="font-size:0.75rem;color:#888;margin-top:4px;">Your details are already saved.</p>
+                        @endif
                     @else
-                        <label>{{ $layer->prompt_label ?? ($layer->source_type === 'dob' ? 'Date of Birth' : ($layer->source_type === 'manual' ? 'Text' : 'Upload Photo')) }}</label>
-                        @if ($layer->source_type === 'dob')
-                            <input type="text" name="user_input[{{ $layer->id }}]" class="fb-input" placeholder="DD/MM/YYYY" pattern="\d{2}/\d{2}/\d{4}" maxlength="10" required>
-                        @elseif ($layer->source_type === 'manual')
-                            <input type="text" name="user_input[{{ $layer->id }}]" class="fb-input" placeholder="{{ $layer->prompt_label ?? 'Enter value' }}" required>
-                        @elseif ($layer->source_type === 'user')
-                            <input type="file" name="user_images[{{ $layer->id }}]" accept="image/*" required>
+                        @php
+                            $existingVal = '';
+                            if ($layer->source_type === 'dob') $existingVal = $session->dob ?? '';
+                        @endphp
+                        @if ($existingVal && $layer->source_type === 'dob')
+                            <input type="hidden" name="user_input[{{ $layer->id }}]" value="{{ $existingVal }}">
+                            <label>{{ $layer->prompt_label ?? 'Date of Birth' }}</label>
+                            <p style="font-size:0.75rem;color:#888;">Your date of birth is already saved.</p>
+                        @else
+                            <label>{{ $layer->prompt_label ?? ($layer->source_type === 'dob' ? 'Date of Birth' : ($layer->source_type === 'manual' ? 'Text' : 'Upload Photo')) }}</label>
+                            @if ($layer->source_type === 'dob')
+                                <input type="date" name="user_input[{{ $layer->id }}]" class="fb-input" max="{{ date('Y-m-d') }}" required>
+                            @elseif ($layer->source_type === 'manual')
+                                <input type="text" name="user_input[{{ $layer->id }}]" class="fb-input" placeholder="{{ $layer->prompt_label ?? 'Enter value' }}" required>
+                            @elseif ($layer->source_type === 'user')
+                                <input type="file" name="user_images[{{ $layer->id }}]" accept="image/*" required>
+                            @endif
                         @endif
                     @endif
                 </div>
