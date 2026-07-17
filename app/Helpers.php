@@ -431,3 +431,24 @@ function decode_hash($hash)
     return false;
 }
 }
+
+if (!function_exists('resolveGameTitle')) {
+function resolveGameTitle(string $title): string
+{
+    $replacements = [
+        '{today}' => now()->format('d/m/Y'),
+        '{time}' => now()->format('h:i A'),
+        '{year}' => now()->format('Y'),
+        '{month}' => now()->format('m'),
+        '{day}' => now()->format('d'),
+    ];
+
+    if (str_contains($title, '{today_bs}')) {
+        $mc = app(\App\Http\Controllers\GameMethodController::class);
+        $session = \App\Models\GameSession::make(['id' => '0', 'name' => '', 'username' => '', 'profile_pic' => '', 'dob' => '']);
+        $replacements['{today_bs}'] = $mc->currentDateBS($session);
+    }
+
+    return str_replace(array_keys($replacements), array_values($replacements), $title);
+}
+}

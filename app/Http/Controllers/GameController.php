@@ -46,6 +46,8 @@ class GameController extends Controller
 
         $hasUserInput = $userInputLayers->isNotEmpty();
 
+        $game->title = resolveGameTitle($game->title);
+
         return view('games.show', compact('game', 'session', 'userInputLayers', 'hasUserInput'));
     }
 
@@ -99,7 +101,7 @@ class GameController extends Controller
 
             $imageUrl = Storage::disk('public')->url('game_output/' . $filename);
 
-            $ogTitle = $game->og_title ?: 'Try it yourself!';
+            $ogTitle = resolveGameTitle($game->og_title ?: 'Try it yourself!');
             $shareUrl = route('game.shared', ['slug' => $slug, 'hash' => $hash]);
 
             return response()->json([
@@ -126,6 +128,8 @@ class GameController extends Controller
         }
 
         $imageUrl = Storage::disk('public')->url('game_output/' . $filename);
+
+        $game->title = resolveGameTitle($game->title);
 
         return view('games.shared', [
             'game' => $game,

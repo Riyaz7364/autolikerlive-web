@@ -36,7 +36,7 @@
                                 <img src="{{ Storage::disk('public')->url($game->thumbnail) }}" alt="" style="width:48px;height:36px;border-radius:6px;object-fit:cover;flex-shrink:0;">
                             @endif
                             <div>
-                                <h2 class="admin-list-title">{{ $game->title }}</h2>
+                                <h2 class="admin-list-title">{{ resolveGameTitle($game->title) }}</h2>
                                 <span class="admin-list-badge admin-list-badge-{{ $game->status === 'published' ? 'published' : 'draft' }}">{{ $game->status }}</span>
                             </div>
                         </div>

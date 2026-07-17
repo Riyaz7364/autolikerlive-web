@@ -30,7 +30,7 @@
                         @endif
                     </div>
                     <div class="og-bottom">
-                        <div class="og-title">{{ $game->title }}</div>
+                        <div class="og-title">{{ resolveGameTitle($game->title) }}</div>
                         @if ($game->description)
                             <div class="og-desc">{{ $game->description }}</div>
                         @endif
