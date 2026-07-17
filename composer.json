@@ -1,3 +1,4 @@
+use Carbon\Carbon;
 {
     "name": "laravel/laravel",
     "type": "project",
