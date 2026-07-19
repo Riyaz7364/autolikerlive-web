@@ -1,38 +1,10 @@
 @extends('layouts.master')
 
 
-@section('title', 'Instagram Engagement Tools | Community-Based Growth | Autolikerlive.com')
-@section('description', 'Enhance your Instagram presence with our community engagement tools. Connect with real users to
-    build authentic engagement. Download our app to join the community.')
-
-@section('meta')
-    <link rel="canonical" href="{{ url()->current() }}" />
-    <meta name="robots" content="index, follow">
-    <meta property="og:title" content="Instagram Engagement Tools | Community-Based Growth">
-    <meta property="og:description"
-        content="Enhance your Instagram presence with our community engagement tools. Connect with real users to build authentic engagement and improve your visibility on Instagram."">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:image" content="{{ asset('assets/instagram-autoliker-og.jpg') }}">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Instagram Engagement Tools | Community-Based Growth">
-    <meta name="twitter:description"
-        content="Enhance your Instagram presence with our community engagement tools. Connect with real users to build authentic engagement and improve your visibility on Instagram."">
-    <meta name="twitter:image" content="{{ asset('assets/instagram-autoliker-og.jpg') }}">
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Instagram Engagement Tools",
-      "url": "{{ url()->current() }}",
-      "description": "Enhance your Instagram presence with our community engagement tools. Connect with real users to build authentic engagement and improve your visibility on Instagram.",
-      "publisher": {
-        "@type": "Organization",
-        "name": "Autolikerlive.com"
-      }
-    }
-    </script>
-@endsection
+@section('title', 'Instagram Auto Liker & Engagement Tools | Autolikerlive.com')
+@section('description', 'Enhance your Instagram presence with our community engagement tools. Connect with real users to build authentic engagement. Free Instagram auto liker and growth tools.')
+@section('keywords', 'instagram auto liker, instagram auto like, instagram comment liker, instagram auto liker 1000 likes, instagram free auto liker, instagram auto liker apk, free instagram likes, instagram auto followers, instagram engagement tools')
+@section('ogimage', asset('assets/instagram-autoliker-og.jpg'))
 
 @section('javascripts')
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>

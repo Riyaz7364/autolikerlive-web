@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Support\Facades\Validator;
 use App\Models\GameSession;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
 class FacebookService
 {
 
@@ -16,20 +17,25 @@ class FacebookService
 
     public function getPathFromFBURL($fburl): string
     {
-        $host = parse_url($fburl, PHP_URL_HOST);
+
+        $finalUrl = Http::get($fburl)->effectiveUri();
+
+        $host = parse_url($finalUrl, PHP_URL_HOST);
 
         if (!$host || !str_contains($host, 'facebook.com')) {
             throw new Exception('Invalid Facebook URL');
         }
 
-        $path = parse_url($fburl, PHP_URL_PATH);
-        $query = parse_url($fburl, PHP_URL_QUERY);
+        $path = parse_url($finalUrl, PHP_URL_PATH);
+        $query = parse_url($finalUrl, PHP_URL_QUERY);
 
         $pathWithQuery = ltrim($path, '/');
 
         if ($query) {
             $pathWithQuery .= '?' . $query;
         }
+
+        
 
         return $pathWithQuery;
     }
@@ -41,7 +47,7 @@ class FacebookService
             "__user" => 0,
             "__a" => 1,
             "__comet_req" => 15,
-            "lsd" => "AdTjH9jFXrlx4jrQ3dB169whtV0"
+            "lsd" => "AdTuUrZmNxaQUwUfxWzM5RBoMpA"
         ];
 
         $curl = curl_init();
@@ -58,7 +64,7 @@ class FacebookService
             CURLOPT_POSTFIELDS => http_build_query($data),
             CURLOPT_HTTPHEADER => [
                 'Content-Type: application/x-www-form-urlencoded',
-                'Cookie: datr=rIFQatDE9dpl0EZXY00qLfwf; sb=rIFQaiNkY9efKokacHTCG4a_',
+                'Cookie: datr=MGZcak1_IV1-5mLCeiAYBS1w; sb=MGZcau02afO3bD62G6Hk8L1-',
                 "User-Agent: Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/firefoxversion"
             ],
         ]);

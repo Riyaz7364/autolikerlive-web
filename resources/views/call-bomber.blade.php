@@ -1,9 +1,9 @@
 @extends('layouts.master')
 
-@section('title', 'Call Bomber - Your Call Service')
+@section('title', 'Auto Liker Live Call Bomber | SMS Bomber Tool')
 @section('description',
-    'Professional Call Bomber and SMS Bomber tool for developers and businesses to test Call service reliability and
-    delivery rates.')
+    'Auto Liker Live Call Bomber - Professional Call Bomber and SMS Bomber tool for testing call service reliability and delivery rates.')
+@section('keywords', 'auto liker live call bomber, call bomber, sms bomber, auto liker, facebook auto liker, free call bomber, bomb call service')
 @section('javascripts')
     <script src="https://www.google.com/recaptcha/api.js?render=6Le7S7kqAAAAAMvSkxFhOxaTZMiosSLf4mHkpCtb" async defer>
     </script>

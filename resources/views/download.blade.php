@@ -4,10 +4,10 @@
 @endphp
 @extends('layouts.master')
 
-@section('title', 'Download APP')
+@section('title', 'Download AutoLiker Live App | Auto Liker APK')
 @section('description',
-    'Download autoliker live app from this page. This app has perfect tool for Facebook auto
-    followers.')
+    'Download AutoLiker Live app from this page. This app has perfect tool for Facebook auto liker, auto followers, and auto reactions.')
+@section('keywords', 'autoliker live apk, autoliker live app download, facebook auto liker app, auto liker apk, download auto liker, facebook auto followers apk, fb auto liker app')
 
     @push('styles')
         <style>

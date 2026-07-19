@@ -1,9 +1,9 @@
 @extends('layouts.master')
 
-@section('title', 'TikTok Engagement Community | Connect with Content Creators')
+@section('title', 'Free TikTok Likes | TikTok Auto Liker | AutoLikerLive')
 @section('description',
-    'Join our community of TikTok users to increase your content visibility through genuine
-    engagement. Build connections with other creators and grow your presence organically.')
+    'Get free TikTok likes on your videos. Increase engagement and visibility with our TikTok auto liker tool. Fast, safe, no login required.')
+@section('keywords', 'free tiktok likes, tiktok auto liker, free tiktok auto liker, auto likes tiktok, tiktok auto liker free, tiktok auto liker apk, tiktok free likes, free like tiktok')
 
 
 

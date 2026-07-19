@@ -1,8 +1,8 @@
 @extends('layouts.master')
 
-@section('title', 'YouTube Auto Liker & Free Youtube Subscribers')
-@section('description', 'Unlimited YouTube Auto Likes and Auto Subscribers. YoSubs\'s algorithm has been updated to
-    allow sending up to Unlimited Auto Likes per hour. Check out the best YouTube Auto Liker of 2023.')
+@section('title', 'YouTube Auto Liker & Free YouTube Subscribers')
+@section('description', 'Get free YouTube auto likes and auto subscribers. Boost your YouTube videos with our auto liker tool. Fast, safe, and free.')
+@section('keywords', 'youtube auto liker, youtube auto like, youtube auto subscribers, free youtube subscribers, youtube like bot, auto likes youtube, youtube auto liker free')
 
 @section('content')
 

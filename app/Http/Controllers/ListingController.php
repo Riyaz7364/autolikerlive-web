@@ -21,9 +21,7 @@ class ListingController extends Controller
 {
     public function Index(Request $request){
 
-
-
-        $listings = Listing::select('name','post_id')->get();
+        $listings = Listing::select('id','name','post_id')->get();
 
         $keyword = str_replace("-", " ", $request['keyword']); // Replaced keyword
         $matchingListing = null;
@@ -34,33 +32,32 @@ class ListingController extends Controller
                 break;
             }
         }
-        $locale = App::getLocale();
-        $default_post = null;
         if($matchingListing && isset($matchingListing['post_id'])){
-            $posts = $this->cURL('https://www.autolikerlive.com/blog/wp-json/trs/v1/post/'.$matchingListing['post_id'].'?local='.$locale);
+            $posts = $this->cURL('https://www.autolikerlive.com/blog/api/post/'.$matchingListing['post_id']);
         }else{
-            $posts = $this->cURL('https://www.autolikerlive.com/blog/wp-json/trs/v1/posts/tags/3/42/1?local='.$locale);
-            $default_post = $this->cURL('https://www.autolikerlive.com/blog/wp-json/trs/v1/post/123?local='.$locale);
-
+            $posts = null;
         }
         $tags = Tag::get();
         $games = Game::where('status', 'published')->orderBy('created_at', 'desc')->get();
         View::share('tags',$tags);
         View::share('posts',$posts);
-        View::share('default_post',$default_post);
         View::share('listings',$listings);
         View::share('games',$games);
 
+        if(Listing::where('name', str_replace("-",' ', $request['keyword']))->exists()){
+            return view('landing', [
+                'keyword' => str_replace("-", " ", $request['keyword']),
+                'posts' => $posts,
+                'listing' => $matchingListing,
+            ]);
+        }
 
-        if(Tag::where('name', str_replace("-",' ', $request['keyword']))->exists() ||
-            Listing::where('name', str_replace("-",' ', $request['keyword']))->exists()
-        ){
-
+        if(Tag::where('name', str_replace("-",' ', $request['keyword']))->exists()){
             return view('index', ['keyword'=> $request['keyword'], "home" => true]);
-        }else{
+        }
+
         if (isset($request['keyword'])) {
             return redirect()->route('index', [], 301);
-        }
         }
 
         return view('index');
@@ -116,9 +113,7 @@ class ListingController extends Controller
     }
 
     public function IgCommentLiker(){
-        $locale = App::getLocale();
-        $posts = $this->cURL('https://www.autolikerlive.com/blog/wp-json/trs/v1/post/81?local='.$locale);
-
+        $posts = $this->cURL('https://www.autolikerlive.com/blog/api/post/81');
 
         return view('instagram-commnet-liker', compact('posts'));
     }

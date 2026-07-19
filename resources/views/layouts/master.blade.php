@@ -10,8 +10,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="canonical" href="{{ url()->current() }}" />
     <title>@yield('title') - AutoLikerLive</title>
-    <meta name="description" content="@yield('description', 'Create fun Facebook image games, profile picture frames & viral photo cards. Free online image game maker for Facebook.')">
-    <meta name="keywords" content="@hasSection('keywords')@yield('keywords')@else facebook image games, profile picture maker, photo frame maker, facebook fun games, viral image games, image game maker @endif">
+    <meta name="description" content="@yield('description', 'AutoLikerLive - Free Facebook auto liker, image games, auto reactions, auto followers, and social media tools. Fast, safe, and free.')">
+    <meta name="keywords" content="@hasSection('keywords')@yield('keywords')@else auto liker live, facebook auto liker, fb liker 1000 likes, facebook image games, profile picture maker, auto react facebook, facebook auto followers, image game maker @endif">
 
     <meta property="og:url" content="{{ Request::url() }}" />
     <meta property="og:type" content="website" />
@@ -88,9 +88,9 @@
         <div class="container">
             <div class="footer-links">
                 <a href="{{ url('/') }}">Games</a>
-                <a href="{{ url('services') }}">Tools</a>
+                <a href="{{ url('services') }}">Free Tools</a>
+                <a href="{{ url('auto-liker-1000-likes') }}">FB Auto Liker</a>
                 <a href="{{ url('privacy') }}">Privacy</a>
-                <a href="{{ url('contact') }}">Contact</a>
                 <a href="{{ url('terms') }}">Terms</a>
             </div>
             <div class="footer-copy">

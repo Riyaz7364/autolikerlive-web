@@ -4,6 +4,7 @@
 @section('description',
     'Instantly boost your Facebook posts with up to 1000 real likes using Autolikerlive.com. Fast,
     safe, and free Facebook Auto Liker service. No login required!')
+@section('keywords', 'fb liker 1000 likes, auto liker 1000 likes, facebook auto liker, free facebook liker 1000 likes, fb free liker, auto liker 1000 likes facebook, fb auto liker 1000 likes, facebook page auto liker, 1000 likes on facebook')
 
 @section('ogimage', url('/images/fb-liker-1000-likes.webp'))
 

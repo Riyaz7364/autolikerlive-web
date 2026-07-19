@@ -13,6 +13,7 @@
     'service_type' => 'Likes',
     'timer' => '5',
     ]))
+@section('keywords', 'free instagram likes, instagram auto liker, instagram auto like, free instagram auto liker, instagram auto liker 1000 likes, free instagram comment liker app, instagram free auto liker, instagram likes free')
 
 @section('javascripts')
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>

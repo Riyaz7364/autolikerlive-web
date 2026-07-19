@@ -69,13 +69,15 @@
         <button class="fb-tools-panel-close" onclick="toggleToolsPanel()">✕</button>
     </div>
     <div class="fb-tools-panel-list">
+        <a href="{{ url('services') }}" class="fb-tools-panel-item fb-tools-panel-all">🔧 All Free Tools</a>
+        <div class="fb-tools-panel-divider"></div>
+        <a href="{{ url('auto-liker-1000-likes') }}" class="fb-tools-panel-item">👍 FB Auto Liker</a>
+        <a href="{{ url('instagram-comment-liker') }}" class="fb-tools-panel-item">📸 IG Comment Liker</a>
         <a href="{{ route('free-tiktok-views') }}" class="fb-tools-panel-item">📹 TikTok Views</a>
         <a href="{{ route('free-tiktok-likes') }}" class="fb-tools-panel-item">❤️ TikTok Likes</a>
         <a href="{{ route('free-instagram-likes') }}" class="fb-tools-panel-item">📸 Instagram Likes</a>
         <a href="{{ route('sms-bomber') }}" class="fb-tools-panel-item">💬 SMS Bomber</a>
         <a href="{{ route('temp-mail') }}" class="fb-tools-panel-item">📧 Temp Mail</a>
-        <div class="fb-tools-panel-divider"></div>
-        <a href="{{ url('services') }}" class="fb-tools-panel-item fb-tools-panel-all">→ All Tools</a>
     </div>
 </div>
 

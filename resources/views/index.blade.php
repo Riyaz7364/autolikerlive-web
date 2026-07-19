@@ -1,8 +1,8 @@
 @extends('layouts.game')
 
-@section('title', 'AutoLikerLive - Free Facebook Image Games & Profile Picture Maker')
-@section('description', 'Create fun Facebook image games, profile picture frames & viral photo cards. Share with friends and see results. Free online Facebook image game maker.')
-@section('keywords', 'facebook image games, facebook profile picture maker, photo frame maker, facebook fun games, viral image games, profile photo card, image game maker, facebook game online')
+@section('title', 'AutoLikerLive - Free Facebook Auto Liker, Image Games & Social Media Tools')
+@section('description', 'AutoLikerLive offers free Facebook auto liker with 1000 likes, Facebook image games, profile picture maker, auto reactions, auto followers, and more social media tools. Fast, safe, and free.')
+@section('keywords', 'auto liker live, autolikerlive, auto liker, facebook auto liker, fb liker 1000 likes, facebook image games, profile picture maker, free facebook liker, auto react facebook, facebook auto followers, photo frame maker, viral image games, image game maker, fb auto liker, facebook page liker')
 
 @section('content')
 <div class="pb-20">

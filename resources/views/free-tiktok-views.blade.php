@@ -13,6 +13,7 @@
     'service_type' => 'views',
     'timer' => '5',
     ]))
+@section('keywords', 'tiktok auto views, free tiktok views, tiktok views free, free tiktok views iframe, tiktok auto view, auto views tiktok, tiktok free auto views')
 @section('ogimage', asset('images/free-tiktok-views.png'))
 @section('javascripts')
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8426510303593933"

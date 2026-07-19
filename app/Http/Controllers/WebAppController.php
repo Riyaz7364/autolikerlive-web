@@ -523,8 +523,8 @@ class WebAppController extends Controller
             // Check valid FB link and get path
           
             $pathWithQuery = $this->getPathFromFBURL($input['fburl']);
-
-            $response = $this->getPathData($pathWithQuery);
+            $fbServices = new \App\Services\FacebookService();
+            $response = $fbServices->getPathData($pathWithQuery);
            
             $source = html_entity_decode($response);
             if(isset($input['type'])) return $source;
@@ -549,136 +549,6 @@ class WebAppController extends Controller
 
             return redirect()->back();
         }
-    }
-
-    private function getPathData($path){
-        $data = [
-            "route_urls[0]" => $path,
-            "__user" => 0,
-            "__a" => 1,
-            "__comet_req" => 15,
-            "lsd" => "AdTjH9jFXrlx4jrQ3dB169whtV0"
-        ];
-
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-          CURLOPT_URL => 'https://www.facebook.com/ajax/bulk-route-definitions/',
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => '',
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_TIMEOUT => 0,
-          CURLOPT_FOLLOWLOCATION => true,
-          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-          CURLOPT_CUSTOMREQUEST => 'POST',
-          CURLOPT_POSTFIELDS => http_build_query($data),
-          CURLOPT_HTTPHEADER => array(
-            'Content-Type: application/x-www-form-urlencoded',
-            'Cookie: datr=rIFQatDE9dpl0EZXY00qLfwf; sb=rIFQaiNkY9efKokacHTCG4a_',
-            "User-Agent: Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/firefoxversion"
-          ),
-        ));
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-        
-        return $response;
-    }
-
-    public function generateBJPCard(Request $request){
-        $validator = Validator::make($request->all(), [
-            'fburl' => 'required|string',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
-            $pathWithQuery = $this->getPathFromFBURL($request['fburl']);
-           
-            $response = $this->getPathData($pathWithQuery);
-           
-            $source = html_entity_decode($response);
-            if(isset($input['type'])) return $source;
-            // dd($response->body());
-            $id = 0;
-            if(preg_match('/userID":"(\d+)/', $source, $match)){
-                $id = $match[1];
-            }
-            elseif (preg_match('/pageID\S:\S(\d+)/', $source, $actor)) {
-                $id = $actor[1];
-            }
-
-          
-
-        if (!$id) {
-            Session::flash('error', 'Could not find Facebook ID. Make sure the profile is public.');
-            return redirect()->back();
-        }
-
-        $profilePicUrl = 'https://graph.fb.me/' . $id . '/picture?type=large&access_token=257931075544071%7Ca19fbd5886d2081430fe02ba9e10ca7d';
-
-        try {
-            $templatePath = storage_path('app/public/id_card_base/bjp_id_card.png');
-            if (!file_exists($templatePath)) {
-                Session::flash('error', 'Card template not found. Please contact admin.');
-                return redirect()->back();
-            }
-
-            $outputDir = storage_path('app/public/bjp_cards');
-            if (!is_dir($outputDir)) {
-                mkdir($outputDir, 0755, true);
-            }
-
-            $card = Image::read($templatePath);
-
-            $picResponse = Http::get($profilePicUrl);
-            if ($picResponse->successful()) {
-                $profilePic = Image::read($picResponse->body());
-                $profilePic->resize(420, 480);
-                $card->place($profilePic, 'top-left', 50, 265);
-            }
-
-            $fontPath = public_path('fonts/Poppins.ttf');
-
-            $today = Carbon::now()->format('d/m/Y');
-
-            $card->text($id, 1040, 600, function ($font) use ($fontPath) {
-                $font->file($fontPath);
-                $font->size(35);
-                $font->color('#000000');
-                $font->align('left');
-                $font->valign('top');
-            });
-
-            $card->text($today, 1040, 657, function ($font) use ($fontPath) {
-                $font->file($fontPath);
-                $font->size(35);
-                $font->color('#000000');
-                $font->align('left');
-                $font->valign('top');
-            });
-
-            $filename = $id . '.png';
-            $outputPath = $outputDir . '/' . $filename;
-            $card->save($outputPath, quality: 60);
-
-            $shareUrl = route('bjp.nagrikta.card.shared', ['hash' => $id]);
-
-            Session::flash('card_hash', $id);
-            Session::flash('card_image', Storage::disk('public')->url('bjp_cards/' . $filename));
-            Session::flash('share_url', $shareUrl);
-            Session::flash('success', 'Your BJP Bhartiya Nagrikta Card is ready! Share it with friends!');
-            Session::flash('card_fb_id', $id);
-            Session::flash('card_date', $today);
-            Session::flash('card_username', $pathWithQuery);
-
-        } catch (\Exception $e) {
-            Session::flash('error', 'Error generating card: ' . $e->getMessage());
-        }
-
-        return redirect()->back();
     }
 
     public function showSharedCard($hash){

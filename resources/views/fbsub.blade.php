@@ -1,9 +1,10 @@
 @extends('layouts.master')
 
-@section('title', 'FBsub - TikTok Auto liker and Auto Views')
+@section('title', 'FBsub - TikTok Auto Liker and Auto Views | AutoLikerLive')
 @section('description',
-    'Boost Tiktok engagement with our freer FBsub auto liker & views tool. Get likes,
-    followers, views, shares, and comments hassle-free, no login required')
+    'Boost Tiktok engagement with our free FBsub auto liker & views tool. Get likes,
+    followers, views, shares, and comments hassle-free, no login required.')
+@section('keywords', 'fbsub, fb sub, tiktok auto liker, tiktok auto views, free tiktok likes, free tiktok views, tiktok auto liker live, tiktok auto liker apk, tiktok auto like')
 
 @section('javascripts')
     <x-mail-wrapper></x-mail-wrapper>

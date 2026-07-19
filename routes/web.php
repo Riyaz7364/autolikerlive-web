@@ -177,6 +177,14 @@ $allowedLangs = config('language.allowed_languages');
         Route::post('/editor/games/{id}/edit-info', [GameController::class, 'editorUpdateInfo'])->name('game.editor.update-info');
         Route::get('/editor/games/{id}/edit', [GameController::class, 'editorEdit'])->name('game.editor.edit');
         Route::delete('/editor/games/{id}', [GameController::class, 'editorDelete'])->name('game.editor.delete');
+
+        // Listings Manager
+        Route::get('/admin/listings', [\App\Http\Controllers\ListingAdminController::class, 'index'])->name('admin.listings.index');
+        Route::get('/admin/listings/create', [\App\Http\Controllers\ListingAdminController::class, 'create'])->name('admin.listings.create');
+        Route::post('/admin/listings', [\App\Http\Controllers\ListingAdminController::class, 'store'])->name('admin.listings.store');
+        Route::get('/admin/listings/{id}/edit', [\App\Http\Controllers\ListingAdminController::class, 'edit'])->name('admin.listings.edit');
+        Route::put('/admin/listings/{id}', [\App\Http\Controllers\ListingAdminController::class, 'update'])->name('admin.listings.update');
+        Route::delete('/admin/listings/{id}', [\App\Http\Controllers\ListingAdminController::class, 'destroy'])->name('admin.listings.destroy');
     });
 
 // Temp Mail
