@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Free Auto Liker, Facebook Tools & Social Media Services | AutoLikerLive')
+@section('title', 'Free Auto Liker, Facebook Tools & Social Media Services')
 @section('description', 'Free Facebook auto liker, auto reactions, auto followers, page liker, Instagram comment liker, TikTok tools, SMS bomber, and more social media tools. Fast, safe, and free.')
 @section('keywords', 'auto liker, facebook auto liker, free facebook liker, auto reactions, facebook auto followers, page liker, instagram comment liker, tiktok auto liker, sms bomber, social media tools')
 

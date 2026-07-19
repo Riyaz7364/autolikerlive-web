@@ -1,5 +1,5 @@
 @extends('bots.free-services.master')
-@section('title', 'Free TikTok Likes - BOT')
+@section('title', 'Free Instagram Likes - BOT')
 @section('description', 'Get free TikTok likes from us and the user-friendly TikTok likes service we provide. We are the
     best TikTok likes service provider on the internet.')
 

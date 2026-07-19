@@ -44,7 +44,7 @@ return [
     'about.step4' => 'You have to add your or any Facebook profile to get followers on that profile it could be any profile. You need to enter the FB account username or numeric id to search the profile and add it into app.',
 
     // Contact Us
-    'contact.meta_title' => 'Find Facebook ID in one click | Find My Facebook ID | FIND MY FB ID',
+    'contact.meta_title' => 'Contact Us - Get Support',
     'contact.meta_desc' => 'We will try to best for your help releated to our FB Autoliker app',
 
     // FindMyFbID

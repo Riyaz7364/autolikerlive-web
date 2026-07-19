@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Download instagram photos | View Instagram photo in Full HD')
+@section('title', 'Download Instagram Photos | View Instagram Photos in Full HD')
 @section('description',
     'Easily view Instagram photos in full hd with our Instagram photo downloader. Enter a
     public photo URL to see high-resolution photos. Free and easy to use!')

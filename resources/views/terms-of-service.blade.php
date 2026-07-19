@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Terms of Service - AutolikerLive')
+@section('title', 'Terms of Service')
 @section('description', 'The terms of service for AutolikerLive outline the rules and guidelines for using our social
     media engagement tools and services.')
 

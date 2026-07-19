@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'FBsub - TikTok Auto Liker and Auto Views | AutoLikerLive')
+@section('title', 'FBsub - TikTok Auto Liker and Auto Views')
 @section('description',
     'Boost Tiktok engagement with our free FBsub auto liker & views tool. Get likes,
     followers, views, shares, and comments hassle-free, no login required.')

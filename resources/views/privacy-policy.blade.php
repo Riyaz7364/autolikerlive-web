@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Privacy Policy - AutolikerLive')
+@section('title', 'Privacy Policy')
 @section('description', 'Our privacy policy details how we collect, use, and protect your information when using
     AutolikerLive services.')
 

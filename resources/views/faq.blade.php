@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Frequently Asked Questions - AutolikerLive')
+@section('title', 'Frequently Asked Questions')
 @section('description', 'Find answers to common questions about AutolikerLive\'s social media engagement tools,
     community features, and how our platform helps you grow your online presence responsibly.')
 

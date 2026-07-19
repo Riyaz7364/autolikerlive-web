@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Dashboard ' . $user['loginType'])
+@section('title', 'Settings - ' . $user['loginType'])
 @section('description', '')
 
 

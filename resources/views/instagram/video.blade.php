@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Download instagram videos | View Instagram video in Full HD')
+@section('title', 'Download Instagram Videos | View Instagram Videos in Full HD')
 @section('description',
     'Empower your creativity with our free Instagram video downloader. Easily download videos from
     Instagram to your device for editing, without any restrictions. Take control of your content today')

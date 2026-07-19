@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Download instagram reels | View Instagram reel in Full HD')
+@section('title', 'Download Instagram Reels | View Instagram Reels in Full HD')
 @section('description',
     'Empower your creativity with our free Instagram reel downloader. Easily download reels from
     Instagram to your device for editing, without any restrictions. Take control of your content today')
