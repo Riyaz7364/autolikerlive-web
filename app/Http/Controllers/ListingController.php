@@ -60,7 +60,19 @@ class ListingController extends Controller
             return redirect()->route('index', [], 301);
         }
 
-        return view('index');
+        $linkedListings = Listing::whereNotNull('post_id')->select('id', 'name', 'post_id')->get();
+        $linkedPosts = [];
+        foreach ($linkedListings as $ll) {
+            $blogPost = $this->cURL('https://www.autolikerlive.com/blog/api/post/' . $ll->post_id);
+            if ($blogPost && isset($blogPost->title)) {
+                $linkedPosts[] = [
+                    'name' => $ll->name,
+                    'slug' => str_replace(' ', '-', strtolower($ll->name)),
+                ];
+            }
+        }
+
+        return view('index', compact('linkedPosts'));
     }
 
     public function fbsub(){

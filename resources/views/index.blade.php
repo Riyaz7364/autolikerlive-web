@@ -44,5 +44,16 @@
             <p class="empty-state-text">No games available yet.</p>
         </div>
     @endif
+
+    @if (isset($linkedPosts) && count($linkedPosts) > 0)
+        <div class="listing-tags" style="margin-top:2rem; padding:1.5rem; background:#f8f9fa; border-radius:12px;">
+            <h3 style="font-size:1rem; font-weight:700; color:#1a1a2e; margin-bottom:0.75rem;">More Free Tools</h3>
+            <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">
+                @foreach ($linkedPosts as $lp)
+                    <a href="{{ url($lp['slug']) }}" style="display:inline-block; padding:0.4rem 0.9rem; background:#fff; border:1px solid #ddd; border-radius:50px; font-size:0.82rem; color:#333; text-decoration:none; transition:all 0.2s;">{{ $lp['name'] }}</a>
+                @endforeach
+            </div>
+        </div>
+    @endif
 </div>
 @stop
