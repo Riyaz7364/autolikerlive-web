@@ -1,25 +1,35 @@
-use App\Models\Game;
-use Illuminate\Support\Facades\Storage;
-use Carbon\Carbon;
-use App\Models\GameSession;
-use App\Models\GameLayer;
+# PHPUnit
 /.phpunit.cache
+.phpunit.result.cache
+
+# Dependencies
 /node_modules
-/public
-/storage/*.key
 /vendor
+
+# Environment
 .env
 .env.backup
 .env.production
-.phpunit.result.cache
-Homestead.json
-Homestead.yaml
-auth.json
-npm-debug.log
-yarn-error.log
+
+# Laravel
+/storage/*.key
+
+# IDEs
 /.fleet
 /.idea
 /.vscode
+
+# Logs
+npm-debug.log*
+yarn-error.log*
+
+# OS / Packages
 *.deb
+
+# Sensitive files
 public/google-client-credentials.json
+
+# Temporary files
 /temp_imagick
+
+/public
