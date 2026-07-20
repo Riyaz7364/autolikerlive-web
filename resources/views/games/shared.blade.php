@@ -24,6 +24,9 @@
     <meta name="twitter:description" content="{{ $ogDesc }}" />
     <meta name="twitter:image" content="{{ $imageUrl }}" />
 
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8426510303593933"
+         crossorigin="anonymous"></script>
+
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
         body { background: #f0f2f5; min-height:100vh; display:flex; flex-direction:column; align-items:center; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
@@ -54,6 +57,21 @@
         </a>
 
         <a href="{{ route('game.show', $game->slug) }}" class="btn-try">{{ $game->og_title ?: 'Try it yourself!' }}</a>
+
+        <div style="margin-top:20px; text-align:center;">
+            <ins class="adsbygoogle"
+                 style="display:inline-block;width:728px;height:90px"
+                 data-ad-client="ca-pub-8426510303593933"
+                 data-ad-slot="7888884839"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+        <div style="margin-top:12px; text-align:center;">
+            <ins class="adsbygoogle"
+                 style="display:inline-block;width:320px;height:50px"
+                 data-ad-client="ca-pub-8426510303593933"
+                 data-ad-slot="5606482216"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
 
         <div class="footer-note">For entertainment purposes only &bull; autolikerlive.com</div>
     </div>

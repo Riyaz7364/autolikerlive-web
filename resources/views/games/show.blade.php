@@ -76,6 +76,11 @@
         @endif
     </div>
 
+    <div style="margin-top:1rem;">
+        <x-ads.leaderboard />
+        <x-ads.mobile-banner />
+    </div>
+
     <div class="widget mt-16">
         <p class="text-xs text-center m-0 text-secondary">
             ⚠️ For entertainment purposes only. Results are randomly generated and not based on real data.
