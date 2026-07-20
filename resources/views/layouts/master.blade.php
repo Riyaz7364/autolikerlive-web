@@ -26,6 +26,7 @@
     @vite(['resources/js/app.js'])
     @stack('styles')
     @yield('javascripts')
+    <x-auto-ads />
 </head>
 <body>
     <x-navbar />
@@ -36,6 +37,7 @@
                     @yield('content')
                 </div>
                 <aside class="blog-sidebar">
+                    <x-ads.sidebar />
                     @hasSection('sidebar')
                         @yield('sidebar')
                     @else

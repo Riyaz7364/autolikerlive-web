@@ -17,7 +17,6 @@
 
 @section('javascripts')
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>
-   <script>(function(s){s.dataset.zone='10482447',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
     <x-mail-wrapper></x-mail-wrapper>
     <style type="text/css">
         .login-with-google-btn {
@@ -172,6 +171,10 @@
             </div>
         </div>
     </header>
+
+    <x-ads.leaderboard />
+    <x-ads.mobile-banner />
+
     <section class="bg-light" id="no-ads-in-steps">
 
         <div class="text-center p-5">

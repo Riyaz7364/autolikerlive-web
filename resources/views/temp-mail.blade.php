@@ -17,9 +17,6 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8426510303593933"
-        crossorigin="anonymous"></script>
-
     <style type="text/css">
         .border-dashes {
             background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='10' ry='10' stroke='%2365656557' stroke-width='3' stroke-dasharray='10' stroke-dashoffset='0' stroke-linecap='round'/%3e%3c/svg%3e");
@@ -521,6 +518,11 @@
 
         </div>
     </section>
+
+    <div class="container my-4">
+        <x-ads.leaderboard />
+        <x-ads.mobile-banner />
+    </div>
 
     <section class="bg-light">
         <div class="container mt-5">

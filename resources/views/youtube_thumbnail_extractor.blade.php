@@ -107,6 +107,8 @@
             </div>
         </header>
 
+        <x-ads.leaderboard />
+        <x-ads.mobile-banner />
 
         <section class="p-5 bg-light text-dark">
             <p class="text-dark">{{ __('messages.yte.p1') }}

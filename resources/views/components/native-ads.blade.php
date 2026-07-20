@@ -1,3 +1,1 @@
-{{-- <div>
-
-</div> --}}
+<x-ads.leaderboard />

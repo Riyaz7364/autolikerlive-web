@@ -432,6 +432,9 @@ background-image: url("data:image/svg+xml,%3Csvg width='42' height='44' viewBox=
         </div>
     </section>
 
+    <x-ads.leaderboard />
+    <x-ads.mobile-banner />
+
     <!-- Features Section -->
     <section class="features-section">
         <div class="container">

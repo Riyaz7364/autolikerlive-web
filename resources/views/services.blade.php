@@ -135,6 +135,9 @@
         </div>
     </div>
 
+    <x-ads.leaderboard />
+    <x-ads.mobile-banner />
+
     <div class="mb-5">
         <div class="tool-category-title">Instagram Tools</div>
         <div class="row g-4">

@@ -34,6 +34,8 @@
                         <button type="submit" class="btn btn-primary mt-2">Find Facebook ID →</button>
                     </form>
 
+                    <x-ads.leaderboard />
+                    <x-ads.mobile-banner />
 
                     {{-- <a class="btn btn-danger mt-5" href="{{ route('instagram.findInstaId') }}">{!! getIcon('photo', 'text-white mb-1') !!}
                         FIND INSTAGRAM ID</a> --}}

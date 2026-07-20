@@ -26,6 +26,7 @@
     @vite(['resources/js/game-app.js'])
     @stack('styles')
     @yield('javascripts')
+    <x-auto-ads />
 </head>
     <body>
         <x-navbar />

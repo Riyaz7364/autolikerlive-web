@@ -135,6 +135,9 @@
         </div>
     </header>
 
+    <x-ads.leaderboard />
+    <x-ads.mobile-banner />
+
     <section class="insta-section">
         <div class="container" data-nosnippet="true">
             <div class="text-center p-4">

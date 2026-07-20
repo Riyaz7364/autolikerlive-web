@@ -313,6 +313,10 @@
             @endif
         </div>
     {{-- @endif --}}
+
+    <x-ads.leaderboard />
+    <x-ads.mobile-banner />
+
     <div class="tiktok-section-title">How It Works</div>
     <div class="tiktok-features" style="align-content: center;">
         <div class="tiktok-feature-card">
@@ -461,5 +465,6 @@
         safeSetHref("redditShare", `https://www.reddit.com/submit?url=${pageUrl}&title=${message}`);
         safeSetHref("snapchatShare", `https://www.snapchat.com/scan?attachmentUrl=${pageUrl}`);
     </script>
-    {{-- <x-ads></x-ads> --}}
+    <x-ads.leaderboard />
+    <x-ads.mobile-banner />
 @stop

@@ -401,12 +401,17 @@
             <div class="wordpress">
                 {!! $posts->content !!}
             </div>
+
+            <x-ads.in-article />
         </div>
     @else
         <div class="no-post-banner">
             <p>Content coming soon. Check out our other free tools below.</p>
         </div>
     @endif
+
+    <x-ads.leaderboard />
+    <x-ads.mobile-banner />
 
     <div class="cta-banner">
         <h3>Need Help With Something Else?</h3>

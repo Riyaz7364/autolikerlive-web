@@ -17,7 +17,6 @@
    
 
     <meta charset="utf-8" />
-    <meta name="propeller" content="81f11f1890e242b2ffa603ee1a3d9453">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="author" content="AutolikerLive" />
     <title>@yield('title')</title>
@@ -44,6 +43,7 @@
     @vite(['resources/js/app.js'])
 
     @yield('javascripts')
+    <x-auto-ads />
 
 </head>
 

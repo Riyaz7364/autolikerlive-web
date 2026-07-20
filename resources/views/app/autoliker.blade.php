@@ -9,6 +9,19 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8426510303593933"
      crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Sidebar Ad -->
+    <style>
+        .ad-sidebar-fixed {
+            position: fixed;
+            top: 70px;
+            right: 10px;
+            z-index: 50;
+            display: none;
+        }
+        @media (min-width: 769px) {
+            .ad-sidebar-fixed { display: block; }
+        }
+    </style>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -769,6 +782,14 @@ button {
 </div>
 
     <div class="container">
+        <!-- AdSense Sidebar (desktop) -->
+        <div class="ad-sidebar-fixed">
+            <ins class="adsbygoogle"
+                 style="display:inline-block;width:300px;height:250px"
+                 data-ad-client="ca-pub-8426510303593933"
+                 data-ad-slot="5562818408"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
         <!-- Header -->
         <div class="header">
             <div style="display: flex; align-items: center; gap: 10px;">
@@ -1018,6 +1039,15 @@ button {
                     <div id="commentsResponseMessage"></div>
                 </div>
             </div>
+        </div>
+
+        <!-- AdSense Banner -->
+        <div style="margin: 20px; text-align: center;">
+            <ins class="adsbygoogle"
+                 style="display:inline-block;width:728px;height:90px"
+                 data-ad-client="ca-pub-8426510303593933"
+                 data-ad-slot="7888884839"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
 
         <!-- Support Section -->

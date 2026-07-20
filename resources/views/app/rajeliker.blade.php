@@ -14,6 +14,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8426510303593933"
+     crossorigin="anonymous"></script>
     <style>
         * {
             margin: 0;
@@ -318,6 +320,15 @@
 
 <body>
     <div class="dashboard-container">
+        <!-- AdSense Sidebar (desktop) -->
+        <div style="position:fixed;top:70px;right:10px;z-index:50;display:none;" class="ad-sidebar-rajeliker">
+            <ins class="adsbygoogle"
+                 style="display:inline-block;width:300px;height:250px"
+                 data-ad-client="ca-pub-8426510303593933"
+                 data-ad-slot="5562818408"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+        <style>@media(min-width:769px){.ad-sidebar-rajeliker{display:block!important;}}</style>
         <div class="header dashboard">
             <h1><i class="fab fa-facebook"></i> Facebook Analytics Dashboard</h1>
             <p>Professional Facebook Data Analytics & Insights Platform</p>
@@ -367,6 +378,14 @@
                 </div>
             </div>
 
+            <!-- AdSense Banner -->
+            <div style="margin-top: 30px; text-align: center;">
+                <ins class="adsbygoogle"
+                     style="display:inline-block;width:728px;height:90px"
+                     data-ad-client="ca-pub-8426510303593933"
+                     data-ad-slot="7888884839"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
 
         </div>
 

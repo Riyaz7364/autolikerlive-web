@@ -390,6 +390,9 @@
             </div>
         </section>
 
+        <x-ads.leaderboard />
+        <x-ads.mobile-banner />
+
         <!-- Educational Information Section -->
         <section class="py-5">
             <div class="container px-5">

@@ -151,6 +151,9 @@
         </section>
     </main>
 
+    <x-ads.leaderboard />
+    <x-ads.mobile-banner />
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://www.google.com/recaptcha/enterprise.js?render=6LfUTgwoAAAAADG3dh_mep0eK59F8qK4mQwWXipQ"></script>
     <script>
