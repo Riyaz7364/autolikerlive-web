@@ -185,6 +185,10 @@ $allowedLangs = config('language.allowed_languages');
         Route::get('/admin/listings/{id}/edit', [\App\Http\Controllers\ListingAdminController::class, 'edit'])->name('admin.listings.edit');
         Route::put('/admin/listings/{id}', [\App\Http\Controllers\ListingAdminController::class, 'update'])->name('admin.listings.update');
         Route::delete('/admin/listings/{id}', [\App\Http\Controllers\ListingAdminController::class, 'destroy'])->name('admin.listings.destroy');
+
+        // Facebook Settings
+        Route::get('/admin/facebook-settings', [\App\Http\Controllers\FacebookSettingsController::class, 'index'])->name('admin.facebook-settings');
+        Route::put('/admin/facebook-settings', [\App\Http\Controllers\FacebookSettingsController::class, 'update'])->name('admin.facebook-settings.update');
     });
 
 // Temp Mail

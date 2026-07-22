@@ -6,6 +6,7 @@ use Exception;
 
 use Illuminate\Support\Facades\Validator;
 use App\Models\GameSession;
+use App\Models\FacebookSetting;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 class FacebookService
@@ -42,12 +43,16 @@ class FacebookService
 
     public function getPathData($path): string
     {
+        $fbSetting = FacebookSetting::first();
+        $lsd = $fbSetting->lsd ?? '';
+        $fbCookie = $fbSetting->fb_cookie ?? '';
+
         $data = [
             "route_urls[0]" => $path,
             "__user" => 0,
             "__a" => 1,
             "__comet_req" => 15,
-            "lsd" => "AdTuUrZmNxaQUwUfxWzM5RBoMpA"
+            "lsd" => $lsd
         ];
 
         $curl = curl_init();
@@ -64,7 +69,7 @@ class FacebookService
             CURLOPT_POSTFIELDS => http_build_query($data),
             CURLOPT_HTTPHEADER => [
                 'Content-Type: application/x-www-form-urlencoded',
-                'Cookie: datr=MGZcak1_IV1-5mLCeiAYBS1w; sb=MGZcau02afO3bD62G6Hk8L1-',
+                'Cookie: ' . $fbCookie,
                 "User-Agent: Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/firefoxversion"
             ],
         ]);
