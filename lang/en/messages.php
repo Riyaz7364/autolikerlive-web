@@ -48,9 +48,8 @@ return [
     'contact.meta_desc' => 'We will try to best for your help releated to our FB Autoliker app',
 
     // FindMyFbID
-    'findmyfbid.meta_title' => 'Find Facebook ID in one click | Find My Facebook ID | FIND MY FB ID',
-    'findmyfbid.meta_desc' => 'Effortlessly find your Facebook ID with a single click using our user-friendly FB ID finder
-    tool. Discover your unique identifier easily – Find My FB ID in a snap!',
+    'findmyfbid.meta_title' => 'Find Facebook ID - Free FB ID Finder Tool | AutoLikerLive',
+    'findmyfbid.meta_desc' => 'Find your Facebook ID instantly with our free FB ID finder. Enter a profile, page, or group URL to get the unique numeric ID in seconds. No signup required. Works for profiles, pages, and groups.',
 
     'findmyfbid.title' => 'Find Your Facebook ID',
     'findmyfbid.subTitle' => 'To find your Facebook personal numeric ID for facebook graph API operations, fb:admins, social plugins',
@@ -74,7 +73,7 @@ return [
 
     'findmyfbid.faq_q1' => 'What is Facebook ID?',
     'findmyfbid.faq_q1_p1' => 'A Facebook ID is a unique numerical identifier assigned to each user profile on the Facebook social media platform. It is a numeric string associated with a specific Facebook account and is used internally by Facebook\'s systems to distinguish between different user profiles.',
-    'findmyfbid.faq_q1_p1' => 'Users typically don\'t interact with or see their Facebook ID directly, as Facebook primarily uses names, usernames, and profile pictures for user identification. However, developers or certain applications may use Facebook IDs when working with the Facebook Graph API or other developer tools to access and retrieve information associated with a specific user\'s profile.',
+    'findmyfbid.faq_q1_p2' => 'Users typically don\'t interact with or see their Facebook ID directly, as Facebook primarily uses names, usernames, and profile pictures for user identification. However, developers or certain applications may use Facebook IDs when working with the Facebook Graph API or other developer tools to access and retrieve information associated with a specific user\'s profile.',
     'findmyfbid.faq_q1_p3' => 'It\'s important to note that Facebook IDs should be handled with care and in accordance with Facebook\'s policies and terms of service to ensure user privacy and data protection.',
 
     'findmyfbid.faq_q2' => 'How to find Facebook URL on mobile?',
@@ -89,6 +88,35 @@ return [
     'findmyfbid.faq_q4_p1' => 'Facebook ID, particularly the user\'s Facebook App User ID, is used in the context of Facebook Ads for retargeting purposes. Retargeting, also known as remarketing, involves targeting ads to people who have already interacted with your website, app, or content. Here\'s a simplified overview of how Facebook ID can be utilized for ads retargeting:',
 
     'findmyfbid.conc' => 'Facebook ID, particularly the user\'s Facebook App User ID, is used in the context of Facebook Ads for retargeting purposes. Retargeting, also known as remarketing, involves targeting ads to people who have already interacted with your website, app, or content. Here\'s a simplified overview of how Facebook ID can be utilized for ads retargeting:',
+
+    'findmyfbid.badge' => 'Free Tool · No Signup Needed',
+    'findmyfbid.heroTitle' => 'Find Facebook ID — Free <span class="grad">FB ID Finder</span>',
+    'findmyfbid.heroSub' => 'Get the unique numeric ID behind any Facebook profile, page, or group in seconds.',
+    'findmyfbid.input.label' => 'Enter your Facebook profile, page, or group URL',
+    'findmyfbid.input.hint' => 'e.g. https://www.facebook.com/YourProfileName',
+    'findmyfbid.button' => 'Find Facebook ID',
+    'findmyfbid.success.title' => 'Your Facebook ID is:',
+    'findmyfbid.success.copy' => 'Copy ID',
+    'findmyfbid.success.copied' => 'Copied!',
+    'findmyfbid.success.openProfile' => 'Open Profile',
+    'findmyfbid.fail.title' => 'We couldn\'t find your ID',
+    'findmyfbid.fail.desc' => 'Your profile may be set to private. To let our tool find your ID, please allow search engines to link to your profile.',
+    'findmyfbid.fail.watch' => 'Watch how to fix it',
+    'findmyfbid.fail.settings' => 'Open Facebook Settings',
+    'findmyfbid.how.title' => 'How to Find Facebook ID in 3 Steps',
+    'findmyfbid.how.step1t' => 'Copy your Facebook profile, page, or group URL',
+    'findmyfbid.how.step1d' => 'Open Facebook and copy your profile, page, or group URL from the browser address bar.',
+    'findmyfbid.how.step2t' => 'Paste the URL into the finder tool',
+    'findmyfbid.how.step2d' => 'Paste the Facebook URL into the box above and click "Find Facebook ID".',
+    'findmyfbid.how.step3t' => 'Get your numeric Facebook ID instantly',
+    'findmyfbid.how.step3d' => 'Your unique Facebook numeric ID appears instantly — copy it and use it for Graph API, fb:admins, or social plugins.',
+    'findmyfbid.modal.title' => 'Make your profile visible',
+    'findmyfbid.modal.subtitle' => 'Follow this short video to change your Facebook settings, then come back and try again.',
+    'findmyfbid.modal.step1' => 'Open your Facebook settings page.',
+    'findmyfbid.modal.step2' => 'Scroll to "How people find and contact you".',
+    'findmyfbid.modal.step3' => 'Turn ON "Do you want search engines outside of Facebook to link to your profile?".',
+    'findmyfbid.modal.openSettings' => 'Open Facebook Profile Settings',
+    'findmyfbid.faq.title' => 'Facebook ID Finder - FAQ',
 
 
     // YouTube Thumbnail Extractor
@@ -151,25 +179,46 @@ return [
                         images for various uses.',
 
     // Temp Mail
-    'tempMail.meta_title' => 'Temp Mail - Disposable Temporary Email',
-    'tempMail.meta_desc' => 'Get a temporary email address with ease using Temp Mail, your solution for disposable email needs. Protect your online privacy today.',
+    'tempMail.meta_title' => 'Temp Mail - Free Disposable Temporary Email Address | AutoLikerLive',
+    'tempMail.meta_desc' => 'Get a free temp mail address instantly. Temp Mail provides disposable temporary email to protect your privacy, avoid spam, and keep your real inbox clean. No signup required, 100% anonymous.',
+    'tempMail.heroTitle' => 'Temp Mail — Free Disposable <span class="grad">Temporary Email</span>',
 
     'tempMail.subTitle' => 'Your Temporary Email Address',
     'tempMail.info' => 'Forget about spam, advertising mailings, hacking and attacking robots. Keep your real mailbox clean and secure. Temp Mail provides temporary, secure, anonymous, free, disposable email address.',
 
-    'tempMail.whatIsTempMail' => 'What is Disposable Temporary E-mail?',
-    'tempMail.whatIsTempMail_p1' => 'Disposable Email: This is a free email service that allows you to receive emails at a temporary address that self-destructs after a period of time. Also known as: temporary email, 10 minute email, 10 minute email, disposable email, fake email, fake email generator, email burner or spam. Many forums, Wi-Fi network owners, websites and blogs require visitors to register before they can view content, post comments or download anything. Temp-Mail is the most advanced email service that helps you avoid spam and stay safe.',
+    'tempMail.whatIsTempMail' => 'What Is Temp Mail? (Disposable Temporary Email)',
+    'tempMail.whatIsTempMail_p1' => 'Temp Mail is a free disposable temporary email service that gives you a temporary email address which self-destructs after a period of time. Also known as: temporary email, 10 minute email, disposable email, fake email, fake email generator, email burner or spam protection. Many forums, Wi-Fi networks, websites and blogs require registration before viewing content. Temp Mail helps you avoid spam and stay safe online.',
 
-    'tempMail.techBehind' => 'The Tech behind Disposable Email Addresses',
-    'tempMail.techBehind_p1' => 'Everyone has an email address every hour, whether they\'re contacting potential clients at work or using their email address as an online passport to contact friends and colleagues.',
-    'tempMail.techBehind_p2' => 'Almost 99% of all apps and services we sign up for today require an email address, as do most customer loyalty cards, contests, offer flyers, etc. We all like to have an email address, but getting a lot of spam every day is inconvenient.',
-    'tempMail.techBehind_p3' => 'It\'s also common for store databases to be hacked, putting your business email address at risk and making it more likely to end up on spam lists. However, nothing done online is 100% private. Therefore, you should protect the identity of your email contacts, preferably by using disposable email addresses.',
+    'tempMail.techBehind' => 'How Temp Mail Works: The Tech Behind Disposable Email',
+    'tempMail.techBehind_p1' => 'Everyone uses an email address daily — for work, signing up for services, or staying in touch. Almost 99% of apps and services today require an email address. But with that comes endless spam and privacy risks.',
+    'tempMail.techBehind_p2' => 'Temp Mail solves this by generating a disposable email address instantly. You receive emails at this temporary address, and it auto-deletes after expiration. Your real email stays private and spam-free.',
+    'tempMail.techBehind_p3' => 'Data breaches are common — store databases get hacked, exposing your email to spam lists. Using Temp Mail (disposable email) protects your identity and prevents unauthorized data sharing. Nothing online is 100% private, so a temp mail address is your first line of defense.',
 
-    'tempMail.whatIsTempMail2' => 'So, What Is A Disposable Email Address?',
-    'tempMail.whatIsTempMail2_p1' => 'Recently, I found a bounce rate complex than usual on my latest email blast! I later realized the surge of users (or bots) signing up for my services hiding their real identity using disposable mail addresses. Disposable email address (DEA) technically means an approach where a user’s with a unique email address gets a temporary email address for your current contact. The DEA allow the creation of an email address that passes validity need to sign-up for services and website without having to show your true identity.',
-    'tempMail.whatIsTempMail2_p2' => 'Disposable emails address if compromised or used in connection with email abuse online, the owner can’t be tied to the abuse and quickly cancel its application without affecting other contacts.',
-    'tempMail.whatIsTempMail2_p3' => 'With temporary mail, you can you receive your emails from the fake emails in your genuine emails address for a specified time set. A fake email address is just an intermediate email, a bunch of temporary emails, and a self-destructing email.',
-    'tempMail.conclusion' => 'Temp-mail provides a brilliantly designed disposable email address system that safeguards your true identity from exposure and prevents any unauthorized sale of your information when engaging in online wikis, chat rooms, file sharing services, and bulletin board forums. This ensures a spam-free mailbox.',
+'tempMail.whatIsTempMail2' => 'Why Use Temp Mail? Benefits of Disposable Email',
+    'tempMail.whatIsTempMail2_p1' => 'Temp Mail (disposable email) lets you sign up for services without revealing your real identity. It creates a temporary email address that passes verification checks, so you can access content, download files, or register on forums anonymously.',
+    'tempMail.whatIsTempMail2_p2' => 'If a disposable email is compromised or used for spam, your real identity stays protected. You simply discard the temp address — no impact on your primary inbox or other accounts.',
+    'tempMail.whatIsTempMail2_p3' => 'Temp Mail acts as an intermediate email layer. Emails sent to your temp address appear in your temporary inbox for a set time, then self-destruct. It\'s a secure, anonymous way to keep your real mailbox clean.',
+    'tempMail.conclusion' => 'Temp Mail provides a brilliantly designed disposable email system that safeguards your identity, prevents data selling, and keeps your inbox spam-free when using online forums, chat rooms, file sharing, and social platforms.',
+
+    'tempMail.badge' => 'Free · Anonymous · Disposable',
+    'tempMail.heroSub' => 'Get a disposable email address in seconds. Receive emails instantly and keep your real inbox clean from spam and data leaks.',
+    'tempMail.yourAddress' => 'Your Temporary Email Address',
+    'tempMail.copy' => 'Copy',
+    'tempMail.copied' => 'Copied!',
+    'tempMail.refresh' => 'Refresh',
+    'tempMail.newAddress' => 'New Address',
+    'tempMail.changeAddress' => 'Change Address',
+    'tempMail.delete' => 'Delete',
+    'tempMail.inboxTitle' => 'Inbox',
+    'tempMail.inboxSender' => 'SENDER',
+    'tempMail.inboxSubject' => 'SUBJECT',
+    'tempMail.inboxView' => 'VIEW',
+    'tempMail.inboxSub' => 'New messages appear automatically — no need to refresh.',
+    'tempMail.changeModalTitle' => 'Change Email',
+    'tempMail.changeModalAlias' => 'Email Alias',
+    'tempMail.changeModalDomain' => 'Domain',
+    'tempMail.randomName' => 'Random Name',
+    'tempMail.updateEmail' => 'Update Email Address',
 
     // Free Services [TikTok, Instagram]
     'freeService.meta_title' => ':title - Get Unlimited Free :service_name every :timer minutes',
@@ -288,4 +337,9 @@ return [
                             </ul>',
 
 ];
+
+
+
+
+
 

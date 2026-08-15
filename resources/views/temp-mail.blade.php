@@ -1,239 +1,489 @@
-@extends('layouts.master')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="AutoLikerLive" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="keywords" content="temp mail, temporary email, disposable email, fake email, 10 minute email, email burner, anonymous email, free temp mail">
+    <link rel="canonical" href="{{ url()->current() }}" />
+    <title>{{ __('messages.tempMail.meta_title') }}</title>
+    <meta name="description" content="{{ __('messages.tempMail.meta_desc') }}">
+    <meta property="og:url" content="{{ Request::url() }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{{ __('messages.tempMail.meta_title') }}" />
+    <meta property="og:description" content="{{ __('messages.tempMail.meta_desc') }}" />
+    <meta property="og:image" content="https://www.autolikerlive.com/blog/wp-content/uploads/2025/05/ChatGPT-Image-May-1-2025-08_11_55-AM.webp" />
 
-@section('title', __('messages.tempMail.meta_title'))
-@section('description', __('messages.tempMail.meta_desc'))
-@section('keywords', 'free, temporary, email, disposable, mail, email address')
-@section('favicons')
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ url('images/favicons/temp-mail/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ url('images/favicons/temp-mail/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ url('images/favicons/temp-mail/favicon-16x16.png') }}">
-    <link rel="manifest" href="{{ url('images/favicons/temp-mail/site.webmanifest') }}">
-@endsection
-@section('ogimage',
-    'https://www.autolikerlive.com/blog/wp-content/uploads/2025/05/ChatGPT-Image-May-1-2025-08_11_55-AM.webp')
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="{{ Request::url() }}" />
+    <meta name="twitter:title" content="{{ __('messages.tempMail.meta_title') }}" />
+    <meta name="twitter:description" content="{{ __('messages.tempMail.meta_desc') }}" />
+    <meta name="twitter:image" content="https://www.autolikerlive.com/blog/wp-content/uploads/2025/05/ChatGPT-Image-May-1-2025-08_11_55-AM.webp" />
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 
-@section('javascripts')
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8426510303593933" crossorigin="anonymous"></script>
 
-    <style type="text/css">
-        .border-dashes {
-            background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='10' ry='10' stroke='%2365656557' stroke-width='3' stroke-dasharray='10' stroke-dashoffset='0' stroke-linecap='round'/%3e%3c/svg%3e");
-            border-radius: 10px;
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Temp Mail",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock"
+  },
+  "description": "Get a free temp mail address instantly. Temp Mail provides disposable temporary email to protect your privacy, avoid spam, and keep your real inbox clean. No signup required, 100% anonymous.",
+  "featureList": [
+    "Free disposable temporary email address",
+    "Instant email reception",
+    "No registration required",
+    "100% anonymous and private",
+    "Auto-delete after time expires",
+    "Multiple domains available",
+    "Copy/refresh/change email address"
+  ],
+  "author": {
+    "@type": "Organization",
+    "name": "AutoLikerLive",
+    "url": "https://autolikerlive.com"
+  },
+  "url": "{{ Request::url() }}",
+  "image": "https://www.autolikerlive.com/blog/wp-content/uploads/2025/05/ChatGPT-Image-May-1-2025-08_11_55-AM.webp"
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is temp mail?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Temp mail (temporary email) is a free disposable email service that gives you a temporary email address which self-destructs after a certain period. It helps you avoid spam, protect your privacy, and keep your real inbox clean when signing up for websites, forums, or Wi-Fi networks."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does temp mail work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Temp Mail generates a random email address for you instantly. You can use this address to receive emails (verification codes, confirmations, etc.) which appear in your temporary inbox. The address and all emails are automatically deleted after the expiration time, leaving no trace."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is temp mail free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, Temp Mail is 100% free. No signup, no payment, no personal information required. You get a disposable email address instantly and can use it as many times as you need."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I send emails from temp mail?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, Temp Mail is designed for receiving emails only. It provides a temporary inbox to receive verification emails, confirmation codes, and other incoming messages. Sending emails is not supported."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does a temp mail address last?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The temporary email address typically lasts for a set period (e.g., 10 minutes to several hours depending on the domain). After expiration, the address and all received emails are permanently deleted automatically."
+      }
+    }
+  ]
+}
+</script>
+
+    <style>
+        :root {
+            --tm: #0d9488;
+            --tm-dark: #0f766e;
+            --tm-grad: linear-gradient(120deg, #14b8a6, #10b981);
+            --ink: #1c1e21;
+            --muted: #65676b;
+            --bg: #eef4f5;
+            --card: #ffffff;
+            --border: #e4e6eb;
+            --radius: 18px;
+            --shadow: 0 12px 34px rgba(13, 148, 136, .14);
+            --shadow-lg: 0 24px 60px rgba(15, 70, 70, .22);
         }
 
-        .input-box {
-            height: 50px;
-            background: #656565b5;
-            color: white;
-            font-weight: bold;
-            border-radius: 20px 0px 0px 20px;
-            border-color: #9f9d9d;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { -webkit-text-size-adjust: 100%; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(1000px 480px at 12% -10%, rgba(20, 184, 166, .16), transparent 60%),
+                radial-gradient(1000px 480px at 88% -10%, rgba(16, 185, 129, .13), transparent 60%),
+                var(--bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.55;
         }
 
-        .input-box-email {
-            height: 55px;
-            background: #6565652b;
-            color: white;
+        a { color: var(--tm); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* ============ Header ============ */
+        .tm-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, .94);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+        .tm-header-inner {
+            max-width: 1220px;
+            margin: 0 auto;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .tm-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--ink);
+            font-weight: 800;
+            font-size: 18px;
+        }
+        .tm-brand:hover { text-decoration: none; }
+        .tm-brand-logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--tm-grad);
+            display: grid;
+            place-items: center;
+            box-shadow: 0 6px 16px rgba(13, 148, 136, .35);
+            flex-shrink: 0;
+            color: #fff;
+        }
+        .tm-brand-logo svg { width: 22px; height: 22px; }
+        .tm-brand-sub { display: block; font-size: 12px; font-weight: 500; color: var(--muted); line-height: 1.1; }
+        .tm-header-links { display: flex; align-items: center; gap: 10px; }
+        .tm-ghost {
+            border: 1px solid var(--border);
+            background: #fff;
+            color: var(--ink);
             font-weight: 600;
-            border-radius: 30px !important;
-            border-color: transparent;
-            overflow: hidden;
+            font-size: 14px;
+            padding: 9px 16px;
+            border-radius: 10px;
+            transition: .2s;
+            cursor: pointer;
+        }
+        .tm-ghost:hover { border-color: var(--tm); color: var(--tm); text-decoration: none; }
+
+        /* ============ Hero ============ */
+        .tm-hero {
+            text-align: center;
+            padding: 30px 24px 28px;
+            background:
+                radial-gradient(900px 300px at 12% -10%, rgba(20, 184, 166, .2), transparent 60%),
+                radial-gradient(900px 300px at 88% -10%, rgba(16, 185, 129, .16), transparent 60%),
+                linear-gradient(180deg, #fff 0%, rgba(13, 148, 136, .06) 100%);
+            border-bottom: 1px solid rgba(13, 148, 136, .12);
+        }
+        .tm-hero-inner { max-width: 1080px; margin: 0 auto; }
+        .tm-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff;
+            border: 1px solid var(--border);
+            color: var(--tm);
+            font-size: 13px;
+            font-weight: 600;
+            padding: 7px 14px;
+            border-radius: 999px;
+            box-shadow: 0 2px 8px rgba(13, 148, 136, .08);
+        }
+        .tm-hero h1 {
+            font-size: clamp(30px, 5vw, 48px);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.12;
+            margin: 18px 0 12px;
+        }
+        .tm-hero h1 .grad {
+            background: var(--tm-grad);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .tm-hero p {
+            color: var(--muted);
+            font-size: clamp(15px, 2.4vw, 18px);
+            /* max-width: 640px;
+            margin: 0 auto; */
+        }
+        .tm-trust {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 22px;
+        }
+        .tm-trust-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: #fff;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 500;
+            padding: 7px 13px;
+            border-radius: 999px;
+        }
+        .tm-trust-pill svg { width: 16px; height: 16px; color: var(--tm); flex-shrink: 0; }
+        .tm-hero .tm-card { text-align: left; margin-top: 26px; }
+
+        /* ============ Ad slots ============ */
+        .ad-slot { overflow: hidden; text-align: center; margin: 22px auto; padding: 6px 0; }
+        .ad-slot.ad-leader { max-width: 1220px; padding: 22px 24px 6px; }
+        .side-ad { width: 100%; max-width: 320px; margin: 0 auto; }
+        .hide-mobile { display: block; }
+        .show-mobile { display: none; }
+
+        /* ============ Main layout ============ */
+        .tm-layout {
+            width: 100%;
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 18px 24px 44px;
+            display: flex;
+            flex-direction: column;
+            gap: 26px;
+        }
+        .tm-main { min-width: 0; display: flex; flex-direction: column; gap: 26px; }
+        .tm-split {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 320px;
+            gap: 24px;
+            align-items: start;
+        }
+        .tm-split-ad {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
         }
 
-        .select-box {
-            height: 50px;
-            border-radius: 0px 20px 20px 0px;
-            font-family: monospace;
-            font-size: larger;
+        /* ============ Cards ============ */
+        .tm-card {
+            background: var(--card);
+            border-radius: 22px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(13, 148, 136, .14);
+            padding: clamp(22px, 3.5vw, 34px);
+            position: relative;
+        }
+        .tm-card::before {
+            content: "";
+            position: absolute;
+            inset: 0 0 auto 0;
+            height: 5px;
+            border-radius: 22px 22px 0 0;
+            background: var(--tm-grad);
+        }
+        .tm-label {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        .tm-label svg { width: 20px; height: 20px; color: var(--tm); flex-shrink: 0; }
 
+        /* ============ Mail address box ============ */
+        .mail-box {
+            display: flex;
+            gap: 10px;
+            align-items: stretch;
+            margin-bottom: 14px;
+        }
+        .mail-box .mail-input-wrap { position: relative; flex: 1; min-width: 0; }
+        .mail-box input {
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 15px 56px 15px 18px;
+            font-family: 'Roboto Mono', monospace;
+            font-size: clamp(14px, 2vw, 18px);
+            font-weight: 600;
+            letter-spacing: .01em;
+            color: var(--tm-dark);
+            background: #f2fbfa;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .mail-box input:focus {
+            outline: none;
+            border-color: var(--tm);
+            box-shadow: 0 0 0 4px rgba(13, 148, 136, .14);
+            background: #fff;
+        }
+        .mail-copy-fab {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            border: 0;
+            border-radius: 11px;
+            background: var(--tm-grad);
+            color: #fff;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            box-shadow: 0 6px 14px rgba(13, 148, 136, .35);
+            transition: transform .15s, box-shadow .2s;
+        }
+        .mail-copy-fab:hover { transform: translateY(-50%) scale(1.06); }
+        .mail-copy-fab svg { width: 18px; height: 18px; }
+
+        .mail-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .tm-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 11px 16px;
+            border-radius: 11px;
+            cursor: pointer;
+            transition: .2s;
+            border: 0;
+            background: #fff;
+            color: var(--ink);
+            border: 2px solid var(--border);
+        }
+        .tm-action svg { width: 16px; height: 16px; }
+        .tm-action:hover { border-color: var(--tm); color: var(--tm); text-decoration: none; }
+        .tm-action-primary {
+            background: var(--tm-grad);
+            color: #fff;
+            border: 0;
+            box-shadow: 0 6px 16px rgba(13, 148, 136, .3);
+        }
+        .tm-action-primary:hover { color: #fff; box-shadow: 0 9px 22px rgba(13, 148, 136, .4); }
+        .tm-action-danger:hover { border-color: #e11d48; color: #e11d48; }
+
+        .mail-info-text {
+            margin-top: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 13.5px;
+            color: #0f766e;
+            line-height: 1.6;
+            background: linear-gradient(120deg, #ecfdf5, #f0fdfa);
+            border: 1px solid rgba(13, 148, 136, .18);
+            border-left: 4px solid var(--tm);
+            border-radius: 12px;
+            padding: 12px 14px;
+        }
+        .mail-info-text svg {
+            width: 18px;
+            height: 18px;
+            color: var(--tm);
+            flex-shrink: 0;
+            margin-top: 2px;
         }
 
-        .max-50 {
-            max-width: 40%;
+        /* ============ Inbox ============ */
+        .inbox-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
         }
-
-        .he-1 {
-            height: 1.5rem !important;
-        }
-
-        .he-2 {
-            height: 2.5rem !important;
-        }
-
-        .text-secondary2 {
-            background: #656565b5;
-        }
-
-        .text-larger {
-            font-size: larger !important;
-        }
-
-        .temp-emailbox-text p {
-            color: #7a7c80;
-            font-size: 14px !important;
-            font-family: Roboto Mono, monospace !important;
-            font-weight: 500 !important;
-            padding: 0;
+        .inbox-head h3 {
+            font-size: 17px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 9px;
             margin: 0;
         }
-
-        @media (min-width: 600px) {
-            .copy-svg {
-                height: 3.5rem;
-                width: 3.5rem;
-                background: #656565b5;
-                padding: 14px;
-                margin-left: 10px !important;
-                border: 1px solid #343333;
-            }
-
-            .pxc-5 {
-                padding-right: 3rem !important;
-                padding-left: 3rem !important;
-            }
-
-            .desktop-d-none {
-                display: none;
-            }
+        .inbox-head h3 svg { width: 20px; height: 20px; color: var(--tm); }
+        .inbox-head .live-dot {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--tm-dark);
+            background: #ecfaf7;
+            border: 1px solid #bfe9df;
+            padding: 5px 11px;
+            border-radius: 999px;
         }
-
-        @media (max-width: 601px) {
-            .mobile-d-none {
-                display: none;
-            }
-        }
-
-
-
-
-        .section-btn-header .tm-btn,
-        #tm-body .section-btn-header button {
-            -webkit-box-shadow: 0 2px 4px rgba(34, 36, 43, .16);
-            box-shadow: 0 2px 4px rgba(34, 36, 43, .16);
-            margin: 15px 9px !important;
-            padding: 13px 38px !important;
-            position: relative !important;
-            min-width: 160px !important;
-            font-weight: 500 !important;
-            font-size: 16px !important;
-            text-decoration: none !important;
-            text-align: left !important;
-        }
-
-        .btn-gray {
-            background-color: #f6f7f9;
-            color: #22242b !important;
-        }
-
-        .tm-btn {
-            display: inline-block;
-            font-weight: 500;
-            color: #212529;
-            text-align: center;
-            vertical-align: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            background-color: #f6f7f9;
-            border: 1px solid transparent;
-            padding: 0.75rem 1.25rem;
-            font-size: 1rem;
-            line-height: 1.5;
-            border-radius: 25px;
-            -webkit-transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-            transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-            -o-transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-            transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-            transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
-        }
-
-        .card-header-radius {
-            border-radius: 1rem 1rem 0rem 0rem !important;
-            height: 52px;
-            padding-top: 15px;
-
-        }
-
-        .border-r-1 {
-            border-radius: 1rem !important;
-        }
-
-        .font-weight-bold {
-            font-weight: 700 !important;
-        }
-
-        .text-right {
-
-            text-align: right !important;
-        }
-
-        .text-left {
-            text-align: left !important;
-        }
-
-        .is-active {
-            height: 6px;
-            width: 6px;
-            background-color: green;
+        .inbox-head .live-dot .dot {
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
+            background: #10b981;
+            animation: pulse 1.6s infinite;
         }
-
-        .is-not-active {
-            height: 6px;
-            width: 6px;
-            background-color: black;
-            border-radius: 50%;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: .4; transform: scale(.8); }
         }
-
-        .px-2-2 {
-            padding-right: 0.8rem !important;
-            padding-left: 0.8rem !important;
-        }
-
-        .viewLink {
-            text-decoration: none
-        }
-
-        .viewLink:hover {
-            text-decoration: underline
-        }
-
-        i {
-            -webkit-text-stroke: 1px;
-        }
-
-        i:hover {
-            color: red;
-        }
-
-        .min-hv-18rem {
-            min-height: 18rem;
-        }
-
-        #tooltip {
-            position: absolute;
-            background-color: #333;
+        .inbox-col-head {
+            display: grid;
+            grid-template-columns: 1.4fr 2fr 1fr;
+            gap: 8px;
+            background: var(--tm-grad);
             color: #fff;
-            padding: 5px;
-            border-radius: 5px;
-            top: 4rem;
-            right: 0rem;
-            display: none;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .06em;
+            padding: 12px 18px;
+            border-radius: 12px;
+            margin-bottom: 6px;
         }
+        .inbox-col-head span:last-child { text-align: right; }
+        .inbox-body { min-height: 260px; padding: 6px 0; }
 
-        .fixedToast {
-            position: fixed;
-            right: 1rem;
-            top: 1rem;
-            width: auto !important;
-        }
-
-
+        /* Empty state (used by livewire component) */
         .inbox-empty {
-            height: 335px;
+            height: 300px;
             display: -webkit-box;
             display: -webkit-flex;
             display: -ms-flexbox;
@@ -248,494 +498,503 @@
             align-items: center;
             text-align: center;
         }
-
         .inboxWarpMain svg .emptyInboxRotation {
             -webkit-animation: rotation 2s linear infinite;
-            -o-animation: rotation 2s infinite linear;
-            /* animation:rotation 2s linear infinite; */
-            -o-transform-origin: 50% 50%;
+            animation: rotation 2s linear infinite;
             transform-origin: 50% 50%;
-            -webkit-transform-origin: 50% 50%;
-            -moz-transform-origin: 50% 50%
         }
-
-        @-webkit-keyframes rotation {
-            0% {
-                -webkit-transform: rotate(0deg)
-            }
-
-            to {
-                -webkit-transform: rotate(359deg)
-            }
-        }
-
-        @-o-keyframes rotation {
-            0% {
-                -o-transform: rotate(0deg)
-            }
-
-            to {
-                -o-transform: rotate(359deg)
-            }
-        }
-
         @keyframes rotation {
-            0% {
-                -webkit-transform: rotate(0deg);
-                -o-transform: rotate(0deg);
-                transform: rotate(0deg)
-            }
-
-            to {
-                -webkit-transform: rotate(359deg);
-                -o-transform: rotate(359deg);
-                transform: rotate(359deg)
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(359deg); }
         }
-
         .inboxWarpMain .inbox-empty .inbox-empty-msg p.emptyInboxTitle {
             color: #585d6a;
             font-size: 20px;
-            font-family: Roboto Mono, monospace !important;
+            font-family: 'Roboto Mono', monospace !important;
             font-weight: 400;
-            font-style: normal;
-            margin-bottom: 5px
+            margin-bottom: 5px;
         }
+        .inbox-empty .text-muted { color: var(--muted) !important; }
 
-
-        /* Style for the loading overlay */
-        #loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            display: none;
-            /* Initially hidden */
-            justify-content: center;
+        /* Message rows (rendered by livewire) */
+        .viewLink { text-decoration: none; }
+        .viewLink:hover { text-decoration: none; }
+        .msg-row {
+            display: grid;
+            grid-template-columns: 1.5fr 1.1fr 1fr;
+            gap: 10px;
             align-items: center;
-            z-index: 9999;
+            padding: 12px 18px;
+            border-radius: 12px;
+            margin-bottom: 6px;
+            background: #fff;
+            border: 1px solid var(--border);
+            transition: border-color .15s, box-shadow .15s;
+        }
+        .msg-row:hover { border-color: var(--tm); box-shadow: 0 6px 16px rgba(13, 148, 136, .12); text-decoration: none; }
+        .msg-cell { min-width: 0; display: flex; flex-direction: column; }
+        .msg-sender {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--ink);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .msg-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+        .msg-dot.is-active { background: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, .18); }
+        .msg-dot.is-not-active { background: #c4c9cf; }
+        .msg-subject {
+            font-size: 12.5px;
+            color: var(--muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 2px;
+        }
+        .msg-email {
+            font-size: 13px;
+            font-family: 'Roboto Mono', monospace;
+            color: var(--tm-dark);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .msg-time { text-align: right; font-size: 12px; font-style: italic; color: var(--muted); white-space: nowrap; }
+
+        /* ============ Sections ============ */
+        .tm-section-title {
+            text-align: center;
+            font-size: clamp(22px, 3.5vw, 30px);
+            font-weight: 800;
+            letter-spacing: -0.01em;
+            margin-bottom: 26px;
+        }
+        .tm-section-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: clamp(20px, 3.5vw, 32px);
+            box-shadow: 0 4px 14px rgba(15, 70, 70, .05);
+        }
+        .tm-section-card h3 { font-size: 18px; font-weight: 800; margin-bottom: 10px; }
+        .tm-section-card p { color: var(--muted); font-size: 15px; margin-bottom: 12px; }
+
+
+
+        /* ============ Footer ============ */
+        .tm-footer {
+            margin-top: auto;
+            background: #fff;
+            border-top: 1px solid var(--border);
+            padding: 26px 24px;
+            text-align: center;
+        }
+        .tm-footer-links { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; margin-bottom: 10px; }
+        .tm-footer a { color: var(--muted); font-size: 14px; font-weight: 600; }
+        .tm-footer a:hover { color: var(--tm); }
+        .tm-footer .copy { color: #9aa0a6; font-size: 13px; }
+
+        /* ============ Modal + Toast ============ */
+        .modal-content { border-radius: 18px; border: 0; box-shadow: var(--shadow-lg); }
+        .modal-header { border-bottom: 1px solid var(--border) !important; padding: 18px 22px; }
+        .modal-title { font-weight: 800; font-size: 19px; }
+        .modal-body { padding: 20px 22px; }
+        .modal-body label { font-weight: 600; font-size: 14px; margin-bottom: 6px; display: block; }
+        .modal-body .form-control, .modal-body .form-select {
+            border-radius: 11px;
+            border: 2px solid var(--border);
+            padding: 11px 14px;
+        }
+        .modal-body .form-control:focus, .modal-body .form-select:focus {
+            border-color: var(--tm);
+            box-shadow: 0 0 0 4px rgba(13, 148, 136, .12);
+        }
+        .modal-body .btn-close { filter: none; }
+        .fixedToast {
+            position: fixed;
+            right: 1.25rem;
+            top: 1.25rem;
+            z-index: 300;
+            border: 0;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            background: #fff;
         }
 
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 2s linear infinite;
-            display: none;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
+        /* ============ Page loader bar ============ */
         .pageLoader {
             position: fixed;
             top: 0;
             left: 0;
             width: 0;
-            height: 3px;
-            /* Adjust the height as needed */
-            background: rgb(242, 99, 38);
-            background: linear-gradient(90deg, rgba(242, 99, 38, 1) 0%, rgba(223, 39, 39, 1) 50%, rgba(255, 0, 206, 1) 100%);
-            transition: width 0.3s linear;
+            height: 4px;
+            background: var(--tm-grad);
+            transition: width .3s linear;
             z-index: 9999;
         }
+
+        /* ============ Responsive ============ */
+        @media (max-width: 960px) {
+            .tm-split { grid-template-columns: 1fr; gap: 18px; }
+            .tm-split-ad { order: 2; }
+            .tm-hero { padding-top: 24px; }
+            .inbox-col-head, .msg-row { grid-template-columns: 1.4fr 1fr 1fr; }
+            .hide-mobile { display: none; }
+            .show-mobile { display: block; }
+            .tm-header-links .hide-sm { display: none; }
+        }
+        @media (max-width: 620px) {
+            .tm-hero { padding: 18px 14px 20px; }
+            .tm-hero h1 { margin: 12px 0 8px; }
+            .tm-trust { margin-top: 12px; }
+            .tm-trust-pill { padding: 5px 11px; font-size: 12px; }
+            .tm-hero .tm-card { margin-top: 18px; }
+            .inbox-col-head { display: none; }
+            .msg-row { grid-template-columns: 1fr 1.3fr; gap: 6px; }
+            .msg-row .msg-time { grid-column: 1 / -1; text-align: left; padding-left: 22px; }
+            .msg-email { grid-column: 1 / -1; padding-left: 22px; }
+        }
     </style>
+</head>
 
-    <x-mail-wrapper></x-mail-wrapper>
-
-@stop <!-- End Javascript -->
-
-@section('content')
-
-
+<body>
 
     <div class="pageLoader"></div>
-    <!-- Navigation-->
-    <!-- Header-->
-    <header class="bg-dark py-5">
-        <div class="container pxc-5">
-            <div class="mail-wrapper">
-                <div class="ad ad-250x250">
-                   <div class="admoloBanner" data-publisher="eyJpdiI6IjB0TlRYb0I4ekQxR2pHYzJjSEM5K2c9PSIsInZhbHVlIjoiR1p1MXh5NEhna2s4Wkk0UkJvditpQT09IiwibWFjIjoiMWVkMzNiMTA1ZTFhNTFhNDg5NjNiMDgzOTQ2NjQxNTRlNGUzYzMzOGJmMjYxY2ZiMTE0OGE0MjVkYmVmZWZiOSIsInRhZyI6IiJ9" data-adsize="320x50"></div>
 
-                </div>
-
-                <div class="mail-selection mb-3">
-                    <div class="border-dashes p-3 justify-content-center">
-                        <h1 class="h5 justify-content-center text-center">Welcome to <strong class="text-success">Temp
-                                Mail</strong></h1>
-                        <h2 class="h6 text-center text-white justify-content-center p-3 text-muted">
-                            {{ __('messages.tempMail.subTitle') }}</h2>
-                        <div class="input-group px-2">
-                            <input class="form-control input-box-email px-3" id="mailbox" value="Loading..."
-                                disabled></input>
-
-                            <button onclick="copyToClipboard()" class="rounded-circle copy-svg mobile-d-none"><svg
-                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                    <g>
-                                        <path fill="none" d="M0 0h24v24H0z" />
-                                        <path
-                                            d="M7 6V3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3v3c0 .552-.45 1-1.007 1H4.007A1.001 1.001 0 0 1 3 21l.003-14c0-.552.45-1 1.007-1H7zM5.003 8L5 20h10V8H5.003zM9 6h8v10h2V4H9v2z"
-                                            fill="#ffffff" />
-                                    </g>
-                                </svg>
-
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                    <div class="row m-2 desktop-d-none">
-                        <button onclick="copyToClipboard()" class="tm-btn text-larger mt-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-copy" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-                                    d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2Zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6ZM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1H2Z" />
-                            </svg>
-                            COPY
-                            <div id="tooltip">Copied!</div>
-                        </button>
-
-                    </div>
-                    <div class="temp-emailbox-text text-center my-2">
-                        <p>{{ __('messages.tempMail.info') }}
-                        </p>
-                    </div>
-                </div>
-                <div class="ad ad-250x250">
-                    <!-- Temp Mail Right adsbygoogle -->
-                <div data-banner-id="6107284"></div>
-
+    <!-- ============ Header ============ -->
+    <header class="tm-header">
+        <div class="tm-header-inner">
+            <a href="{{ url('/') }}" class="tm-brand">
+                <span class="tm-brand-logo">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                </span>
+                <span>
+                    Temp Mail
+                    <span class="tm-brand-sub">by AutoLikerLive</span>
+                </span>
+            </a>
+            <div class="tm-header-links">
+                <a href="{{ url('services') }}" class="tm-ghost hide-sm">All Tools</a>
+                <a href="{{ url('/') }}" class="tm-ghost">Home</a>
             </div>
-            </div>
-
-
         </div>
-
-
     </header>
 
-    <section class="section-btn-header bg-white shadow-sm" style="position: relative; top: 0px;">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-auto justify-content-center my-3">
-                    <button onclick="copyToClipboard()" data-clipboard-action="copy" data-clipboard-target="#mail"
-                        class="no-ajaxy tm-btn btn-gray click-to-copy" data-original-title="" title="">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-copy" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2Zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6ZM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1H2Z" />
-                        </svg> Copy</button>
+    <!-- ============ Hero ============ -->
+    <section class="tm-hero">
+        <div class="tm-hero-inner">
+            <span class="tm-badge">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+                {{ __('messages.tempMail.badge') }}
+            </span>
+            <h1>{!! __('messages.tempMail.heroTitle') !!}</h1>
+            <p>{{ __('messages.tempMail.heroSub') }}</p>
+            <div class="tm-trust">
+                <span class="tm-trust-pill">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l8 4v6c0 5.55-3.84 10.74-9 12-5.16-1.26-9-6.45-9-12V6l8-4z"/></svg>
+                    100% Free
+                </span>
+                <span class="tm-trust-pill">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z"/></svg>
+                    No Signup
+                </span>
+                <span class="tm-trust-pill">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 21h22L12 2zm1 14h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    Auto-Delete
+                </span>
+            </div>
 
+            <!-- Mail address card — full width, above the fold -->
+            <div class="tm-card">
+                <div class="tm-label">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    {{ __('messages.tempMail.yourAddress') }}
+                </div>
 
+                <div class="mail-box">
+                    <div class="mail-input-wrap">
+                        <input type="text" id="mailbox" value="Loading..." disabled autocomplete="off" spellcheck="false" readonly>
+                        <button type="button" class="mail-copy-fab" onclick="copyToClipboard()" aria-label="Copy email">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4a2 2 0 00-2 2v14h2V3h12V1zm3 4H8a2 2 0 00-2 2v14a2 2 0 002 2h11a2 2 0 002-2V7a2 2 0 00-2-2zm0 16H8V7h11v14z"/></svg>
+                        </button>
+                    </div>
+                </div>
 
-                    <a href="javascript:;" id="click-to-refresh" class="no-ajaxy tm-btn btn-gray click-to-refresh"
-                        data-original-title="" title=""> <svg xmlns="http://www.w3.org/2000/svg" width="16"
-                            height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z" />
-                            <path
-                                d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
-                        </svg> Refresh</a>
-
-
-                    <form class="d-inline" action="{{ route('deleteMail') }}" method="post">
+                <div class="mail-actions">
+                    <button type="button" class="tm-action tm-action-primary" onclick="copyToClipboard()">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4a2 2 0 00-2 2v14h2V3h12V1zm3 4H8a2 2 0 00-2 2v14a2 2 0 002 2h11a2 2 0 002-2V7a2 2 0 00-2-2zm0 16H8V7h11v14z"/></svg>
+                        {{ __('messages.tempMail.copy') }}
+                    </button>
+                    <a href="javascript:;" id="click-to-refresh" class="tm-action">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                        {{ __('messages.tempMail.refresh') }}
+                    </a>
+                    <a href="javascript:;" id="click-to-change" class="tm-action d-none">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0020 13c0-4.42-3.58-8-8-8zm-1 12c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 6.74A7.93 7.93 0 004 13c0 4.42 3.58 8 8 8v4l5-5-5-5v4z"/></svg>
+                        {{ __('messages.tempMail.newAddress') }}
+                    </a>
+                    <button type="button" id="changeMailBtn" class="tm-action d-none">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 000-1.41l-2.34-2.34a1 1 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                        {{ __('messages.tempMail.changeAddress') }}
+                    </button>
+                    <form action="{{ route('deleteMail') }}" method="post" class="d-inline">
                         @csrf
-                        <input type="hidden" name="email" id="email_id" value="" disabled="true">
-                        <button class="no-ajaxy tm-btn btn-gray click-to-delete"> <svg xmlns="http://www.w3.org/2000/svg"
-                                width="16" height="16" fill="currentColor" class="bi bi-trash"
-                                viewBox="0 0 16 16">
-                                <path
-                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
-                                <path
-                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
-                            </svg> Delete</button>
-
+                        <input type="hidden" name="email" id="email_id" value="" disabled>
+                        <button type="submit" class="tm-action tm-action-danger">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                            {{ __('messages.tempMail.delete') }}
+                        </button>
                     </form>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <section class="bg-light">
-        <div class="container">
-            <!-- Horizontal banner ads -->
-
-
-<div class="row">
-                <div class="col-md-2 col-lg-2"></div>
-                <div class="col-md-8 col-lg-8 col-xl-8 col-sm-12 p-1 my-3">
-                    <div class="card border-r-1">
-                        <div class="card-header bg-dark card-header-radius">
-                            <div class="row">
-                                <div class="col-4 text-white text-left font-weight-bold pl-2">SENDER</div>
-                                <div class="col-4 text-white text-center font-weight-bold">SUBJECT</div>
-                                <div class="col-4 text-white text-right font-weight-bold pr-2">VIEW</div>
-                            </div>
-                        </div>
-                        <div class="card-body min-hv-18rem">
-                            <div class="row">
-                                <div class="col-box p-2 bg-light inboxWarpMain" id="messageList">
-                                    @livewire('tempmail-inbox')
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-lg-4 col-sm-12">
-
-                    <!-- temp-mail-buttom -->
-
-
-                </div>
-            </div>
-            <div class="row">
-                <div class="col"></div>
-                <div class="col-md-6 col-lg-8 col-sm-12 text-center mb-5">
-                    <div class="mt-5">
-                        <h2 class="text-muted">{{ __('messages.tempMail.whatIsTempMail') }}</h2>
-                        <div class="temp-emailbox-text text-center my-2">
-                            <p>{{ __('messages.tempMail.whatIsTempMail_p1') }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col"></div>
-            </div>
-
-
-
-        </div>
-    </section>
-
-    <div class="container my-4">
-        <x-ads.leaderboard />
-        <x-ads.mobile-banner />
-    </div>
-
-    <section class="bg-light">
-        <div class="container mt-5">
-
-
-            <div class="mt-5 temp-emailbox-text">
-                <h2 class="text-muted">{{ __('messages.tempMail.techBehind') }}</h2>
-                <div>
-                    <p>{{ __('messages.tempMail.techBehind_p1') }}</p>
-                    <p>{{ __('messages.tempMail.techBehind_p2') }}</p>
-                    <p>{{ __('messages.tempMail.techBehind_p3') }}</p>
-                </div>
-            </div>
-
-            <div class="mt-5 temp-emailbox-text">
-                <h2 class="text-muted">{{ __('messages.tempMail.whatIsTempMail2') }}</h2>
-                <div>
-                    <p>{{ __('messages.tempMail.whatIsTempMail2_p1') }}</p>
-                    <p>{{ __('messages.tempMail.whatIsTempMail2_p2') }}</p>
-                    <p>{{ __('messages.tempMail.whatIsTempMail2_p3') }}</p>
-                </div>
-            </div>
-
-            <div class="mt-5 temp-emailbox-text mb-5">
-                <h2 class="text-muted">{{ __('common.Conclusion') }}</h2>
-                <p>
-                    {{ __('messages.tempMail.conclusion') }}
+                <p class="mail-info-text">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+                    {{ __('messages.tempMail.info') }}
                 </p>
             </div>
+
+            {{-- Ads inside the header band — desktop leaderboard / mobile banner --}}
+            <div class="ad-slot ad-leader hide-mobile">
+                <x-ads.leaderboard />
+            </div>
+            <div class="ad-slot ad-leader show-mobile">
+                <x-ads.mobile-banner />
+            </div>
         </div>
     </section>
 
-    <!-- Bootstrap Toast -->
-    <div class="toast fixedToast" role="alert">
+    <!-- ============ Main layout ============ -->
+    <div class="tm-layout">
+        <main class="tm-main">
+
+            <!-- Inbox card + right ad -->
+            <div class="tm-split">
+                <div class="tm-card">
+                    <div class="inbox-head">
+                        <h3>
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                            {{ __('messages.tempMail.inboxTitle') }}
+                        </h3>
+                        <span class="live-dot"><span class="dot"></span> Live · {{ __('messages.tempMail.inboxSub') }}</span>
+                    </div>
+                    <div class="inbox-col-head">
+                        <span>{{ __('messages.tempMail.inboxSender') }}</span>
+                        <span>{{ __('messages.tempMail.inboxSubject') }}</span>
+                        <span>{{ __('messages.tempMail.inboxView') }}</span>
+                    </div>
+                    <div class="inbox-body inboxWarpMain" id="messageList">
+                        @livewire('tempmail-inbox')
+                    </div>
+                </div>
+
+                <aside class="tm-split-ad">
+                    <div class="side-ad">
+                        <x-ads.sidebar />
+                    </div>
+                </aside>
+            </div>
+
+            <!-- Info sections -->
+            <section class="tm-section-card">
+                <h3>{{ __('messages.tempMail.whatIsTempMail') }}</h3>
+                <p>{{ __('messages.tempMail.whatIsTempMail_p1') }}</p>
+            </section>
+
+            <section class="tm-section-card">
+                <h3>{{ __('messages.tempMail.techBehind') }}</h3>
+                <p>{{ __('messages.tempMail.techBehind_p1') }}</p>
+                <p>{{ __('messages.tempMail.techBehind_p2') }}</p>
+                <p>{{ __('messages.tempMail.techBehind_p3') }}</p>
+            </section>
+
+            <section class="tm-section-card">
+                <h3>{{ __('messages.tempMail.whatIsTempMail2') }}</h3>
+                <p>{{ __('messages.tempMail.whatIsTempMail2_p1') }}</p>
+                <p>{{ __('messages.tempMail.whatIsTempMail2_p2') }}</p>
+                <p>{{ __('messages.tempMail.whatIsTempMail2_p3') }}</p>
+                <p>{{ __('messages.tempMail.conclusion') }}</p>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ============ Footer ============ -->
+    <footer class="tm-footer">
+        <div class="tm-footer-links">
+            <a href="{{ url('/') }}">Home</a>
+            <a href="{{ url('services') }}">All Tools</a>
+            <a href="{{ url('privacy') }}">Privacy</a>
+            <a href="{{ url('terms') }}">Terms</a>
+            <a href="{{ url('contact') }}">Contact</a>
+        </div>
+        <div class="copy">&copy; autolikerlive.com &mdash; For entertainment purposes only.</div>
+    </footer>
+
+    <!-- ============ Toast ============ -->
+    <div class="toast fixedToast" id="copyToast" role="status" aria-live="polite" aria-atomic="true">
         <div class="toast-body">
-            <strong class="mr-auto">Copied</strong>
+            <strong>{{ __('messages.tempMail.copied') }}</strong>
         </div>
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="changeMailModal" tabindex="-1" aria-labelledby="changeMailModalLabel"
-        aria-hidden="true">
+    <!-- ============ Change Email Modal ============ -->
+    <div class="modal fade" id="changeMailModal" tabindex="-1" aria-labelledby="changeMailModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5 text-dark" id="changeMailModalLabel">Change Email</h1>
+                    <h1 class="modal-title fs-5" id="changeMailModalLabel">{{ __('messages.tempMail.changeModalTitle') }}</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Email Alias</label>
+                        <label for="random_code_input">{{ __('messages.tempMail.changeModalAlias') }}</label>
                         <div class="input-group">
-                            <input type="text" class="form-control form-control-md" id="random_code_input">
-                            <button type="button" id="random_code" class="btn btn-primary btn-md">Random Name</button>
+                            <input type="text" class="form-control" id="random_code_input" placeholder="john.doe">
+                            <button type="button" id="random_code" class="btn btn-success">{{ __('messages.tempMail.randomName') }}</button>
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Domain</label>
-                        <select class="form-select form-select-md select-input" id="name_domain" tabindex="-1"
-                            aria-hidden="true">
+                        <label for="name_domain">{{ __('messages.tempMail.changeModalDomain') }}</label>
+                        <select class="form-select" id="name_domain" tabindex="-1" aria-hidden="true">
+                            <option value="">Loading domains...</option>
                         </select>
                     </div>
-                    <button id="change_email" class="btn btn-primary kill btn-md w-100">Update Email Address</button>
+                    <button id="change_email" class="btn btn-success w-100">{{ __('messages.tempMail.updateEmail') }}</button>
                 </div>
-
             </div>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             axios.get(`{{ route('mailbox') }}`)
-                .then(function(response) {
-                    // Update the content with the generated email
+                .then(function (response) {
                     $('#mailbox').val(response.data.email);
                     $('#email_id').val(response.data.email);
                     $('#email_id').prop('disabled', false);
 
                     var emails = response.data.list;
-                    emails.forEach(e => {
-                        $('#name_domain').append(`
-                        <option value="` + e.name + `" data-select2-id="select2-data-2-cbn5">
-                            ` + e.name + `
-                        </option>`);
+                    $('#name_domain').empty();
+                    emails.forEach(function (e) {
+                        $('#name_domain').append('<option value="' + e.name + '">' + e.name + '</option>');
                     });
                 })
-                .catch(function(error) {
+                .catch(function (error) {
                     console.error(error);
                 });
 
-            $('#random_code').on('click', function() {
-                var name = generateRandomEmail();
-                $('#random_code_input').val(name);
+            $('#random_code').on('click', function () {
+                $('#random_code_input').val(generateRandomEmail());
             });
 
-            $('#change_email').on('click', function() {
+            $('#change_email').on('click', function () {
                 $('#email_id').prop('disabled', true);
                 var name = $('#random_code_input').val();
                 var domain = $('#name_domain').find(':selected').val();
                 var email = name + '@' + domain;
-                axios.post(`{{ route('updateEmail') }}`, {
-                    email: email
-                }).then(function(response) {
-                    $('#email_id').prop('disabled', false);
-                    if (response.status === 200) {
-                        console.log(response);
+                axios.post(`{{ route('updateEmail') }}`, { email: email })
+                    .then(function (response) {
+                        $('#email_id').prop('disabled', false);
+                        if (response.status === 200 && response.data.success) {
+                            $('#mailbox').val(email);
+                            $('#email_id').val(email);
+                            var modalEl = document.getElementById('changeMailModal');
+                            var modal = bootstrap.Modal.getInstance(modalEl);
+                            if (modal) modal.hide();
+                            Livewire.dispatch('refreshInbox');
+                        }
+                    })
+                    .catch(function () {
+                        $('#email_id').prop('disabled', false);
+                    });
+            });
 
+            $('#changeMailBtn').on('click', function () {
+                var modal = new bootstrap.Modal(document.getElementById('changeMailModal'));
+                modal.show();
+            });
+
+            $('#click-to-refresh').click(function () {
+                Livewire.dispatch('refreshInbox');
+            });
+
+            $('#click-to-change').click(function () {
+                showLoader();
+                axios.post(`{{ route('mailbox') }}`, { refresh: true })
+                    .then(function (response) {
                         $('#mailbox').val(response.data.email);
                         $('#email_id').val(response.data.email);
-
-                    }
-                });
-            });
-        });
-
-
-
-
-        $('#click-to-refresh').click(function() {
-            Livewire.dispatch('refreshInbox');
-        });
-
-        $('#click-to-change').click(function() {
-            $(document).ready(function() {
-                axios.post(`{{ route('mailbox') }}`, {
-                        refresh: true
+                        $('#email_id').prop('disabled', false);
+                        hideLoader();
                     })
-                    .then(function(response) {
-                        // Update the content with the generated email
-
-                        $('#mailbox').val(response.data.email);
-                    })
-                    .catch(function(error) {
-                        console.error(error);
+                    .catch(function () {
+                        hideLoader();
                     });
             });
         });
 
-
         function showLoader() {
-            const loader = document.querySelector('.pageLoader');
-            loader.style.height = '4px'
-            loader.style.width = '100%';
-
+            var loader = document.querySelector('.pageLoader');
+            if (loader) {
+                loader.style.height = '4px';
+                loader.style.width = '100%';
+            }
         }
 
         function hideLoader() {
-            const loader = document.querySelector('.pageLoader');
-            loader.style.width = '0';
-            loader.style.height = '0px'
+            var loader = document.querySelector('.pageLoader');
+            if (loader) {
+                loader.style.width = '0';
+                loader.style.height = '0px';
+            }
         }
-
 
         function copyToClipboard() {
-            // Select the text you want to copy
-            const textToCopy = $('#mailbox').val();
-
-            // Create a temporary textarea element to hold the text
-            const textArea = document.createElement("textarea");
+            var textToCopy = $('#mailbox').val();
+            var textArea = document.createElement("textarea");
             textArea.value = textToCopy;
-
-            // Append the textarea to the document
             document.body.appendChild(textArea);
-
-            // Select the text within the textarea
             textArea.select();
-
-            // Execute the copy command
-            document.execCommand("copy");
-
-            // Remove the temporary textarea
+            try {
+                document.execCommand("copy");
+            } catch (e) {}
             document.body.removeChild(textArea);
 
-            $('.toast').toast('show')
-            // Set a timeout to hide the tooltip after a few seconds
-            setTimeout(function() {
-                $('.toast').toast('hide')
-            }, 1000);
+            var toastEl = document.getElementById('copyToast');
+            var toast = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 1500 });
+            toast.show();
         }
-
 
         function generateRandomEmail() {
             const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-.";
             let name = "";
-            const nameLength = Math.floor(Math.random() * 8) + 5; // Random length (5-12)
-
+            const nameLength = Math.floor(Math.random() * 8) + 5;
             for (let i = 0; i < nameLength; i++) {
                 name += chars.charAt(Math.floor(Math.random() * chars.length));
             }
-
-            // Ensure the first and last character is a letter or number (not a special char)
             if (!/^[a-zA-Z0-9]/.test(name.charAt(0))) {
                 name = "a" + name.substring(1);
             }
             if (!/[a-zA-Z0-9]$/.test(name.charAt(name.length - 1))) {
                 name = name.substring(0, name.length - 1) + "z";
             }
-
-            // Prevent consecutive dots
             name = name.replace(/\.\./g, ".");
-
             return name;
         }
+
         document.addEventListener('livewire:init', () => {
             Livewire.on('show-loader', (event) => {
                 showLoader();
-                setTimeout(function() {
-                    hideLoader();
-                }, 1000);
+                setTimeout(function () { hideLoader(); }, 1000);
             });
         });
-
-
     </script>
-@stop
+</body>
+</html>

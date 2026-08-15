@@ -539,15 +539,15 @@ class WebAppController extends Controller
            
             if($id){
                 Session::flash('message', $id);
-                return redirect()->back();
+                return redirect()->back()->withInput();
             }
             Session::flash('fail', "");
 
-            return redirect()->back();
+            return redirect()->back()->withInput();
         }else{
             Session::flash('fail', "");
 
-            return redirect()->back();
+            return redirect()->back()->withInput();
         }
     }
 
