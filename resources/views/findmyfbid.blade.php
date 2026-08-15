@@ -967,10 +967,7 @@
                 </button>
             </div>
             <div class="modal-sub">{{ __('messages.findmyfbid.modal.subtitle') }}</div>
-            <video id="tutorialVideo" controls playsinline preload="metadata">
-                <source src="https://www.autolikerlive.com/assets/videos/facebook_setting.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/ALOXKMY_fNE?si=OAb30CgzI60aWzsQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             <ol class="modal-steps">
                 <li><span class="n">1</span><span>{{ __('messages.findmyfbid.modal.step1') }}</span></li>
                 <li><span class="n">2</span><span>{{ __('messages.findmyfbid.modal.step2') }}</span></li>
