@@ -6,6 +6,9 @@
 
 @section('styles')
     <style>
+            h5, p {
+            color: #000;
+        }
         .tools-hero {
             background: linear-gradient(135deg, #2a2a72 0%, #009ffd 100%);
             padding: 4rem 0;
