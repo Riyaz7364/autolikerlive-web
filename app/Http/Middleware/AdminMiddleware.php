@@ -9,7 +9,7 @@ class AdminMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        $adminKey = env('ADMIN_SECRET_KEY', 'change-me');
+        $adminKey = config('admin.secret_key');
 
         if ($request->session()->get('admin_auth') === $adminKey) {
             return $next($request);

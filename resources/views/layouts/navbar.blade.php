@@ -9,7 +9,7 @@
         @php
             $token = request()->cookie('game_session');
             $gameSession = $token ? \App\Models\GameSession::where('session_token', $token)->first() : null;
-            $isAdmin = \Illuminate\Support\Facades\Session::get('admin_auth') === env('ADMIN_SECRET_KEY', 'change-me');
+            $isAdmin = \Illuminate\Support\Facades\Session::get('admin_auth') === config('admin.secret_key');
         @endphp
 
         <div class="fb-nav-center">
