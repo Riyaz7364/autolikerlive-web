@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Tag;
 use App\Models\Post;
 use App\Models\Listing;
+use App\Models\AppRelease;
 use App\Models\PremiumAccount;
 use App\Models\Game;
 use App\Http\Controllers\TiktokController; // Adjust the namespace accordingly
@@ -14,6 +15,8 @@ use App\Http\Controllers\InstagramController; // Adjust the namespace accordingl
 use App\Http\Controllers\TikTokeIframeController; // Adjust the namespace accordingly
 
 use Illuminate\Support\Facades\App;
+
+use Illuminate\Support\Facades\Storage;
 
 use Session;
 use View;
@@ -109,7 +112,12 @@ class ListingController extends Controller
 
         View::share('ads',$ads);
         View::share('code',$code);
-        return view('download');
+        // Download page: RajeLiker (Play Store) + every app from DB that has an APK on disk
+        $instaApp = AppRelease::where('app_name', 'instaliker')->first();
+        $apps = AppRelease::where('is_active', true)->orderBy('name')->get()
+            ->filter(fn ($a) => $a->apk_path && Storage::disk('local')->exists($a->apk_path))
+            ->values();
+        return view('download', compact('instaApp', 'apps'));
     }
 
     function cURL($url){
@@ -127,7 +135,10 @@ class ListingController extends Controller
     public function IgCommentLiker(){
         $posts = $this->cURL('https://www.autolikerlive.com/blog/api/post/81');
 
-        return view('instagram-commnet-liker', compact('posts'));
+        // Official app of this page — managed in Admin > App Updates
+        $instaApp = AppRelease::where('app_name', 'instaliker')->first();
+
+        return view('instagram-commnet-liker', compact('posts', 'instaApp'));
     }
 
     public function services(){

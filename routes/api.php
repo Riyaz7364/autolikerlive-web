@@ -114,6 +114,11 @@ Route::prefix('downloader')->group(function () {
     });
 });
 
+// App Updates — looked up by app_name key, e.g. /api/app-update/autolikerlive
+Route::get('/app-update/{appName}', [\App\Http\Controllers\AppReleaseController::class, 'apiShow'])
+    ->where('appName', '[a-zA-Z0-9_\-]+');
+Route::get('/app-updates', [\App\Http\Controllers\AppReleaseController::class, 'apiIndex']);
+
 // Get Cookies
 Route::get('getCookies', function () {
         return response()->json([

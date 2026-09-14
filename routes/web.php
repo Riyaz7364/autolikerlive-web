@@ -63,6 +63,9 @@ require __DIR__.'/sitemaps.php';
 
 Route::get('/download/apk', [DownloadController::class, 'apk'])
      ->name('apk.download');
+Route::get('/download/apk/{appName}', [DownloadController::class, 'apk'])
+     ->where('appName', '[a-zA-Z0-9_\-]+')
+     ->name('apk.download.app');
 
 
 Route::get('/gsc/oauth2callback', function (Request $request) {
@@ -170,6 +173,9 @@ $allowedLangs = config('language.allowed_languages');
     Route::get('/game/{slug}/shared/{hash}', [GameController::class, 'shared'])->name('game.shared');
 
     Route::middleware('admin')->group(function () {
+        // Unified dashboard — single entry point for all tools
+        Route::get('/admin', [\App\Http\Controllers\AdminController::class, 'dashboard'])->name('admin.dashboard');
+
         Route::get('/editor/games', [GameController::class, 'editorList'])->name('game.editor.list');
         Route::get('/editor/games/create', [GameController::class, 'editorCreate'])->name('game.editor.create');
         Route::post('/editor/games/create', [GameController::class, 'editorStore'])->name('game.editor.store');
@@ -189,6 +195,14 @@ $allowedLangs = config('language.allowed_languages');
         // Facebook Settings
         Route::get('/admin/facebook-settings', [\App\Http\Controllers\FacebookSettingsController::class, 'index'])->name('admin.facebook-settings');
         Route::put('/admin/facebook-settings', [\App\Http\Controllers\FacebookSettingsController::class, 'update'])->name('admin.facebook-settings.update');
+
+        // App Updates (APK releases per app, looked up by app_name)
+        Route::get('/admin/app-updates', [\App\Http\Controllers\AppReleaseController::class, 'index'])->name('admin.app-releases.index');
+        Route::get('/admin/app-updates/create', [\App\Http\Controllers\AppReleaseController::class, 'create'])->name('admin.app-releases.create');
+        Route::post('/admin/app-updates', [\App\Http\Controllers\AppReleaseController::class, 'store'])->name('admin.app-releases.store');
+        Route::get('/admin/app-updates/{id}/edit', [\App\Http\Controllers\AppReleaseController::class, 'edit'])->name('admin.app-releases.edit');
+        Route::put('/admin/app-updates/{id}', [\App\Http\Controllers\AppReleaseController::class, 'update'])->name('admin.app-releases.update');
+        Route::delete('/admin/app-updates/{id}', [\App\Http\Controllers\AppReleaseController::class, 'destroy'])->name('admin.app-releases.destroy');
     });
 
 // Temp Mail

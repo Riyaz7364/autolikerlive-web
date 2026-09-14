@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit InstaLiker - AutoLikerLive Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f0f2f5; }
+        .sidebar { min-height: 100vh; }
+        .sidebar .nav-link { color: #ced4da; border-radius: 8px; margin-bottom: 2px; }
+        .sidebar .nav-link:hover { background: #343a40; color: #fff; }
+        .sidebar .nav-link.active { background: #0d6efd; color: #fff; }
+        .stat-number { font-size: 2rem; font-weight: 700; }
+        @media (max-width: 767px) { .sidebar { min-height: auto; } }
+    </style>
+    
+<script type="text/javascript" class="flasher-js">(function() {    var rootScript = 'https://cdn.jsdelivr.net/npm/@flasher/flasher@1.3.2/dist/flasher.min.js';    var FLASHER_FLASH_BAG_PLACE_HOLDER = {};    var options = mergeOptions({"envelopes":[{"notification":{"type":"success","message":"App 'UploadTest' created successfully.","title":"Success","options":[]},"handler":"flasher","created_at":"2026-09-14 04:58:24","uuid":"000000000000070e0000000000000000","priority":0},{"notification":{"type":"success","message":"App deleted successfully.","title":"Success","options":[]},"handler":"flasher","created_at":"2026-09-14 04:58:29","uuid":"00000000000006e30000000000000000","priority":0}],"styles":["https:\/\/cdn.jsdelivr.net\/npm\/@flasher\/flasher@1.3.2\/dist\/flasher.min.css"],"options":{"theme.flasher":[]}}, FLASHER_FLASH_BAG_PLACE_HOLDER);    function mergeOptions(first, second) {        return {            context: merge(first.context || {}, second.context || {}),            envelopes: merge(first.envelopes || [], second.envelopes || []),            options: merge(first.options || {}, second.options || {}),            scripts: merge(first.scripts || [], second.scripts || []),            styles: merge(first.styles || [], second.styles || []),        };    }    function merge(first, second) {        if (Array.isArray(first) && Array.isArray(second)) {            return first.concat(second).filter(function(item, index, array) {                return array.indexOf(item) === index;            });        }        return Object.assign({}, first, second);    }    function renderOptions(options) {        if(!window.hasOwnProperty('flasher')) {            console.error('Flasher is not loaded');            return;        }        requestAnimationFrame(function () {            window.flasher.render(options);        });    }    function render(options) {        if ('loading' !== document.readyState) {            renderOptions(options);            return;        }        document.addEventListener('DOMContentLoaded', function() {            renderOptions(options);        });    }    if (1 === document.querySelectorAll('script.flasher-js').length) {        document.addEventListener('flasher:render', function (event) {            render(event.detail);        });        document.addEventListener('livewire:navigating', function () {    var elements = document.querySelectorAll('.fl-no-cache');    for (var i = 0; i < elements.length; i++) {        elements[i].remove();    }});    }    if (window.hasOwnProperty('flasher') || !rootScript || document.querySelector('script[src="' + rootScript + '"]')) {        render(options);    } else {        var tag = document.createElement('script');        tag.setAttribute('src', rootScript);        tag.setAttribute('type', 'text/javascript');        tag.onload = function () {            render(options);        };        document.head.appendChild(tag);    }})();</script>
+</head>
+<body><a href="https://www.autolikerlive.com/cdn-cgi/content?id=IJ_DJhtX8Ei_U2.j8Drq8_vKEImzxKo.CiJGXdP0AZg-1789359023.92714-1.2.1.1-sW96XStzWL7MjYMMzpVKb2WbgXN9ZbqDc.lanxbWOETy1ap0q4bsLoR3bo66GNH6" aria-hidden="true" rel="nofollow noopener" style="display: none !important; visibility: hidden !important"></a>
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar p-3">
+            <a href="https://www.autolikerlive.com/admin" class="navbar-brand text-white fw-bold d-block mb-1">AutoLikerLive</a>
+            <div class="text-secondary small mb-3">Unified Admin Panel</div>
+                        <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link " href="https://www.autolikerlive.com/admin">&#127968; Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="https://www.autolikerlive.com/admin/listings">&#128221; Listings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="https://www.autolikerlive.com/admin/facebook-settings">&#128293; Facebook Settings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="https://www.autolikerlive.com/editor/games">&#127918; Games Control</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="https://www.autolikerlive.com/admin/app-updates">&#128241; App Updates</a>
+                </li>
+            </ul>
+            <hr class="border-secondary">
+            <a href="https://www.autolikerlive.com" class="btn btn-outline-light btn-sm w-100">Back to Site</a>
+        </nav>
+
+        <main class="col-md-9 col-lg-10 px-4 py-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h4 mb-0">Edit App: InstaLiker</h1>
+                <span class="text-muted small d-none d-md-block">admin.app-releases.edit</span>
+            </div>
+
+                        
+            <div class="row justify-content-center">
+    <div class="col-md-8">
+                    <div class="alert alert-info">
+                Current APK: <strong>app-release.apk</strong>
+                 (58.1 MB)                 — <a href="https://www.autolikerlive.com/download/apk/instaliker" target="_blank">Download</a><br>
+                <span class="small">Visitors download it as <code>InstaLiker_1.apk</code>. API: <code>/api/app-update/instaliker</code></span>
+            </div>
+                <div class="card shadow-sm">
+            <div class="card-header fw-bold">App Details</div>
+            <div class="card-body">
+                <form method="POST" action="https://www.autolikerlive.com/admin/app-updates/5" enctype="multipart/form-data">
+                    <input type="hidden" name="_token" value="9Bp31hEVXdJ3aQEY3YzsRxWb9A6v5hKqVImTa2PG" autocomplete="off">                    <input type="hidden" name="_method" value="PUT">                    <div class="mb-3">
+    <label for="app_name" class="form-label">App Key (for API lookup) <span class="text-danger">*</span></label>
+    <input type="text" name="app_name" id="app_name" class="form-control "
+           value="instaliker" placeholder="e.g. autolikerlive" required>
+        <div class="form-text">Lowercase, no spaces. Your app calls <code>GET /api/app-update/<b>this-key</b></code>.</div>
+</div>
+
+<div class="mb-3">
+    <label for="name" class="form-label">Display Name <span class="text-danger">*</span></label>
+    <input type="text" name="name" id="name" class="form-control "
+           value="InstaLiker" placeholder="e.g. AutoLiker Live" required>
+    </div>
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label for="version" class="form-label">Version <span class="text-danger">*</span></label>
+        <input type="text" name="version" id="version" class="form-control "
+               value="1.0.0" placeholder="e.g. 1.0.6" required>
+            </div>
+    <div class="col-md-6 mb-3">
+        <label for="release_code" class="form-label">Release Code <span class="text-danger">*</span></label>
+        <input type="number" name="release_code" id="release_code" min="1" class="form-control "
+               value="1" required>
+                <div class="form-text">Integer the app compares to detect updates (e.g. 7).</div>
+    </div>
+</div>
+
+<div class="mb-3">
+    <label for="tagline" class="form-label">Button Subtitle (tagline)</label>
+    <input type="text" name="tagline" id="tagline" maxlength="100" class="form-control "
+           value="Instagram only" placeholder="e.g. Instagram only">
+        <div class="form-text">Small text under the download button on the download page.</div>
+</div>
+
+<div class="mb-3">
+    <label for="icon" class="form-label">App Icon</label>
+        <input type="file" name="icon" id="icon" accept="image/png,image/jpeg,image/webp" class="form-control ">
+        <div class="form-text">Square PNG/JPG/WebP, max 2 MB. Shown on the download button.</div>
+</div>
+
+<div class="mb-3">
+    <label for="apk_file" class="form-label">APK File (leave empty to keep current)</label>
+    <input type="file" name="apk_file" id="apk_file" accept=".apk" class="form-control ">
+        <div class="form-text">Max 200 MB. Stored under <code>storage/app/builds/</code>, served at <code>/download/apk/{app-key}</code>.</div>
+</div>
+
+<div class="mb-3">
+    <label for="changelog" class="form-label">What's New / Changelog</label>
+    <textarea name="changelog" id="changelog" rows="3" class="form-control "
+              placeholder="Bug fixes and improvements...">Instagram Comment Liker release with a new Look and super-fast speed.</textarea>
+    </div>
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" name="is_active" value="1" id="is_active"
+                   checked>
+            <label class="form-check-label" for="is_active">Active (visible in API)</label>
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" name="force_update" value="1" id="force_update"
+                   >
+            <label class="form-check-label" for="force_update">Force update</label>
+        </div>
+    </div>
+</div>
+                    <div class="d-flex gap-2 mt-3">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <a href="https://www.autolikerlive.com/admin/app-updates" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+        </main>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

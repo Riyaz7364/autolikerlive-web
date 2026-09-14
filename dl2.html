@@ -1,16 +1,29 @@
-@php
-    $infoPath = public_path('info.json');
-    $json = json_decode(file_get_contents($infoPath));
-@endphp
-@extends('layouts.master')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no" />
+    <meta name="revisit-after" content="1 days" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="robots" content="all" />
+    <meta name="author" content="AutolikerLive" />
+    <meta name="csrf-token" content="Nfh43sHFHcxch7EQWL07sStRl4GWqO53Xvq8CuDp">
+    <link rel="canonical" href="http://127.0.0.1:18092/download" />
+    <title>Download Our Apps | RajeLiker for Facebook &amp; InstaLiker APK - AutoLikerLive</title>
+    <meta name="description" content="Download our free Android apps: RajeLiker for Facebook from Google Play, and InstaLiker for Instagram — auto-like comments on any post.">
+    <meta name="keywords" content="rajeliker app, rajeliker apk download, instaliker apk, instaliker app download, instagram comment liker app, facebook auto liker app">
 
-@section('title', 'Download Our Apps | RajeLiker for Facebook & InstaLiker APK')
-@section('description',
-    'Download our free Android apps: RajeLiker for Facebook from Google Play, and InstaLiker for Instagram — auto-like comments on any post.')
-@section('keywords', 'rajeliker app, rajeliker apk download, instaliker apk, instaliker app download, instagram comment liker app, facebook auto liker app')
+    <meta property="og:url" content="http://127.0.0.1:18092/download" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Download Our Apps | RajeLiker for Facebook &amp; InstaLiker APK" />
+    <meta property="og:description" content="Download our free Android apps: RajeLiker for Facebook from Google Play, and InstaLiker for Instagram — auto-like comments on any post." />
+    <meta property="og:image" content="http://127.0.0.1:18092/images/graphic.webp" />
 
-    @push('styles')
-        <style>
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.webp">
+    <link rel="icon" type="image/webp" sizes="32x32" href="/images/favicons/favicon-32x32.webp">
+    <link rel="icon" type="image/webp" sizes="16x16" href="/images/favicons/favicon-16x16.webp">
+
+    <link rel="preload" as="style" href="http://127.0.0.1:18092/build/assets/ExampleComponent-c4b9a820.css" /><link rel="preload" as="style" href="http://127.0.0.1:18092/build/assets/app-6b013151.css" /><link rel="modulepreload" href="http://127.0.0.1:18092/build/assets/app-7bbf9fb0.js" /><link rel="modulepreload" href="http://127.0.0.1:18092/build/assets/ExampleComponent-5051289c.js" /><link rel="stylesheet" href="http://127.0.0.1:18092/build/assets/ExampleComponent-c4b9a820.css" data-navigate-track="reload" /><link rel="stylesheet" href="http://127.0.0.1:18092/build/assets/app-6b013151.css" data-navigate-track="reload" /><script type="module" src="http://127.0.0.1:18092/build/assets/app-7bbf9fb0.js" data-navigate-track="reload"></script>            <style>
             .download-hero {
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 border-radius: 25px;
@@ -124,8 +137,8 @@
                 display: flex;
                 align-items: center;
                 gap: 12px;
-                /* flex: 1 1 240px;
-                width: 100%; */
+                flex: 1 1 240px;
+                width: 100%;
                 max-width: 320px;
                 background: #fff;
                 color: #1a1a2e;
@@ -203,6 +216,26 @@
                 display: block;
                 color: #6c757d;
                 font-size: .76rem;
+            }
+
+            .dl-app-arrow {
+                margin-left: auto;
+                flex: 0 0 32px;
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #f1f3ff;
+                color: #667eea;
+                font-size: 1rem;
+                transition: background .25s ease, color .25s ease;
+            }
+
+            .dl-app-btn:hover .dl-app-arrow {
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                color: #fff;
             }
 
             .feature-icon {
@@ -398,9 +431,83 @@
                 background-color: rgba(255, 255, 255, 0.06);
             }
         </style>
-    @endpush
-@section('content')
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8426510303593933"
+     crossorigin="anonymous"></script>
 
+<script type="text/javascript" class="flasher-js">(function() {    var rootScript = 'https://cdn.jsdelivr.net/npm/@flasher/flasher@1.3.2/dist/flasher.min.js';    var FLASHER_FLASH_BAG_PLACE_HOLDER = {};    var options = mergeOptions([], FLASHER_FLASH_BAG_PLACE_HOLDER);    function mergeOptions(first, second) {        return {            context: merge(first.context || {}, second.context || {}),            envelopes: merge(first.envelopes || [], second.envelopes || []),            options: merge(first.options || {}, second.options || {}),            scripts: merge(first.scripts || [], second.scripts || []),            styles: merge(first.styles || [], second.styles || []),        };    }    function merge(first, second) {        if (Array.isArray(first) && Array.isArray(second)) {            return first.concat(second).filter(function(item, index, array) {                return array.indexOf(item) === index;            });        }        return Object.assign({}, first, second);    }    function renderOptions(options) {        if(!window.hasOwnProperty('flasher')) {            console.error('Flasher is not loaded');            return;        }        requestAnimationFrame(function () {            window.flasher.render(options);        });    }    function render(options) {        if ('loading' !== document.readyState) {            renderOptions(options);            return;        }        document.addEventListener('DOMContentLoaded', function() {            renderOptions(options);        });    }    if (1 === document.querySelectorAll('script.flasher-js').length) {        document.addEventListener('flasher:render', function (event) {            render(event.detail);        });        document.addEventListener('livewire:navigating', function () {    var elements = document.querySelectorAll('.fl-no-cache');    for (var i = 0; i < elements.length; i++) {        elements[i].remove();    }});    }    if (window.hasOwnProperty('flasher') || !rootScript || document.querySelector('script[src="' + rootScript + '"]')) {        render(options);    } else {        var tag = document.createElement('script');        tag.setAttribute('src', rootScript);        tag.setAttribute('type', 'text/javascript');        tag.onload = function () {            render(options);        };        document.head.appendChild(tag);    }})();</script>
+</head>
+<body>
+    <nav class="fb-nav">
+    <div class="fb-nav-inner">
+        <div class="fb-nav-left">
+            <a href="http://127.0.0.1:18092" class="fb-nav-brand" aria-label="Home">Autoliker Live</a>
+        </div>
+
+        <div class="fb-nav-right">
+                            <a href="http://127.0.0.1:18092/session/login?redirect=http%3A%2F%2F127.0.0.1%3A18092%2Fdownload" class="fb-nav-login">Log In</a>
+                    </div>
+    </div>
+</nav>
+
+<div class="fb-bottom-nav">
+    <a href="http://127.0.0.1:18092" class="fb-bottom-nav-item ">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M4 21V9l8-6 8 6v12h-6v-7h-4v7H4z"/></svg>
+        <span>Home</span>
+    </a>
+    <a href="http://127.0.0.1:18092/session/login?redirect=http%3A%2F%2F127.0.0.1%3A18092%2Fmy-images" class="fb-bottom-nav-item ">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+        <span>My Images</span>
+    </a>
+    <button class="fb-bottom-nav-item" onclick="toggleToolsPanel()">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+        <span>Tools</span>
+    </button>
+</div>
+
+<div class="fb-overlay" id="toolsOverlay" onclick="toggleToolsPanel()"></div>
+<div class="fb-tools-panel" id="toolsPanel">
+    <div class="fb-tools-panel-header">
+        <span class="fb-tools-panel-title">🔧 Free Tools</span>
+        <button class="fb-tools-panel-close" onclick="toggleToolsPanel()">✕</button>
+    </div>
+    <div class="fb-tools-panel-list">
+        <a href="http://127.0.0.1:18092/services" class="fb-tools-panel-item fb-tools-panel-all">🔧 All Free Tools</a>
+        <div class="fb-tools-panel-divider"></div>
+        <a href="http://127.0.0.1:18092/auto-liker-1000-likes" class="fb-tools-panel-item">👍 FB Auto Liker</a>
+        <a href="http://127.0.0.1:18092/instagram-comment-liker" class="fb-tools-panel-item">📸 IG Comment Liker</a>
+        <a href="http://127.0.0.1:18092/free-tiktok-views" class="fb-tools-panel-item">📹 TikTok Views</a>
+        <a href="http://127.0.0.1:18092/free-tiktok-likes" class="fb-tools-panel-item">❤️ TikTok Likes</a>
+        <a href="http://127.0.0.1:18092/free-instagram-likes" class="fb-tools-panel-item">📸 Instagram Likes</a>
+        <a href="http://127.0.0.1:18092/sms-bomber" class="fb-tools-panel-item">💬 SMS Bomber</a>
+        <a href="http://127.0.0.1:18092/temp-mail" class="fb-tools-panel-item">📧 Temp Mail</a>
+    </div>
+</div>
+
+<script>
+function toggleUserMenu() {
+    const menu = document.getElementById('userMenu');
+    if (menu) {
+        menu.classList.toggle('show');
+        const closeHandler = function(e) {
+            if (!menu.contains(e.target) && !e.target.closest('.fb-nav-user-btn')) {
+                menu.classList.remove('show');
+                document.removeEventListener('click', closeHandler);
+            }
+        };
+        setTimeout(() => document.addEventListener('click', closeHandler), 0);
+    }
+}
+
+function toggleToolsPanel() {
+    document.getElementById('toolsPanel').classList.toggle('open');
+    document.getElementById('toolsOverlay').classList.toggle('show');
+}
+</script>
+    <main>
+        <div class="container">
+            <div class="blog-layout">
+                <div class="blog-main">
+                    
 
     <main class="flex-shrink-0">
         <!-- Navigation-->
@@ -430,23 +537,17 @@
                                     </a>
 
                                     <!-- Every app from the database, next to RajeLiker -->
-                                    @foreach(($apps ?? collect()) as $dbApp)
-                                    <button type="button" data-timer="5" data-url="{{ route('apk.download.app', $dbApp->app_name) }}" class="dl-app-btn dl-timer-btn">
+                                                                        <button type="button" data-timer="5" data-url="http://127.0.0.1:18092/download/apk/instaliker" class="dl-app-btn dl-timer-btn">
                                         <span class="dl-app-icon">
-                                            @if($dbApp->icon_url)
-                                                <img src="{{ $dbApp->icon_url }}" alt="{{ $dbApp->name }} icon" loading="lazy">
-                                            @else
-                                                <i class="bi bi-download"></i>
-                                            @endif
-                                        </span>
+                                                                                            <img src="https://www.autolikerlive.com/storage/instaliker/app_logo.webp" alt="InstaLiker icon" loading="lazy">
+                                                                                    </span>
                                         <span class="dl-app-text">
-                                            <strong>{{ str_replace('.apk', '', $dbApp->download_filename) }}</strong>
-                                            <small>{{ $dbApp->tagline ?? 'Android APK' }} · v{{ $dbApp->version }}</small>
+                                            <strong>Direct InstaLiker_1</strong>
+                                            <small>Instagram only · v1.0.0</small>
                                         </span>
-                                        
+                                        <span class="dl-app-arrow"><i class="bi bi-arrow-right"></i></span>
                                     </button>
-                                    @endforeach
-                                </div>
+                                                                    </div>
                             </div>
                         </div>
                         <div class="col-lg-4 text-center d-none d-lg-block">
@@ -472,7 +573,7 @@
                                 <i class="bi bi-tag text-primary fs-2"></i>
                             </div>
                             <h5 class="text-dark fw-bold mb-2">Version</h5>
-                            <p class="text-muted mb-0 fs-4 fw-bold text-gradient">{{ ($instaApp ?? null) ? $instaApp->release_code : $json->version }}</p>
+                            <p class="text-muted mb-0 fs-4 fw-bold text-gradient">1</p>
                             <small class="text-muted">Latest Release</small>
                         </div>
                     </div>
@@ -483,7 +584,7 @@
                                 <i class="bi bi-gear text-success fs-2"></i>
                             </div>
                             <h5 class="text-dark fw-bold mb-2">Build</h5>
-                            <p class="text-muted mb-0 fs-4 fw-bold text-gradient">{{ ($instaApp ?? null) ? $instaApp->version : $json->build }}</p>
+                            <p class="text-muted mb-0 fs-4 fw-bold text-gradient">1.0.0</p>
                             <small class="text-muted">Stable Build</small>
                         </div>
                     </div>
@@ -494,7 +595,7 @@
                                 <i class="bi bi-calendar-check text-info fs-2"></i>
                             </div>
                             <h5 class="text-dark fw-bold mb-2">Last Update</h5>
-                            <p class="text-muted mb-0 fs-6 fw-bold">{{ ($instaApp ?? null) && $instaApp->updated_at ? $instaApp->updated_at->format('d M, Y') : $json->update }}</p>
+                            <p class="text-muted mb-0 fs-6 fw-bold">14 Sep, 2026</p>
                             <small class="text-muted">Recently Updated</small>
                         </div>
                     </div>
@@ -544,7 +645,7 @@
                 <div class="row g-4 mb-5">
                     <div class="col-md-6 col-lg-3">
                         <a class="service-card p-4 text-center text-decoration-none"
-                            href="{{ route('autoliker.instagram') }}">
+                            href="http://127.0.0.1:18092/auto-liker-instagram">
                             <div class="feature-icon"
                                 style="background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);">
                                 <i class="bi bi-heart-fill text-white fs-4"></i>
@@ -556,7 +657,7 @@
 
                     <div class="col-md-6 col-lg-3">
                         <a class="service-card p-4 text-center text-decoration-none"
-                            href="{{ route('free-tiktok-views') }}" target="_blank">
+                            href="http://127.0.0.1:18092/free-tiktok-views" target="_blank">
                             <div class="feature-icon"
                                 style="background: linear-gradient(45deg, #000000 0%, #ffffff 100%);">
                                 <i class="bi bi-play-circle-fill text-white fs-4"></i>
@@ -568,7 +669,7 @@
 
                     <div class="col-md-6 col-lg-3">
                         <a class="service-card p-4 text-center text-decoration-none"
-                            href="{{ route('free-instagram-likes') }}" target="_blank">
+                            href="http://127.0.0.1:18092/free-instagram-likes" target="_blank">
                             <div class="feature-icon"
                                 style="background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);">
                                 <i class="bi bi-heart text-danger fs-4"></i>
@@ -579,7 +680,7 @@
                     </div>
 
                     <div class="col-md-6 col-lg-3">
-                        <a class="service-card p-4 text-center text-decoration-none" href="{{ route('sms-bomber') }}">
+                        <a class="service-card p-4 text-center text-decoration-none" href="http://127.0.0.1:18092/sms-bomber">
                             <div class="feature-icon bg-warning">
                                 <i class="bi bi-telephone text-white fs-4"></i>
                             </div>
@@ -589,7 +690,7 @@
                     </div>
 
                     <div class="col-md-6 col-lg-3">
-                        <a class="service-card p-4 text-center text-decoration-none" href="{{ route('temp-mail') }}">
+                        <a class="service-card p-4 text-center text-decoration-none" href="http://127.0.0.1:18092/temp-mail">
                             <div class="feature-icon bg-success">
                                 <i class="bi bi-envelope text-white fs-4"></i>
                             </div>
@@ -729,7 +830,81 @@
             });
         });
     </script>
-    <x-ads></x-ads>
-    <x-bottom-ad></x-bottom-ad>
-@stop
-{{-- <a href="mailto:rajeliker+subscribe@googlegroups.com?Subject=Subscription Request">Subscribe</a> --}}
+    <div class="ad-container my-4 text-center d-none d-md-block" style="overflow:hidden;">
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:728px;height:90px"
+         data-ad-client="ca-pub-8426510303593933"
+         data-ad-slot="7888884839"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+    <div class="ad-container my-3 text-center d-block d-md-none" style="overflow:hidden;">
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:320px;height:50px"
+         data-ad-client="ca-pub-8426510303593933"
+         data-ad-slot="5606482216"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+                </div>
+                <aside class="blog-sidebar">
+                    <div class="ad-container my-3 text-center" style="overflow:hidden;">
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:300px;height:250px"
+         data-ad-client="ca-pub-8426510303593933"
+         data-ad-slot="5562818408"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+                                            <div class="widget">
+                            <h3>⚠️ Disclaimer</h3>
+                            <p>These games are for <strong>entertainment purposes only</strong>. All images are auto-generated and do not reflect real traits, abilities, or facts.</p>
+                        </div>
+
+                        <div class="widget">
+        <div class="container mx-auto px-4">
+                            <div class="flex flex-col gap-8">
+                                <a href="http://127.0.0.1:18092/free-tiktok-views">TikTok Views</a>
+                                <a href="http://127.0.0.1:18092/free-tiktok-likes">TikTok Likes</a>
+                                <a href="http://127.0.0.1:18092/free-instagram-likes">Instagram Likes</a>
+                                <a href="http://127.0.0.1:18092/sms-bomber">SMS Bomber</a>
+            <div class="container mx-auto px-4">
+                                <a href="http://127.0.0.1:18092/services">All Tools →</a>
+                            </div>
+                        </div>
+
+                        <div class="widget">
+                            <h3>🎮 Quick Links</h3>
+                            <div class="flex flex-col gap-8">
+                                <a href="http://127.0.0.1:18092">All Games</a>
+                                <a href="http://127.0.0.1:18092/privacy">Privacy Policy</a>
+                                <a href="http://127.0.0.1:18092/terms">Terms of Service</a>
+                                <a href="http://127.0.0.1:18092/contact">Contact Us</a>
+                            </div>
+                        </div>
+
+                                                            </aside>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="http://127.0.0.1:18092">Games</a>
+                <a href="http://127.0.0.1:18092/services">Free Tools</a>
+                <a href="http://127.0.0.1:18092/auto-liker-1000-likes">FB Auto Liker</a>
+                <a href="http://127.0.0.1:18092/privacy">Privacy</a>
+                <a href="http://127.0.0.1:18092/terms">Terms</a>
+            </div>
+            <div class="footer-copy">
+                &copy; autolikerlive.com &mdash; For entertainment purposes only.
+            </div>
+        </div>
+    </footer>
+
+    </body>
+</html>
