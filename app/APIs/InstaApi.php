@@ -112,10 +112,25 @@ class InstaApi
         }elseif($type == 'fbpost'){
             $process = new Process(['node', base_path('node_scripts/scrape_facebook.cjs'), $data, 'comet_ufi_summary_and_actions_renderer,props', 'story_token', 0]);
         }
-        $process->run();
+        $process->setTimeout(120);
+        try {
+            $process->run();
+        } catch (\Throwable $e) {
+            \Log::error('scrapeWeb process failed: '.$e->getMessage(), ['type' => $type]);
+            return response()->json([
+                'success' => false,
+                'code' => 500,
+                'error' => 'Scraper temporarily unavailable. Please try again.',
+            ], 500);
+        }
 
         if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
+            \Log::error('scrapeWeb unsuccessful: '.$process->getErrorOutput(), ['type' => $type]);
+            return response()->json([
+                'success' => false,
+                'code' => 500,
+                'error' => 'Scraper temporarily unavailable. Please try again.',
+            ], 500);
         }
 
         $output = trim($process->getOutput());

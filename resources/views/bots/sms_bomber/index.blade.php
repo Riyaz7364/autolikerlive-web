@@ -1,6 +1,6 @@
 @extends('bots.sms_bomber.master')
 @section('title', 'SMS BOMBER - BOT')
-@section('description', '')
+@section('description', 'Free SMS bomber bot by AutoLikerLive. Prank your friends with fast SMS delivery via Telegram bot. Free to use, no login required.')
 @section('javascripts')
 
     <script src="https://www.google.com/recaptcha/api.js?render=6Le7S7kqAAAAAMvSkxFhOxaTZMiosSLf4mHkpCtb" async defer>
@@ -73,7 +73,7 @@
                             style="border-width:3px;">
                             <div class="card-header bg-primary text-white border-primary">
                                 <center>
-                                    <h4>SMS BOMBER</h4>
+                                    <h1 style="font-size:1.5rem;margin:0;">SMS BOMBER</h1>
                                 </center>
                             </div>
                             <div class="card-body">
@@ -82,7 +82,7 @@
                                     <div class="col-sm-6">
 
                                         <div class="col-sm-4 d-none" id="send-success" style="text-align-last: center">
-                                            <img src="https://mytoolstown.com/images/smsbomber/success.png"
+                                            <img src="https://mytoolstown.com/images/smsbomber/success.png" alt="SMS bomb sent successfully"
                                                 style="width:50%;height:auto;pointer-events: none;"><br>
                                             <br>
                                             <h4>SMS BOMB SUCCESSFUL</h4>

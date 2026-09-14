@@ -6,7 +6,7 @@
     <meta name="robots" content="index, follow" />
     <meta name="author" content="AutoLikerLive" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="canonical" href="{{ url()->current() }}" />
+    <link rel="canonical" href="{{ request()->url() }}" />
     <title>Facebook Auto Liker 1000 Likes - Free FB Auto Liker Tool | AutoLikerLive</title>
     <meta name="description" content="Get 1000 free Facebook likes instantly with our auto liker tool. Boost your Facebook posts with real reactions from active users. No password needed, 100% safe and free.">
     <meta name="keywords" content="fb liker 1000 likes, auto liker 1000 likes, facebook auto liker, free facebook liker 1000 likes, fb free liker, auto liker 1000 likes facebook, fb auto liker 1000 likes, facebook page auto liker, 1000 likes on facebook, facebook auto reactions, free facebook likes">

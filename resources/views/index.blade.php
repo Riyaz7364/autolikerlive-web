@@ -1,14 +1,14 @@
 @extends('layouts.game')
 
-@section('title', 'Free Facebook Image Games & Profile Picture Maker')
-@section('description', 'AutoLikerLive offers free Facebook auto liker with 1000 likes, Facebook image games, profile picture maker, auto reactions, auto followers, and more social media tools. Fast, safe, and free.')
+@section('title', (isset($keyword) && $keyword ? \Illuminate\Support\Str::limit(ucwords(str_replace('-', ' ', $keyword)) . ' - Free Online Tool', 60, '') : 'Free Facebook Image Games & Profile Picture Maker'))
+@section('description', (isset($keyword) && $keyword ? \Illuminate\Support\Str::limit('Free ' . ucwords(str_replace('-', ' ', $keyword)) . ' tool. Use it free online — fast, safe, no login required. Try it now on AutoLikerLive.', 155, '') : 'Play free Facebook image games and use our profile picture maker. Create viral photo cards, frames and fun games to share with friends.'))
 @section('keywords', 'auto liker live, autolikerlive, auto liker, facebook auto liker, fb liker 1000 likes, facebook image games, profile picture maker, free facebook liker, auto react facebook, facebook auto followers, photo frame maker, viral image games, image game maker, fb auto liker, facebook page liker')
 
 @section('content')
 <div class="pb-20">
     <div class="page-header mb-16">
-        <h1>Free Facebook Image Games & Profile Picture Maker</h1>
-        <p>Create fun image games, profile picture frames & viral photo cards for Facebook. Play free, share with friends!</p>
+        <h1>{{ (isset($keyword) && $keyword ? ucwords(str_replace('-', ' ', $keyword)) : 'Free Facebook Image Games & Profile Picture Maker') }}</h1>
+        <p>{{ (isset($keyword) && $keyword ? 'Use our free ' . ucwords(str_replace('-', ' ', $keyword)) . ' tool online. Fast, safe, and no login required.' : 'Create fun image games, profile picture frames & viral photo cards for Facebook. Play free, share with friends!') }}</p>
     </div>
 
     @if (count($games) > 0)

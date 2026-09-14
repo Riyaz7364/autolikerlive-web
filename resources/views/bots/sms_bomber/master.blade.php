@@ -24,6 +24,11 @@
     <meta name="author" content="AutolikerLive" />
     <title>@yield('title')</title>
     <meta name=description content="@yield('description')">
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="{{ request()->url() }}" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="@yield('title')" />
+    <meta name="twitter:description" content="@yield('description')" />
     <!-- Favicon-->
     <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.webp">
     <link rel="icon" type="image/webp" sizes="32x32" href="/images/favicons/favicon-32x32.webp">

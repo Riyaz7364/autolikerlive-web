@@ -53,6 +53,10 @@ return [
         'key' => env('IPHUB_KEY'),
     ],
 
+    'indexnow' => [
+        'key' => env('INDEXNOW_KEY'),
+    ],
+
     'aicredit' => [
         'key' => env('AICREDIT_API_KEY'),
         'base_url' => env('AICREDIT_BASE_URL', 'https://api.aicredits.in/v1'),

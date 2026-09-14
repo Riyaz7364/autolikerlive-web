@@ -1,3 +1,10 @@
+// Polyfill for Node < 20: undici v7 (via cheerio v1.2) requires global File.
+if (typeof globalThis.File === 'undefined') {
+    try {
+        const { File } = require('buffer');
+        if (File) globalThis.File = File;
+    } catch (_) {}
+}
 const { Cluster } = require("puppeteer-cluster");
 const puppeteer = require("puppeteer");
 const fs = require("fs");

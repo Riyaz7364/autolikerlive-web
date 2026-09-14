@@ -8,7 +8,7 @@
     <meta name="robots" content="all" />
     <meta name="author" content="AutoLikerLive" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="canonical" href="{{ url()->current() }}" />
+    <link rel="canonical" href="{{ request()->url() }}" />
     <title>{{ __('messages.igCommentLiker.meta_title') }} - AutoLikerLive</title>
     <meta name="description" content="{{ __('messages.igCommentLiker.meta_desc') }}">
     <meta name="keywords" content="Instagram comment liker, Increase Instagram comment likes, Best Instagram comment liker 2025, Auto comment liker for Instagram, Get more Instagram comment likes, How to increase Instagram comment likes fast, Best tools to get Instagram comment likes in 2025, Instagram auto comment liker without login, Free Instagram comment liker tool, How to boost Instagram engagement with comment likes, Instagram engagement booster, Social media auto liker 2025, How to get organic Instagram comment likes, Instagram growth hacks 2025, Boost Instagram comments and likes">

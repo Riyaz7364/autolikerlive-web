@@ -147,18 +147,10 @@ $allowedLangs = config('language.allowed_languages');
     //  Find My FB ID
     Route::post('/findmyfbid',[WebAppController::class,'findmyfbid'])->name("searchFBID");
 
-    // BJP Nagrikta Card (Meme Page)
-    Route::get('/bjp-nagrikta-card', function () {
-        return view('bjp-nagrikta-card');
-    })->name('bjp.nagrikta.card');
-
-    Route::post('/bjp-nagrikta-card',[WebAppController::class,'generateBJPCard'])->name('bjp.nagrikta.card.generate');
-
-    Route::get('/bjp-nagrikta-card/shared/{hash}', [WebAppController::class, 'showSharedCard'])->name('bjp.nagrikta.card.shared');
-
-    Route::get('/bjp-nagrikta-card/gd-editor', function () {
-        return view('bjp-gd-editor-livewire');
-    })->name('bjp.nagrikta.card.gd.editor');
+    // BJP Nagrikta Card — REMOVED (410 Gone). Page + subtree intentionally deleted.
+    Route::match(['get', 'post'], '/bjp-nagrikta-card/{any?}', function () {
+        abort(410);
+    })->where('any', '.*');
 
     // Image Games (New Feature)
     Route::get('/session/login', [SessionController::class, 'loginPage'])->name('session.login');

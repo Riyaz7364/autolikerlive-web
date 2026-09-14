@@ -7,7 +7,7 @@
     <meta name="author" content="AutoLikerLive" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="keywords" content="temp mail, temporary email, disposable email, read message, fake email, email burner, anonymous email, free temp mail">
-    <link rel="canonical" href="{{ url()->current() }}" />
+    <link rel="canonical" href="{{ request()->url() }}" />
     <title>Temp Mail - Read Message</title>
     <meta name="description" content="Read your received temp mail message. View the content of disposable temporary emails with Temp Mail - your solution for private, spam-free email.">
     <meta property="og:url" content="{{ Request::url() }}" />

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Game;
 use App\Models\GameSession;
+use App\Models\GoneUrl;
 use App\Services\AiGameService;
 use App\Services\FacebookService;
 use App\Services\ImageService;
@@ -35,7 +36,11 @@ class GameController extends Controller
             $q->with('aiFields');
         }, 'visibleLayers' => function ($q) {
             $q->with('aiFields');
-        }])->where('slug', $slug)->where('status', 'published')->firstOrFail();
+        }])->where('slug', $slug)->where('status', 'published')->first();
+
+        if (! $game) {
+            abort(GoneUrl::isGone('game/' . $slug) ? 410 : 404);
+        }
 
         $session = $this->getSession();
 
@@ -118,7 +123,11 @@ class GameController extends Controller
 
     public function shared($slug, $hash)
     {
-        $game = Game::where('slug', $slug)->where('status', 'published')->firstOrFail();
+        $game = Game::where('slug', $slug)->where('status', 'published')->first();
+
+        if (! $game) {
+            abort(GoneUrl::isGone('game/' . $slug) ? 410 : 404);
+        }
 
         $filename = $slug . '_' . $hash . '.png';
         $imagePath = storage_path('app/public/game_output/' . $filename);
@@ -404,6 +413,10 @@ class GameController extends Controller
             'status' => $request->status,
         ]);
 
+        if ($game->status === 'published') {
+            \App\Services\IndexNow::submitPath('game/' . $game->slug);
+        }
+
         return redirect()->route('game.editor.edit', $game->id)
             ->with('success', 'Game created! Now design your game canvas.');
     }
@@ -470,6 +483,10 @@ class GameController extends Controller
    
         $game->update($data);
 
+        if ($game->status === 'published') {
+            \App\Services\IndexNow::submitPath('game/' . $game->slug);
+        }
+
         return redirect()->route('game.editor.edit-info', $game->id)
             ->with('success', 'Game info updated!');
     }
@@ -483,6 +500,8 @@ class GameController extends Controller
     public function editorDelete($id)
     {
         $game = Game::findOrFail($id);
+        \App\Services\IndexNow::submitPath('game/' . $game->slug);
+        GoneUrl::record('game/' . $game->slug, 'game deleted via admin');
         $game->layers()->delete();
         $game->delete();
         return redirect()->route('game.editor.list')->with('success', 'Game deleted.');

@@ -6,7 +6,7 @@
     <meta name="robots" content="index, follow" />
     <meta name="author" content="AutoLikerLive" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="canonical" href="{{ url()->current() }}" />
+    <link rel="canonical" href="{{ request()->url() }}" />
     <title>{{ __('messages.findmyfbid.meta_title') }}</title>
     <meta name="description" content="{{ __('messages.findmyfbid.meta_desc') }}">
     <meta property="og:url" content="{{ Request::url() }}" />

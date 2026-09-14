@@ -6,7 +6,7 @@
     <meta name="robots" content="index, follow" />
     <meta name="author" content="AutoLikerLive" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="canonical" href="{{ url()->current() }}" />
+    <link rel="canonical" href="{{ request()->url() }}" />
     <title>Free TikTok Views - Get 100 Free Views Every 10 Minutes | AutoLikerLive</title>
     <meta name="description" content="Get 100 free TikTok views instantly. Boost your TikTok video visibility with our free auto views tool. Fast delivery, no login required, works every 10 minutes.">
     <meta name="keywords" content="free tiktok views, tiktok auto views, tiktok views free, auto views tiktok, free tiktok auto views, tiktok video views, boost tiktok views, tiktok views generator, get free tiktok views">

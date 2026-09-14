@@ -8,7 +8,7 @@
     <meta name="robots" content="all" />
     <meta name="author" content="AutolikerLive" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="canonical" href="{{ url()->current() }}" />
+    <link rel="canonical" href="{{ request()->url() }}" />
     <title>@yield('title') - AutoLikerLive</title>
     <meta name="description" content="@yield('description', 'AutoLikerLive - Free Facebook auto liker, image games, auto reactions, auto followers, and social media tools. Fast, safe, and free.')">
     <meta name="keywords" content="@hasSection('keywords')@yield('keywords')@else auto liker live, facebook auto liker, fb liker 1000 likes, facebook image games, profile picture maker, auto react facebook, facebook auto followers, image game maker @endif">
@@ -18,6 +18,11 @@
     <meta property="og:title" content="@yield('title')" />
     <meta property="og:description" content="@yield('description')" />
     <meta property="og:image" content="@hasSection('ogimage')@yield('ogimage')@else{{ asset('images/graphic.webp') }}@endif" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="@yield('title')" />
+    <meta name="twitter:description" content="@yield('description')" />
+    <meta name="twitter:image" content="@hasSection('ogimage')@yield('ogimage')@else{{ asset('images/graphic.webp') }}@endif" />
 
     <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.webp">
     <link rel="icon" type="image/webp" sizes="32x32" href="/images/favicons/favicon-32x32.webp">

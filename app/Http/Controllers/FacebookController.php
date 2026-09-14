@@ -67,11 +67,41 @@ class FacebookController extends Controller
                 // $finalParsed = parse_url(trim($finalUrl));
                 // \Log::debug("Final URL Parse Data:" . print_r($finalParsed, true));
                 $request = Http::get($username);
-                $finalUrl = $request->effectiveUri();
+                $finalUrl = (string) $request->effectiveUri();
                 \Log::debug("Final URL after HTTP request: " . $finalUrl);
                 $finalParsed = parse_url(trim($finalUrl));
                 \Log::debug("Final URL Parse Data:" . print_r($finalParsed, true));
-                $username = trim($finalParsed['path'], '/');
+                // Unauthenticated share links redirect to /login/?next=... — recover the real target.
+                if (isset($finalParsed['path']) && trim($finalParsed['path'], '/') === 'login' && !empty($finalParsed['query'])) {
+                    parse_str($finalParsed['query'], $loginParams);
+                    if (!empty($loginParams['next'])) {
+                        $nextUrl = urldecode($loginParams['next']);
+                        \Log::debug("Recovered next URL from login redirect: " . $nextUrl);
+                        $finalParsed = parse_url(trim($nextUrl));
+                        if (!empty($finalParsed['query'])) {
+                            parse_str($finalParsed['query'], $nextParams);
+                            // story.php?story_fbid=...&id=... → profile id
+                            if (!empty($nextParams['id'])) {
+                                $username = $nextParams['id'];
+                            } elseif (!empty($nextParams['share_url'])) {
+                                $shareParsed = parse_url(urldecode($nextParams['share_url']));
+                                $username = trim($shareParsed['path'] ?? '', '/');
+                            }
+                        } else {
+                            $username = trim($finalParsed['path'] ?? '', '/');
+                        }
+                    } else {
+                        $username = '';
+                    }
+                } else {
+                    $username = trim($finalParsed['path'] ?? '', '/');
+                }
+                // Guard: never scrape the login page itself.
+                if ($username === '' || strtolower($username) === 'login' || stripos($username, 'login/') === 0) {
+                    Session::flash('fail', 'This Facebook share link requires login to resolve. Please enter the profile username or numeric ID directly.');
+                    toastr()->error('Share link could not be resolved. Use profile username or ID.');
+                    return redirect()->back();
+                }
             } else {
                 if (!empty($parsed['query'])) {
                     parse_str($parsed['query'], $queryParams);

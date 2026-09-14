@@ -104,8 +104,6 @@
             'engry' => 8,
         ];
 
-        $json = json_decode(file_get_contents(url('') . '/Download/info.json'));
-
     @endphp
     <header class="bg-dark py-5">
         <div class="container pxc-5">

@@ -51,6 +51,8 @@ class ListingAdminController extends Controller
             'type' => $request->type ?: 'tool',
         ]);
 
+        \App\Services\IndexNow::submitPath(str_replace(' ', '-', strtolower($request->name)));
+
         return redirect()->route('admin.listings.index')->with('success', 'Listing created successfully.');
     }
 
@@ -76,12 +78,16 @@ class ListingAdminController extends Controller
             'type' => $request->type ?: 'tool',
         ]);
 
+        \App\Services\IndexNow::submitPath(str_replace(' ', '-', strtolower($request->name)));
+
         return redirect()->route('admin.listings.index')->with('success', 'Listing updated successfully.');
     }
 
     public function destroy($id)
     {
         $listing = Listing::findOrFail($id);
+        \App\Services\IndexNow::submitPath(str_replace(' ', '-', strtolower($listing->name)));
+        \App\Models\GoneUrl::record(str_replace(' ', '-', strtolower($listing->name)), 'listing deleted via admin');
         $listing->delete();
 
         return redirect()->route('admin.listings.index')->with('success', 'Listing deleted successfully.');

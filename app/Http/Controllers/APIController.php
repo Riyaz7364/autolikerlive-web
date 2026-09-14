@@ -55,16 +55,32 @@ class APIController extends Controller
         $command = 'node ' . base_path('node_scripts/check_fb_cookie.cjs') . ' ' . escapeshellarg(json_encode($clearCookies));
 
         $output = shell_exec($command);
-        $output = json_decode($output, true);
+        $decoded = $output ? json_decode($output, true) : null;
 
-        foreach($output['results'] as $result){
+        // The node checker may fail (missing binary, script error, bad output).
+        // Never crash on that — log and report unavailability instead.
+        if (! is_array($decoded) || ! isset($decoded['results']) || ! is_array($decoded['results'])) {
+            \Log::warning('clearCookies: cookie-check script returned no usable output');
+            return response()->json([
+                'status' => false,
+                'message' => 'Cookie check unavailable, nothing was deleted.',
+            ], 500);
+        }
+
+        $deleted = 0;
+        foreach($decoded['results'] as $result){
              if (isset($result['success']) && $result['success'] === false) {
                 // Delete the database entry to set the cookie as valid
-                DB::connection('mysql2')->table("users")->where('id', $result['user_id'])->delete();
+                $deleted += DB::connection('mysql2')->table("users")->where('id', $result['user_id'] ?? null)->delete();
             }
         }
 
-
+        return response()->json([
+            'status' => true,
+            'message' => 'Cookie check completed.',
+            'checked' => count($decoded['results']),
+            'deleted' => $deleted,
+        ]);
     }
 
 
@@ -87,8 +103,16 @@ class APIController extends Controller
         $command = 'node ' . base_path('node_scripts/check_fb_cookie.cjs') . ' ' . escapeshellarg(json_encode($cookies));
 
         $output = shell_exec($command);
-        return $output = json_decode($output, true);
-        if (isset($output['status']) && $output['status'] === true) {
+        $decoded = $output ? json_decode($output, true) : null;
+
+        if (! is_array($decoded)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Cookie check unavailable',
+            ], 200);
+        }
+
+        if (isset($decoded['status']) && $decoded['status'] === true) {
             return response()->json([
                 'status' => true,
                 'message' => 'Cookies are valid',

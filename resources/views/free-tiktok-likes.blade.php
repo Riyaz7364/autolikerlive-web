@@ -6,7 +6,7 @@
     <meta name="robots" content="index, follow" />
     <meta name="author" content="AutoLikerLive" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="canonical" href="{{ url()->current() }}" />
+    <link rel="canonical" href="{{ request()->url() }}" />
     <title>Free TikTok Likes - Get Free TikTok Likes Every 15 Minutes | AutoLikerLive</title>
     <meta name="description" content="Get free TikTok likes instantly. Boost your TikTok engagement with our free auto liker tool. Fast delivery, no login required, works every 15 minutes.">
     <meta name="keywords" content="free tiktok likes, tiktok auto liker, free tiktok auto liker, auto likes tiktok, tiktok auto liker free, tiktok free likes, free like tiktok, tiktok likes generator, boost tiktok likes">

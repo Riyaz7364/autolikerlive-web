@@ -1,6 +1,6 @@
 @php
     $infoPath = public_path('info.json');
-    $json = json_decode(file_get_contents($infoPath));
+    $json = is_file($infoPath) ? json_decode(@file_get_contents($infoPath)) : null;
 @endphp
 @extends('layouts.master')
 
@@ -472,7 +472,7 @@
                                 <i class="bi bi-tag text-primary fs-2"></i>
                             </div>
                             <h5 class="text-dark fw-bold mb-2">Version</h5>
-                            <p class="text-muted mb-0 fs-4 fw-bold text-gradient">{{ ($instaApp ?? null) ? $instaApp->release_code : $json->version }}</p>
+                            <p class="text-muted mb-0 fs-4 fw-bold text-gradient">{{ ($instaApp ?? null) ? $instaApp->release_code : ($json->version ?? '—') }}</p>
                             <small class="text-muted">Latest Release</small>
                         </div>
                     </div>
@@ -483,7 +483,7 @@
                                 <i class="bi bi-gear text-success fs-2"></i>
                             </div>
                             <h5 class="text-dark fw-bold mb-2">Build</h5>
-                            <p class="text-muted mb-0 fs-4 fw-bold text-gradient">{{ ($instaApp ?? null) ? $instaApp->version : $json->build }}</p>
+                            <p class="text-muted mb-0 fs-4 fw-bold text-gradient">{{ ($instaApp ?? null) ? $instaApp->version : ($json->build ?? '—') }}</p>
                             <small class="text-muted">Stable Build</small>
                         </div>
                     </div>
@@ -494,7 +494,7 @@
                                 <i class="bi bi-calendar-check text-info fs-2"></i>
                             </div>
                             <h5 class="text-dark fw-bold mb-2">Last Update</h5>
-                            <p class="text-muted mb-0 fs-6 fw-bold">{{ ($instaApp ?? null) && $instaApp->updated_at ? $instaApp->updated_at->format('d M, Y') : $json->update }}</p>
+                            <p class="text-muted mb-0 fs-6 fw-bold">{{ ($instaApp ?? null) && $instaApp->updated_at ? $instaApp->updated_at->format('d M, Y') : ($json->update ?? '—') }}</p>
                             <small class="text-muted">Recently Updated</small>
                         </div>
                     </div>

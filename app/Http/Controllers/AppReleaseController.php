@@ -78,6 +78,8 @@ class AppReleaseController extends Controller
         // /download/apk endpoint keeps serving the newest build.
         $this->syncLegacyInfoJson($app);
 
+        \App\Services\IndexNow::submitPath('download');
+
         return redirect()->route('admin.app-releases.index')->with('success', "App '{$app->name}' created successfully.");
     }
 
@@ -151,6 +153,8 @@ class AppReleaseController extends Controller
         $app->update($validated);
 
         $this->syncLegacyInfoJson($app->fresh());
+
+        \App\Services\IndexNow::submitPath('download');
 
         return redirect()->route('admin.app-releases.index')->with('success', "App '{$app->name}' updated successfully.");
     }

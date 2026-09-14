@@ -1,9 +1,13 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
+// Consolidated duplicates: /privacy and /terms are canonical (see sitemap).
+// Old long URLs 301 here to keep their link equity.
 Route::get('/privacy-policy', function () {
-    return view('privacy-policy');
+    return redirect('/privacy', 301);
 });
 
 Route::get('/terms-of-service', function () {
-    return view('terms-of-service');
+    return redirect('/terms', 301);
 });

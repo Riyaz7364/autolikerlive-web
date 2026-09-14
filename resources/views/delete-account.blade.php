@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delete Account Request - AutoLiker Live</title>
+    <meta name="description" content="Request deletion of your AutoLikerLive account and personal data. Fill the form and we will process your request within 24 hours.">
+    <link rel="canonical" href="{{ request()->url() }}">
     {{-- Bootstrap CSS removed for Tailwind migration --}}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
@@ -125,7 +127,7 @@
         <div class="delete-container">
             <div class="delete-header">
                 <i class="fas fa-user-times fa-3x mb-3"></i>
-                <h2 class="mb-0">Delete Account Request</h2>
+                <h1 class="mb-0">Delete Account Request</h1>
                 <p class="mb-0 mt-2">We're sorry to see you go</p>
             </div>
 

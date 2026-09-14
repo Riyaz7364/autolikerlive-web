@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title', 'Create QR Code')
-@section('desctiption',
+@section('description',
     'Create QR Code for free. Generate QR code for any URL, text, vCard, or other data types with
     our easy-to-use QR code generator tool.')
 @section('keywords',
@@ -36,6 +36,9 @@
     <main class="flex-shrink-0">
         <!-- Navigation-->
         <!-- Page content-->
+        <div class="container pt-3">
+            <h1 class="h4 text-center mb-0">Create QR Code — Free QR Generator</h1>
+        </div>
         <div class="iframe-container">
             <iframe src="https://www.autolikerlive.com/create-qr-code/" frameborder="0" allowfullscreen></iframe>
         </div>
