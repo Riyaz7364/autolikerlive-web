@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <x-monetag-notification-ad />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="revisit-after" content="1 days" />
@@ -35,8 +36,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/tool-header.css') }}">
 
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8426510303593933" crossorigin="anonymous"></script>
+    <x-auto-ads />
 
     <script type="application/ld+json">
     {
@@ -88,19 +90,7 @@
             radial-gradient(1000px 480px at 88% -10%,rgba(249,115,22,.12),transparent 60%),#fff;
             min-height:100vh;display:flex;flex-direction:column;line-height:1.55;margin:0}
         a{text-decoration:none}
-        /* ===== Slim standalone header (like temp-mail, InstaLiker themed) ===== */
-        .icl-topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--icl-border)}
-        .icl-topbar-inner{max-width:1120px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-        .icl-topbrand{display:flex;align-items:center;gap:12px;color:var(--icl-ink);font-weight:800;font-size:18px}
-        .icl-topbrand:hover{color:var(--icl-ink)}
-        .icl-topbrand img{width:42px;height:42px;border-radius:12px;box-shadow:0 6px 16px rgba(124,58,237,.35)}
-        .icl-topbrand small{display:block;font-size:12px;font-weight:500;color:var(--icl-muted);line-height:1.1}
-        .icl-top-links{display:flex;align-items:center;gap:10px}
-        .icl-ghost{border:1px solid var(--icl-border);background:#fff;color:var(--icl-ink);font-weight:600;font-size:14px;padding:9px 16px;border-radius:10px;transition:.2s}
-        .icl-ghost:hover{border-color:var(--icl-purple);color:var(--icl-purple)}
-        .icl-dl{background:var(--icl-grad);color:#fff!important;border:0;box-shadow:0 6px 16px rgba(214,36,140,.35)}
-        .icl-dl:hover{filter:brightness(1.05);color:#fff}
-        .hide-sm{display:inline-block}
+        /* Slim standalone header lives in public/css/tool-header.css (<x-tool-header />) */
         /* ===== Page layout (no sidebar) ===== */
         .icl-wrap{width:100%;margin:0 auto;padding:18px 24px 44px;display:flex;flex-direction:column;gap:26px}
         .icl-hero{position:relative;overflow:hidden;background:#fff;border-radius:28px;border:1px solid #f3f4f6;
@@ -215,25 +205,17 @@
         .icl-footer-links a{color:#4b5563;font-size:14px;font-weight:500}
         .icl-footer-links a:hover{color:var(--icl-purple)}
         .icl-footer-bottom{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:24px;padding-top:16px;border-top:1px solid #f3f4f6;color:#9ca3af;font-size:13px}
-        @media(max-width:960px){.hide-sm{display:none}}
     </style>
 </head>
 <body>
 
-    <!-- ===== Standalone header (no main navbar) ===== -->
-    <header class="icl-topbar">
-        <div class="icl-topbar-inner">
-            <a href="{{ url('/') }}" class="icl-topbrand">
-                <img src="{{ url('/storage/instaliker/app_logo.webp') }}" alt="InstaLiker logo" width="42" height="42">
-                <span>InstaLiker<small>by AutoLikerLive</small></span>
-            </a>
-            <div class="icl-top-links">
-                <a href="{{ url('services') }}" class="icl-ghost hide-sm">All Tools</a>
-                <a href="{{ url('/') }}" class="icl-ghost">Home</a>
-                <a href="{{ $instaApkUrl ?? url('download') }}" class="icl-ghost icl-dl">⬇ Download APK</a>
-            </div>
-        </div>
-    </header>
+    <!-- ===== Shared standalone header (same layout as other tools) ===== -->
+    @php
+        $__toolHeaderApk = isset($instaApp) && !empty($instaApp->apk_path ?? null)
+            ? route('apk.download.app', $instaApp->app_name)
+            : url('download');
+    @endphp
+    <x-tool-header brand="InstaLiker" theme="purple" logoUrl="{{ url('/storage/instaliker/app_logo.webp') }}" logoAlt="InstaLiker logo" :downloadUrl="$__toolHeaderApk" downloadLabel="Download APK" />
 
     <div class="icl-wrap">
         @php

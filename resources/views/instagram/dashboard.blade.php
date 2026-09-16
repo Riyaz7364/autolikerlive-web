@@ -3,10 +3,7 @@
 @section('title', 'Dashboard '.$user['loginType'])
 @section('description', '')
 
-@section('javascripts')
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8426510303593933"
-     crossorigin="anonymous"></script>
-@endsection
+{{-- Auto ads are loaded once via layouts.master (<x-auto-ads />) --}}
 
 @section('content')
     <main class="bg-light">

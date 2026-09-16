@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <x-monetag-notification-ad />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="robots" content="index, follow" />
@@ -24,8 +25,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/tool-header.css') }}">
 
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8426510303593933" crossorigin="anonymous"></script>
+    <x-auto-ads />
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
     <script type="application/ld+json">
@@ -147,59 +149,7 @@
         a { color: var(--tt-cyan); text-decoration: none; }
         a:hover { text-decoration: underline; }
 
-        /* ============ Header ============ */
-        .site-header {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            background: rgba(1, 1, 1, .94);
-            backdrop-filter: blur(10px);
-            border-bottom: 3px solid var(--tt-red);
-        }
-        .site-header-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 12px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-        }
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #fff;
-            font-weight: 800;
-            font-size: 18px;
-        }
-        .brand:hover { text-decoration: none; }
-        .brand-logo {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--tt-red), var(--tt-cyan));
-            display: grid;
-            place-items: center;
-            box-shadow: 0 6px 16px rgba(254, 44, 85, .35);
-            flex-shrink: 0;
-            color: #fff;
-            font-size: 20px;
-        }
-        .brand-sub { display: block; font-size: 12px; font-weight: 500; color: var(--muted); line-height: 1.1; }
-        .header-links { display: flex; align-items: center; gap: 10px; }
-        .btn-ghost {
-            border: 1px solid var(--border);
-            background: transparent;
-            color: #fff;
-            font-weight: 600;
-            font-size: 14px;
-            padding: 9px 16px;
-            border-radius: 10px;
-            transition: .2s;
-            cursor: pointer;
-        }
-        .btn-ghost:hover { border-color: var(--tt-cyan); color: var(--tt-cyan); text-decoration: none; }
+        /* Header styles live in public/css/tool-header.css (<x-tool-header />) */
 
         /* ============ Hero ============ */
         .hero { text-align: center; padding: 56px 24px 12px; }
@@ -549,7 +499,6 @@
             .features { grid-template-columns: 1fr; }
             .hide-mobile { display: none; }
             .show-mobile { display: block; }
-            .header-links .hide-sm { display: none; }
         }
         @media (max-width: 480px) {
             .steps { grid-template-columns: 1fr; }
@@ -559,24 +508,10 @@
 
 <body data-fail="{{ Session::has('fail') ? '1' : '0' }}">
 
-    <!-- ============ Header ============ -->
-    <header class="site-header">
-        <div class="site-header-inner">
-            <a href="{{ url('/') }}" class="brand">
-                <span class="brand-logo">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 5.82s.51.5 0 0A4.278 4.278 0 0 1 15.54 3h-3.09v12.4a2.592 2.592 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6 0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64 0 3.33 2.76 5.7 5.69 5.7 3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3s-1.88.09-3.24-1.48z"/></svg>
-                </span>
-                <span>
-                    TikTok Views
-                    <span class="brand-sub">by AutoLikerLive</span>
-                </span>
-            </a>
-            <div class="header-links">
-                <a href="{{ url('services') }}" class="btn-ghost hide-sm">All Tools</a>
-                <a href="{{ url('/') }}" class="btn-ghost">Home</a>
-            </div>
-        </div>
-    </header>
+    <!-- ============ Header (shared) ============ -->
+    <x-tool-header brand="TikTok Views" theme="tiktok">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 5.82s.51.5 0 0A4.278 4.278 0 0 1 15.54 3h-3.09v12.4a2.592 2.592 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6 0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64 0 3.33 2.76 5.7 5.69 5.7 3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3s-1.88.09-3.24-1.48z"/></svg>
+    </x-tool-header>
 
     <!-- ============ Hero ============ -->
     <section class="hero">
@@ -677,6 +612,9 @@
                 </div>
                 <p style="color: var(--muted); font-size: 12px; text-align: center; margin-top: 10px;">Results may vary depending on TikTok activity. Use responsibly.</p>
             </div>
+
+            {{-- Cross-promo: managed in Admin > Promotions --}}
+            <x-promo-banner placement="tiktok_views" />
 
             {{-- Ad Slot 3: Between tool and content --}}
             <div class="ad-slot ad-inline">

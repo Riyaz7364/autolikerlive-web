@@ -33,14 +33,40 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card shadow-sm border-0">
+        <div class="card shadow-sm border-0" style="border-top:3px solid #7c3aed !important">
             <div class="card-body text-center">
-                <div class="stat-number {{ $stats['facebook_configured'] ? 'text-success' : 'text-warning' }}">{{ $stats['facebook_configured'] ? 'OK' : '!' }}</div>
-                <div class="text-muted">Facebook Settings</div>
-                <a href="{{ route('admin.facebook-settings') }}" class="btn btn-sm btn-outline-secondary mt-2">Configure</a>
+                <div class="stat-number" style="color:#7c3aed">{{ $stats['promotions_active'] ?? 0 }}<span class="text-muted fs-6">/{{ $stats['promotions_total'] ?? 0 }}</span></div>
+                <div class="text-muted">Promotions live</div>
+                <a href="{{ route('admin.promotions.index') }}" class="btn btn-sm btn-outline-primary mt-2">📣 Manage Promotions</a>
             </div>
         </div>
     </div>
+</div>
+
+<div class="card shadow-sm border-0 mb-4" style="border-left:4px solid #7c3aed !important">
+    <div class="card-body d-flex flex-wrap gap-3 align-items-center justify-content-between">
+        <div>
+            <div class="fw-bold">📣 Promote your Instagram Comment Liker app</div>
+            <div class="text-muted small">Active promos show automatically on Free TikTok Views + Free TikTok Likes, right under the tool card.</div>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ route('admin.promotions.index') }}" class="btn btn-sm btn-primary">Open Promotions</a>
+            <a href="{{ route('admin.promotions.create') }}" class="btn btn-sm btn-success">+ New Promotion</a>
+        </div>
+    </div>
+    @if(($promotions ?? collect())->count())
+    <ul class="list-group list-group-flush">
+        @foreach($promotions as $promo)
+        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <span><strong>{{ $promo->emoji }} {{ $promo->title }}</strong> <span class="text-muted small">— {{ $promo->name }}</span></span>
+            <span class="d-flex gap-2 align-items-center">
+                {!! $promo->is_active ? '<span class="badge bg-success">Live</span>' : '<span class="badge bg-secondary">Paused</span>' !!}
+                <a href="{{ route('admin.promotions.edit', $promo->id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+            </span>
+        </li>
+        @endforeach
+    </ul>
+    @endif
 </div>
 
 <div class="row g-3">
@@ -86,6 +112,7 @@
                 <a href="{{ route('game.editor.list') }}" class="list-group-item list-group-item-action">Games Control Panel</a>
                 <a href="{{ route('game.editor.create') }}" class="list-group-item list-group-item-action">+ New Game</a>
                 <a href="{{ route('admin.app-releases.index') }}" class="list-group-item list-group-item-action">App Updates</a>
+                <a href="{{ route('admin.promotions.index') }}" class="list-group-item list-group-item-action">📣 Promotions</a>
             </div>
         </div>
         <div class="card shadow-sm">

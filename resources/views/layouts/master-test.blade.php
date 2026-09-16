@@ -55,6 +55,7 @@
     @stack('styles')
 
     @yield('javascripts')
+    <x-auto-ads />
 </head>
 
 <body class="d-flex flex-column

@@ -24,8 +24,7 @@
     <meta name="twitter:description" content="{{ $ogDesc }}" />
     <meta name="twitter:image" content="{{ $imageUrl }}" />
 
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8426510303593933"
-         crossorigin="anonymous"></script>
+    <x-auto-ads />
 
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }

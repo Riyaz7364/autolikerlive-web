@@ -8,8 +8,7 @@
 
 @section('javascripts')
     <x-mail-wrapper></x-mail-wrapper>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8426510303593933"
-     crossorigin="anonymous"></script>
+    {{-- Auto ads are loaded once via layouts.master (<x-auto-ads />) --}}
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 @endsection
 

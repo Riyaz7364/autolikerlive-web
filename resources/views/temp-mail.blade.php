@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <x-monetag-notification-ad />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="robots" content="index, follow" />
@@ -27,8 +28,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/tool-header.css') }}">
 
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8426510303593933" crossorigin="anonymous"></script>
+    <x-auto-ads />
 
     <script type="application/ld+json">
 {
@@ -146,59 +148,7 @@
         a { color: var(--tm); text-decoration: none; }
         a:hover { text-decoration: underline; }
 
-        /* ============ Header ============ */
-        .tm-header {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            background: rgba(255, 255, 255, .94);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-        }
-        .tm-header-inner {
-            max-width: 1220px;
-            margin: 0 auto;
-            padding: 12px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-        }
-        .tm-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: var(--ink);
-            font-weight: 800;
-            font-size: 18px;
-        }
-        .tm-brand:hover { text-decoration: none; }
-        .tm-brand-logo {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            background: var(--tm-grad);
-            display: grid;
-            place-items: center;
-            box-shadow: 0 6px 16px rgba(13, 148, 136, .35);
-            flex-shrink: 0;
-            color: #fff;
-        }
-        .tm-brand-logo svg { width: 22px; height: 22px; }
-        .tm-brand-sub { display: block; font-size: 12px; font-weight: 500; color: var(--muted); line-height: 1.1; }
-        .tm-header-links { display: flex; align-items: center; gap: 10px; }
-        .tm-ghost {
-            border: 1px solid var(--border);
-            background: #fff;
-            color: var(--ink);
-            font-weight: 600;
-            font-size: 14px;
-            padding: 9px 16px;
-            border-radius: 10px;
-            transition: .2s;
-            cursor: pointer;
-        }
-        .tm-ghost:hover { border-color: var(--tm); color: var(--tm); text-decoration: none; }
+        /* Header styles live in public/css/tool-header.css (<x-tool-header />) */
 
         /* ============ Hero ============ */
         .tm-hero {
@@ -645,7 +595,6 @@
             .inbox-col-head, .msg-row { grid-template-columns: 1.4fr 1fr 1fr; }
             .hide-mobile { display: none; }
             .show-mobile { display: block; }
-            .tm-header-links .hide-sm { display: none; }
         }
         @media (max-width: 620px) {
             .tm-hero { padding: 18px 14px 20px; }
@@ -665,24 +614,10 @@
 
     <div class="pageLoader"></div>
 
-    <!-- ============ Header ============ -->
-    <header class="tm-header">
-        <div class="tm-header-inner">
-            <a href="{{ url('/') }}" class="tm-brand">
-                <span class="tm-brand-logo">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                </span>
-                <span>
-                    Temp Mail
-                    <span class="tm-brand-sub">by AutoLikerLive</span>
-                </span>
-            </a>
-            <div class="tm-header-links">
-                <a href="{{ url('services') }}" class="tm-ghost hide-sm">All Tools</a>
-                <a href="{{ url('/') }}" class="tm-ghost">Home</a>
-            </div>
-        </div>
-    </header>
+    <!-- ============ Header (shared) ============ -->
+    <x-tool-header brand="Temp Mail" theme="teal">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+    </x-tool-header>
 
     <!-- ============ Hero ============ -->
     <section class="tm-hero">

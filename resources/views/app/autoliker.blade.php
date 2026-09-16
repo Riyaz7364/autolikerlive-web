@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RajeLiker - Dashboard</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8426510303593933"
-     crossorigin="anonymous"></script>
+    <x-auto-ads />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Sidebar Ad -->
     <style>

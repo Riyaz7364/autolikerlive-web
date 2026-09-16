@@ -195,6 +195,15 @@ $allowedLangs = config('language.allowed_languages');
         Route::get('/admin/app-updates/{id}/edit', [\App\Http\Controllers\AppReleaseController::class, 'edit'])->name('admin.app-releases.edit');
         Route::put('/admin/app-updates/{id}', [\App\Http\Controllers\AppReleaseController::class, 'update'])->name('admin.app-releases.update');
         Route::delete('/admin/app-updates/{id}', [\App\Http\Controllers\AppReleaseController::class, 'destroy'])->name('admin.app-releases.destroy');
+
+        // Promotions — cross-promote apps on high-traffic pages
+        Route::get('/admin/promotions', [\App\Http\Controllers\PromotionController::class, 'index'])->name('admin.promotions.index');
+        Route::get('/admin/promotions/create', [\App\Http\Controllers\PromotionController::class, 'create'])->name('admin.promotions.create');
+        Route::post('/admin/promotions', [\App\Http\Controllers\PromotionController::class, 'store'])->name('admin.promotions.store');
+        Route::get('/admin/promotions/{id}/edit', [\App\Http\Controllers\PromotionController::class, 'edit'])->name('admin.promotions.edit');
+        Route::put('/admin/promotions/{id}', [\App\Http\Controllers\PromotionController::class, 'update'])->name('admin.promotions.update');
+        Route::delete('/admin/promotions/{id}', [\App\Http\Controllers\PromotionController::class, 'destroy'])->name('admin.promotions.destroy');
+        Route::post('/admin/promotions/{id}/toggle', [\App\Http\Controllers\PromotionController::class, 'toggle'])->name('admin.promotions.toggle');
     });
 
 // Temp Mail
