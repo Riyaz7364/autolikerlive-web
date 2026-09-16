@@ -57,3 +57,49 @@
     @endif
 </div>
 @stop
+
+@section('sidebar')
+    {{-- Cross-promo banners (sidebar only, compact): managed in Admin > Promotions (Homepage) --}}
+    <x-promo-banner placement="homepage" variant="compact" />
+
+    <div class="widget">
+        <h3>⚠️ Disclaimer</h3>
+        <p>These games are for <strong>entertainment purposes only</strong>. All images are auto-generated and do not reflect real traits, abilities, or facts.</p>
+    </div>
+
+    <div class="widget">
+        <h3>🔧 Free Tools</h3>
+        <div class="flex flex-col gap-8">
+            <a href="{{ route('free-tiktok-views') }}">TikTok Views</a>
+            <a href="{{ route('free-tiktok-likes') }}">TikTok Likes</a>
+            <a href="{{ route('free-instagram-likes') }}">Instagram Likes</a>
+            <a href="{{ route('sms-bomber') }}">SMS Bomber</a>
+            <a href="{{ route('temp-mail') }}">Temp Mail</a>
+            <a href="{{ url('services') }}">All Tools →</a>
+        </div>
+    </div>
+
+    <div class="widget">
+        <h3>🎮 Quick Links</h3>
+        <div class="flex flex-col gap-8">
+            <a href="{{ url('/') }}">All Games</a>
+            <a href="{{ url('/download') }}">⬇️ Download AutoLiker app</a>
+            <a href="{{ url('privacy') }}">Privacy Policy</a>
+            <a href="{{ url('terms') }}">Terms of Service</a>
+            <a href="{{ url('contact') }}">Contact Us</a>
+        </div>
+    </div>
+
+    @if (isset($tags) && count($tags) > 0)
+        <div class="widget">
+            <h3>🏷️ Tags</h3>
+            <div class="flex flex-wrap gap-6">
+                @foreach ($tags as $tag)
+                    @if ($tag->link != null)
+                        <a href="{{ url($tag->link) }}" class="tag-pill">{{ $tag->name }}</a>
+                    @endif
+                @endforeach
+            </div>
+        </div>
+    @endif
+@stop

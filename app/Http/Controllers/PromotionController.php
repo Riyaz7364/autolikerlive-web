@@ -17,11 +17,15 @@ class PromotionController extends Controller
     public function create()
     {
         $promotion = new Promotion([
-            'button_text' => 'Try it now',
+            'button_text' => 'Install',
             'emoji' => '📸',
             'badge_text' => 'NEW APP',
+            'theme' => 'default',
             'show_on_tiktok_views' => true,
             'show_on_tiktok_likes' => true,
+            'show_on_fb_1000_likes' => false,
+            'show_on_landing' => false,
+            'show_on_homepage' => false,
             'is_active' => true,
             'sort_order' => 0,
         ]);
@@ -40,16 +44,25 @@ class PromotionController extends Controller
             'button_url' => 'required|string|max:500',
             'emoji' => 'nullable|string|max:10',
             'image_url' => 'nullable|string|max:500',
+            'theme' => 'nullable|in:default,fb,instagram',
+            'short_name' => 'nullable|string|max:50',
             'sort_order' => 'nullable|integer|min:0|max:9999',
             'show_on_tiktok_views' => 'nullable|boolean',
             'show_on_tiktok_likes' => 'nullable|boolean',
+            'show_on_fb_1000_likes' => 'nullable|boolean',
+            'show_on_landing' => 'nullable|boolean',
+            'show_on_homepage' => 'nullable|boolean',
             'is_active' => 'nullable|boolean',
         ]);
 
         $validated['show_on_tiktok_views'] = $request->boolean('show_on_tiktok_views');
         $validated['show_on_tiktok_likes'] = $request->boolean('show_on_tiktok_likes');
+        $validated['show_on_fb_1000_likes'] = $request->boolean('show_on_fb_1000_likes');
+        $validated['show_on_landing'] = $request->boolean('show_on_landing');
+        $validated['show_on_homepage'] = $request->boolean('show_on_homepage');
         $validated['is_active'] = $request->boolean('is_active');
         $validated['sort_order'] = $validated['sort_order'] ?? 0;
+        $validated['theme'] = $validated['theme'] ?? 'default';
 
         $promotion = Promotion::create($validated);
 
@@ -76,16 +89,25 @@ class PromotionController extends Controller
             'button_url' => 'required|string|max:500',
             'emoji' => 'nullable|string|max:10',
             'image_url' => 'nullable|string|max:500',
+            'theme' => 'nullable|in:default,fb,instagram',
+            'short_name' => 'nullable|string|max:50',
             'sort_order' => 'nullable|integer|min:0|max:9999',
             'show_on_tiktok_views' => 'nullable|boolean',
             'show_on_tiktok_likes' => 'nullable|boolean',
+            'show_on_fb_1000_likes' => 'nullable|boolean',
+            'show_on_landing' => 'nullable|boolean',
+            'show_on_homepage' => 'nullable|boolean',
             'is_active' => 'nullable|boolean',
         ]);
 
         $validated['show_on_tiktok_views'] = $request->boolean('show_on_tiktok_views');
         $validated['show_on_tiktok_likes'] = $request->boolean('show_on_tiktok_likes');
+        $validated['show_on_fb_1000_likes'] = $request->boolean('show_on_fb_1000_likes');
+        $validated['show_on_landing'] = $request->boolean('show_on_landing');
+        $validated['show_on_homepage'] = $request->boolean('show_on_homepage');
         $validated['is_active'] = $request->boolean('is_active');
         $validated['sort_order'] = $validated['sort_order'] ?? 0;
+        $validated['theme'] = $validated['theme'] ?? 'default';
 
         $promotion->update($validated);
 

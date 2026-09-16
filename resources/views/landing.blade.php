@@ -386,6 +386,11 @@
         <p class="hero-sub">Use our free {{ ucwords($keyword) }} tool online. Fast, safe, and no login required.</p>
     </div>
 
+    {{-- Cross-promo banner: managed in Admin > Promotions (Landing Banner) --}}
+    <div style="margin-bottom:1.5rem;">
+        <x-promo-banner placement="landing" />
+    </div>
+
     @if ($posts && isset($posts->title) && $posts->title)
         <div class="blog-card">
             <span class="article-label">Guide</span>

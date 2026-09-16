@@ -1008,6 +1008,9 @@
 
     </div>
 
+    {{-- Cross-promo popup: managed in Admin > Promotions (FB 1000 Popup) --}}
+    <x-promo-popup placement="fb_1000_likes" />
+
     <!-- ============ Footer ============ -->
     <footer class="site-footer">
         <div class="footer-links">
