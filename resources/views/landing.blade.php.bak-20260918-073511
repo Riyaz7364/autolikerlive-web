@@ -1,19 +1,7 @@
 @extends('layouts.master')
 
-@php
-    // Per-keyword title/description overrides for top-impression pages (GSC CTR rescue).
-    $landingSeo = [
-        'liker us' => [
-            'title' => 'Liker Us - Free Facebook Auto Liker',
-            'description' => 'Use Liker Us free auto liker to boost Facebook likes online. Fast, safe, no login required. Try the free Liker Us tool now.',
-        ],
-    ];
-    $landingKey = strtolower(trim($keyword ?? ''));
-    $landingTitle = $landingSeo[$landingKey]['title'] ?? (ucwords($keyword) . ' - Free Online Tool');
-    $landingDesc = $landingSeo[$landingKey]['description'] ?? ('Free ' . ucwords($keyword) . ' tool. ' . ($posts->title ?? 'Use our free social media tools online. Fast, safe, and free. No login required.') . ' Try it now on AutoLikerLive.');
-@endphp
-@section('title', \Illuminate\Support\Str::limit($landingTitle, 60, ''))
-@section('description', \Illuminate\Support\Str::limit($landingDesc, 155, ''))
+@section('title', \Illuminate\Support\Str::limit(ucwords($keyword) . ' - Free Online Tool', 60, ''))
+@section('description', \Illuminate\Support\Str::limit('Free ' . ucwords($keyword) . ' tool. ' . ($posts->title ?? 'Use our free social media tools online. Fast, safe, and free. No login required.') . ' Try it now on AutoLikerLive.', 155, ''))
 @section('keywords', $keyword . ', ' . $keyword . ' free, auto liker, facebook auto liker, ' . $keyword . ' online, autolikerlive, ' . $keyword . ' without survey')
 
 @section('javascripts')

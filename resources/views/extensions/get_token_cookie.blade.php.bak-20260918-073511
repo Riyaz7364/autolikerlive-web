@@ -1,13 +1,13 @@
 @extends('layouts.master')
 
-@section('title', 'Get Token Cookie Extension - Free Download')
+@section('title', 'Get Token Cookie - Android App Extension')
 @section('ogimage', '/images/get_token_cookie.webp')
 @section('apple-icon', '/images/favicons/get_token_cookie/apple-icon.png')
 @section('16-icon', '/images/favicons/get_token_cookie/favicon-16x16.png')
 @section('32-icon', '/images/favicons/get_token_cookie/favicon-32x32.png')
 @section('description',
-    'Download Get Token Cookie extension free for Android. Manage multiple accounts and
-    generate tokens effortlessly. Free download with easy setup guide.')
+    'Download the \'Get Cookie Extension\' for Android to manage multiple accounts and generate
+    tokens effortlessly. Simplify your app experience today!')
 @section('javascripts')
     <style>
         .thumbnail {

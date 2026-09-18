@@ -1,8 +1,8 @@
 @extends('layouts.master')
 
-@section('title', 'SMS Bomber Free - SMS & Call Bomber')
-@section('description', 'Free SMS bomber and call bomber online. Send bulk SMS to your own numbers for testing. Fast, free, no signup. Try the free SMS bomber now.')
-@section('keywords', 'sms bomber, sms bomber free, call bomber, call bomber free, sms bomber free bd, bulk sms test, sms load tester')
+@section('title', 'SMS Bomber - Free SMS & Call Load Tester')
+@section('description', 'Free SMS bomber and call bomber load-testing tool for developers and businesses. Test SMS delivery rates and gateway reliability on your own numbers. Fast, free, no signup.')
+@section('keywords', 'sms bomber, call bomber, sms load tester, sms gateway test, free sms bomber, bulk sms test')
 
 @section('javascripts')
     <script src="https://www.google.com/recaptcha/api.js?render=6Le9PSErAAAAAHw5ToZq73TKSIqMwmuPi7y4wZkj" async defer></script>

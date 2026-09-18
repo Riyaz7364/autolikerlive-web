@@ -7,18 +7,18 @@
     <meta name="author" content="AutoLikerLive" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="canonical" href="{{ request()->url() }}" />
-    <title>FB Auto Liker 1000 Likes - Free Facebook Likes Instantly</title>
-    <meta name="description" content="Get 1000 free Facebook likes instantly with our FB auto liker tool. Real reactions from active users. No password needed, 100% safe and free.">
+    <title>Facebook Auto Liker 1000 Likes - Free FB Auto Liker Tool | AutoLikerLive</title>
+    <meta name="description" content="Get 1000 free Facebook likes instantly with our auto liker tool. Boost your Facebook posts with real reactions from active users. No password needed, 100% safe and free.">
     <meta name="keywords" content="fb liker 1000 likes, auto liker 1000 likes, facebook auto liker, free facebook liker 1000 likes, fb free liker, auto liker 1000 likes facebook, fb auto liker 1000 likes, facebook page auto liker, 1000 likes on facebook, facebook auto reactions, free facebook likes">
     <meta property="og:url" content="{{ Request::url() }}" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="FB Auto Liker 1000 Likes - Free Facebook Likes Instantly" />
+    <meta property="og:title" content="Facebook Auto Liker 1000 Likes - Free FB Auto Liker Tool | AutoLikerLive" />
     <meta property="og:description" content="Get 1000 free Facebook likes instantly with our auto liker tool. Boost your Facebook posts with real reactions from active users. No password needed, 100% safe and free." />
     <meta property="og:image" content="{{ url('/images/fb-liker-1000-likes.webp') }}" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="{{ Request::url() }}" />
-    <meta name="twitter:title" content="FB Auto Liker 1000 Likes - Free Facebook Likes Instantly" />
+    <meta name="twitter:title" content="Facebook Auto Liker 1000 Likes - Free FB Auto Liker Tool | AutoLikerLive" />
     <meta name="twitter:description" content="Get 1000 free Facebook likes instantly with our auto liker tool. Boost your Facebook posts with real reactions from active users." />
     <meta name="twitter:image" content="{{ url('/images/fb-liker-1000-likes.webp') }}" />
 

@@ -1,7 +1,9 @@
 @extends('layouts.master-test')
 
-@section('title', 'DJ Liker 2026 - Free FB Auto Liker')
-@section('description', 'DJ Liker free Facebook auto liker app. Get auto likes, reactions and followers instantly in one click. Unlimited services, free of cost.')
+@section('title', 'DJ Liker | Best Facebook Auto Liker App | Auto Reactions | Auto Like FB | Auto Followers')
+@section('description', 'DJ Liker is the best facebook auto liker app. Get Free Auto Likes, Auto Reactions, Auto
+    Followers Instantly in one click. We are Only working Auto Like App in Market and Provide Unlimited Services Free of
+    Cost')
 @section('keywords', 'auto liker, auto like, auto liker app, auto liker apk, auto reactions, facebook auto liker')
 @section('body-class', 'bg-light')
 
