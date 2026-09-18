@@ -109,9 +109,10 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-12" data-aos="fade-right" data-aos-duration="1500">
                         <div class="banner_text">
-                            <h1><span>DJ Liker Alternative (2026)</span></h1>
-                            <h3>Working free Facebook auto liker - no token errors.</h3>
-                            <p>DJ Liker was popular, but users now face expired tokens, login failures and long downtimes. Use this working alternative instead: free auto likes, reactions and followers with no access token and nothing to install.</p>
+                            <h1><span>DJ Liker!</span></h1>
+                            <h3>Best Facebook Auto Liker App.</h3>
+                            <p>Download our FB Auto Likes App and Start Exchanging Free Auto Likes, Auto Reactions, Auto
+                                Followers and Much More...</p>
                         </div>
                         <ul class="app_btn">
                             <li>
@@ -342,7 +343,8 @@
                             <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
                                 data-parent="#accordionExample">
                                 <div class="card-body">
-                                    <p>You don't need to download anything. Open the <a href="{{ route('autoliker.facebook') }}">free auto liker tool</a>, paste your public profile link and submit - it runs fully in your browser on any device.</p>
+                                    <p>You can download our Auto Liker App straight from the Play Store and Mirror links.
+                                        Our app is only available for Android devices only.</p>
                                 </div>
                             </div>
                         </div>
@@ -357,7 +359,9 @@
                             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
                                 data-parent="#accordionExample">
                                 <div class="card-body">
-                                    <p>No login is needed here. Unlike DJ Liker, which requires your Facebook account and full permissions, this alternative only asks for your public profile link - your credentials stay safe.</p>
+                                    <p>You may log in using your Facebook Account by allowing all permissions. After login
+                                        is complete, you will redirected to our Tool Page where you can use any tool you
+                                        prefer.</p>
                                 </div>
                             </div>
                         </div>
@@ -372,7 +376,10 @@
                             <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
                                 data-parent="#accordionExample">
                                 <div class="card-body">
-                                    <p>DJ Liker itself asks for broad Facebook permissions and an access token, which is exactly what triggers checkpoints and token errors. This alternative avoids that entirely: no token, no password, only a public link - so there is nothing to leak or expire.</p>
+                                    <p>Yes, definitely!!! You can rely on our app more than your girlfriend, LOL! Our
+                                        exchange system operates automat through the Facebook Graph API! and your access
+                                        token will kept in an encrypted format. We do not access your account or share your
+                                        information with any third-party websites or apps.</p>
                                 </div>
                             </div>
                         </div>
@@ -396,38 +403,6 @@
                 </div>
             </div>
         </section>
-        <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            "mainEntity": [
-                {
-                    "@type": "Question",
-                    "name": "Is DJ Liker still working in 2026?",
-                    "acceptedAnswer": {
-                        "@type": "Answer",
-                        "text": "DJ Liker users widely report expired tokens, login failures and downtimes. The alternative on this page works in the browser with no token and nothing to install."
-                    }
-                },
-                {
-                    "@type": "Question",
-                    "name": "Do I need to log in with Facebook?",
-                    "acceptedAnswer": {
-                        "@type": "Answer",
-                        "text": "No login is needed here. Unlike DJ Liker, this alternative only asks for your public profile link."
-                    }
-                },
-                {
-                    "@type": "Question",
-                    "name": "Will my Facebook account get blocked?",
-                    "acceptedAnswer": {
-                        "@type": "Answer",
-                        "text": "This tool never touches your credentials, so there is nothing to leak or expire. Use public posts and respect the cooldown between requests."
-                    }
-                }
-            ]
-        }
-        </script>
         <!--<section class="newsletter_section">
                 <div class="container">
                    <div class="newsletter_box">

@@ -424,16 +424,6 @@ $allowedLangs = config('language.allowed_languages');
 
 
 
-    // Consolidated dated liker pages (approved 2026-09-18): equity -> evergreen page
-    Route::redirect('/facebook-auto-liker-2022', '/auto-liker-app', 301);
-    Route::redirect('/facebook-auto-liker-2023', '/auto-liker-app', 301);
-    // Thin near-duplicate listings consolidated: equity -> canonical tool pages
-    Route::redirect('/facebook-autoliker', '/facebook-auto-likes', 301);
-    Route::redirect('/ig-auto-liker', '/auto-liker-instagram', 301);
-    Route::redirect('/facebook-post-shared', '/fbsub', 301);
-    // Accidental trailing-hyphen slug, never a real page
-    Route::get('/facebook-friend-remover-', fn() => abort(410));
-
     Route::get('/{keyword?}', [ListingController::class,'index'])->name('index');
 
 
