@@ -81,6 +81,7 @@ foreach ($popups as $pp) {
 
 <script>
 (function(){
+    function init(){
     var promos = @json($promoData);
     if (!promos.length) return;
 
@@ -137,8 +138,8 @@ foreach ($popups as $pp) {
         try { localStorage.setItem('promo_dismiss_' + promos[idx].id, String(Date.now())); } catch(e){}
     }
 
-    document.getElementById('promo-modal-close').addEventListener('click', close);
-    overlay.addEventListener('click', function(e){ if (e.target === overlay) close(); });
+    document.getElementById('promo-modal-close').addEventListener('click', close, { passive: true });
+    overlay.addEventListener('click', function(e){ if (e.target === overlay) close(); }, { passive: true });
     document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && overlay.classList.contains('show')) close(); });
 
     render(0);
@@ -149,7 +150,22 @@ foreach ($popups as $pp) {
             render(idx + 1);
         }, 6000);
     }
-    setTimeout(open, {{ (int) $delayMs }});
+    // Defer popup past idle + first interaction window so it never inflates INP
+    var delay = {{ (int) $delayMs }} + 2500;
+    if (document.hidden) delay += 5000;
+    setTimeout(function () {
+        if (document.hidden) {
+            document.addEventListener('visibilitychange', function h() {
+                if (!document.hidden) { document.removeEventListener('visibilitychange', h); setTimeout(open, 2000); }
+            });
+        } else {
+            open();
+        }
+    }, delay);
+    }
+    // Never run promo JS during initial interaction window
+    if ('requestIdleCallback' in window) requestIdleCallback(init, { timeout: 6000 });
+    else setTimeout(init, 3000);
 })();
 </script>
 @endif

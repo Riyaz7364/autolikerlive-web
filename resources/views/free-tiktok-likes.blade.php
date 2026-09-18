@@ -565,14 +565,15 @@
                     @csrf
                     <input type="hidden" name="type" value="TIKTOK_LIKES">
                     <div class="input-row">
-                        <input
+                        <!-- <input
                             type="text"
                             name="link"
                             placeholder="Paste your TikTok video link"
                             autocomplete="off"
                             spellcheck="false"
                             required
-                        />
+                        /> -->
+                        Please Contect Admin For TikTok Likes <a href="https://t.me/AutoLikerLive" target="_blank" style="color: var(--tt-cyan); font-weight: 600;">@AutoLikerLive</a>
                         <button type="submit" class="btn-find" id="sendViewsBtn">
                             <span class="btn-label">Request Likes</span>
                             <span class="spinner"></span>

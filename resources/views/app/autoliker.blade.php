@@ -270,6 +270,64 @@
             color: #666 !important;
         }
 
+        .submit-btn.sending:disabled {
+            background: linear-gradient(135deg, #9e9e9e, #757575) !important;
+            color: #fff !important;
+            opacity: 0.9;
+        }
+
+        .submit-btn .btn-spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255, 255, 255, 0.4);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: btnSpin 0.8s linear infinite;
+            vertical-align: -3px;
+            margin-right: 8px;
+        }
+
+        @keyframes btnSpin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .ws-loader {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-size: 14px;
+            font-weight: 600;
+            border-left: 4px solid #2196f3;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .ws-loader .btn-spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(21, 101, 192, 0.25);
+            border-top-color: #1565c0;
+            border-radius: 50%;
+            animation: btnSpin 0.8s linear infinite;
+            flex-shrink: 0;
+        }
+
+        .ws-loader .ws-count {
+            background: #1565c0;
+            color: #fff;
+            border-radius: 12px;
+            padding: 2px 10px;
+            font-size: 13px;
+        }
+
         .stats-section {
             background: white;
             margin: 20px;
@@ -1141,6 +1199,120 @@ button {
         const countdownEls = document.querySelectorAll("[data-timer]");
         let timeLeft = parseInt(countdownEls[0].getAttribute('data-timer')) || 0;
 
+        // ---- Send-task state: button stays locked until WS error or page reload ----
+        const sendTaskState = {
+            reaction: { running: false, done: false, originalHTML: null, ws: null },
+            followers: { running: false, done: false, originalHTML: null, ws: null },
+            comments: { running: false, done: false, originalHTML: null, ws: null },
+        };
+
+        function getTaskEls(kind) {
+            if (kind === 'reaction') return { btn: sendButtonEL, msgBox: document.getElementById('responseMessage') };
+            if (kind === 'followers') return { btn: sendFollowersButtonEL, msgBox: document.getElementById('followersResponseMessage') };
+            return { btn: sendCommentsButtonEL, msgBox: document.getElementById('commentsResponseMessage') };
+        }
+
+        function syncTaskFlags() {
+            isReactionTaskRunning = sendTaskState.reaction.running;
+            isFollowersTaskRunning = sendTaskState.followers.running;
+            isCommentsTaskRunning = sendTaskState.comments.running;
+        }
+
+        function startSendTask(kind, sendingLabel) {
+            const { btn, msgBox } = getTaskEls(kind);
+            const st = sendTaskState[kind];
+            if (st.running) return false;
+            // Close any stale socket for this task
+            try { if (st.ws && st.ws.readyState === WebSocket.OPEN) st.ws.close(); } catch (e) {}
+            st.running = true;
+            st.done = false;
+            st.ws = null;
+            st.originalHTML = btn.innerHTML;
+            btn.disabled = true;
+            btn.classList.add('sending');
+            btn.innerHTML = `<span class="btn-spinner"></span> ${sendingLabel}`;
+            if (msgBox) {
+                msgBox.innerHTML = `<div class="ws-loader"><span class="btn-spinner"></span><span>Sending… waiting for server</span><span class="ws-count">0</span></div>`;
+            }
+            syncTaskFlags();
+            return true;
+        }
+
+        function updateSendProgress(kind, count) {
+            const { btn, msgBox } = getTaskEls(kind);
+            const st = sendTaskState[kind];
+            if (!st.running || st.done) return;
+            const label = kind === 'reaction' ? 'Sending' : (kind === 'followers' ? 'Sending Followers' : 'Sending Comments');
+            btn.disabled = true;
+            btn.classList.add('sending');
+            btn.innerHTML = `<span class="btn-spinner"></span> ${label} (${count})`;
+            if (msgBox) {
+                const countEl = msgBox.querySelector('.ws-count');
+                if (countEl) countEl.textContent = count;
+                else msgBox.innerHTML = `<div class="ws-loader"><span class="btn-spinner"></span><span>Sending…</span><span class="ws-count">${count}</span></div>`;
+            }
+        }
+
+        function succeedSendTask(kind, reloadDelay = 2000) {
+            const { btn, msgBox } = getTaskEls(kind);
+            const st = sendTaskState[kind];
+            st.done = true;
+            // Keep running=true so updateTimer / method handlers NEVER re-enable.
+            // Button stays disabled until page reload.
+            btn.disabled = true;
+            btn.classList.add('sending');
+            btn.innerHTML = `<span class="btn-spinner"></span> Done! Refreshing…`;
+            if (msgBox) {
+                msgBox.innerHTML = `<div class="success-message"><i class="fas fa-check-circle"></i> Completed! Refreshing page…</div>`;
+            }
+            syncTaskFlags();
+            setTimeout(function() { window.location.reload(); }, reloadDelay);
+        }
+
+        function failSendTask(kind, message) {
+            const { btn, msgBox } = getTaskEls(kind);
+            const st = sendTaskState[kind];
+            st.running = false;
+            st.done = false;
+            try { if (st.ws && st.ws.readyState !== WebSocket.CLOSED) st.ws.close(); } catch (e) {}
+            st.ws = null;
+            btn.classList.remove('sending');
+            if (st.originalHTML !== null) btn.innerHTML = st.originalHTML;
+            // Re-enable ONLY on error — recompute timer/storage rules
+            refreshSendButtons();
+            if (msgBox) {
+                msgBox.innerHTML = `<div class="error-message"><i class="fas fa-exclamation-triangle"></i> ${message || 'Failed. Please try again.'}</div>`;
+            } else if (message) {
+                alert(message);
+            }
+            syncTaskFlags();
+        }
+
+        function refreshSendButtons() {
+            // Central place to compute enabled/disabled, always respecting running tasks
+            if (!sendTaskState.reaction.running) {
+                if (selectedMethod === 'storage') sendButtonEL.disabled = storageCredits <= 0;
+                else sendButtonEL.disabled = timeLeft > 0;
+                sendButtonEL.classList.remove('sending');
+            } else {
+                sendButtonEL.disabled = true;
+            }
+            if (!sendTaskState.followers.running) {
+                if (selectedMethodFollowers === 'storage') sendFollowersButtonEL.disabled = storageCredits <= 0;
+                else sendFollowersButtonEL.disabled = timeLeft > 0;
+                sendFollowersButtonEL.classList.remove('sending');
+            } else {
+                sendFollowersButtonEL.disabled = true;
+            }
+            if (!sendTaskState.comments.running) {
+                if (selectedMethodComments === 'storage') sendCommentsButtonEL.disabled = storageCredits <= 0;
+                else sendCommentsButtonEL.disabled = timeLeft > 0;
+                sendCommentsButtonEL.classList.remove('sending');
+            } else {
+                sendCommentsButtonEL.disabled = true;
+            }
+        }
+
         function updateTimer() {
             const minutes = Math.floor(timeLeft / 60);
             const seconds = timeLeft % 60;
@@ -1155,27 +1327,14 @@ button {
             });
 
             if (timeLeft <= 0) {
-                sendButtonEL.disabled = isReactionTaskRunning;
-                sendFollowersButtonEL.disabled = isFollowersTaskRunning;
-                sendCommentsButtonEL.disabled = isCommentsTaskRunning;
+                // Never re-enable a running/succeeded task — only page reload clears it
+                sendButtonEL.disabled = sendTaskState.reaction.running || sendTaskState.reaction.done ? true : false;
+                sendFollowersButtonEL.disabled = sendTaskState.followers.running || sendTaskState.followers.done ? true : false;
+                sendCommentsButtonEL.disabled = sendTaskState.comments.running || sendTaskState.comments.done ? true : false;
                 storeButtonEL.disabled = false;
-                timerEl.innerHTML = '⸜(｡˃ ᵕ ˂ )⸝♡';
+                if (timerEl) timerEl.innerHTML = '⸜(｡˃ ᵕ ˂ )⸝♡';
             } else {
-                if(selectedMethod == "storage"){
-                    sendButtonEL.disabled = storageCredits <= 0 || isReactionTaskRunning;
-                } else {
-                    sendButtonEL.disabled = true;
-                }
-                if(selectedMethodFollowers == "storage"){
-                    sendFollowersButtonEL.disabled = storageCredits <= 0 || isFollowersTaskRunning;
-                } else {
-                    sendFollowersButtonEL.disabled = true;
-                }
-                if(selectedMethodComments == "storage"){
-                    sendCommentsButtonEL.disabled = storageCredits <= 0 || isCommentsTaskRunning;
-                } else {
-                    sendCommentsButtonEL.disabled = true;
-                }
+                refreshSendButtons();
                 storeButtonEL.disabled = true;
                 timeLeft--;
                 setTimeout(updateTimer, 1000);
@@ -1203,15 +1362,14 @@ button {
                 $('.send-method').removeClass('selected');
                 $(this).addClass('selected');
                 selectedMethod = $(this).data('reaction');
-                if(selectedMethod == "storage"){
-                    sendButtonEL.disabled = storageCredits <= 0 || isReactionTaskRunning;
-                    sendButtonEL.innerHTML = `<i class="fa-solid fa-warehouse fa-shake"></i> Send`;
-                }else if(timeLeft > 0){
-                    sendButtonEL.disabled = true;
-                    sendButtonEL.innerHTML = `<i class="fa-solid fa-paper-plane fa-shake"></i> Send`;
-                }else{
-                    sendButtonEL.disabled = isReactionTaskRunning;
-                    sendButtonEL.innerHTML = `<i class="fa-solid fa-paper-plane fa-shake"></i> Send`;
+                // Never touch button while a task is running/succeeded — stays locked till reload/error
+                if (sendTaskState.reaction.running || sendTaskState.reaction.done) return;
+                refreshSendButtons();
+                if (!sendButtonEL.classList.contains('sending')) {
+                    sendButtonEL.innerHTML = selectedMethod === 'storage'
+                        ? `<i class="fa-solid fa-warehouse fa-shake"></i> Send`
+                        : `<i class="fa-solid fa-paper-plane fa-shake"></i> Send`;
+                    sendTaskState.reaction.originalHTML = sendButtonEL.innerHTML;
                 }
             });
         }
@@ -1229,15 +1387,13 @@ button {
                 $(this).addClass('selected');
                 selectedMethodFollowers = $(this).data('reaction');
 
-                if(selectedMethodFollowers == "storage"){
-                    sendFollowersButtonEL.disabled = storageCredits <= 0 || isFollowersTaskRunning;
-                    sendFollowersButtonEL.innerHTML = `<i class="fa-solid fa-warehouse fa-shake"></i> Send Followers`;
-                }else if(timeLeft > 0){
-                    sendFollowersButtonEL.disabled = true;
-                    sendFollowersButtonEL.innerHTML = `<i class="fa-solid fa-user-plus fa-shake"></i> Send Followers`;
-                }else{
-                    sendFollowersButtonEL.disabled = isFollowersTaskRunning;
-                    sendFollowersButtonEL.innerHTML = `<i class="fa-solid fa-user-plus fa-shake"></i> Send Followers`;
+                if (sendTaskState.followers.running || sendTaskState.followers.done) return;
+                refreshSendButtons();
+                if (!sendFollowersButtonEL.classList.contains('sending')) {
+                    sendFollowersButtonEL.innerHTML = selectedMethodFollowers === 'storage'
+                        ? `<i class="fa-solid fa-warehouse fa-shake"></i> Send Followers`
+                        : `<i class="fa-solid fa-user-plus fa-shake"></i> Send Followers`;
+                    sendTaskState.followers.originalHTML = sendFollowersButtonEL.innerHTML;
                 }
             });
         }
@@ -1254,13 +1410,8 @@ button {
                 $(this).addClass('selected');
                 selectedMethodComments = $(this).data('reaction');
 
-                if (selectedMethodComments == "storage") {
-                    sendCommentsButtonEL.disabled = storageCredits <= 0 || isCommentsTaskRunning;
-                } else if (timeLeft > 0) {
-                    sendCommentsButtonEL.disabled = true;
-                } else {
-                    sendCommentsButtonEL.disabled = isCommentsTaskRunning;
-                }
+                if (sendTaskState.comments.running || sendTaskState.comments.done) return;
+                refreshSendButtons();
             });
         }
 
@@ -1306,11 +1457,13 @@ button {
                 window.flutter_inappwebview.callHandler('showInterstitialAd');
             }
 
-            const sendCommentsButtonEL = document.getElementById('submitCommentsBtn');
-            sendCommentsButtonEL.disabled = true;
-            isCommentsTaskRunning = true;
+            if (!startSendTask('comments', 'Sending Comments…')) return;
             const postId = $('#commentPostUrl').val();
             const comment = $('#commentText').val().trim();
+            if (!postId || !comment) {
+                failSendTask('comments', 'Please enter post link and comment text.');
+                return;
+            }
 
             const ws = new WebSocket("wss://www.autolikerlive.com/api/v1/send", ['{{$session}}'], {
                 headers: {
@@ -1318,6 +1471,7 @@ button {
                     "sec-websocket-protocol": "{{$session}}",
                 }
             });
+            sendTaskState.comments.ws = ws;
 
             ws.onopen = () => {
                 ws.send(JSON.stringify({
@@ -1335,13 +1489,13 @@ button {
                     if(data.success != null){
                         if(data.success){
                             console.log("Comment Task Completed");
-                            setTimeout(function() {
-                                window.location.reload();
-                            }, 2000);
+                            try { ws.close(); } catch (err) {}
+                            succeedSendTask('comments');
                         }else{
-                            alert(data.message)
+                            failSendTask('comments', data.message || 'Comment failed.');
                         }
                     }else{
+                        updateSendProgress('comments', data.totalSuccess || 0);
                         showCommentResult(data.totalSuccess);
                     }
                     console.log(data);
@@ -1350,17 +1504,27 @@ button {
                 }
             };
 
+            ws.onerror = () => {
+                if (!sendTaskState.comments.done) failSendTask('comments', 'Connection error. Please try again.');
+            };
+
             ws.onclose = () => {
-                isCommentsTaskRunning = false;
-                sendCommentsButtonEL.disabled = selectedMethodComments !== "storage" && timeLeft > 0;
-                if (selectedMethodComments == "storage") {
-                    sendCommentsButtonEL.disabled = storageCredits <= 0;
+                // Stay locked on success (reload will happen). Only unlock on explicit error,
+                // which is already handled in onmessage. Abnormal close without any message:
+                // keep locked if done, else unlock to allow retry.
+                if (sendTaskState.comments.done) return;
+                if (sendTaskState.comments.running) {
+                    const box = document.getElementById('commentsResponseMessage');
+                    const hasError = box && box.querySelector('.error-message');
+                    if (!hasError && !(box && box.querySelector('.ws-count'))) {
+                        // No progress and no error — likely failed to connect
+                        failSendTask('comments', 'Connection closed. Please try again.');
+                    }
+                    // else: progress was showing, keep waiting? Server closed — unlock only if no reload pending
+                    // Do NOT auto-reload here; wait for success message which triggers reload.
                 }
-                console.log("Comment Task Completed");
-                setTimeout(function() {
-                    window.location.reload();
-                }, 2000);
-            }
+                console.log("Comment socket closed");
+            };
         });
 
         $('#submitFollowersBtn').on('click', async function(e) {
@@ -1370,15 +1534,19 @@ button {
                 window.flutter_inappwebview.callHandler('showInterstitialAd');
             }
 
-            const sendFollowersButtonEL = document.getElementById('submitFollowersBtn');
-            sendFollowersButtonEL.disabled = true;
+            if (!startSendTask('followers', 'Sending Followers…')) return;
             const profileId = $('#profileUrl').val();
+            if (!profileId) {
+                failSendTask('followers', 'Please enter profile link.');
+                return;
+            }
 
             const ws = new WebSocket("wss://www.autolikerlive.com/api/v1/send", ['{{$session}}'], {
                 headers: {
                     "Authorization": "{{$session}}",
                 }
             });
+            sendTaskState.followers.ws = ws;
 
             ws.onopen = () => {
                 ws.send(JSON.stringify({
@@ -1396,14 +1564,13 @@ button {
                     if(data.success != null){
                         if(data.success){
                             console.log("Followers Task Completed");
-                            setTimeout(function() {
-                                window.location.reload();
-                            }, 2000);
+                            try { ws.close(); } catch (err) {}
+                            succeedSendTask('followers');
                         }else{
-                            alert(data.message)
+                            failSendTask('followers', data.message || 'Followers failed.');
                         }
-                        sendFollowersButtonEL.disabled = false;
                     }else{
+                        updateSendProgress('followers', data.totalSuccess || 0);
                         showFollowersResult(data.totalSuccess);
                     }
                     console.log(data);
@@ -1412,13 +1579,21 @@ button {
                 }
             };
 
+            ws.onerror = () => {
+                if (!sendTaskState.followers.done) failSendTask('followers', 'Connection error. Please try again.');
+            };
+
             ws.onclose = () => {
-                sendFollowersButtonEL.disabled = false;
-                console.log("Followers Task Completed");
-                setTimeout(function() {
-                    window.location.reload();
-                }, 2000);
-            }
+                if (sendTaskState.followers.done) return;
+                if (sendTaskState.followers.running) {
+                    const box = document.getElementById('followersResponseMessage');
+                    const hasError = box && box.querySelector('.error-message');
+                    if (!hasError && !(box && box.querySelector('.ws-count'))) {
+                        failSendTask('followers', 'Connection closed. Please try again.');
+                    }
+                }
+                console.log("Followers socket closed");
+            };
         });
 
         $('#submitBtn').on('click', async function(e) {
@@ -1429,13 +1604,18 @@ button {
                 window.flutter_inappwebview.callHandler('showInterstitialAd');
             }
 
-            sendButtonEL.disabled = true;
+            if (!startSendTask('reaction', 'Sending…')) return;
             const postId = $('#postUrl').val();
+            if (!postId) {
+                failSendTask('reaction', 'Please enter post link.');
+                return;
+            }
             const ws = new WebSocket("wss://www.autolikerlive.com/api/v1/send", ['{{$session}}'], {
             headers: {
                 "Authorization": "{{$session}}",
             }
             });
+            sendTaskState.reaction.ws = ws;
 
             ws.onopen = () => {
 
@@ -1454,15 +1634,13 @@ button {
                     if(data.success != null){
                         if(data.success){
                             console.log("Task Completed");
-                                 setTimeout(function() {
-                                    window.location.reload();
-                                }, 2000);
+                            try { ws.close(); } catch (err) {}
+                            succeedSendTask('reaction');
                         }else{
-                            alert(data.message)
+                            failSendTask('reaction', data.message || 'Send failed.');
                         }
-                        sendButtonEL.disabled = false;
-
                     }else{
+                        updateSendProgress('reaction', data.totalSuccess || 0);
                         showReactionResult(data.reaction, data.totalSuccess);
                     }
                     console.log(data);
@@ -1472,15 +1650,58 @@ button {
                 }
             };
 
+            ws.onerror = () => {
+                if (!sendTaskState.reaction.done) failSendTask('reaction', 'Connection error. Please try again.');
+            };
+
             ws.onclose = () => {
-                sendButtonEL.disabled = false;
-                     console.log("Task Completed");
-                                 setTimeout(function() {
-                                    window.location.reload();
-                                }, 2000);
-            }
+                if (sendTaskState.reaction.done) return;
+                if (sendTaskState.reaction.running) {
+                    const box = document.getElementById('responseMessage');
+                    const hasError = box && box.querySelector('.error-message');
+                    if (!hasError && !(box && box.querySelector('.ws-count'))) {
+                        failSendTask('reaction', 'Connection closed. Please try again.');
+                    }
+                }
+                console.log("Like socket closed");
+            };
         });
 
+
+function showProgressToast(id, innerHTML, bg) {
+    let card = document.getElementById(id);
+    if (!card) {
+        card = document.createElement("div");
+        card.id = id;
+        Object.assign(card.style, {
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%) scale(1)",
+            background: bg,
+            color: "white",
+            padding: "20px 30px",
+            borderRadius: "12px",
+            fontSize: "16px",
+            fontWeight: "500",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+            zIndex: 9999,
+            opacity: "1",
+            transition: "opacity 0.4s ease, transform 0.4s ease",
+            pointerEvents: "none"
+        });
+        document.body.appendChild(card);
+    }
+    card.style.background = bg;
+    card.innerHTML = innerHTML;
+    // Clear any pending hide timer and set a fresh one
+    if (card._hideTimer) clearTimeout(card._hideTimer);
+    card._hideTimer = setTimeout(() => {
+        card.style.opacity = "0";
+        setTimeout(() => { card.remove(); }, 400);
+    }, 2500);
+    return card;
+}
 
 function showReactionResult(reaction, success = 0) {
     const icons = {
@@ -1491,192 +1712,23 @@ function showReactionResult(reaction, success = 0) {
         7: "😢",
         8: "😡"
     };
-
-const card = document.createElement("div");
-card.innerHTML = `
-    <div style="
-        display: flex;
-        align-items: center;
-        gap: 10px;">
-        <span style="font-size: 20px;">${icons[reaction] || "✨"}</span>
-        <span><b>Success: ${success}</b></span>
-    </div>
-`;
-
-// Create overlay to block clicks
-const overlay = document.createElement("div");
-Object.assign(overlay.style, {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    background: "rgba(0,0,0,0)", // fully transparent
-    zIndex: 9998,
-    cursor: "not-allowed"
-});
-document.body.appendChild(overlay);
-
-Object.assign(card.style, {
-    position: "fixed",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%) scale(0.8)",
-    background: success ? "#4CAF50" : "#E53935",
-    color: "white",
-    padding: "20px 30px",
-    borderRadius: "12px",
-    fontSize: "16px",
-    fontWeight: "500",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-    zIndex: 9999,
-    opacity: "0",
-    transition: "opacity 0.4s ease, transform 0.4s ease"
-});
-
-document.body.appendChild(card);
-
-// Animate in
-requestAnimationFrame(() => {
-    card.style.opacity = "1";
-    card.style.transform = "translate(-50%, -50%) scale(1)";
-});
-
-
-    // Animate in
-    setTimeout(() => {
-        card.style.opacity = "1";
-        card.style.transform = "translateY(0)";
-    }, 50);
-
-    // Auto hide
-    setTimeout(() => {
-        card.style.opacity = "0";
-        card.style.transform = "translateY(-20px)";
-        setTimeout(() => card.remove(), 400);
-    }, 3000);
+    // No fullscreen overlay: button is already disabled + ws-loader shows progress.
+    // Reuse a single toast so progress updates don't stack overlays (old bug leaked overlay).
+    showProgressToast("reactionToast",
+        `<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">${icons[reaction] || "✨"}</span><span><b>Success: ${success}</b></span><span class="btn-spinner" style="width:16px;height:16px;border-width:2px;"></span></div>`,
+        success ? "#4CAF50" : "#E53935");
 }
 
 function showFollowersResult(success = 0) {
-    const card = document.createElement("div");
-    card.innerHTML = `
-        <div style="
-            display: flex;
-            align-items: center;
-            gap: 10px;">
-            <span style="font-size: 20px;">👥</span>
-            <span><b>Followers Success: ${success}</b></span>
-        </div>
-    `;
-
-    // Create overlay to block clicks
-    const overlay = document.createElement("div");
-    Object.assign(overlay.style, {
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        background: "rgba(0,0,0,0)", // fully transparent
-        zIndex: 9998,
-        cursor: "not-allowed"
-    });
-    document.body.appendChild(overlay);
-
-    Object.assign(card.style, {
-        position: "fixed",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%) scale(0.8)",
-        background: success ? "#667eea" : "#E53935",
-        color: "white",
-        padding: "20px 30px",
-        borderRadius: "12px",
-        fontSize: "16px",
-        fontWeight: "500",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-        zIndex: 9999,
-        opacity: "0",
-        transition: "opacity 0.4s ease, transform 0.4s ease"
-    });
-
-    document.body.appendChild(card);
-
-    // Animate in
-    requestAnimationFrame(() => {
-        card.style.opacity = "1";
-        card.style.transform = "translate(-50%, -50%) scale(1)";
-    });
-
-    // Auto hide
-    setTimeout(() => {
-        card.style.opacity = "0";
-        card.style.transform = "translateY(-20px)";
-        setTimeout(() => {
-            card.remove();
-            overlay.remove();
-        }, 400);
-    }, 3000);
+    showProgressToast("followersToast",
+        `<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">👥</span><span><b>Followers Success: ${success}</b></span><span class="btn-spinner" style="width:16px;height:16px;border-width:2px;"></span></div>`,
+        success ? "#667eea" : "#E53935");
 }
 
 function showCommentResult(success = 0) {
-    const card = document.createElement("div");
-    card.innerHTML = `
-        <div style="
-            display: flex;
-            align-items: center;
-            gap: 10px;">
-            <span style="font-size: 20px;">💬</span>
-            <span><b>Comments Success: ${success}</b></span>
-        </div>
-    `;
-
-    // Create overlay to block clicks
-    const overlay = document.createElement("div");
-    Object.assign(overlay.style, {
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        background: "rgba(0,0,0,0)",
-        zIndex: 9998,
-        cursor: "not-allowed"
-    });
-    document.body.appendChild(overlay);
-
-    Object.assign(card.style, {
-        position: "fixed",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%) scale(0.8)",
-        background: success ? "#f97316" : "#E53935",
-        color: "white",
-        padding: "20px 30px",
-        borderRadius: "12px",
-        fontSize: "16px",
-        fontWeight: "500",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-        zIndex: 9999,
-        opacity: "0",
-        transition: "opacity 0.4s ease, transform 0.4s ease"
-    });
-
-    document.body.appendChild(card);
-
-    requestAnimationFrame(() => {
-        card.style.opacity = "1";
-        card.style.transform = "translate(-50%, -50%) scale(1)";
-    });
-
-    setTimeout(() => {
-        card.style.opacity = "0";
-        card.style.transform = "translateY(-20px)";
-        setTimeout(() => {
-            card.remove();
-            overlay.remove();
-        }, 400);
-    }, 3000);
+    showProgressToast("commentToast",
+        `<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">💬</span><span><b>Comments Success: ${success}</b></span><span class="btn-spinner" style="width:16px;height:16px;border-width:2px;"></span></div>`,
+        success ? "#f97316" : "#E53935");
 }
 
         function loadUserStats() {

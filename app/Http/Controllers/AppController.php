@@ -99,16 +99,48 @@ class AppController extends Controller
                 ])->post($this->baseUrl . $path);
 
             if ($response->failed()) {
-                Log::warning('Backend API request failed', [
-                    'path' => $path,
-                    'status' => $response->status(),
-                    'body' => $response->body()
-                ]);
-                Session::flush();
+                $body = $response->json() ?? null;
+                // Only drop the login session when the backend explicitly says
+                // the auth is dead: HTTP 401/419, body-level 401/419 (unauth /
+                // session not found), or Facebook OAuth code 190 with subcode
+                // 463 (token expired) / 460 (user logged out, changed
+                // password, token invalidated).
+                // Any other failure (5xx, validation, timeout responses,
+                // etc.) or transport error must NOT log the user out,
+                // otherwise a single transient backend hiccup kicks the
+                // user out of the app after ~1 minute of use.
+                if ($this->isSessionDead($body, $response->status())) {
+                    Log::warning('Backend session expired, logging user out', [
+                        'path' => $path,
+                        'status' => $response->status(),
+                        'body' => $response->body()
+                    ]);
+                    Session::forget('facebook_user');
+                } else {
+                    Log::warning('Backend API request failed, keeping session', [
+                        'path' => $path,
+                        'status' => $response->status(),
+                        'body' => $response->body()
+                    ]);
+                }
                 return null;
             }
 
-            return $response->json();
+            $data = $response->json();
+
+            // Backend may answer HTTP 200 with an auth-dead body (FB 190 +
+            // 460/463, or 401 unauth / session not found). That also means
+            // the access token is dead, so clear the auth session.
+            if ($this->isSessionDead($data, $response->status())) {
+                Log::warning('Backend reports session dead, logging user out', [
+                    'path' => $path,
+                    'body' => $response->body(),
+                ]);
+                Session::forget('facebook_user');
+                return null;
+            }
+
+            return $data;
         } catch (\Exception $e) {
             Log::error('Backend API connection error', [
                 'path' => $path,
@@ -117,6 +149,91 @@ class AppController extends Controller
             // Don't flush session on connection errors, might be temporary
             return null;
         }
+    }
+
+    /**
+     * Single logout decision for backend responses. Returns true when the
+     * auth session must be cleared:
+     * - HTTP 401/419, or body-level 401/419 (unauth / session not found)
+     * - Body message signals unauth / session not found|expired|invalid
+     * - Facebook code 190 + subcode 463 (expired) / 460 (invalidated)
+     */
+    private function isSessionDead($payload, $httpStatus = null): bool
+    {
+        if (in_array((int) $httpStatus, [401, 419], true)) {
+            return true;
+        }
+
+        if ($this->isFacebookTokenDead($payload)) {
+            return true;
+        }
+
+        if (!is_array($payload)) {
+            return false;
+        }
+
+        $nodes = [$payload];
+        if (isset($payload['error']) && is_array($payload['error'])) {
+            $nodes[] = $payload['error'];
+        }
+
+        foreach ($nodes as $node) {
+            $code = $node['status'] ?? $node['statusCode'] ?? $node['code'] ?? $node['error_code'] ?? null;
+            if (in_array((int) $code, [401, 419], true)) {
+                return true;
+            }
+
+            $message = $node['message'] ?? $node['msg'] ?? $node['error_message'] ?? $node['error_msg'] ?? '';
+            if (is_string($message) && $message !== '') {
+                $message = strtolower($message);
+                foreach (['unauth', 'session not found', 'session expired', 'invalid session', 'session invalid', 'no session'] as $needle) {
+                    if (str_contains($message, $needle)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Detect a dead Facebook access token in a backend/Facebook payload.
+     * Logout signal: code 190 with subcode 463 (token expired) or
+     * subcode 460 (user logged out / changed password / token invalidated).
+     * Handles FB REST shape ({error:{code,error_subcode}}), flat shapes
+     * ({code,subcode}), and GraphQL shape ({errors:[...]}).
+     */
+    private function isFacebookTokenDead($payload): bool
+    {
+        if (!is_array($payload)) {
+            return false;
+        }
+
+        $nodes = [$payload];
+        if (isset($payload['error']) && is_array($payload['error'])) {
+            $nodes[] = $payload['error'];
+        }
+        if (isset($payload['errors']) && is_array($payload['errors'])) {
+            foreach ($payload['errors'] as $err) {
+                if (is_array($err)) {
+                    $nodes[] = $err;
+                    if (isset($err['error']) && is_array($err['error'])) {
+                        $nodes[] = $err['error'];
+                    }
+                }
+            }
+        }
+
+        foreach ($nodes as $node) {
+            $code = $node['code'] ?? $node['error_code'] ?? null;
+            $subcode = $node['error_subcode'] ?? $node['subcode'] ?? $node['error_sub_code'] ?? null;
+            if ((int) $code === 190 && in_array((int) $subcode, [460, 463], true)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function getGraphUser($id, $token)
@@ -137,6 +254,12 @@ class AppController extends Controller
         if ($response->successful()) {
             $data = $response->json();
             if (isset($data['errors'])) {
+                // Dead FB token (190 + 460/463) means the login is no longer
+                // valid, so clear the auth session.
+                if ($this->isFacebookTokenDead($data)) {
+                    Log::warning('Facebook token dead, logging user out', ['user_id' => $id]);
+                    Session::forget('facebook_user');
+                }
                 return null;
             }
             return $data['data']['node']['comet_hovercard_renderer']['user'];
@@ -177,6 +300,13 @@ class AppController extends Controller
         }
 
         $credits = $this->httpRequest('getCredits');
+
+        // httpRequest() clears the session when the backend reports the
+        // token dead (401/419 or FB 190 + 460/463). In that case send the
+        // user back to login instead of rendering with a stale $user.
+        if (!Session::has('facebook_user')) {
+            return redirect('/app/rajeliker');
+        }
 
         // If credits API fails, use default values instead of redirecting
         if (!$credits) {

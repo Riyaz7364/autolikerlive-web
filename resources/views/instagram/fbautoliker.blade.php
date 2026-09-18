@@ -24,10 +24,13 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
+    <link rel="preconnect" href="https://challenges.cloudflare.com">
 
     <x-auto-ads />
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    {{-- Turnstile loads lazily (explicit render) via footer script to keep INP < 200ms on mobile --}}
 
     <script type="application/ld+json">
 {
@@ -494,7 +497,24 @@
             font-weight: 600;
             color: var(--ink);
         }
-        .reaction-chip img { width: 22px; height: 22px; }
+        button, .btn, .btn-find, .faq-q { touch-action: manipulation; }
+        .reaction-chip img { width: 22px; height: 22px; aspect-ratio: 1/1; }
+
+        /* Below-the-fold sections: skip rendering until near viewport (INP win on mobile) */
+        .section-card, .steps, .tips-grid, .faq-list, .ad-slot.ad-inline {
+            content-visibility: auto;
+            contain-intrinsic-size: auto 600px;
+        }
+        .cf-turnstile { min-height: 65px; }
+        .modal-video-facade {
+            width: 100%; aspect-ratio: 16/9; display: grid; place-items: center;
+            background: #000; color: #fff; border: 0; cursor: pointer; margin: 16px 0 0; padding: 0;
+        }
+        .modal-video-facade img { width: 100%; height: 100%; object-fit: cover; opacity: .8; }
+        .modal-video-facade .play {
+            position: absolute; width: 64px; height: 64px; border-radius: 50%;
+            background: rgba(255,255,255,.92); color: #111; display: grid; place-items: center;
+        }
 
         /* ============ Sections ============ */
         .section-title {
@@ -691,6 +711,7 @@
 
         /* ============ Responsive ============ */
         @media (max-width: 960px) {
+            .site-header { backdrop-filter: none; -webkit-backdrop-filter: none; background: #fff; }
             .hero { padding-top: 34px; }
             .input-row { flex-direction: column; }
             .btn-find { justify-content: center; }
@@ -797,7 +818,7 @@
                     @endif
 
                     <div class="recaptcha-wrap">
-                        <div class="cf-turnstile" data-sitekey="0x4AAAAAABUvrkxDbOApMo7H"></div>
+                        <div class="cf-turnstile" id="cf-turnstile-box" data-sitekey="0x4AAAAAABUvrkxDbOApMo7H"></div>
                     </div>
                     {{-- In-tool ad: between search bar and CAPTCHA --}}
                     <div class="tool-ad-slot">
@@ -805,13 +826,13 @@
                     </div>
                     {{-- Reactions available --}}
                     <div class="reactions-row">
-                        <span class="reaction-chip"><img src="https://www.autolikerlive.com/reaction/like.png" alt="Like"> Like</span>
-                        <span class="reaction-chip"><img src="https://www.autolikerlive.com/reaction/love.png" alt="Love"> Love</span>
-                        <span class="reaction-chip"><img src="https://www.autolikerlive.com/reaction/care.png" alt="Care"> Care</span>
-                        <span class="reaction-chip"><img src="https://www.autolikerlive.com/reaction/haha.png" alt="Haha"> Haha</span>
-                        <span class="reaction-chip"><img src="https://www.autolikerlive.com/reaction/wow.png" alt="Wow"> Wow</span>
-                        <span class="reaction-chip"><img src="https://www.autolikerlive.com/reaction/sad.png" alt="Sad"> Sad</span>
-                        <span class="reaction-chip"><img src="https://www.autolikerlive.com/reaction/engry.png" alt="Angry"> Angry</span>
+                        <span class="reaction-chip"><img src="/reaction/like.png" width="22" height="22" loading="lazy" decoding="async" alt="Like"> Like</span>
+                        <span class="reaction-chip"><img src="/reaction/love.png" width="22" height="22" loading="lazy" decoding="async" alt="Love"> Love</span>
+                        <span class="reaction-chip"><img src="/reaction/care.png" width="22" height="22" loading="lazy" decoding="async" alt="Care"> Care</span>
+                        <span class="reaction-chip"><img src="/reaction/haha.png" width="22" height="22" loading="lazy" decoding="async" alt="Haha"> Haha</span>
+                        <span class="reaction-chip"><img src="/reaction/wow.png" width="22" height="22" loading="lazy" decoding="async" alt="Wow"> Wow</span>
+                        <span class="reaction-chip"><img src="/reaction/sad.png" width="22" height="22" loading="lazy" decoding="async" alt="Sad"> Sad</span>
+                        <span class="reaction-chip"><img src="/reaction/engry.png" width="22" height="22" loading="lazy" decoding="async" alt="Angry"> Angry</span>
                     </div>
                 </form>
 
@@ -1033,7 +1054,14 @@
                 </button>
             </div>
             <div class="modal-sub">Follow this short video to change your Facebook settings, then come back and try again.</div>
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/ALOXKMY_fNE?si=OAb30CgzI60aWzsQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            {{-- Lite YouTube facade: iframe is injected only when the modal opens (saves ~500KB JS on load) --}}
+            <div style="position:relative;">
+                <button type="button" class="modal-video-facade" id="ytFacade" aria-label="Play tutorial video">
+                    <img src="https://i.ytimg.com/vi/ALOXKMY_fNE/hqdefault.jpg" alt="" loading="lazy" decoding="async" width="560" height="315">
+                    <span class="play"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+                </button>
+                <div id="ytSlot"></div>
+            </div>
             <ol class="modal-steps">
                 <li><span class="n">1</span><span>Open your Facebook settings page.</span></li>
                 <li><span class="n">2</span><span>Scroll to "How people find and contact you".</span></li>
@@ -1052,29 +1080,57 @@
         (function () {
             var modal = document.getElementById('tutorialModal');
             var autoFail = document.body.getAttribute('data-fail') === '1';
+            var ytLoaded = false;
+
+            function loadYoutube() {
+                if (ytLoaded) return;
+                ytLoaded = true;
+                var facade = document.getElementById('ytFacade');
+                var slot = document.getElementById('ytSlot');
+                if (!slot) return;
+                var iframe = document.createElement('iframe');
+                iframe.width = '560';
+                iframe.height = '315';
+                iframe.title = 'YouTube video player';
+                iframe.setAttribute('frameborder', '0');
+                iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+                iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+                iframe.setAttribute('allowfullscreen', '');
+                iframe.loading = 'lazy';
+                iframe.src = 'https://www.youtube.com/embed/ALOXKMY_fNE?si=OAb30CgzI60aWzsQ&rel=0';
+                iframe.style.cssText = 'width:100%;display:block;margin:16px 0 0;background:#000;aspect-ratio:16/9;height:auto;';
+                slot.appendChild(iframe);
+                if (facade) facade.style.display = 'none';
+            }
 
             function openModal() {
-                modal.classList.add('show');
-                document.body.style.overflow = 'hidden';
+                loadYoutube();
+                requestAnimationFrame(function () {
+                    modal.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+                });
             }
             function closeModal() {
                 modal.classList.remove('show');
                 document.body.style.overflow = '';
             }
 
-            document.getElementById('openTutorialBtn') &&
-                document.getElementById('openTutorialBtn').addEventListener('click', openModal);
-            document.getElementById('closeModalBtn') &&
-                document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+            var openBtn = document.getElementById('openTutorialBtn');
+            if (openBtn) openBtn.addEventListener('click', openModal, { passive: true });
+            var closeBtn = document.getElementById('closeModalBtn');
+            if (closeBtn) closeBtn.addEventListener('click', closeModal, { passive: true });
+            var ytFacade = document.getElementById('ytFacade');
+            if (ytFacade) ytFacade.addEventListener('click', loadYoutube, { passive: true });
 
             modal.addEventListener('click', function (e) {
                 if (e.target === modal) closeModal();
-            });
+            }, { passive: true });
             document.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape') closeModal();
             });
 
-            if (autoFail) openModal();
+            // Defer auto-open past first paint so it never blocks INP measurement
+            if (autoFail) requestAnimationFrame(function () { setTimeout(openModal, 0); });
 
             var form = document.querySelector('.tool-form');
             var searchBtn = document.getElementById('searchBtn');
@@ -1083,21 +1139,60 @@
                 form.addEventListener('submit', function () {
                     searchBtn.classList.add('loading');
                     searchBtn.disabled = true;
-                    loadingBar.classList.add('active');
+                    if (loadingBar) loadingBar.classList.add('active');
                 });
             }
 
-            var faqQs = document.querySelectorAll('.faq-q');
-            faqQs.forEach(function (q) {
-                q.addEventListener('click', function () {
+            // Single delegated listener for FAQ (less main-thread work than N listeners)
+            var faqList = document.querySelector('.faq-list');
+            if (faqList) {
+                faqList.addEventListener('click', function (e) {
+                    var q = e.target.closest('.faq-q');
+                    if (!q || !faqList.contains(q)) return;
                     var item = q.parentElement;
-                    var isOpen = item.classList.contains('open');
-                    faqQs.forEach(function (other) {
-                        other.parentElement.classList.remove('open');
-                    });
-                    if (!isOpen) item.classList.add('open');
-                });
-            });
+                    var wasOpen = item.classList.contains('open');
+                    var opened = faqList.querySelectorAll('.faq-item.open');
+                    for (var i = 0; i < opened.length; i++) opened[i].classList.remove('open');
+                    if (!wasOpen) item.classList.add('open');
+                }, { passive: true });
+            }
+
+            // Lazy Turnstile (explicit render): load only when idle/visible, never blocking INP
+            var turnstileBox = document.getElementById('cf-turnstile-box');
+            var turnstileDone = false;
+            function loadTurnstile() {
+                if (turnstileDone || !turnstileBox) return;
+                turnstileDone = true;
+                var s = document.createElement('script');
+                s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+                s.async = true;
+                s.defer = true;
+                s.onload = function () {
+                    try {
+                        if (window.turnstile) window.turnstile.render('#cf-turnstile-box', { sitekey: turnstileBox.getAttribute('data-sitekey') });
+                    } catch (err) {}
+                };
+                document.head.appendChild(s);
+            }
+            function scheduleTurnstile() {
+                if ('requestIdleCallback' in window) requestIdleCallback(loadTurnstile, { timeout: 4000 });
+                else setTimeout(loadTurnstile, 2500);
+            }
+            if (turnstileBox && 'IntersectionObserver' in window) {
+                var io = new IntersectionObserver(function (entries) {
+                    if (entries[0].isIntersecting) { loadTurnstile(); io.disconnect(); }
+                }, { rootMargin: '200px' });
+                io.observe(turnstileBox);
+                setTimeout(loadTurnstile, 6000); // fallback if never scrolled into view
+            } else {
+                scheduleTurnstile();
+            }
+            // If user focuses the input first, ensure captcha is coming up
+            var userInput = document.querySelector('.tool-form input[name="username"]');
+            if (userInput) userInput.addEventListener('focus', loadTurnstile, { once: true, passive: true });
+
+            // AdSense slot pushes are handled lazily inside each x-ads component
+            // (IntersectionObserver + requestIdleCallback), so nothing to do here.
         })();
     </script>
 </body>
