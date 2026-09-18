@@ -90,16 +90,7 @@
                             "node" => "fbuser",
                             "type" => "followers",
                         ],
-                        "Facebook Post Reaction [ Like 👍] [Time: 21 Mint]" => [
-                            "id" => 3758,
-                            "node" => "fbpost",
-                            "type" => "reactions",
-                        ],
-                        "Facebook Post Reaction [ WOW 😮] [Time: 10 Mint]" => [
-                            "id" => 164,
-                            "node" => "fbpost",
-                            "type" => "reactions",
-                        ],
+                     
                         // "Facebook Post Reaction [ Love ❤️] [Time: 8 Mint]" => 5341,
                         // "Facebook Post Reaction [ Care 🤗] [Time: 13 Mint]" => 5342,
                         // "Facebook Post Reaction [ Haha 😂] [Time: 53 Mint]" => 5343,

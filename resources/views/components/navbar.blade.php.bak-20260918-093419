@@ -5,25 +5,9 @@
 @endphp
 
 <nav class="fb-nav">
-    <style>
-        .fb-nav-menu { display: flex; align-items: center; gap: 4px; }
-        .fb-nav-menu a { color: #4b5563; font-size: 14px; font-weight: 600; padding: 8px 12px; border-radius: 8px; text-decoration: none; white-space: nowrap; }
-        .fb-nav-menu a:hover { background: #f3f4f6; color: #111827; text-decoration: none; }
-        .fb-nav-menu a.active { color: #1877f2; background: #e8f0fe; }
-        @media (max-width: 900px) { .fb-nav-menu { display: none; } }
-    </style>
     <div class="fb-nav-inner">
         <div class="fb-nav-left">
             <a href="{{ url('/') }}" class="fb-nav-brand" aria-label="Home">Autoliker Live</a>
-        </div>
-
-        <div class="fb-nav-menu">
-            <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'active' : '' }}">Home</a>
-            <a href="{{ url('/download') }}" class="{{ request()->is('download*') ? 'active' : '' }}">Download</a>
-            <a href="{{ url('auto-liker-1000-likes') }}" class="{{ request()->is('auto-liker-1000-likes') ? 'active' : '' }}">FB Liker</a>
-            <a href="{{ route('games.hub') }}" class="{{ request()->is('games*') || request()->is('game*') ? 'active' : '' }}">Games</a>
-            <a href="{{ url('/blog/') }}" class="{{ request()->is('blog*') ? 'active' : '' }}">Blog</a>
-            <a href="{{ url('contact') }}" class="{{ request()->is('contact') ? 'active' : '' }}">Contact</a>
         </div>
 
         <div class="fb-nav-right">

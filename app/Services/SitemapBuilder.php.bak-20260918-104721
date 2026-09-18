@@ -51,23 +51,6 @@ class SitemapBuilder
             '/instagram-comment-liker',
             '/session/login',
             '/create-qr',
-            '/games',
-        ];
-    }
-
-    /**
-     * Listing slugs that must never appear in the sitemap:
-     * consolidated via 301 to a canonical page, or gone (410).
-     */
-    public static function excludedListingSlugs(): array
-    {
-        return [
-            'facebook-auto-liker-2022',
-            'facebook-auto-liker-2023',
-            'facebook-autoliker',
-            'ig-auto-liker',
-            'facebook-post-shared',
-            'facebook-friend-remover-',
         ];
     }
 
@@ -100,17 +83,8 @@ class SitemapBuilder
             $add($path, $path === '/' ? 1.0 : 0.8);
         }
 
-        // 2) Listings + tags (each renders a 200 landing page).
-        // Consolidated (301) and gone (410) slugs are excluded.
-        $excluded = array_map(fn($s) => '/' . strtolower($s), self::excludedListingSlugs());
+        // 2) Listings + tags (each renders a 200 landing page)
         foreach (Listing::select('name')->get() as $listing) {
-            $slug = '/' . strtolower(str_replace(' ', '-', $listing->name));
-            if (in_array($slug, $excluded, true)) {
-                continue;
-            }
-            if (\App\Models\GoneUrl::isGone($slug)) {
-                continue;
-            }
             $add(str_replace(' ', '-', $listing->name), 0.6);
         }
         foreach (Tag::select('name')->get() as $tag) {

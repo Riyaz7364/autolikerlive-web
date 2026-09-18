@@ -434,15 +434,6 @@ $allowedLangs = config('language.allowed_languages');
     // Accidental trailing-hyphen slug, never a real page
     Route::get('/facebook-friend-remover-', fn() => abort(410));
 
-    // Dead 2025 SEO-tools section (removed, no replacement)
-    Route::get('/web-tools/{any?}', fn() => abort(410))->where('any', '.*');
-
-    // Games hub: full image-games listing (homepage shows a compact strip)
-    Route::get('/games', function () {
-        $games = \App\Models\Game::where('status', 'published')->orderBy('created_at', 'desc')->get();
-        return view('games', compact('games'));
-    })->name('games.hub');
-
     Route::get('/{keyword?}', [ListingController::class,'index'])->name('index');
 
 

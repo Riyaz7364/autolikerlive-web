@@ -48,16 +48,6 @@ class ListingController extends Controller
         View::share('listings',$listings);
         View::share('games',$games);
 
-        // Homepage blog feed (latest 3 posts, cached; null on API failure -> section hides).
-        $latestPosts = null;
-        if (!isset($request['keyword']) || !$request['keyword']) {
-            $feed = $this->cURL('https://www.autolikerlive.com/blog/api/latest-posts?limit=3');
-            if ($feed && isset($feed->posts) && is_array($feed->posts)) {
-                $latestPosts = $feed->posts;
-            }
-        }
-        View::share('latestPosts',$latestPosts);
-
         if(Listing::where('name', str_replace("-",' ', $request['keyword']))->exists()){
             return view('landing', [
                 'keyword' => str_replace("-", " ", $request['keyword']),

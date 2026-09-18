@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script class="admoloScript" src="https://cdn.admolo.com/assets/ads/ad.js"></script>
     <x-monetag-notification-ad />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -649,9 +648,6 @@
                     </div>
                 </div>
             </section>
-<div class="admoloBanner"
-data-publisher="eyJpdiI6InJaaWd5dERkUVVEb2F0SDNKNkF2cUE9PSIsInZhbHVlIjoiRVhpR3FpZnd3QVYvRFRDdGREYVY0UT09IiwibWFjIjoiNDIxYTdhYjBlYjFmN2Y5MDE3NjI1YjdkMDdiMWE2Yjg2MTcxZTdkY2JkYzE5NzZmYjIxZWFhYTE4OTY3OTM0ZSIsInRhZyI6IiJ9"
-data-adsize="300x300"></div>
             <!-- Why Choose Us -->
             <section>
                 <h2 class="section-title">Why Choose Our TikTok Views Tool</h2>

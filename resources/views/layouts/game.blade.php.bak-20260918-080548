@@ -36,9 +36,6 @@
 </head>
     <body>
         <x-navbar />
-        @hasSection('hero')
-            @yield('hero')
-        @endif
         <main>
             <div class="container">
                 <div class="blog-layout">
@@ -69,7 +66,7 @@
                             <div class="widget">
                                 <h3>🎮 Quick Links</h3>
                                 <div class="flex flex-col gap-8">
-                                    <a href="{{ route('games.hub') }}">All Games</a>
+                                    <a href="{{ url('/') }}">All Games</a>
                                     <a href="{{ url('/download') }}">⬇️ Download AutoLiker app</a>
                                     <a href="{{ url('privacy') }}">Privacy Policy</a>
                                     <a href="{{ url('terms') }}">Terms of Service</a>
@@ -98,13 +95,11 @@
         <footer class="footer">
             <div class="container">
                 <div class="footer-links">
-                    <a href="{{ url('/') }}">Home</a>
+                    <a href="{{ url('/') }}">Games</a>
                     <a href="{{ url('services') }}">Free Tools</a>
                     <a href="{{ url('auto-liker-1000-likes') }}">FB Auto Liker</a>
-                    <a href="{{ url('games') }}">Games</a>
                     <a href="{{ url('privacy') }}">Privacy</a>
                     <a href="{{ url('terms') }}">Terms</a>
-                    <a href="{{ url('contact') }}">Contact</a>
                 </div>
                 <div class="footer-copy">
                     &copy; autolikerlive.com &mdash; For entertainment purposes only.

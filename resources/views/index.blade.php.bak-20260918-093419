@@ -10,9 +10,6 @@
         {{-- ============ Old-style homepage (dark, 2025 restoration) ============ --}}
         <style>
             .oh-wrap { background: #0b1526; color: #e8edf5; border-radius: 16px; overflow: hidden; }
-            .oh-wrap.oh-full { border-radius: 0; min-height: calc(100vh - 56px); min-height: calc(100svh - 56px); display: flex; flex-direction: column; justify-content: center; }
-            .oh-wrap.oh-full .oh-hero { max-width: 1200px; width: 100%; margin: 0 auto; }
-            .oh-wrap.oh-full .oh-feats, .oh-wrap.oh-full .oh-pills { max-width: 1200px; width: 100%; margin-left: auto; margin-right: auto; }
             .oh-hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 1.5rem; align-items: center; padding: 2.5rem 2rem; }
             .oh-hero h1 { color: #fff; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; margin: 0 0 0.5rem; }
             .oh-hero p.sub { color: #c4cfe3; font-size: 1.02rem; margin: 0 0 1.25rem; }
@@ -65,8 +62,7 @@
             }
         </style>
 
-        @section('hero')
-        <div class="oh-wrap oh-full">
+        <div class="oh-wrap">
             {{-- Hero --}}
             <div class="oh-hero">
                 <div>
@@ -129,7 +125,6 @@
                 </div>
             </div>
         </div>
-        @stop
 
         {{-- How to use + video (lite facade: thumbnail only until click) --}}
         <div class="oh-light">
