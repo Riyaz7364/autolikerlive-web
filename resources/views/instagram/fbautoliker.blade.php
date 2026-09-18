@@ -118,6 +118,14 @@
         "@type": "Answer",
         "text": "You can get all Facebook reaction types including Like, Love, Care, Haha, Wow, Sad, and Angry. The reactions come from real Facebook users, making your engagement look natural."
       }
+    },
+    {
+      "@type": "Question",
+      "name": "Why am I not getting Facebook likes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Almost always it is a private profile: open Facebook settings, go to How people find and contact you and allow search engines to link to your profile. Other causes are requesting again during the 10-minute cooldown, or pasting a share link instead of your profile username or ID."
+      }
     }
   ]
 }
@@ -1022,6 +1030,15 @@
                         </button>
                         <div class="faq-a">
                             <p>You can get all Facebook reaction types including Like, Love, Care, Haha, Wow, Sad, and Angry. The reactions come from real Facebook users, making your engagement look natural.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button type="button" class="faq-q">
+                            Why am I not getting Facebook likes?
+                            <svg class="chev" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+                        </button>
+                        <div class="faq-a">
+                            <p>Almost always it is a private profile: open Facebook settings, go to "How people find and contact you" and allow search engines to link to your profile. Other causes are requesting again during the 10-minute cooldown, or pasting a share link instead of your profile username or ID.</p>
                         </div>
                     </div>
                 </div>

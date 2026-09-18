@@ -114,6 +114,14 @@
         "@type": "Answer",
         "text": "No account creation is required. Simply paste your TikTok video link, complete the verification, and your likes will be delivered automatically."
       }
+    },
+    {
+      "@type": "Question",
+      "name": "Why am I not getting TikTok likes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The most common reasons are a private TikTok account, a deleted or restricted video, or requesting again during the 15-minute cooldown. Make sure your video is public, wait out the cooldown, then submit the correct video link once more."
+      }
     }
   ]
 }
@@ -746,6 +754,15 @@
                         </button>
                         <div class="faq-a">
                             <p>No account creation is required. Simply paste your TikTok video link, complete the verification, and your likes will be delivered automatically.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button type="button" class="faq-q">
+                            Why am I not getting TikTok likes?
+                            <svg class="chev" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+                        </button>
+                        <div class="faq-a">
+                            <p>The most common reasons are a private TikTok account, a deleted or restricted video, or requesting again during the 15-minute cooldown. Make sure your video is public, wait out the cooldown, then submit the correct video link once more.</p>
                         </div>
                     </div>
                 </div>

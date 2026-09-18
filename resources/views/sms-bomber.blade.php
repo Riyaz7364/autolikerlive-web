@@ -589,6 +589,55 @@
             <strong>Legal compliance notice.</strong> This tool is provided for legitimate SMS testing and development purposes only. You are responsible for complying with all applicable laws and carrier terms. We do not condone harassment, spam or any other misuse.
         </div>
 
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": "Is the SMS bomber free?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes. You can run up to 30 test messages per run, completely free and without creating an account. Just pick a gateway region, enter the number and start."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "Which numbers can I test?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Only numbers you own or have explicit permission to test. Numbers on our protection blocklist are automatically refused, and abuse may lead to access restrictions."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "What is the difference between SMS and call testing?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "SMS testing dispatches text messages through SMS gateways, while call testing places automated voice calls. Call testing is only enabled for regions where the gateway supports it."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "How do the speed settings work?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Slow sends one request every 4 seconds, medium every 2 seconds and fast every 1 second. Use slow for sensitive carrier routes and fast when you want a quick load sample."
+                    }
+                },
+                {
+                    "@type": "Question",
+                    "name": "How do I block my number?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Enter your number in the Protect your number box above and submit. It is added to the blocklist and this tool will refuse any future test against it."
+                    }
+                }
+            ]
+        }
+        </script>
+
         {{-- ============ Related tools ============ --}}
         <section>
             <h2 class="smsb-section-title">More free tools</h2>

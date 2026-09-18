@@ -352,6 +352,104 @@
         </div>
     </section>
 
+    <section class="bg-white border-top">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10 col-sm-12 mb-4">
+                    <h2 class="text-muted">How to use FBSub in 3 steps</h2>
+                    <div class="temp-emailbox-text my-2">
+                        <p><strong>1. Paste your Facebook profile or post link</strong> in the search box above. FBSub
+                            works with public profiles, posts, photos and videos.</p>
+                        <p><strong>2. Verify you are human</strong> with the quick check. FBSub never asks for your
+                            Facebook password or access token.</p>
+                        <p><strong>3. Submit and watch the reactions arrive.</strong> Likes, loves and follows come
+                            from real users in our engagement community, usually starting within minutes. You can
+                            request up to 1000 likes per submit, with a short cooldown between requests.</p>
+                    </div>
+                </div>
+                <div class="col-lg-8 col-md-10 col-sm-12 mb-4">
+                    <h2 class="text-muted">FBSub vs other auto likers</h2>
+                    <div class="temp-emailbox-text my-2">
+                        <p>FBSub focuses on Facebook likes, reactions and followers in one place. Unlike token-based
+                            tools that ask for your access token, FBSub only needs your public profile link, which
+                            keeps your account safe. If you want Instagram or TikTok boosts instead, try our
+                            <a href="{{ route('free-instagram-likes') }}">free Instagram likes</a> or
+                            <a href="{{ route('free-tiktok-likes') }}">free TikTok likes</a> tools.</p>
+                    </div>
+                </div>
+                <div class="col-lg-8 col-md-10 col-sm-12 mb-4">
+                    <h2 class="text-muted">FBSub - frequently asked questions</h2>
+                    <div class="temp-emailbox-text my-2">
+                        <p><strong>What is FBSub?</strong><br>
+                            FBSub (FB sub liker) is a free Facebook auto liker tool. Enter your public profile link
+                            and get likes, reactions and followers from real users.</p>
+                        <p><strong>Is FBSub safe for my Facebook account?</strong><br>
+                            Yes. FBSub never asks for your password or access token - only your public profile link.
+                            All engagement comes from real community members, not bots.</p>
+                        <p><strong>How many likes can I get with FBSub?</strong><br>
+                            You can request up to 1000 likes per submit. After a short cooldown you can submit again
+                            to keep growing your post.</p>
+                        <p><strong>Why is FBSub not working for my profile?</strong><br>
+                            The most common reason is a private profile. Open Facebook settings, go to "How people
+                            find and contact you" and allow search engines to link to your profile, then try again.
+                            Business pages and public posts work best.</p>
+                        <p><strong>Is FBSub free?</strong><br>
+                            Yes, FBSub is completely free with no login, no app download and no hidden charges.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is FBSub?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "FBSub (FB sub liker) is a free Facebook auto liker tool. Enter your public profile link and get likes, reactions and followers from real users."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Is FBSub safe for my Facebook account?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes. FBSub never asks for your password or access token, only your public profile link. All engagement comes from real community members, not bots."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How many likes can I get with FBSub?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "You can request up to 1000 likes per submit. After a short cooldown you can submit again to keep growing your post."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Why is FBSub not working for my profile?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "The most common reason is a private profile. Open Facebook settings, go to How people find and contact you and allow search engines to link to your profile, then try again."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Is FBSub free?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, FBSub is completely free with no login, no app download and no hidden charges."
+                }
+            }
+        ]
+    }
+    </script>
+
     <script>
         (function () {
             const form = document.getElementById('profileSearchForm');
