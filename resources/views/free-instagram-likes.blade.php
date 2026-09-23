@@ -271,7 +271,7 @@
         <div class="row text-center p-5">
 
             <div class="col-md-4">
-                <i class="bi bi-balloon-heart-fill infoicon"></i>
+                <span class="infoicon"><x-icon name="heart" /></span>
                 <h4>{{ __('messages.freeService.howItsWork2') }}</h4>
                 <p>
                     {{ __('messages.freeService.howItsWork2_p1', [
@@ -282,14 +282,14 @@
                 </p>
             </div>
             <div class="col-md-4">
-                <i class="bi bi-unlock-fill infoicon"></i>
+                <span class="infoicon"><x-icon name="unlock" /></span>
                 <h4>{{ __('messages.freeService.whyChooseUs') }}</h4>
                 <p>
                     {{ __('messages.freeService.whyChooseUs_p1', ['service_name' => 'Instagram']) }}
                 </p>
             </div>
             <div class="col-md-4">
-                <i class="bi bi-trophy-fill infoicon"></i>
+                <span class="infoicon"><x-icon name="award" /></span>
                 <h4>{{ __('messages.freeService.ourServices') }}</h4>
                 <p>
                     {!! __('messages.freeService.ourServices_p1', ['service' => 'Instagram Likes']) !!}

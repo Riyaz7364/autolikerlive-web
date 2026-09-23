@@ -9,7 +9,26 @@
         }
     @endphp
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    {{-- This page is rendered inside the Android app WebView (flutter_inappwebview). --}}
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#4267B2">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <script>
+        // Shared WebView flag: server-side UA sniff + client-side bridge probe.
+        window.isAndroidWebView = {{ !empty($isWebView ?? false) ? 'true' : 'false' }} ||
+            /; wv\)|flutter|inappwebview/i.test(navigator.userAgent || '');
+        window.hasFlutterBridge = function () {
+            return !!(window.flutter_inappwebview && window.flutter_inappwebview.callHandler);
+        };
+        window.notifyFlutter = function (handler, payload) {
+            if (window.hasFlutterBridge()) {
+                try { window.flutter_inappwebview.callHandler(handler, payload); } catch (e) {}
+                return true;
+            }
+            return false;
+        };
+    </script>
     <title>RajeLiker - {{ $title }}</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">

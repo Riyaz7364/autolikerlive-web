@@ -10,9 +10,13 @@ class TrustProxies extends Middleware
     /**
      * The trusted proxies for this application.
      *
+     * `*` trusts Cloudflare / nginx `X-Forwarded-*` so `$request->ip()`
+     * returns the real visitor IP (CF-Connecting-IP) instead of the
+     * Cloudflare edge IP. Required for admin + WebView session logic.
+     *
      * @var array<int, string>|string|null
      */
-    protected $proxies;
+    protected $proxies = '*';
 
     /**
      * The headers that should be used to detect proxies.

@@ -38,6 +38,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\NoIndexNonCanonicalHost::class,
+            \App\Http\Middleware\BypassCloudflareCache::class,
 
 
         ],
@@ -70,6 +71,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'checkFBToken' => \App\Http\Middleware\CheckFacebookAccessToken::class,
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        'cf.bypass' => \App\Http\Middleware\BypassCloudflareCache::class,
 
     ];
 }

@@ -23,6 +23,7 @@ class Promotion extends Model
         'show_on_fb_1000_likes',
         'show_on_landing',
         'show_on_homepage',
+        'show_on_tools',
         'is_active',
         'sort_order',
     ];
@@ -33,13 +34,17 @@ class Promotion extends Model
         'show_on_fb_1000_likes' => 'boolean',
         'show_on_landing' => 'boolean',
         'show_on_homepage' => 'boolean',
+        'show_on_tools' => 'boolean',
         'is_active' => 'boolean',
         'sort_order' => 'integer',
     ];
 
     /**
      * Active promos for a given placement, cached for 5 minutes.
-     * $placement: 'tiktok_views' | 'tiktok_likes' | 'fb_1000_likes' | 'landing' | 'homepage'
+     * $placement: 'tiktok_views' | 'tiktok_likes' | 'fb_1000_likes' | 'landing' | 'homepage' | 'tools'
+     * NOTE: there is intentionally no 'app' placement — /app/* pages render
+     * inside the Android WebView where external redirects/downloads don't
+     * work, so promos never show there.
      */
     public static function activeFor(string $placement)
     {
@@ -49,6 +54,7 @@ class Promotion extends Model
             'landing' => 'show_on_landing',
             'homepage' => 'show_on_homepage',
             'tiktok_views' => 'show_on_tiktok_views',
+            'tools' => 'show_on_tools',
         ];
         $column = $map[$placement] ?? 'show_on_tiktok_views';
 
@@ -68,6 +74,7 @@ class Promotion extends Model
         Cache::forget('promotions_active_fb_1000_likes');
         Cache::forget('promotions_active_landing');
         Cache::forget('promotions_active_homepage');
+        Cache::forget('promotions_active_tools');
     }
 
     protected static function booted(): void

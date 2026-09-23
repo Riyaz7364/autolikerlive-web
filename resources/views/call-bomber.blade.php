@@ -228,6 +228,8 @@
 
 @section('content')
     <main class="flex-shrink-0">
+        {{-- Cross-promo: managed in Admin > Promotions (Tool pages) --}}
+        <x-promo-banner placement="tools" />
         <!-- Navigation -->
         <!-- Tool Hero Section -->
         <section class="py-5">

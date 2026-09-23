@@ -44,7 +44,8 @@
                             @if($promo->show_on_fb_1000_likes ?? false)<span class="badge bg-primary">FB 1000 Popup</span>@endif
                             @if($promo->show_on_landing ?? false)<span class="badge bg-info text-dark">Landing Banner</span>@endif
                             @if($promo->show_on_homepage ?? false)<span class="badge bg-success">Homepage</span>@endif
-                            @if(!$promo->show_on_tiktok_views && !$promo->show_on_tiktok_likes && !($promo->show_on_fb_1000_likes ?? false) && !($promo->show_on_landing ?? false) && !($promo->show_on_homepage ?? false))<span class="text-muted">Hidden</span>@endif
+                            @if($promo->show_on_tools ?? false)<span class="badge bg-warning text-dark">Tool pages</span>@endif
+                            @if(!$promo->show_on_tiktok_views && !$promo->show_on_tiktok_likes && !($promo->show_on_fb_1000_likes ?? false) && !($promo->show_on_landing ?? false) && !($promo->show_on_homepage ?? false) && !($promo->show_on_tools ?? false))<span class="text-muted">Hidden</span>@endif
                         </td>
                         <td>
                             {!! $promo->is_active ? '<span class="badge bg-success">Live</span>' : '<span class="badge bg-secondary">Paused</span>' !!}
@@ -75,6 +76,6 @@
 </div>
 <div class="alert alert-info mt-3 mb-0">
     <strong>How it works:</strong> Active promotions appear automatically on your most-visited pages.
-    TikTok placements show as inline banner under the tool card. <strong>FB 1000 Popup</strong> shows as a delayed modal with cross button on <code>/auto-liker-1000-likes</code>. <strong>Landing Banner</strong> shows as inline banner on SEO landing pages. Pause anytime — pages update within 5 minutes (cache).
+    TikTok placements show as inline banner under the tool card. <strong>FB 1000 Popup</strong> shows as a delayed modal with cross button on <code>/auto-liker-1000-likes</code>. <strong>Landing Banner</strong> shows as inline banner on SEO landing pages.     <strong>Tool pages</strong> covers <code>/call-bomber</code> and <code>/session/login</code> (browser pages — promos never show inside the Android WebView <code>/app/*</code> pages where redirects/downloads don't work). Pause anytime — pages update within 5 minutes (cache).
 </div>
 @endsection

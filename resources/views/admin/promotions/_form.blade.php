@@ -131,6 +131,14 @@
     </div>
     <div class="col-md-4 mb-3">
         <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" name="show_on_tools" value="1" id="show_on_tools"
+                   {{ old('show_on_tools', $promotion->show_on_tools ?? false) ? 'checked' : '' }}>
+            <label class="form-check-label" for="show_on_tools">Banner on tool pages</label>
+        </div>
+        <div class="form-text">Shows on <code>/call-bomber</code>, <code>/download</code>, <code>/session/login</code>.</div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="form-check form-switch">
             <input class="form-check-input" type="checkbox" name="is_active" value="1" id="is_active"
                    {{ old('is_active', $promotion->is_active ?? true) ? 'checked' : '' }}>
             <label class="form-check-label" for="is_active">Active (live on site)</label>

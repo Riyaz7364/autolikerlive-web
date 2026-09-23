@@ -26,6 +26,7 @@ class PromotionController extends Controller
             'show_on_fb_1000_likes' => false,
             'show_on_landing' => false,
             'show_on_homepage' => false,
+            'show_on_tools' => false,
             'is_active' => true,
             'sort_order' => 0,
         ]);
@@ -52,6 +53,7 @@ class PromotionController extends Controller
             'show_on_fb_1000_likes' => 'nullable|boolean',
             'show_on_landing' => 'nullable|boolean',
             'show_on_homepage' => 'nullable|boolean',
+            'show_on_tools' => 'nullable|boolean',
             'is_active' => 'nullable|boolean',
         ]);
 
@@ -60,6 +62,7 @@ class PromotionController extends Controller
         $validated['show_on_fb_1000_likes'] = $request->boolean('show_on_fb_1000_likes');
         $validated['show_on_landing'] = $request->boolean('show_on_landing');
         $validated['show_on_homepage'] = $request->boolean('show_on_homepage');
+        $validated['show_on_tools'] = $request->boolean('show_on_tools');
         $validated['is_active'] = $request->boolean('is_active');
         $validated['sort_order'] = $validated['sort_order'] ?? 0;
         $validated['theme'] = $validated['theme'] ?? 'default';
@@ -97,6 +100,7 @@ class PromotionController extends Controller
             'show_on_fb_1000_likes' => 'nullable|boolean',
             'show_on_landing' => 'nullable|boolean',
             'show_on_homepage' => 'nullable|boolean',
+            'show_on_tools' => 'nullable|boolean',
             'is_active' => 'nullable|boolean',
         ]);
 
@@ -105,6 +109,7 @@ class PromotionController extends Controller
         $validated['show_on_fb_1000_likes'] = $request->boolean('show_on_fb_1000_likes');
         $validated['show_on_landing'] = $request->boolean('show_on_landing');
         $validated['show_on_homepage'] = $request->boolean('show_on_homepage');
+        $validated['show_on_tools'] = $request->boolean('show_on_tools');
         $validated['is_active'] = $request->boolean('is_active');
         $validated['sort_order'] = $validated['sort_order'] ?? 0;
         $validated['theme'] = $validated['theme'] ?? 'default';

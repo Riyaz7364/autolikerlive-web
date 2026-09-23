@@ -5,6 +5,8 @@
 
 @section('content')
 <div class="login-page">
+    {{-- Cross-promo: managed in Admin > Promotions (Tool pages) --}}
+    <x-promo-banner placement="tools" variant="compact" />
     <h1>🎮 Create Your Image</h1>
     <p class="subtitle">Choose how you'd like to login</p>
 

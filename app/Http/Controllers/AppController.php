@@ -267,9 +267,14 @@ class AppController extends Controller
     }
 
     /**
-     * Main RajeLiker page
+     * Main RajeLiker page.
+     *
+     * NOTE: this view is rendered inside the Android app WebView
+     * (flutter_inappwebview). Keep it lightweight, no-cache, and guard
+     * all `window.flutter_inappwebview` JS calls so desktop browsers
+     * fall back to normal OAuth redirects.
      */
-    public function rajeliker()
+    public function rajeliker(Request $request)
     {
         $user = Session::get('facebook_user');
         $hasSession = Session::has('facebook_user');
@@ -284,7 +289,37 @@ class AppController extends Controller
             \Log::debug("Line: 144 - RajeLiker ", ['user' => $user]);
         }
         $config = $this->appConfig;
-        return view('app.rajeliker', compact(['config', 'hasSession']));
+        $isWebView = $this->isAndroidWebView($request);
+        return response()
+            ->view('app.rajeliker', compact(['config', 'hasSession', 'isWebView']))
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0')
+            ->header('CDN-Cache-Control', 'no-store')
+            ->header('Cloudflare-CDN-Cache-Control', 'no-store');
+    }
+
+    /**
+     * Detect Android WebView (incl. Flutter InAppWebView).
+     * WebView UAs contain `; wv)` or `Version/* ... Chrome/* Mobile`,
+     * Flutter bridges expose `flutter_inappwebview` in JS (checked client-side).
+     */
+    protected function isAndroidWebView(Request $request): bool
+    {
+        $ua = strtolower($request->header('User-Agent', ''));
+        if ($ua === '') {
+            return false;
+        }
+        if (str_contains($ua, 'flutter') || str_contains($ua, 'inappwebview')) {
+            return true;
+        }
+        if (str_contains($ua, '; wv)') || str_contains($ua, ';wv)')) {
+            return true;
+        }
+        if (str_contains($ua, 'android') && str_contains($ua, 'version/') && str_contains($ua, 'chrome/') && str_contains($ua, 'mobile')) {
+            return true;
+        }
+        return false;
     }
 
     /**
