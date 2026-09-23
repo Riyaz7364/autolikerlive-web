@@ -446,5 +446,6 @@
         <div class="copy">&copy; autolikerlive.com &mdash; For entertainment purposes only.</div>
     </footer>
 
+@include('components.chat-widget')
 </body>
 </html>

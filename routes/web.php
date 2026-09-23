@@ -61,6 +61,9 @@ require __DIR__.'/app.php';
 // Sitemap routes
 require __DIR__.'/sitemaps.php';
 
+// Live chat routes (guest -> admin, isolated)
+require __DIR__.'/chat.php';
+
 Route::get('/download/apk', [DownloadController::class, 'apk'])
      ->name('apk.download');
 Route::get('/download/apk/{appName}', [DownloadController::class, 'apk'])
@@ -436,6 +439,16 @@ $allowedLangs = config('language.allowed_languages');
 
     // Dead 2025 SEO-tools section (removed, no replacement)
     Route::get('/web-tools/{any?}', fn() => abort(410))->where('any', '.*');
+
+    // GSC 404 cleanup (2026-09): retired tag/category/dated archives.
+    // Mapped URLs 301 to living pages, everything else 410 (gone for good).
+    Route::get('/tag/{name}', [\App\Http\Controllers\SeoCleanupController::class, 'tag'])->where('name', '.*');
+    Route::get('/category/{a}/{b?}', [\App\Http\Controllers\SeoCleanupController::class, 'category']);
+    Route::get('/{y}/{m}/{d}/{slug?}', [\App\Http\Controllers\SeoCleanupController::class, 'dated'])
+        ->where(['y' => '[0-9]{4}', 'm' => '[0-9]{2}', 'd' => '[0-9]{2}']);
+    // Spam/bot leftovers, never real pages (case handled by ForceLowercaseUrl)
+    Route::get('/user/imported', fn() => abort(410));
+    Route::get('/pages', fn() => abort(410));
 
     // Games hub: full image-games listing (homepage shows a compact strip)
     Route::get('/games', function () {

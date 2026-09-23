@@ -43,6 +43,9 @@
                     <a class="nav-link {{ $isActive('admin.app-releases') ? 'active' : '' }}" href="{{ route('admin.app-releases.index') }}">&#128241; App Updates</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link {{ $isActive('admin.chats') ? 'active' : '' }}" href="{{ route('admin.chats.index') }}">&#128172; Live Chats</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link {{ $isActive('admin.promotions') ? 'active' : '' }}" href="{{ route('admin.promotions.index') }}">&#128226; Promotions</a>
                 </li>
             </ul>

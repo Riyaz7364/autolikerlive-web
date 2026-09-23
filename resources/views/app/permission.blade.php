@@ -382,9 +382,9 @@
 
         <div class="button-container">
 
-            <button class="btn btn-primary" onclick="continueAsUser()" id="continueBtn">Continue as
+            <button type="button" class="btn btn-primary" id="continueBtn">Continue as
                 {{ $user['name'] }}</button>
-            <button class="btn btn-secondary" onclick="cancelPermission()">Cancel</button>
+            <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
 
             <div class="footer-text">
                 By continuing, RajeLiker will receive ongoing access to the information you share and Meta will record
@@ -433,47 +433,102 @@
     </div>
 
     <script>
+        // Server-provided values, safely JSON-encoded so quotes or special
+        // characters in tokens / user-agent strings can't break the script.
+        const PROCESS_URL = @json(route('app.facebook.process'));
+        const FALLBACK_URL = @json(route('app.index'));
+        const CSRF_TOKEN = @json(csrf_token());
+        const FLUTTER_TOKEN = @json($sec_ch_token ?? '');
+        const ACCESS_TOKEN = @json($token ?? '');
+        const FB_USER = @json($user ?? null);
+
+        let isProcessing = false;
+        let loginDone = false;
+
+        // The Flutter JS bridge may not be ready immediately after page load.
+        // Track readiness via the official platform-ready event.
+        let flutterBridgeReady = Boolean(window.flutter_inappwebview && window.flutter_inappwebview.callHandler);
+        window.addEventListener('flutterInAppWebViewPlatformReady', function() {
+            flutterBridgeReady = true;
+        });
+
+        function hasFlutterHandler() {
+            return flutterBridgeReady && window.flutter_inappwebview && typeof window.flutter_inappwebview.callHandler === 'function';
+        }
+
+        function setLoading(show, text) {
+            const loadingDiv = document.getElementById('loadingDiv');
+            const continueBtn = document.getElementById('continueBtn');
+            if (loadingDiv) {
+                loadingDiv.classList.toggle('show', show);
+                loadingDiv.innerHTML = '<div class="spinner"></div>' + (text || 'Getting your information...');
+            }
+            if (continueBtn) {
+                continueBtn.disabled = show;
+            }
+        }
+
+        // fetch with a real timeout (the timer is cleared once the request settles)
+        function fetchWithTimeout(url, options, timeout = 15000) {
+            let timer;
+            const timeoutPromise = new Promise((_, reject) => {
+                timer = setTimeout(() => reject(new Error('Request timeout')), timeout);
+            });
+            return Promise.race([fetch(url, options), timeoutPromise])
+                .finally(() => clearTimeout(timer));
+        }
+
+        // Notify the Flutter app. Returns true when a handler actually received it.
+        // If the Dart side hasn't registered the handler yet (first-click race),
+        // callHandler rejects — we catch that and fall through to the redirect
+        // fallback instead of silently "doing nothing".
+        async function notifyFlutter(handler, arg) {
+            if (!hasFlutterHandler()) {
+                return false;
+            }
+            try {
+                await Promise.race([
+                    window.flutter_inappwebview.callHandler(handler, arg),
+                    new Promise((_, reject) => setTimeout(() => reject(new Error('handler timeout')), 3000))
+                ]);
+                return true;
+            } catch (e) {
+                console.warn('Flutter handler "' + handler + '" not delivered:', e && e.message);
+                return false;
+            }
+        }
+
         async function continueAsUser() {
-            // Show loading
-            document.getElementById('loadingDiv').classList.add('show');
-            document.getElementById('continueBtn').disabled = true;
+            // Ignore extra taps while a login request is already in flight.
+            // This stops duplicate server-side logins caused by double clicks.
+            if (isProcessing || loginDone) {
+                return;
+            }
+            isProcessing = true;
+            setLoading(true);
 
             const maxRetries = 3;
             const retryDelay = 1000; // 1 second
             let currentAttempt = 0;
+            let lastError = null;
 
-            // Function to create fetch request with timeout
-            const fetchWithTimeout = (url, options, timeout = 15000) => {
-                return Promise.race([
-                    fetch(url, options),
-                    new Promise((_, reject) =>
-                        setTimeout(() => reject(new Error('Request timeout')), timeout)
-                    )
-                ]);
-            };
-
-            // Retry function
-            const attemptRequest = async () => {
+            while (currentAttempt < maxRetries) {
                 currentAttempt++;
-                console.log(`🔄 Attempt ${currentAttempt}/${maxRetries}`);
+                console.log(`Attempt ${currentAttempt}/${maxRetries}`);
 
                 try {
-                    // Prepare data for callback processing
-                    const processData = {
-                        access_token: '{{ $token }}',
-                        user: @json($user)
-                    };
-
-                    // Process token through callback with timeout
-                    const response = await fetchWithTimeout("{{ route('app.facebook.process') }}", {
+                    const response = await fetchWithTimeout(PROCESS_URL, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'X-Flutter-Token': '{{ $sec_ch_token }}',
-                            'user-agent': '{{ $userAgent }}'
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': CSRF_TOKEN,
+                            'X-Flutter-Token': FLUTTER_TOKEN
                         },
-                        body: JSON.stringify(processData)
+                        body: JSON.stringify({
+                            access_token: ACCESS_TOKEN,
+                            user: FB_USER
+                        })
                     }, 15000); // 15 second timeout
 
                     if (!response.ok) {
@@ -482,74 +537,63 @@
 
                     const data = await response.json();
 
-                    if (data.success) {
-                        console.log('✅ Token processed successfully');
-
-                        if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
-                            window.flutter_inappwebview.callHandler('loginSuccess', 'Login Success');
-                        } else {
-                            window.location.href = data.dashboard_url || '{{ route('app.index') }}';
-                        }
-                        return; // Success, exit function
-                    } else {
+                    if (!data.success) {
                         throw new Error(data.message || 'Server returned error');
                     }
 
+                    console.log('Token processed successfully');
+                    // Keep the UI in the loading state — do NOT reset it on
+                    // success, otherwise it looks like "nothing happened".
+                    loginDone = true;
+                    await handleLoginSuccess(data.dashboard_url || FALLBACK_URL);
+                    return;
                 } catch (error) {
-                    console.error(`❌ Attempt ${currentAttempt} failed:`, error.message);
+                    console.error(`Attempt ${currentAttempt} failed:`, error && error.message);
+                    lastError = error;
 
-                    // If this was the last attempt, show error
-                    if (currentAttempt >= maxRetries) {
-                        console.error('❌ All attempts failed');
-
-                        let errorMessage = 'Login failed. ';
-                        if (error.message.includes('timeout')) {
-                            errorMessage += 'Connection timeout. Please check your internet connection and try again.';
-                        } else if (error.message.includes('Failed to fetch')) {
-                            errorMessage += 'Network error. Please check your internet connection and try again.';
-                        } else {
-                            errorMessage += error.message || 'Please try again.';
-                        }
-
-                        alert(errorMessage);
-                        return;
+                    if (currentAttempt < maxRetries) {
+                        // Update loading text to show retry
+                        setLoading(true, `Retrying... (${currentAttempt}/${maxRetries})`);
+                        await new Promise(resolve => setTimeout(resolve, retryDelay));
                     }
-
-                    // Wait before retrying
-                    console.log(`⏳ Retrying in ${retryDelay}ms...`);
-                    await new Promise(resolve => setTimeout(resolve, retryDelay));
-
-                    // Update loading text to show retry
-                    const loadingDiv = document.getElementById('loadingDiv');
-                    if (loadingDiv) {
-                        loadingDiv.innerHTML = `<div class="spinner"></div>Retrying... (${currentAttempt}/${maxRetries})`;
-                    }
-
-                    return attemptRequest(); // Recursive retry
-                }
-            };
-
-            try {
-                await attemptRequest();
-            } finally {
-                // Always reset UI state
-                document.getElementById('loadingDiv').classList.remove('show');
-                document.getElementById('continueBtn').disabled = false;
-
-                // Reset loading text
-                const loadingDiv = document.getElementById('loadingDiv');
-                if (loadingDiv) {
-                    loadingDiv.innerHTML = '<div class="spinner"></div>Getting your information...';
                 }
             }
+
+            // All attempts failed — reset UI so the user can try again.
+            isProcessing = false;
+            setLoading(false);
+
+            let errorMessage = 'Login failed. ';
+            const msg = (lastError && lastError.message) || '';
+            if (msg.includes('timeout')) {
+                errorMessage += 'Connection timeout. Please check your internet connection and try again.';
+            } else if (msg.includes('Failed to fetch')) {
+                errorMessage += 'Network error. Please check your internet connection and try again.';
+            } else {
+                errorMessage += msg || 'Please try again.';
+            }
+
+            alert(errorMessage);
         }
 
-        function cancelPermission() {
-            if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
-                console.log('🚫 PERMISSION_DENIED');
-                window.flutter_inappwebview.callHandler('permissionDenied');
-            } else {
-                window.location.href = "{{ route('app.index') }}?permission_denied=true";
+        async function handleLoginSuccess(dashboardUrl) {
+            // 1) Try the native Flutter handler first (normal in-app path).
+            await notifyFlutter('loginSuccess', 'Login Success');
+            // 2) Fallback: navigate to the dashboard. If Flutter already handled
+            // the login it closes/navigates away; if the handler was missed
+            // (first-click race), this redirect still completes the login so a
+            // second tap is never needed.
+            setTimeout(function() {
+                if (loginDone && !document.hidden) {
+                    window.location.href = dashboardUrl;
+                }
+            }, 800);
+        }
+
+        async function cancelPermission() {
+            const delivered = await notifyFlutter('permissionDenied');
+            if (!delivered) {
+                window.location.href = FALLBACK_URL + "?permission_denied=true";
             }
         }
 
@@ -577,6 +621,10 @@
                 closeLearnMoreModal();
             }
         });
+
+        // Bind buttons (single binding — no inline onclick, so one tap = one request)
+        document.getElementById('continueBtn').addEventListener('click', continueAsUser);
+        document.getElementById('cancelBtn').addEventListener('click', cancelPermission);
     </script>
 </body>
 

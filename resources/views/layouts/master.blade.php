@@ -108,5 +108,6 @@
     </footer>
 
     @yield('footer')
+    @include('components.chat-widget')
 </body>
 </html>

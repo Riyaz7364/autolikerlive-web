@@ -37,5 +37,6 @@
 
     <h2>4. Contact Us</h2>
     <p>If you have any questions or need assistance, you can reach out to our customer support team at <span class="contact">support@autolikerlive.com</span>. We are available to address your inquiries and concerns.</p>
+@include('components.chat-widget')
 </body>
 </html>

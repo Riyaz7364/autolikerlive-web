@@ -15,6 +15,10 @@ class VerifyCsrfToken extends Middleware
         "/facebook/process-token",
         "/app/facebook/process-token",
         "all-messages",
+        // Guest live-chat APIs authenticate via per-conversation guest_token
+        // (bearer secret in body), so session CSRF adds nothing. Exempting also
+        // keeps the widget working behind Cloudflare-cached pages.
+        "api/chat/*",
 
     ];
 }

@@ -88,5 +88,6 @@
             });
         }
     </script>
+@include('components.chat-widget')
 </body>
 </html>

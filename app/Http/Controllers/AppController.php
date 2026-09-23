@@ -474,11 +474,11 @@ class AppController extends Controller
 
             // Detect app type based on token prefix
             $appType = 'unknown';
-            $dashboardUrl = '/app/';
+            $dashboardUrl = route('app.index');
 
             if (str_starts_with($accessToken, 'EAA') && !str_starts_with($accessToken, 'EAAF')) {
                 $appType = 'rajeliker';
-                $dashboardUrl = '/app/'; // Analytics Dashboard
+                $dashboardUrl = route('app.index'); // Analytics Dashboard
                 \Log::debug("Line 323 ", ['access_token' => $accessToken]);
             } elseif (str_starts_with($accessToken, 'EAAF')) {
                 $appType = 'autoliker';
