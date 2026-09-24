@@ -456,21 +456,26 @@ $allowedLangs = config('language.allowed_languages');
         return view('games', compact('games'));
     })->name('games.hub');
 
+    // English-only site: legacy /en/* and /bn/* -> root 301.
+    // MUST sit BEFORE the /{keyword?} catch-all, otherwise /en alone
+    // matches ListingController@index with keyword=en (thin duplicate).
+    Route::redirect('/en', '/', 301);
+    Route::redirect('/bn', '/', 301);
+    Route::redirect('/en/', '/', 301);
+    Route::redirect('/bn/', '/', 301);
+
+    Route::get('{lang}/{any}', function (Request $request, $lang = null, $any = null) use ($allowedLangs) {
+        if ($lang && in_array(strtolower($lang), $allowedLangs)) {
+            $qs = $request->getQueryString();
+            return redirect()->to('/' . ltrim($any, '/') . ($qs ? '?' . $qs : ''), 301);
+        }
+        abort(404);
+    })->where([
+        'lang' => 'en|bn',
+        'any' => '.*'
+    ]);
+
     Route::get('/{keyword?}', [ListingController::class,'index'])->name('index');
-
-
-
-// Redirect if a language is set in the URL
-
-Route::get('{lang}/{any}', function ($lang = null, $any = null) use ($allowedLangs) {
-    if ($lang && in_array($lang, $allowedLangs)) {
-        return redirect("/{$any}", 301);
-    }
-    abort(404);
-})->where([
-    'lang' => implode('|', $allowedLangs),
-    'any' => '.*'
-]);
 
 
 // });

@@ -380,6 +380,31 @@
         }
         .timer-badge.ready { background: rgba(46, 168, 79, .1); border-color: rgba(46, 168, 79, .3); color: #2fa84f; }
 
+        /* ============ Reel promo ============ */
+        .reel-promo {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            background: linear-gradient(120deg, rgba(254,44,85,.14), rgba(37,244,238,.10));
+            border: 1px solid rgba(254, 44, 85, .35);
+            border-radius: 14px;
+            padding: 16px 18px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #fff;
+        }
+        .reel-promo .reel-ic {
+            flex-shrink: 0;
+            width: 42px; height: 42px;
+            border-radius: 12px;
+            display: grid; place-items: center;
+            background: linear-gradient(135deg, var(--tt-red), var(--tt-cyan));
+            font-size: 22px;
+        }
+        .reel-promo strong { color: var(--tt-cyan); }
+        .reel-promo a { color: var(--tt-cyan); font-weight: 700; }
+
         /* ============ Result ============ */
         .result { margin-top: 16px; border-radius: 14px; overflow: hidden; padding: 18px; text-align: center; }
         .result.success { background: rgba(46, 168, 79, .1); border: 1px solid rgba(46, 168, 79, .3); color: #2fa84f; }
@@ -569,6 +594,16 @@
                     Enter your TikTok video URL to get free likes
                 </div>
 
+                <div class="reel-promo">
+                    <span class="reel-ic">🎬</span>
+                    <div>
+                        <strong>Want FREE likes access? Make a reel about our website!</strong><br>
+                        Post a reel about <strong>AutoLikerLive</strong> on TikTok, then send your reel link to admin
+                        <a href="https://t.me/AutoLikerLive" target="_blank" rel="noopener">@AutoLikerLive</a>
+                        to unlock free likes access.
+                    </div>
+                </div>
+
                 <form method="POST" action="{{ route('free-tiktok-views-post') }}" class="tool-form" id="form">
                     @csrf
                     <input type="hidden" name="type" value="TIKTOK_LIKES">
@@ -754,6 +789,15 @@
                         </button>
                         <div class="faq-a">
                             <p>No account creation is required. Simply paste your TikTok video link, complete the verification, and your likes will be delivered automatically.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button type="button" class="faq-q">
+                            How do I get free likes access?
+                            <svg class="chev" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+                        </button>
+                        <div class="faq-a">
+                            <p>Make a reel about the AutoLikerLive website on TikTok, then send your reel link to admin <a href="https://t.me/AutoLikerLive" target="_blank" rel="noopener">@AutoLikerLive</a> to get free likes access.</p>
                         </div>
                     </div>
                     <div class="faq-item">
