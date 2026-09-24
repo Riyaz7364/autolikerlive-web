@@ -1,7 +1,7 @@
 @extends('layouts.game')
 
-@section('title', (isset($keyword) && $keyword ? \Illuminate\Support\Str::limit(ucwords(str_replace('-', ' ', $keyword)) . ' - Free Online Tool', 60, '') : 'Autoliker Live - Facebook Auto Follow | Instagram Auto Follow'))
-@section('description', (isset($keyword) && $keyword ? \Illuminate\Support\Str::limit('Free ' . ucwords(str_replace('-', ' ', $keyword)) . ' tool. Use it free online — fast, safe, no login required. Try it now on AutoLikerLive.', 155, '') : 'Get free Facebook auto followers, auto likes, reactions and Instagram followers with Autoliker Live. Download the app or use free online tools. Safe, fast, no password needed.'))
+@section('title', (isset($keyword) && $keyword ? \Illuminate\Support\Str::limit(ucwords(str_replace('-', ' ', $keyword)) . ' - Free Online Tool', 44, '') : 'Facebook Auto Liker | Instagram Auto Follow'))
+@section('description', (isset($keyword) && $keyword ? \Illuminate\Support\Str::limit('Free ' . ucwords(str_replace('-', ' ', $keyword)) . ' tool. Use it free online — fast, safe, no login required. Try it now on AutoLikerLive.', 155, '') : 'Get free Facebook auto followers, likes, reactions and Instagram followers. Download the app or use free online tools. Safe, fast, no password.'))
 @section('keywords', 'auto liker live, autolikerlive, auto liker, facebook auto liker, facebook auto followers, instagram auto follow, fb liker 1000 likes, free facebook liker, auto react facebook, facebook auto followers, fb auto liker, facebook page liker')
 
 @section('content')

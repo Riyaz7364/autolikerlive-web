@@ -15,7 +15,7 @@
     <meta property="og:type" content="article" />
     <meta property="og:title" content="Temp Mail - Read Message" />
     <meta property="og:description" content="Read your received temp mail message with Temp Mail - your solution for private, spam-free email." />
-    <meta property="og:image" content="https://www.autolikerlive.com/blog/wp-content/uploads/2025/05/ChatGPT-Image-May-1-2025-08_11_55-AM.webp" />
+    <meta property="og:image" content="https://www.autolikerlive.com/blog/storage/uploads/2025/05/ChatGPT-Image-May-1-2025-08_11_55-AM.webp" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Temp Mail - Read Message" />
     <meta name="twitter:description" content="Read your received temp mail message with Temp Mail." />

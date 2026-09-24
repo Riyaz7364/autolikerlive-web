@@ -287,7 +287,7 @@
                                     <h3>01</h3>
                                 </div>
                                 <div class="step_img" data-aos="fade-left" data-aos-duration="1500">
-                                    <img src="https://www.autolikerlive.com/blog/wp-content/uploads/2025/03/download_app.jpg"
+                                    <img src="https://www.autolikerlive.com/blog/storage/uploads/2025/03/download_app.jpg"
                                         alt="image">
                                 </div>
                             </li>
@@ -301,7 +301,7 @@
                                     <h3>02</h3>
                                 </div>
                                 <div class="step_img" data-aos="fade-right" data-aos-duration="1500">
-                                    <img src="https://www.autolikerlive.com/blog/wp-content/uploads/2025/03/create_account.jpg"
+                                    <img src="https://www.autolikerlive.com/blog/storage/uploads/2025/03/create_account.jpg"
                                         alt="image">
                                 </div>
                             </li>
@@ -315,7 +315,7 @@
                                     <h3>03</h3>
                                 </div>
                                 <div class="step_img" data-aos="fade-left" data-aos-duration="1500">
-                                    <img src="https://www.autolikerlive.com/blog/wp-content/uploads/2025/03/enjoy_app.jpg"
+                                    <img src="https://www.autolikerlive.com/blog/storage/uploads/2025/03/enjoy_app.jpg"
                                         alt="image">
                                 </div>
                             </li>

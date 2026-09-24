@@ -93,8 +93,8 @@ class ListingController extends Controller
             $blogPost = $this->cURL('https://www.autolikerlive.com/blog/api/post/' . $ll->post_id);
             if ($blogPost && isset($blogPost->title)) {
                 $linkedPosts[] = [
-                    'name' => $ll->name,
-                    'slug' => str_replace(' ', '-', strtolower($ll->name)),
+                    'name' => trim($ll->name),
+                    'slug' => str_replace(' ', '-', strtolower(trim($ll->name))),
                 ];
             }
         }

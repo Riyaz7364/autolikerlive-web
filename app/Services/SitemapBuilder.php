@@ -104,14 +104,17 @@ class SitemapBuilder
         // Consolidated (301) and gone (410) slugs are excluded.
         $excluded = array_map(fn($s) => '/' . strtolower($s), self::excludedListingSlugs());
         foreach (Listing::select('name')->get() as $listing) {
-            $slug = '/' . strtolower(str_replace(' ', '-', $listing->name));
+            $slug = '/' . strtolower(str_replace(' ', '-', trim($listing->name)));
             if (in_array($slug, $excluded, true)) {
                 continue;
             }
             if (\App\Models\GoneUrl::isGone($slug)) {
                 continue;
             }
-            $add(str_replace(' ', '-', $listing->name), 0.6);
+            if (\App\Models\GoneUrl::isGone(ltrim($slug, '/'))) {
+                continue;
+            }
+            $add(str_replace(' ', '-', trim($listing->name)), 0.6);
         }
         foreach (Tag::select('name')->get() as $tag) {
             $add(str_replace(' ', '-', $tag->name), 0.6);

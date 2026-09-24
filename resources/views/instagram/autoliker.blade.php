@@ -151,7 +151,7 @@
             <div class="row">
                 <div class="col-md-3 col-lg-3 col-sm-12 insta-step-card">
                     <div class="card-body m-3">
-                        <h1 class="card-title">01.</h1>
+                        <h2 class="card-title">01.</h2>
                         <h6 class="card-subtitle mb-2 text-black">Open Auto Liker Instagram</h6>
                         <p class="card-text text-black">
                             Visit our platform from your preferred device. Get free Instagram Followers, Likes, and Views!
@@ -161,7 +161,7 @@
                 </div>
                 <div class="col-md-3 col-lg-3 col-sm-12 insta-step-card">
                     <div class="card-body m-3">
-                        <h1 class="card-title">02.</h1>
+                        <h2 class="card-title">02.</h2>
                         <h6 class="card-subtitle mb-2 text-black">Download the App</h6>
                         <p class="card-text text-black">Click the download button above to get the official Instagram
                             engagement app.
@@ -170,7 +170,7 @@
                 </div>
                 <div class="col-md-3 col-lg-3 col-sm-12 insta-step-card">
                     <div class="card-body m-3">
-                        <h1 class="card-title">03.</h1>
+                        <h2 class="card-title">03.</h2>
                         <h6 class="card-subtitle mb-2 text-black">Earn Credits (Easy & Free)</h6>
                         <p class="card-text text-black">
                             Complete simple tasks like:
@@ -186,7 +186,7 @@
                 </div>
                 <div class="col-md-3 col-lg-3 col-sm-12 insta-step-card">
                     <div class="card-body m-3">
-                        <h1 class="card-title">04.</h1>
+                        <h2 class="card-title">04.</h2>
                         <h6 class="card-subtitle mb-2 text-black">Get Free Likes, Followers & Views</h6>
                         <p class="card-text text-black">
                             Use your earned credits to increase likes, followers, and views on your Instagram posts or

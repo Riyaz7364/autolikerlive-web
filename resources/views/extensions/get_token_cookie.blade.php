@@ -41,7 +41,7 @@
 
                 <div class="col-sm-12 col-md-6 col-lg-4">
                     <a class="btn btn-primary btn-lg px-4 me-sm-3 download float-end rounded-btn"
-                        href="{{ url('') }}/Download/get_token_cookie.apk">
+                        href="{{ url('') }}/apks/get_token_cookie.apk">
                         {!! getIcon('android2', 'mb-1') !!}
                         Download APP</a>
                 </div>

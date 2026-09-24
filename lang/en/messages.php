@@ -48,8 +48,8 @@ return [
     'contact.meta_desc' => 'We will try to best for your help releated to our FB Autoliker app',
 
     // FindMyFbID
-    'findmyfbid.meta_title' => 'Find Facebook ID - Free FB ID Finder Tool | AutoLikerLive',
-    'findmyfbid.meta_desc' => 'Find your Facebook ID instantly with our free FB ID finder. Enter a profile, page, or group URL to get the unique numeric ID in seconds. No signup required. Works for profiles, pages, and groups.',
+    'findmyfbid.meta_title' => 'Find Facebook ID - Free FB ID Finder',
+    'findmyfbid.meta_desc' => 'Find your Facebook ID instantly with our free FB ID finder. Enter a profile, page, or group URL to get the numeric ID in seconds. No signup needed.',
 
     'findmyfbid.title' => 'Find Your Facebook ID',
     'findmyfbid.subTitle' => 'To find your Facebook personal numeric ID for facebook graph API operations, fb:admins, social plugins',
@@ -179,8 +179,8 @@ return [
                         images for various uses.',
 
     // Temp Mail
-    'tempMail.meta_title' => 'Temp Mail - Free Disposable Temporary Email Address | AutoLikerLive',
-    'tempMail.meta_desc' => 'Get a free temp mail address instantly. Temp Mail provides disposable temporary email to protect your privacy, avoid spam, and keep your real inbox clean. No signup required, 100% anonymous.',
+    'tempMail.meta_title' => 'Temp Mail - Free Disposable Email',
+    'tempMail.meta_desc' => 'Get a free temp mail address instantly. Disposable temporary email to protect your privacy and avoid spam. No signup, 100% anonymous.',
     'tempMail.heroTitle' => 'Temp Mail — Free Disposable <span class="grad">Temporary Email</span>',
 
     'tempMail.subTitle' => 'Your Temporary Email Address',
@@ -221,7 +221,7 @@ return [
     'tempMail.updateEmail' => 'Update Email Address',
 
     // Free Services [TikTok, Instagram]
-    'freeService.meta_title' => ':title - Get Unlimited Free :service_name every :timer minutes',
+    'freeService.meta_title' => 'Free :service_name Every :timer Minutes',
     'freeService.meta_desc' => 'Boost your :service_name visibility effortlessly with :title! Enjoy unlimited free :service_type every :timer minutes for enhanced engagement and reach.',
     'freeService.title' => 'Get :amount free :service every :timer minutes.',
     'freeService.subTitle' => 'Boost Your <strong>:service</strong> Presence: Enjoy :amount Free Auto :type Every :timer Minutes!',
@@ -253,7 +253,7 @@ return [
     'freeService.ourServices' => 'Our Services',
     'freeService.ourServices_p1' => ' While we\'re delighted to offer free :service as a promotional sample,
                 our commitment extends beyond just this. We provide an array of services,
-                including <a href="https://www.autolikerlive.com/FB-Liker">FB liker</a>, <a
+                including <a href="https://www.autolikerlive.com/fb-liker">FB liker</a>, <a
                     href="https://www.autolikerlive.com/temp-mail">Disposable email</a>, and <a
                     href="https://www.autolikerlive.com/sms-bomber">SMS pranks</a>.
                 Constantly evolving and expanding our offerings,

@@ -26,9 +26,9 @@
                 <div class="mail-wrapper">
                     <div class="mail-selection mb-3">
                         <div class="border-dashes p-3 justify-content-center">
-                            <h1 class="h5 justify-content-center text-center">
+                            <h2 class="h5 justify-content-center text-center">
                                 {{ __('messages.freeService.title', ['amount' => '10', 'service' => 'Instagram Views', 'timer' => '10']) }}
-                            </h1>
+                            </h2>
                             <h2 class="h6 text-center text-white justify-content-center p-3 text-muted">
                                 {!! __('messages.freeService.subTitle', [
                                     'service' => 'Instagram',
@@ -134,13 +134,13 @@
                 <div class="row">
                     <div class="col-md-3 col-lg-3 col-sm-12 card border border-white" style="background:#F5F2F2">
                         <div class="card-body m-3">
-                            <h1 class="card-title"
+                            <h2 class="card-title"
                                 style="
                                 color: #DADADA;
                                 font-family: Helvetica, Sans-serif;
                                 font-size: 85px;
                                 font-weight: 600;">
-                                01.</h1>
+                                01.</h2>
                             <h6 class="card-subtitle mb-2"
                                 style="
                   color: #000000;
@@ -157,13 +157,13 @@
 
                     <div class="col-md-3 col-lg-3 col-sm-12 card border border-white" style="background:#F5F2F2">
                         <div class="card-body m-3">
-                            <h1 class="card-title"
+                            <h2 class="card-title"
                                 style="
                                 color: #DADADA;
                                 font-family: Helvetica, Sans-serif;
                                 font-size: 85px;
                                 font-weight: 600;">
-                                02.</h1>
+                                02.</h2>
                             <h6 class="card-subtitle mb-2"
                                 style="
                   color: #000000;
@@ -178,13 +178,13 @@
                     </div>
                     <div class="col-md-3 col-lg-3 col-sm-12 card border border-white" style="background:#F5F2F2">
                         <div class="card-body m-3">
-                            <h1 class="card-title"
+                            <h2 class="card-title"
                                 style="
                                 color: #DADADA;
                                 font-family: Helvetica, Sans-serif;
                                 font-size: 85px;
                                 font-weight: 600;">
-                                03.</h1>
+                                03.</h2>
                             <h6 class="card-subtitle mb-2"
                                 style="
                   color: #000000;
@@ -198,13 +198,13 @@
                     </div>
                     <div class="col-md-3 col-lg-3 col-sm-12 card border border-white" style="background:#F5F2F2">
                         <div class="card-body m-3">
-                            <h1 class="card-title"
+                            <h2 class="card-title"
                                 style="
                                 color: #DADADA;
                                 font-family: Helvetica, Sans-serif;
                                 font-size: 85px;
                                 font-weight: 600;">
-                                04.</h1>
+                                04.</h2>
                             <h6 class="card-subtitle mb-2"
                                 style="
                   color: #000000;

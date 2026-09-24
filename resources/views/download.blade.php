@@ -4,7 +4,7 @@
 @endphp
 @extends('layouts.master')
 
-@section('title', 'Download Our Apps | RajeLiker for Facebook & InstaLiker APK')
+@section('title', 'Download RajeLiker & InstaLiker Apps')
 @section('description',
     'Download our free Android apps: RajeLiker for Facebook from Google Play, and InstaLiker for Instagram — auto-like comments on any post.')
 @section('keywords', 'rajeliker app, rajeliker apk download, instaliker apk, instaliker app download, instagram comment liker app, facebook auto liker app')

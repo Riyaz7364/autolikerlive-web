@@ -12,7 +12,7 @@
     $landingTitle = $landingSeo[$landingKey]['title'] ?? (ucwords($keyword) . ' - Free Online Tool');
     $landingDesc = $landingSeo[$landingKey]['description'] ?? ('Free ' . ucwords($keyword) . ' tool. ' . ($posts->title ?? 'Use our free social media tools online. Fast, safe, and free. No login required.') . ' Try it now on AutoLikerLive.');
 @endphp
-@section('title', \Illuminate\Support\Str::limit($landingTitle, 60, ''))
+@section('title', \Illuminate\Support\Str::limit($landingTitle, 44, ''))
 @section('description', \Illuminate\Support\Str::limit($landingDesc, 155, ''))
 @section('keywords', $keyword . ', ' . $keyword . ' free, auto liker, facebook auto liker, ' . $keyword . ' online, autolikerlive, ' . $keyword . ' without survey')
 
@@ -491,14 +491,16 @@
     </div>
 
     @php
-        $otherListings = collect($listings ?? [])->reject(fn ($l) => strtolower($l->name ?? '') === strtolower($keyword ?? ''))->take(24);
+        // Slug must be trimmed: a trailing space in a listing name would
+        // otherwise build a trailing-dash URL (e.g. ...remover-) that 410s.
+        $otherListings = collect($listings ?? [])->reject(fn ($l) => strtolower(trim($l->name ?? '')) === strtolower(trim($keyword ?? '')))->take(24);
     @endphp
     @if ($otherListings->count())
         <div class="tools-section">
             <div class="section-title">More Free Tools</div>
             <div style="display:flex;flex-wrap:wrap;gap:.5rem;">
                 @foreach ($otherListings as $ol)
-                    <a href="{{ url(str_replace(' ', '-', strtolower($ol->name))) }}" style="display:inline-block;padding:.45rem 1rem;background:#fff;border:1px solid #e5e7eb;border-radius:999px;font-size:.85rem;color:#0f3460;text-decoration:none;">{{ ucwords($ol->name) }}</a>
+                    <a href="{{ url(str_replace(' ', '-', strtolower(trim($ol->name)))) }}" style="display:inline-block;padding:.45rem 1rem;background:#fff;border:1px solid #e5e7eb;border-radius:999px;font-size:.85rem;color:#0f3460;text-decoration:none;">{{ ucwords(trim($ol->name)) }}</a>
                 @endforeach
             </div>
         </div>

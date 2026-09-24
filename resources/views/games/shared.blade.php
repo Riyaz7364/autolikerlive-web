@@ -1,6 +1,7 @@
 @php
-    $ogTitle = $game->og_title ?: 'Try it yourself!';
-    $ogDesc = $game->og_description ?: 'Create your own fun image. Share with friends!';
+    // User-generated text truncated for meta/OG tags (SEO length limits).
+    $ogTitle = \Illuminate\Support\Str::limit($game->og_title ?: 'Try it yourself!', 60, '');
+    $ogDesc = \Illuminate\Support\Str::limit($game->og_description ?: 'Create your own fun image. Share with friends!', 160, '');
 @endphp
 
 <!DOCTYPE html>

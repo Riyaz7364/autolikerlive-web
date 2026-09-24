@@ -1,7 +1,7 @@
 @extends('layouts.game')
 
-@section('title', $game->title)
-@section('description', $game->description)
+@section('title', \Illuminate\Support\Str::limit($game->title, 60, ''))
+@section('description', \Illuminate\Support\Str::limit($game->description ?? '', 160, ''))
 @if($game->thumbnail)
 @section('ogimage', asset('storage/' . $game->thumbnail))
 @endif

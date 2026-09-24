@@ -15,13 +15,13 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="{{ __('messages.tempMail.meta_title') }}" />
     <meta property="og:description" content="{{ __('messages.tempMail.meta_desc') }}" />
-    <meta property="og:image" content="https://www.autolikerlive.com/blog/wp-content/uploads/2025/05/ChatGPT-Image-May-1-2025-08_11_55-AM.webp" />
+    <meta property="og:image" content="https://www.autolikerlive.com/blog/storage/uploads/2025/05/ChatGPT-Image-May-1-2025-08_11_55-AM.webp" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="{{ Request::url() }}" />
     <meta name="twitter:title" content="{{ __('messages.tempMail.meta_title') }}" />
     <meta name="twitter:description" content="{{ __('messages.tempMail.meta_desc') }}" />
-    <meta name="twitter:image" content="https://www.autolikerlive.com/blog/wp-content/uploads/2025/05/ChatGPT-Image-May-1-2025-08_11_55-AM.webp" />
+    <meta name="twitter:image" content="https://www.autolikerlive.com/blog/storage/uploads/2025/05/ChatGPT-Image-May-1-2025-08_11_55-AM.webp" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -61,7 +61,7 @@
     "url": "https://autolikerlive.com"
   },
   "url": "{{ Request::url() }}",
-  "image": "https://www.autolikerlive.com/blog/wp-content/uploads/2025/05/ChatGPT-Image-May-1-2025-08_11_55-AM.webp"
+  "image": "https://www.autolikerlive.com/blog/storage/uploads/2025/05/ChatGPT-Image-May-1-2025-08_11_55-AM.webp"
 }
 </script>
 
@@ -781,7 +781,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="changeMailModalLabel">{{ __('messages.tempMail.changeModalTitle') }}</h1>
+                    <h2 class="modal-title fs-5" id="changeMailModalLabel">{{ __('messages.tempMail.changeModalTitle') }}</h2>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

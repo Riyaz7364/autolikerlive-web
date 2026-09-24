@@ -19,7 +19,7 @@
     <meta name="twitter:url" content="{{ Request::url() }}" />
     <meta name="twitter:title" content="{{ __('messages.findmyfbid.meta_title') }}" />
     <meta name="twitter:description" content="{{ __('messages.findmyfbid.meta_desc') }}" />
-    <meta name="twitter:image" content="https://www.autolikerlive.com/blog/wp-content/uploads/2025/05/ChatGPT-Image-May-1-2025-08_11_55-AM.webp" />
+    <meta name="twitter:image" content="https://www.autolikerlive.com/blog/storage/uploads/2025/05/ChatGPT-Image-May-1-2025-08_11_55-AM.webp" />
 
     <meta name="keywords" content="find facebook id, facebook id finder, fb id finder, facebook profile id, facebook page id, facebook group id, facebook numeric id, facebook graph api id, free facebook id tool" />
 
@@ -59,7 +59,7 @@
     "url": "https://autolikerlive.com"
   },
   "url": "{{ Request::url() }}",
-  "image": "https://www.autolikerlive.com/blog/wp-content/uploads/2025/05/ChatGPT-Image-May-1-2025-08_11_55-AM.webp"
+  "image": "https://www.autolikerlive.com/blog/storage/uploads/2025/05/ChatGPT-Image-May-1-2025-08_11_55-AM.webp"
 }
 </script>
 
