@@ -23,6 +23,12 @@
 
     <meta name="keywords" content="find facebook id, facebook id finder, fb id finder, facebook profile id, facebook page id, facebook group id, facebook numeric id, facebook graph api id, free facebook id tool" />
 
+    <link rel="icon" type="image/png" href="/favicons/findmyfbid/files/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicons/findmyfbid/files/favicon.svg" />
+    <link rel="shortcut icon" href="/favicons/findmyfbid/files/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/findmyfbid/files/apple-touch-icon.png" />
+    <link rel="manifest" href="/favicons/findmyfbid/files/site.webmanifest" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">

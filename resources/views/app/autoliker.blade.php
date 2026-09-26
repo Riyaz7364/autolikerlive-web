@@ -801,6 +801,76 @@ button {
     transform: scale(1.05);
 }
 
+/* Link-not-found video hint (one line) */
+.tut-hint {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.tut-hint a {
+    color: #1877f2;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}
+.tut-hint a:hover { text-decoration: underline; }
+
+/* FB settings video modal */
+.fb-video-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 1200;
+    padding: 18px;
+    align-items: center;
+    justify-content: center;
+}
+.fb-video-overlay.show { display: flex; }
+.fb-video-modal {
+    position: relative;
+    background: #fff;
+    border-radius: 14px;
+    max-width: 560px;
+    width: 100%;
+    padding: 18px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+}
+.fb-video-modal h4 { font-size: 16px; margin-bottom: 12px; padding-right: 36px; }
+.fb-video-close {
+    position: absolute;
+    top: 10px; right: 10px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 0;
+    background: #f0f2f5;
+    color: #333;
+    font-size: 18px;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    padding: 0;
+}
+.fb-video-close:hover { background: #e4e6eb; }
+.fb-video-wrap {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    background: #000;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.fb-video-wrap iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border: 0;
+}
+
     </style>
 </head>
 
@@ -834,6 +904,16 @@ button {
       <div class="ad-popup-actions">
         <button type="button" class="copy-btn" id="copyAdLinkBtn">Copy Link</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<div class="fb-video-overlay" id="fbVideoOverlay" role="dialog" aria-modal="true" aria-label="Facebook settings tutorial">
+  <div class="fb-video-modal">
+    <button class="fb-video-close" id="closeFbVideoBtn" aria-label="Close video">&times;</button>
+    <h4>Link not found? Fix it in 30 seconds</h4>
+    <div class="fb-video-wrap">
+      <iframe id="fbVideoFrame" data-src="https://www.youtube.com/embed/ALOXKMY_fNE?si=OAb30CgzI60aWzsQ&autoplay=1" title="Facebook public post settings tutorial" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
   </div>
 </div>
@@ -933,6 +1013,7 @@ button {
                             </label>
                             <input type="text" id="postUrl" class="url-input" placeholder="Your Public Post Link Or ID"
                                 required>
+                            <div class="tut-hint"><i class="fas fa-circle-play"></i> Link not found or invalid? <a href="#" class="open-fb-video">Watch this 30-sec fix</a></div>
                         </div>
 
                         <div class="form-group">
@@ -1015,6 +1096,7 @@ button {
                             </label>
                             <input type="text" id="profileUrl" class="url-input" placeholder="Your Public Profile Link Or ID"
                                 required>
+                            <div class="tut-hint"><i class="fas fa-circle-play"></i> Link not found or invalid? <a href="#" class="open-fb-video">Watch this 30-sec fix</a></div>
                         </div>
 
                         <div class="form-group">
@@ -1062,6 +1144,7 @@ button {
                                 <i class="fas fa-link"></i> Enter Public Post Link!
                             </label>
                             <input type="text" id="commentPostUrl" class="url-input" placeholder="Your Public Post Link Or ID" required>
+                            <div class="tut-hint"><i class="fas fa-circle-play"></i> Link not found or invalid? <a href="#" class="open-fb-video">Watch this 30-sec fix</a></div>
                         </div>
 
                         <div class="form-group">
@@ -1903,6 +1986,37 @@ function showCommentResult(success = 0) {
                 }
             });
         }
+
+        // FB settings tutorial video modal (same video as findmyfbid fail modal)
+        const fbVideoOverlay = document.getElementById('fbVideoOverlay');
+        const fbVideoFrame = document.getElementById('fbVideoFrame');
+        const closeFbVideoBtn = document.getElementById('closeFbVideoBtn');
+
+        function openFbVideo(e) {
+            if (e) e.preventDefault();
+            if (fbVideoFrame && !fbVideoFrame.src) fbVideoFrame.src = fbVideoFrame.dataset.src;
+            if (fbVideoOverlay) {
+                fbVideoOverlay.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        function closeFbVideo() {
+            if (fbVideoOverlay) fbVideoOverlay.classList.remove('show');
+            document.body.style.overflow = '';
+            if (fbVideoFrame) fbVideoFrame.src = '';
+        }
+        document.querySelectorAll('.open-fb-video').forEach(function (el) {
+            el.addEventListener('click', openFbVideo);
+        });
+        if (closeFbVideoBtn) closeFbVideoBtn.addEventListener('click', closeFbVideo);
+        if (fbVideoOverlay) {
+            fbVideoOverlay.addEventListener('click', function (e) {
+                if (e.target === fbVideoOverlay) closeFbVideo();
+            });
+        }
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && fbVideoOverlay && fbVideoOverlay.classList.contains('show')) closeFbVideo();
+        });
 
         // Auto refresh stats every 30 seconds
         setInterval(loadUserStats, 30000);

@@ -50,7 +50,22 @@ class InstagramController extends Controller
         $user = Auth::user();
         $services = Service::where('loginType', $user->loginType)->get();
         $timeLeft = $this->loadTimer($request, $user['uid']);
-        return view('instagram.boost', compact(['user', 'services', 'timeLeft']));
+        // Latest submitted link in the queue (for instant back-to-back repeat warning).
+        $lastBoostLink = null;
+        try {
+            $lastTimerRow = TiktokTimer::orderByDesc('updated_at')->first();
+            if ($lastTimerRow && trim((string) $lastTimerRow->link) !== '') {
+                $lastBoostLink = $lastTimerRow->link;
+            } else {
+                $lastLinkRow = Link::orderByDesc('id')->first();
+                if ($lastLinkRow && trim((string) $lastLinkRow->link) !== '') {
+                    $lastBoostLink = $lastLinkRow->link;
+                }
+            }
+        } catch (\Throwable $e) {
+            $lastBoostLink = null;
+        }
+        return view('instagram.boost', compact(['user', 'services', 'timeLeft', 'lastBoostLink']));
     }
 
     public function loadEarnLink()

@@ -1,765 +1,819 @@
-@extends('layouts.master')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="AutoLikerLive" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="canonical" href="{{ request()->url() }}" />
+    <title>Auto Liker Live Call Bomber | SMS Bomber Tool - AutoLikerLive</title>
+    <meta name="description" content="Auto Liker Live Call Bomber - Professional Call Bomber and SMS Bomber tool for testing call service reliability and delivery rates.">
+    <meta name="keywords" content="auto liker live call bomber, call bomber, sms bomber, auto liker, facebook auto liker, free call bomber, bomb call service" />
+    <meta property="og:url" content="{{ Request::url() }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Auto Liker Live Call Bomber | SMS Bomber Tool" />
+    <meta property="og:description" content="Auto Liker Live Call Bomber - Professional Call Bomber and SMS Bomber tool for testing call service reliability and delivery rates." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Auto Liker Live Call Bomber | SMS Bomber Tool" />
+    <meta name="twitter:description" content="Professional Call Bomber and SMS Bomber tool for testing call service reliability and delivery rates." />
 
-@section('title', 'Auto Liker Live Call Bomber | SMS Bomber Tool')
-@section('description',
-    'Auto Liker Live Call Bomber - Professional Call Bomber and SMS Bomber tool for testing call service reliability and delivery rates.')
-@section('keywords', 'auto liker live call bomber, call bomber, sms bomber, auto liker, facebook auto liker, free call bomber, bomb call service')
-@section('javascripts')
-    <script src="https://www.google.com/recaptcha/api.js?render=6Le7S7kqAAAAAMvSkxFhOxaTZMiosSLf4mHkpCtb" async defer>
+    <link rel="icon" type="image/png" href="/favicons/bomber/files/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicons/bomber/files/favicon.svg" />
+    <link rel="shortcut icon" href="/favicons/bomber/files/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/bomber/files/apple-touch-icon.png" />
+    <link rel="manifest" href="/favicons/bomber/files/site.webmanifest" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://www.google.com/recaptcha/api.js?render=6Le7S7kqAAAAAMvSkxFhOxaTZMiosSLf4mHkpCtb" async defer></script>
+    <x-auto-ads />
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            { "@type": "Question", "name": "Is the call bomber free?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. You can run up to 30 test calls per run, completely free and without creating an account." } },
+            { "@type": "Question", "name": "Which numbers can I test?", "acceptedAnswer": { "@type": "Answer", "text": "Only numbers you own or have explicit permission to test. Numbers on the protection blocklist are automatically refused." } },
+            { "@type": "Question", "name": "What is the difference between call and SMS testing?", "acceptedAnswer": { "@type": "Answer", "text": "Call testing places automated voice calls through voice gateways, while SMS testing dispatches text messages where the gateway supports it." } },
+            { "@type": "Question", "name": "How do the speed settings work?", "acceptedAnswer": { "@type": "Answer", "text": "Slow sends one request every 4 seconds, medium every 2 seconds and fast every 1 second." } },
+            { "@type": "Question", "name": "How do I block my number?", "acceptedAnswer": { "@type": "Answer", "text": "Enter your number in the Protect your number box and submit. It is added to the blocklist." } }
+        ]
+    }
     </script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-@stop
 
-@push('styles')
     <style>
-        .tool-hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 20px;
-            position: relative;
-            overflow: hidden;
+        /* ============ SMS Bomber — mobile-first, full-bleed ============ */
+        *, *::before, *::after { box-sizing: border-box; }
+        html { -webkit-text-size-adjust: 100%; }
+        body {
+            margin: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #1c1e21;
+            background:
+                radial-gradient(900px 420px at 10% -8%, rgba(79,70,229,.14), transparent 60%),
+                radial-gradient(900px 420px at 90% -8%, rgba(22,163,74,.10), transparent 60%),
+                #eef1f6;
+            line-height: 1.55;
+            min-height: 100vh;
         }
 
-        .tool-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="circuit" width="100" height="100" patternUnits="userSpaceOnUse"><rect width="100" height="100" fill="none"/><circle cx="25" cy="25" r="2" fill="%23ffffff" opacity="0.1"/><circle cx="75" cy="75" r="2" fill="%23ffffff" opacity="0.1"/><path d="M25,25 L75,25 L75,75 L25,75 Z" stroke="%23ffffff" stroke-width="0.5" opacity="0.1" fill="none"/></pattern></defs><rect width="100" height="100" fill="url(%23circuit)"/></svg>');
-        }
-
-        .tool-card {
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-            border: none;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            position: relative;
-        }
-
-        .tool-header {
-            background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .tool-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23ffffff" stroke-width="0.5" opacity="0.2"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-        }
-
-        .form-control {
-            border-radius: 10px;
-            border: 2px solid #e9ecef;
-            padding: 12px 15px;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus {
-            border-color: #4e73df;
-            box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
-        }
-
-        .btn-tool {
-            background: linear-gradient(45deg, #28a745, #20c997);
-            border: none;
-            border-radius: 15px;
-            padding: 12px 30px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-        }
-
-        .btn-tool:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
-        }
-
-        .btn-stop {
-            background: linear-gradient(45deg, #dc3545, #c82333);
-            border: none;
-            border-radius: 15px;
-            padding: 12px 30px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
-        }
-
-        .status-card {
-            background: rgba(255, 255, 255, 0.9);
+        .sb-topbar {
+            position: sticky; top: 0; z-index: 50;
+            background: rgba(255,255,255,.95);
             backdrop-filter: blur(10px);
-            border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 15px;
-            margin: 10px 0;
+            border-bottom: 1px solid #e4e6eb;
         }
-
-        .progress-modern {
-            height: 8px;
-            border-radius: 10px;
-            background: #e9ecef;
-            overflow: hidden;
+        .sb-topbar-in {
+            max-width: 960px; margin: 0 auto;
+            padding: 10px 14px;
+            display: flex; align-items: center; justify-content: space-between; gap: 10px;
         }
-
-        .progress-bar-modern {
-            background: linear-gradient(45deg, #28a745, #20c997);
-            height: 100%;
-            border-radius: 10px;
-            transition: width 0.3s ease;
+        .sb-brand { display: flex; align-items: center; gap: 10px; color: #1c1e21; font-weight: 800; font-size: 16px; text-decoration: none; }
+        .sb-brand-badge {
+            width: 36px; height: 36px; border-radius: 11px; flex-shrink: 0;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            display: grid; place-items: center; color: #fff;
+            box-shadow: 0 5px 14px rgba(79,70,229,.35);
         }
-
-        .feature-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
+        .sb-brand-badge svg { width: 19px; height: 19px; }
+        .sb-brand small { display: block; font-size: 11px; font-weight: 500; color: #65676b; }
+        .sb-nav { display: flex; gap: 8px; }
+        .sb-nav a {
+            font-size: 13px; font-weight: 600; color: #1c1e21; text-decoration: none;
+            border: 1px solid #e4e6eb; background: #fff; border-radius: 9px; padding: 8px 12px;
         }
+        .sb-nav a:hover { border-color: #4f46e5; color: #4f46e5; }
 
-        .warning-modern {
-            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-            border: 1px solid #f39c12;
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
+        .sb-wrap { max-width: 960px; margin: 0 auto; padding: 14px 12px 44px; display: flex; flex-direction: column; gap: 16px; }
+
+        /* ---- Hero ---- */
+        .sb-hero {
+            position: relative; overflow: hidden;
+            border-radius: 18px; padding: 22px 18px;
+            color: #fff; background: linear-gradient(135deg, #312e81 0%, #4f46e5 45%, #7c3aed 100%);
+            box-shadow: 0 14px 36px rgba(79,70,229,.28);
         }
-
-        .info-modern {
-            background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
-            border: 1px solid #17a2b8;
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
+        .sb-hero::before {
+            content: ''; position: absolute; width: 340px; height: 340px; right: -120px; top: -140px;
+            background: radial-gradient(closest-side, rgba(255,255,255,.22), transparent 70%); pointer-events: none;
         }
-
-        .btn-xs {
-            padding: 4px 8px;
-            font-size: 10px;
-            line-height: 1;
-            border-radius: 8px;
-            margin: 2px;
+        .sb-hero-in { position: relative; z-index: 1; display: flex; gap: 16px; align-items: center; }
+        .sb-hero-txt { flex: 1; min-width: 0; }
+        .sb-badge {
+            display: inline-flex; align-items: center; gap: 7px;
+            background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.28);
+            color: #fff; font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 999px;
         }
-
-        .telegramIcon {
-            height: 20px;
-            width: 20px;
+        .sb-badge .dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 0 3px rgba(74,222,128,.25); animation: sb-pulse 1.8s infinite; }
+        @keyframes sb-pulse { 0%,100% { opacity: 1; } 50% { opacity: .45; } }
+        .sb-hero h1 { color: #fff; font-size: 24px; font-weight: 800; letter-spacing: -.02em; line-height: 1.15; margin: 10px 0 8px; }
+        .sb-hero h1 .grad { background: linear-gradient(90deg, #fde68a, #f9a8d4); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .sb-hero p { color: rgba(255,255,255,.85); font-size: 14px; margin: 0; }
+        .sb-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+        .sb-pills span {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22);
+            color: #fff; font-size: 12px; font-weight: 600; padding: 6px 11px; border-radius: 999px;
         }
-
-        .tool-stats {
-            display: flex;
-            justify-content: space-around;
-            padding: 20px 0;
+        .sb-pills svg { width: 13px; height: 13px; flex-shrink: 0; }
+        .sb-hero-art img { width: 104px; height: auto; border-radius: 22px; box-shadow: 0 14px 34px rgba(0,0,0,.35); flex-shrink: 0; }
+        .sb-notice {
+            position: relative; z-index: 1;
+            display: flex; gap: 9px; align-items: flex-start;
+            margin-top: 14px; background: rgba(0,0,0,.28); border: 1px solid rgba(255,255,255,.25);
+            border-radius: 12px; padding: 10px 12px; font-size: 12.5px; line-height: 1.6; color: #fff;
         }
+        .sb-notice svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; color: #fde68a; }
+        .sb-notice strong { color: #fde68a; }
 
-        .stat-item {
-            text-align: center;
+        /* ---- Tool card ---- */
+        .sb-card { background: #fff; border: 1px solid #e4e6eb; border-radius: 18px; box-shadow: 0 10px 30px rgba(28,30,33,.07); overflow: hidden; }
+        .sb-card-head { padding: 18px; color: #fff; background: linear-gradient(120deg, #4f46e5, #7c3aed); position: relative; overflow: hidden; }
+        .sb-card-head::after { content: ''; position: absolute; width: 220px; height: 220px; right: -80px; top: -100px; background: radial-gradient(closest-side, rgba(255,255,255,.25), transparent 70%); }
+        .sb-card-head h2 { position: relative; z-index: 1; color: #fff; font-size: 18px; font-weight: 800; margin: 0 0 2px; display: flex; align-items: center; gap: 9px; }
+        .sb-card-head h2 svg { width: 20px; height: 20px; }
+        .sb-card-head p { position: relative; z-index: 1; margin: 0; color: rgba(255,255,255,.85); font-size: 13.5px; }
+        .sb-card-body { padding: 16px 14px; display: flex; flex-direction: column; gap: 16px; }
+
+        .sb-flash { display: flex; align-items: center; gap: 10px; background: #ecfdf5; border: 1px solid #6ee7b7; color: #065f46; font-size: 14px; font-weight: 600; border-radius: 12px; padding: 12px 14px; }
+        .sb-flash svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+        .sb-label { display: flex; align-items: center; gap: 7px; font-size: 13.5px; font-weight: 700; margin-bottom: 8px; }
+        .sb-label svg { width: 16px; height: 16px; color: #4f46e5; flex-shrink: 0; }
+        .sb-label small { font-weight: 500; color: #65676b; }
+        .sb-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+        .sb-chip {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: #eef2ff; border: 1px solid #c7d2fe; color: #4338ca;
+            font-size: 12px; font-weight: 700; padding: 6px 11px; border-radius: 999px;
         }
+        .sb-chip .dot { width: 7px; height: 7px; border-radius: 50%; background: #16a34a; }
+        .sb-empty { font-size: 13.5px; color: #65676b; background: #f0f2f5; border-radius: 10px; padding: 12px 14px; }
 
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #4e73df;
+        .sb-field { min-width: 0; }
+        .sb-phone-row { display: flex; gap: 8px; }
+        .sb-select, .sb-input {
+            font-family: inherit; border: 2px solid #e4e6eb; border-radius: 12px;
+            padding: 13px 12px; font-size: 16px; color: #1c1e21; background: #fff;
+            transition: border-color .2s, box-shadow .2s; width: 100%; min-width: 0;
         }
+        .sb-select { flex: 0 1 118px; min-width: 0; cursor: pointer; font-size: 14px; padding-left: 8px; padding-right: 4px; }
+        .sb-input { flex: 1; }
+        .sb-input::placeholder { color: #9aa0a6; }
+        .sb-select:focus, .sb-input:focus { outline: none; border-color: #4f46e5; box-shadow: 0 0 0 4px rgba(79,70,229,.13); }
+        .sb-hint { font-size: 12px; color: #65676b; margin-top: 6px; }
 
-        .input-group-modern {
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        .sb-seg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .sb-seg3 { grid-template-columns: 1fr 1fr 1fr; }
+        .sb-seg input { position: absolute; opacity: 0; pointer-events: none; }
+        .sb-seg label {
+            display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+            border: 2px solid #e4e6eb; border-radius: 12px; padding: 12px 6px;
+            font-size: 13.5px; font-weight: 700; color: #65676b; cursor: pointer; transition: .18s; text-align: center;
         }
+        .sb-seg label svg { width: 16px; height: 16px; flex-shrink: 0; }
+        .sb-seg input:checked + label { border-color: #4f46e5; background: #eef2ff; color: #4338ca; box-shadow: 0 0 0 3px rgba(79,70,229,.12); }
+        .sb-seg input:disabled + label { opacity: .45; cursor: not-allowed; background: #f0f2f5; }
 
-        .call-progress-panel {
-            display: none;
-            margin-top: 1.5rem;
-            padding: 1.25rem;
-            border-radius: 18px;
-            background: linear-gradient(135deg, #e8fff6 0%, #eef6ff 100%);
-            border: 1px solid rgba(32, 201, 151, 0.25);
-            box-shadow: 0 12px 30px rgba(34, 74, 190, 0.08);
+        .sb-count-row { display: flex; gap: 8px; align-items: stretch; }
+        .sb-count-row .sb-input { text-align: center; font-weight: 800; }
+        .sb-count-row input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+        .sb-count-row input::-webkit-outer-spin-button, .sb-count-row input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .sb-preset {
+            border: 2px solid #e4e6eb; background: #fff; color: #4f46e5;
+            font-weight: 800; font-size: 13px; font-family: inherit;
+            border-radius: 12px; padding: 0 12px; cursor: pointer; transition: .18s; flex-shrink: 0;
         }
+        .sb-preset:hover, .sb-preset.active { border-color: #4f46e5; background: #eef2ff; }
 
-        .call-progress-panel.is-active {
-            display: block;
+        .sb-status { display: none; align-items: center; gap: 10px; border-radius: 12px; padding: 12px 14px; font-size: 13.5px; font-weight: 600; }
+        .sb-status.show { display: flex; }
+        .sb-status.ok { background: #ecfdf5; border: 1px solid #6ee7b7; color: #065f46; }
+        .sb-status.err { background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; }
+        .sb-progress { display: none; }
+        .sb-progress.show { display: block; }
+        .sb-progress-top { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; color: #4338ca; margin-bottom: 8px; }
+        .sb-bar { height: 10px; border-radius: 999px; background: #eef2ff; overflow: hidden; }
+        .sb-bar-fill { height: 100%; width: 0%; border-radius: 999px; background: linear-gradient(90deg, #4f46e5, #8b5cf6); transition: width .3s ease; }
+
+        .sb-actions { display: flex; gap: 10px; }
+        .sb-btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+            font-family: inherit; font-size: 15px; font-weight: 800;
+            border: 0; border-radius: 14px; cursor: pointer;
+            padding: 15px 20px; transition: transform .15s, box-shadow .2s, opacity .2s;
+            flex: 1;
         }
+        .sb-btn svg { width: 19px; height: 19px; flex-shrink: 0; }
+        .sb-btn-start { color: #fff; background: linear-gradient(120deg, #16a34a, #059669); box-shadow: 0 8px 20px rgba(22,163,74,.35); }
+        .sb-btn-start:hover { transform: translateY(-1px); }
+        .sb-btn-stop { color: #fff; background: linear-gradient(120deg, #dc2626, #b91c1c); flex: 0 0 130px; }
+        .sb-btn:disabled { opacity: .7; cursor: wait; transform: none; }
+        .sb-spinner { display: none; width: 18px; height: 18px; flex-shrink: 0; border: 2.5px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: sb-spin .7s linear infinite; }
+        .sb-btn.loading .sb-spinner { display: inline-block; }
+        @keyframes sb-spin { to { transform: rotate(360deg); } }
+        .sb-stay { text-align: center; font-size: 12px; color: #65676b; }
 
-        .call-progress-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-            margin-bottom: 0.75rem;
+        .sb-success { display: none; text-align: center; background: #f0fdf4; border: 1.5px dashed #86efac; border-radius: 16px; padding: 26px 18px; }
+        .sb-success.show { display: block; }
+        .sb-success .big-icon { width: 58px; height: 58px; margin: 0 auto 12px; border-radius: 50%; background: #dcfce7; color: #16a34a; display: grid; place-items: center; }
+        .sb-success .big-icon svg { width: 30px; height: 30px; }
+        .sb-success h3 { color: #15803d; font-size: 18px; font-weight: 800; margin: 0 0 6px; }
+        .sb-success p { color: #65676b; font-size: 13.5px; margin: 0 0 16px; }
+
+        .sb-info { display: flex; gap: 10px; align-items: flex-start; border-radius: 14px; padding: 13px 14px; font-size: 13px; line-height: 1.65; }
+        .sb-info svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; }
+        .sb-info.blue { background: #eff6ff; border: 1px solid #bfdbfe; }
+        .sb-info.blue svg { color: #2563eb; }
+        .sb-info h4 { font-size: 13.5px; font-weight: 800; margin: 0 0 3px; }
+        .sb-info p { margin: 0; color: #4b5563; }
+
+        .sb-protect { background: #f8faff; border: 1.5px dashed #c7d2fe; border-radius: 16px; padding: 16px 14px; }
+        .sb-protect h4 { display: flex; align-items: center; gap: 8px; font-size: 14.5px; font-weight: 800; color: #4338ca; margin: 0 0 3px; }
+        .sb-protect h4 svg { width: 17px; height: 17px; }
+        .sb-protect p { font-size: 13px; color: #65676b; margin: 0 0 10px; }
+        .sb-protect-row { display: flex; flex-direction: column; gap: 8px; }
+        .sb-btn-protect { background: #4f46e5; color: #fff; box-shadow: 0 6px 16px rgba(79,70,229,.3); }
+        .sb-btn-protect:hover { background: #4338ca; }
+
+        /* ---- Content sections ---- */
+        .sb-sec-title { font-size: 20px; font-weight: 800; letter-spacing: -.01em; margin: 8px 0 2px; text-align: center; }
+        .sb-sec-sub { text-align: center; color: #65676b; font-size: 14px; margin: 0 0 16px; }
+        .sb-grid3 { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .sb-feat {
+            background: #fff; border: 1px solid #e4e6eb; border-radius: 16px;
+            padding: 18px 16px; display: flex; gap: 13px; align-items: flex-start;
+            box-shadow: 0 4px 14px rgba(28,30,33,.05);
         }
+        .sb-feat .ic { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; flex-shrink: 0; }
+        .sb-feat .ic svg { width: 23px; height: 23px; }
+        .sb-feat .ic.indigo { background: #eef2ff; color: #4f46e5; }
+        .sb-feat .ic.amber { background: #fffbeb; color: #d97706; }
+        .sb-feat .ic.green { background: #ecfdf5; color: #16a34a; }
+        .sb-feat h3 { font-size: 15px; font-weight: 800; margin: 0 0 4px; }
+        .sb-feat p { font-size: 13.5px; color: #65676b; margin: 0; line-height: 1.6; }
 
-        .call-progress-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.45rem 0.8rem;
-            border-radius: 999px;
-            background: rgba(13, 110, 253, 0.1);
-            color: #0d6efd;
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
+        .sb-cols { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .sb-list-card { background: #fff; border: 1px solid #e4e6eb; border-radius: 16px; padding: 18px 16px; }
+        .sb-list-card h3 { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 800; margin: 0 0 12px; }
+        .sb-list-card h3 svg { width: 19px; height: 19px; }
+        .sb-list-card.do h3 { color: #15803d; }
+        .sb-list-card.dont h3 { color: #b45309; }
+        .sb-list-card ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 9px; }
+        .sb-list-card li { display: flex; gap: 8px; align-items: flex-start; font-size: 13.5px; color: #4b5563; line-height: 1.55; }
+        .sb-list-card li svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; }
+        .sb-list-card.do li svg { color: #16a34a; }
+        .sb-list-card.dont li svg { color: #dc2626; }
+        .sb-legal { text-align: center; font-size: 12.5px; color: #65676b; background: #fff; border: 1px solid #e4e6eb; border-radius: 14px; padding: 15px 16px; line-height: 1.7; }
+        .sb-legal strong { color: #1c1e21; }
 
-        .call-progress-meta {
-            display: flex;
-            justify-content: space-between;
-            gap: 1rem;
-            margin-top: 0.75rem;
-            color: #495057;
-            font-size: 0.95rem;
-        }
+        .sb-faq { display: flex; flex-direction: column; gap: 8px; }
+        .sb-faq details { background: #fff; border: 1px solid #e4e6eb; border-radius: 13px; padding: 14px 15px; }
+        .sb-faq summary { font-weight: 700; font-size: 14.5px; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+        .sb-faq summary::-webkit-details-marker { display: none; }
+        .sb-faq summary svg { width: 18px; height: 18px; color: #4f46e5; flex-shrink: 0; transition: transform .2s; }
+        .sb-faq details[open] summary svg { transform: rotate(180deg); }
+        .sb-faq details p { color: #65676b; font-size: 13.5px; margin: 9px 0 0; line-height: 1.7; }
 
-        .call-progress-note {
-            margin-top: 0.75rem;
-            color: #6c757d;
-            font-size: 0.9rem;
+        .sb-tools { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+        .sb-tools a { padding: 10px 16px; border-radius: 999px; background: #eef2ff; color: #4338ca; font-weight: 700; font-size: 13.5px; border: 1px solid #e0e7ff; text-decoration: none; transition: .18s; }
+        .sb-tools a:hover { background: #4f46e5; color: #fff; border-color: #4f46e5; }
+
+        .sb-ad { text-align: center; overflow: hidden; }
+        .sb-ad-desktop { display: none; }
+        .sb-ad-mobile { display: block; }
+
+        .sb-footer { background: #fff; border-top: 1px solid #e4e6eb; padding: 22px 14px; text-align: center; }
+        .sb-footer .links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+        .sb-footer a { color: #65676b; font-size: 13.5px; font-weight: 600; text-decoration: none; }
+        .sb-footer a:hover { color: #4f46e5; }
+        .sb-footer .copy { color: #9aa0a6; font-size: 12.5px; }
+
+        /* ---- Tablet / desktop ---- */
+        @media (min-width: 640px) {
+            .sb-wrap { padding: 22px 20px 56px; gap: 22px; }
+            .sb-hero { border-radius: 22px; padding: 34px 32px; }
+            .sb-hero h1 { font-size: clamp(28px, 4vw, 40px); }
+            .sb-hero p { font-size: 16px; }
+            .sb-hero-art img { width: clamp(130px, 16vw, 190px); }
+            .sb-card { border-radius: 22px; }
+            .sb-card-head { padding: 22px 28px; }
+            .sb-card-head h2 { font-size: 20px; }
+            .sb-card-body { padding: 26px; gap: 20px; }
+            .sb-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+            .sb-protect-row { flex-direction: row; }
+            .sb-protect-row .sb-input { flex: 1; }
+            .sb-protect-row .sb-btn { flex: 0 0 auto; }
+            .sb-grid3 { grid-template-columns: repeat(3, 1fr); gap: 14px; }
+            .sb-feat { flex-direction: column; text-align: center; align-items: center; padding: 24px 18px; }
+            .sb-cols { grid-template-columns: 1fr 1fr; gap: 14px; }
+            .sb-ad-desktop { display: block; }
+            .sb-ad-mobile { display: none; }
+            .sb-sec-title { font-size: clamp(22px, 3vw, 28px); }
         }
     </style>
-@endpush
+</head>
+<body>
 
-@section('content')
-    <main class="flex-shrink-0">
-        {{-- Cross-promo: managed in Admin > Promotions (Tool pages) --}}
-        <x-promo-banner placement="tools" />
-        <!-- Navigation -->
-        <!-- Tool Hero Section -->
-        <section class="py-5">
-            <div class="container px-5">
-                <div class="tool-hero py-5 px-4 px-md-5 mb-5 text-white position-relative row">
-                    <div class="col align-items-center">
-                        <h1 class="fw-bolder display-5 mb-3">Call Bomber Tool</h1>
-                        <p class="lead mb-4 text-light">Professional Call Bomber and SMS Bomber tool for developers and
-                            businesses</p>
-                        <div class="warning-modern">
-                            <h6 class="text-warning mb-2"><i class="bi bi-exclamation-triangle"></i> Professional Use
-                                Only</h6>
-                            <p class="mb-0 text-dark small">This tool is designed for legitimate Call service testing,
-                                developer debugging, and delivery verification purposes only.</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 text-center d-none d-lg-block">
-                        <img height="200px" width="200px" class="img-fluid rounded-3"
-                            src="{{ asset('images/smsbomberiocn.webp') }}" alt="Call Testing Tool">
-                    </div>
+    <header class="sb-topbar">
+        <div class="sb-topbar-in">
+            <a href="{{ url('/') }}" class="sb-brand">
+                <span class="sb-brand-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-9 9H7V9h4zm6 0h-4V9h4z"/></svg></span>
+                <span>Call Bomber<small>by AutoLikerLive</small></span>
+            </a>
+            <nav class="sb-nav">
+                <a href="{{ route('sms-bomber') }}">SMS Bomber</a>
+                <a href="{{ url('services') }}">All Tools</a>
+            </nav>
+        </div>
+    </header>
 
+    <div class="sb-wrap">
+
+        {{-- ============ Hero ============ --}}
+        <section class="sb-hero">
+            <div class="sb-hero-in">
+                <div class="sb-hero-txt">
+                    <span class="sb-badge"><span class="dot"></span> Free load-testing tool &middot; No signup</span>
+                    <h1>Call Bomber &mdash; <span class="grad">Test Call Delivery</span> in Seconds</h1>
+                    <p>Fire test calls through live voice gateways to verify delivery rates and service reliability on numbers you own or are authorized to test.</p>
+                    <div class="sb-pills">
+                        <span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> 100% Free</span>
+                        <span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2.05v2.02c3.95.49 7 3.85 7 7.93 0 1.45-.39 2.81-1.06 3.98l1.46 1.46C21.59 15.67 22 13.89 22 12c0-5.18-3.95-9.45-9-9.95zM12 19c-3.87 0-7-3.13-7-7 0-3.53 2.61-6.43 6-6.92V2.05c-5.06.5-9 4.76-9 9.95 0 5.52 4.47 10 9.99 10 3.31 0 6.24-1.61 8.06-4.09l-1.46-1.46C16.14 17.85 14.18 19 12 19z"/></svg> Up to 30 tests</span>
+                        <span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg> Consent required</span>
+                    </div>
+                </div>
+                <div class="sb-hero-art">
+                    <img src="{{ asset('images/smsbomberiocn.webp') }}" alt="SMS Bomber tool illustration" width="190" height="190" loading="lazy">
                 </div>
             </div>
+            <div class="sb-notice">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 1 21h22L12 2zm1 14h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span><strong>Professional use only.</strong> Only test numbers you own or have explicit permission to test. Misuse for spam or harassment is strictly prohibited.</span>
             </div>
         </section>
 
-        <!-- Main Tool Section -->
-        <section class="py-5 bg-light">
-            <div class="container px-5">
-                <div class="row justify-content-center">
-                    <div class="col-lg-10 col-xl-8">
-                        <div class="tool-card">
-                            <div class="tool-header p-4 text-white position-relative">
-                                <div class="text-center">
-                                    <h3 class="fw-bold mb-2 text-light"><i class="bi bi-tools me-2"></i>Call Service Tester
-                                    </h3>
-                                    <p class="mb-0 opacity-75 text-light">Test Call delivery rates and service reliability
-                                    </p>
-                                </div>
+        @if (session()->has('message'))
+            <div class="sb-flash" role="status">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                {{ session('message') }}
+            </div>
+        @endif
+
+        {{-- ============ Tool card ============ --}}
+        <section class="sb-card" aria-label="SMS testing tool">
+            <div class="sb-card-head">
+                <h2><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-9 9H7V9h4zm6 0h-4V9h4z"/></svg> SMS Service Tester</h2>
+                <p>Pick a gateway region, enter the target number and start your call delivery test.</p>
+            </div>
+            <div class="sb-card-body">
+
+                <div>
+                    <div class="sb-label"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 8h16v11H4z" opacity=".3"/><path d="M20 6H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 13H4V8h16v11z"/></svg> Available gateway regions</div>
+                    @if (isset($status) && count($status))
+                        <div class="sb-chips">
+                            @foreach ($status as $item)
+                                <span class="sb-chip"><span class="dot"></span>{{ $item->name }} (+{{ $item->code }})</span>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="sb-empty">No gateway regions are online right now. Please try again later.</div>
+                    @endif
+                </div>
+
+                <div class="sb-success" id="smsb-success" role="status">
+                    <div class="big-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                    <h3>Testing completed</h3>
+                    <p id="smsb-success-text">All test messages were dispatched. Check the handset delivery report.</p>
+                    <div class="sb-actions" style="justify-content:center">
+                        <button type="button" class="sb-btn sb-btn-protect" id="smsb-again" style="flex:0 0 auto;padding:13px 30px">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                            Run a new test
+                        </button>
+                    </div>
+                </div>
+
+                <form id="smsb-form" method="post" novalidate>
+                    @csrf
+                    <div class="sb-form-grid">
+                        <div class="sb-field">
+                            <div class="sb-label"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24 11.4 11.4 0 0 0 3.57.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1.02z"/></svg> Target phone number</div>
+                            <div class="sb-phone-row">
+                                <select name="code" id="smsb-code" class="sb-select" aria-label="Country code">
+                                    @foreach ($status ?? [] as $item)
+                                        <option value="{{ $item->code }}" data-item="{{ json_encode($item) }}">{{ $item->name }} (+{{ $item->code }})</option>
+                                    @endforeach
+                                </select>
+                                <input id="smsb-number" type="tel" inputmode="numeric" autocomplete="tel" name="number" class="sb-input" placeholder="e.g. 01712345678" required>
+                                <input type="hidden" id="smsb-recaptcha" name="recaptcha-token">
                             </div>
+                            <div class="sb-hint">Number only, without the country code or leading +.</div>
+                        </div>
 
-                            <div class="p-4">
-                                <!-- Service Status Display -->
-                                <div class="status-card mb-4">
-                                    <h6 class="fw-bold text-muted mb-3"><i class="bi bi-server me-2"></i>Available Testing
-                                        Services:</h6>
-                                    <div class="d-flex flex-wrap gap-1">
-                                        @foreach ($status as $item)
-                                            <span class="btn btn-success btn-xs">{{ $item->name }}</span>
-                                        @endforeach
-                                    </div>
-                                </div>
+                        <div class="sb-field">
+                            <div class="sb-label"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg> Test type</div>
+                            <div class="sb-seg" role="radiogroup" aria-label="Test type">
+                                <input type="radio" name="call" id="smsb-mode-sms" value="0">
+                                <label for="smsb-mode-sms"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-9 9H7V9h4zm6 0h-4V9h4z"/></svg> SMS test</label>
+                                <input type="radio" name="call" id="smsb-mode-call" value="1" checked>
+                                <label for="smsb-mode-call"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24 11.4 11.4 0 0 0 3.57.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1.02z"/></svg> Call test</label>
+                            </div>
+                            <div class="sb-hint" id="smsb-mode-hint">Call testing is available for this region.</div>
+                        </div>
 
-                                <!-- Success Message -->
-                                <div class="col-12 d-none" id="send-success" style="text-align: center">
-                                    <div class="status-card">
-                                        <div class="feature-icon bg-success bg-opacity-20 mb-3 mx-auto">
-                                            <i class="bi bi-check-circle text-success fs-1"></i>
-                                        </div>
-                                        <h4 class="text-success mb-3">Testing Completed Successfully</h4>
-                                        <p class="text-muted mb-3">Call service testing has been completed. Check your
-                                            delivery reports.</p>
-                                        <button type="button" class="btn btn-primary" onclick="window.location.reload()">
-                                            <i class="bi bi-arrow-clockwise me-2"></i>Run New Test
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <!-- Testing Form -->
-                                <form id="call-bomber-form">
-                                    <div class="row g-4">
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-bold text-dark">
-                                                <i class="bi bi-phone me-2"></i>Target Phone Number
-                                            </label>
-                                            <div class="input-group input-group-modern">
-                                                <select name="code" id="code" class="form-select"
-                                                    style="max-width: 150px;">
-                                                    @foreach ($status as $item)
-                                                        <option value="{{ $item->code }}"
-                                                            data-item="{{ json_encode($item) }}">
-                                                            {{ $item->name }} (+{{ $item->code }})
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                                <input id="number" type="number" name="number" class="form-control"
-                                                    placeholder="Enter phone number" required>
-                                                <input type="hidden" id="recaptcha-token" name="recaptcha-token">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-bold text-dark">
-                                                <i class="bi bi-gear me-2"></i>Test Configuration
-                                            </label>
-                                            <div class="form-check form-check-inline d-block mb-2">
-                                                <input class="form-check-input" type="radio" name="call"
-                                                    id="inlineRadio1" value="0">
-                                                <label class="form-check-label" for="inlineRadio1">SMS Testing</label>
-                                            </div>
-                                            <div class="form-check form-check-inline d-block">
-                                                <input class="form-check-input" type="radio" name="call"
-                                                    id="inlineRadio2" value="1" checked>
-                                                <label class="form-check-label" for="inlineRadio2">Call Testing</label>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-bold text-dark">
-                                                <i class="bi bi-123 me-2"></i>Test Count <small class="text-muted">(max
-                                                    30)</small>
-                                            </label>
-                                            <input id="count" type="number" class="form-control"
-                                                placeholder="Number of test messages" max="30" required>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-bold text-dark">
-                                                <i class="bi bi-speedometer2 me-2"></i>Test Speed
-                                            </label>
-                                            <div class="form-check">
-                                                <input type="radio" id="speedLow" name="speed" value="slow"
-                                                    class="form-check-input">
-                                                <label class="form-check-label" for="speedLow">Slow (4s intervals)</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="radio" id="speedMedium" name="speed" value="medium"
-                                                    class="form-check-input">
-                                                <label class="form-check-label" for="speedMedium">Medium (2s
-                                                    intervals)</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="radio" id="speedFast" name="speed" value="fast"
-                                                    class="form-check-input" checked>
-                                                <label class="form-check-label" for="speedFast">Fast (1s
-                                                    intervals)</label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Progress and Status -->
-                                    <div class="mt-4">
-                                        <div class="alert alert-success d-none" id="showsuccess" role="alert">
-                                            <i class="bi bi-check-circle me-2"></i><strong>Test Messages Sent</strong>
-                                        </div>
-
-                                        <div class="progress-modern d-none" id="progress-container">
-                                            <div class="progress-bar-modern" id="progress-bar" style="width: 0%;"></div>
-                                        </div>
-
-                                        <div class="call-progress-panel" id="call-progress-panel">
-                                            <div class="call-progress-header">
-                                                <div>
-                                                    <div class="call-progress-badge">
-                                                        <i class="bi bi-telephone-outbound"></i>
-                                                        <span>Call campaign running</span>
-                                                    </div>
-                                                    <h6 class="fw-bold text-dark mt-3 mb-1">Live call delivery status</h6>
-                                                    <p class="mb-0 text-muted small">You can watch each request advance in real time.</p>
-                                                </div>
-                                                <div class="text-end">
-                                                    <div class="fw-bold text-primary fs-4" id="progress-percentage">0%</div>
-                                                    <div class="text-muted small">completed</div>
-                                                </div>
-                                            </div>
-
-                                            <div class="call-progress-meta">
-                                                <span><i class="bi bi-broadcast me-1"></i>Sent: <strong id="progress-count">0</strong></span>
-                                                <span><i class="bi bi-bullseye me-1"></i>Target: <strong id="progress-total">0</strong></span>
-                                            </div>
-
-                                            <div class="call-progress-note" id="call-progress-note">
-                                                Preparing secure request...
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Disclaimer -->
-                                    <div class="info-modern mt-4">
-                                        <h6 class="text-info mb-2"><i class="bi bi-info-circle"></i> Testing Guidelines
-                                        </h6>
-                                        <p class="mb-0 small text-dark">
-                                            This tool is intended for legitimate Call service testing and debugging purposes
-                                            only.
-                                            Ensure you have proper authorization before testing any phone number. Use
-                                            responsibly and in compliance with applicable laws.
-                                        </p>
-                                    </div>
-
-                                    <!-- Action Buttons -->
-                                    <div class="text-center mt-4">
-                                        <button class="btn btn-tool text-white me-3" type="submit" id="submit-button">
-                                            <span class="spinner-border spinner-border-sm d-none"
-                                                id="startsms_spinner"></span>
-                                            <i class="bi bi-play-circle me-2"></i>
-                                            <span id="submitBtnText">Start</span>
-                                        </button>
-                                        <button class="btn btn-stop text-white d-none" id="stop-sms">
-                                            <i class="bi bi-stop-circle me-2"></i>Stop
-                                        </button>
-                                    </div>
-
-                                    <div class="text-center mt-3">
-                                        <small class="text-muted">
-                                            <i class="bi bi-wifi me-1"></i>Stay online during testing for accurate results
-                                        </small>
-                                    </div>
-                                </form>
-
-                                <!-- Number Protection Section -->
-                                <div class="status-card mt-4">
-                                    <h6 class="fw-bold text-primary mb-3">
-                                        <i class="bi bi-shield-check me-2"></i>Protect Your Number
-                                    </h6>
-                                    <p class="text-muted small mb-3">Add your number to our protection list to prevent
-                                        testing on your device</p>
-                                    <form action="{{ route('save-bomber') }}" method="post"
-                                        class="row g-3 align-items-end">
-                                        @csrf
-                                        <div class="col-md-8">
-                                            <input type="text" class="form-control" name="number"
-                                                placeholder="Enter your mobile number (without country code)">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <button type="submit" class="btn btn-primary w-100">
-                                                <i class="bi bi-shield-plus me-2"></i>Protect
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
+                        <div class="sb-field">
+                            <div class="sb-label"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2.05v2.02c3.95.49 7 3.85 7 7.93 0 1.45-.39 2.81-1.06 3.98l1.46 1.46C21.59 15.67 22 13.89 22 12c0-5.18-3.95-9.45-9-9.95zM12 19c-3.87 0-7-3.13-7-7 0-3.53 2.61-6.43 6-6.92V2.05c-5.06.5-9 4.76-9 9.95 0 5.52 4.47 10 9.99 10 3.31 0 6.24-1.61 8.06-4.09l-1.46-1.46C16.14 17.85 14.18 19 12 19z"/></svg> Test count <small>(max 30)</small></div>
+                            <div class="sb-count-row">
+                                <input id="smsb-count" type="number" class="sb-input" value="5" min="1" max="30" step="1" inputmode="numeric" required>
+                                <button type="button" class="sb-preset" data-count="5">5</button>
+                                <button type="button" class="sb-preset" data-count="10">10</button>
+                                <button type="button" class="sb-preset" data-count="20">20</button>
                             </div>
                         </div>
+
+                        <div class="sb-field">
+                            <div class="sb-label"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg> Test speed</div>
+                            <div class="sb-seg sb-seg3" role="radiogroup" aria-label="Test speed">
+                                <input type="radio" name="speed" id="smsb-slow" value="slow">
+                                <label for="smsb-slow">Slow</label>
+                                <input type="radio" name="speed" id="smsb-medium" value="medium">
+                                <label for="smsb-medium">Med</label>
+                                <input type="radio" name="speed" id="smsb-fast" value="fast" checked>
+                                <label for="smsb-fast">Fast</label>
+                            </div>
+                            <div class="sb-hint">Slow · 4s &nbsp;/&nbsp; Medium · 2s &nbsp;/&nbsp; Fast · 1s per request.</div>
+                        </div>
                     </div>
+
+                    <div style="margin-top:16px;display:flex;flex-direction:column;gap:12px">
+                        <div class="sb-status" id="smsb-status" role="status"></div>
+
+                        <div class="sb-progress" id="smsb-progress">
+                            <div class="sb-progress-top"><span id="smsb-progress-text">0 / 0 sent</span><span id="smsb-progress-pct">0%</span></div>
+                            <div class="sb-bar"><div class="sb-bar-fill" id="smsb-bar"></div></div>
+                            <div class="sb-hint" id="smsb-note" style="margin-top:8px">Preparing secure request...</div>
+                        </div>
+
+                        <div class="sb-actions">
+                            <button class="sb-btn sb-btn-start" type="submit" id="smsb-start">
+                                <span class="sb-spinner"></span>
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                                <span id="smsb-start-text">Start test</span>
+                            </button>
+                            <button class="sb-btn sb-btn-stop" type="button" id="smsb-stop" hidden>
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z"/></svg>
+                                Stop
+                            </button>
+                        </div>
+                        <div class="sb-stay">Keep this tab open while the test runs for accurate results.</div>
+                    </div>
+                </form>
+
+                <div class="sb-info blue">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    <div><h4>Testing guidelines</h4><p>This tool is for legitimate SMS gateway testing and debugging only. You must own the target number or have explicit consent from its owner, and you must comply with your local telecommunications laws.</p></div>
+                </div>
+
+                <div class="sb-protect">
+                    <h4><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg> Protect your number</h4>
+                    <p>Add a number to the blocklist and this tool will refuse to test it.</p>
+                    <form action="{{ route('save-bomber') }}" method="post">
+                        @csrf
+                        <div class="sb-protect-row">
+                            <input type="text" class="sb-input" name="number" inputmode="numeric" placeholder="Mobile number without country code" required>
+                            <button type="submit" class="sb-btn sb-btn-protect">Protect number</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="sb-ad sb-ad-desktop">
+            <x-ads.leaderboard />
+        </div>
+        <div class="sb-ad sb-ad-mobile">
+            <x-ads.mobile-banner />
+        </div>
+
+        {{-- ============ Info ============ --}}
+        <section>
+            <h2 class="sb-sec-title">Why test your call gateway?</h2>
+            <p class="sb-sec-sub">Delivery rates vary by carrier, region and time of day. Verify before you deploy.</p>
+            <div class="sb-grid3">
+                <div class="sb-feat">
+                    <div class="ic indigo"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-9 9H7V9h4zm6 0h-4V9h4z"/></svg></div>
+                    <div><h3>Real delivery checks</h3><p>Place live test calls through production voice gateways and confirm they actually connect on the handset.</p></div>
+                </div>
+                <div class="sb-feat">
+                    <div class="ic amber"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg></div>
+                    <div><h3>Responsible by design</h3><p>Built-in 30-message cap, consent requirement and a self-serve blocklist keep testing legitimate.</p></div>
+                </div>
+                <div class="sb-feat">
+                    <div class="ic green"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg></div>
+                    <div><h3>Call + SMS gateways</h3><p>Compare voice and SMS OTP delivery side by side and find the most reliable service for your region.</p></div>
                 </div>
             </div>
         </section>
 
-        <!-- Educational Information Section -->
-        <section class="py-5">
-            <div class="container px-5">
-                <div class="row g-4">
-                    <div class="col-lg-4">
-                        <div class="status-card h-100">
-                            <div class="feature-icon bg-primary bg-opacity-20 mb-3">
-                                <i class="bi bi-question-circle text-primary fs-2"></i>
-                            </div>
-                            <h5 class="text-primary fw-bold mb-3">What is Call Testing?</h5>
-                            <p class="text-dark mb-0">
-                                Call testing is a legitimate process used by developers and businesses to verify Call delivery
-                                rates,
-                                test notification systems, and ensure proper functionality of messaging services before
-                                deployment.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4">
-                        <div class="status-card h-100">
-                            <div class="feature-icon bg-warning bg-opacity-20 mb-3">
-                                <i class="bi bi-shield-exclamation text-warning fs-2"></i>
-                            </div>
-                            <h5 class="text-warning fw-bold mb-3">Responsible Testing</h5>
-                            <p class="text-dark mb-0">
-                                Always ensure you have proper authorization before testing any phone number. This tool
-                                should only be used
-                                for legitimate business purposes, development testing, or with explicit consent from the
-                                number owner.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4">
-                        <div class="status-card h-100">
-                            <div class="feature-icon bg-success bg-opacity-20 mb-3">
-                                <i class="bi bi-gear text-success fs-2"></i>
-                            </div>
-                            <h5 class="text-success fw-bold mb-3">How It Works</h5>
-                            <p class="text-dark mb-0">
-                                This tool connects to various Call gateway APIs to test message delivery. It helps identify
-                                the most
-                                reliable services for your specific region and use case, ensuring optimal performance for
-                                your applications.
-                            </p>
-                        </div>
-                    </div>
+        {{-- ============ Best practices ============ --}}
+        <section>
+            <h2 class="sb-sec-title">Call Testing Best Practices</h2>
+            <p class="sb-sec-sub">Professional guidelines for responsible call testing.</p>
+            <div class="sb-cols">
+                <div class="sb-list-card do">
+                    <h3><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Recommended</h3>
+                    <ul>
+                        <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Always get explicit consent before testing a number you don't own.</li>
+                        <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Prefer your own devices or dedicated test numbers where possible.</li>
+                        <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg> Use slow speed for carrier-sensitive routes; fast for load checks.</li>
+                        <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Document your test runs for compliance and debugging.</li>
+                    </ul>
+                </div>
+                <div class="sb-list-card dont">
+                    <h3><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 1 21h22L12 2zm1 14h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg> Never do this</h3>
+                    <ul>
+                        <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg> Never use this tool for harassment, spam or pranks.</li>
+                        <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg> Never test strangers' numbers without their permission.</li>
+                        <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg> Never ignore local telecom and privacy regulations.</li>
+                        <li><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg> Never exceed what you need — small samples are usually enough.</li>
+                    </ul>
                 </div>
             </div>
         </section>
 
-        <!-- Best Practices Section -->
-        <section class="py-5 bg-light">
-            <div class="container px-5">
-                <div class="text-center mb-5">
-                    <h2 class="fw-bold text-dark mb-3">Call Testing Best Practices</h2>
-                    <p class="text-muted lead">Professional guidelines for responsible Call testing</p>
-                </div>
-
-                <div class="row g-4">
-                    <div class="col-md-6">
-                        <div class="info-modern h-100">
-                            <h5 class="text-info mb-3"><i class="bi bi-check-circle me-2"></i>Recommended Practices</h5>
-                            <ul class="list-unstyled mb-0">
-                                <li class="mb-2"><i class="bi bi-arrow-right text-success me-2"></i>Always obtain proper
-                                    consent before testing</li>
-                                <li class="mb-2"><i class="bi bi-arrow-right text-success me-2"></i>Use test numbers or
-                                    your own devices when possible</li>
-                                <li class="mb-2"><i class="bi bi-arrow-right text-success me-2"></i>Limit test frequency
-                                    to avoid service disruption</li>
-                                <li class="mb-2"><i class="bi bi-arrow-right text-success me-2"></i>Document your
-                                    testing procedures for compliance</li>
-                                <li class="mb-2"><i class="bi bi-arrow-right text-success me-2"></i>Respect carrier
-                                    guidelines and regulations</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="warning-modern h-100">
-                            <h5 class="text-warning mb-3"><i class="bi bi-exclamation-triangle me-2"></i>Important
-                                Considerations</h5>
-                            <ul class="list-unstyled mb-0">
-                                <li class="mb-2"><i class="bi bi-arrow-right text-danger me-2"></i>Never use for
-                                    harassment or spam</li>
-                                <li class="mb-2"><i class="bi bi-arrow-right text-danger me-2"></i>Comply with local
-                                    telecommunications laws</li>
-                                <li class="mb-2"><i class="bi bi-arrow-right text-danger me-2"></i>Respect privacy and
-                                    data protection regulations</li>
-                                <li class="mb-2"><i class="bi bi-arrow-right text-danger me-2"></i>Monitor for any
-                                    negative impact on recipients</li>
-                                <li class="mb-2"><i class="bi bi-arrow-right text-danger me-2"></i>Maintain ethical
-                                    testing standards</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="text-center mt-5">
-                    <div class="info-modern d-inline-block">
-                        <h6 class="text-info mb-2"><i class="bi bi-info-circle me-2"></i>Legal Compliance Notice</h6>
-                        <p class="mb-0 small text-dark">
-                            This tool is provided for legitimate Call testing and development purposes only. Users are
-                            responsible for ensuring
-                            compliance with all applicable laws, regulations, and terms of service. We do not condone or
-                            support any misuse
-                            of this tool for harassment, spam, or any other malicious activities.
-                        </p>
-                    </div>
-                </div>
+        {{-- ============ FAQ ============ --}}
+        <section>
+            <h2 class="sb-sec-title">Frequently asked questions</h2>
+            <p class="sb-sec-sub">Everything you need to know before running a test.</p>
+            <div class="sb-faq">
+                <details open>
+                    <summary>Is the call bomber free? <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></summary>
+                    <p>Yes. You can run up to 30 test calls per run, completely free and without creating an account. Just pick a gateway region, enter the number and start.</p>
+                </details>
+                <details>
+                    <summary>Which numbers can I test? <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></summary>
+                    <p>Only numbers you own or have explicit permission to test. Numbers on our protection blocklist are automatically refused, and abuse may lead to access restrictions.</p>
+                </details>
+                <details>
+                    <summary>What is the difference between call and SMS testing? <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></summary>
+                    <p>Call testing places automated voice calls through voice gateways, while SMS testing dispatches text messages. Call testing is only enabled for regions where the gateway supports it — otherwise the option is disabled automatically.</p>
+                </details>
+                <details>
+                    <summary>How do the speed settings work? <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></summary>
+                    <p>Slow sends one request every 4 seconds, medium every 2 seconds and fast every 1 second. Use slow for sensitive carrier routes and fast when you want a quick load sample.</p>
+                </details>
+                <details>
+                    <summary>How do I block my number? <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></summary>
+                    <p>Enter your number in the "Protect your number" box above and submit. It is added to the blocklist and this tool will refuse any future test against it.</p>
+                </details>
             </div>
         </section>
-    </main>
+
+        <div class="sb-legal">
+            <strong>Legal compliance notice.</strong> This tool is provided for legitimate call testing and development purposes only. You are responsible for complying with all applicable laws and carrier terms. We do not condone harassment, spam or any other misuse.
+        </div>
+
+        <section>
+            <h2 class="sb-sec-title">More free tools</h2>
+            <p class="sb-sec-sub">Keep exploring AutoLikerLive.</p>
+            <div class="sb-tools">
+                <a href="{{ route('sms-bomber') }}">SMS Bomber</a>
+                <a href="{{ route('temp-mail') }}">Temp Mail</a>
+                <a href="{{ route('free-tiktok-views') }}">TikTok Views</a>
+                <a href="{{ route('free-tiktok-likes') }}">TikTok Likes</a>
+                <a href="{{ route('free-instagram-likes') }}">Instagram Likes</a>
+                <a href="{{ url('services') }}">All Tools</a>
+            </div>
+        </section>
+
+    </div>
+
+    <footer class="sb-footer">
+        <div class="links">
+            <a href="{{ url('/') }}">Home</a>
+            <a href="{{ url('services') }}">All Tools</a>
+            <a href="{{ route('sms-bomber') }}">SMS Bomber</a>
+            <a href="{{ url('privacy') }}">Privacy</a>
+            <a href="{{ url('terms') }}">Terms</a>
+        </div>
+        <div class="copy">&copy; autolikerlive.com &mdash; For entertainment purposes only.</div>
+    </footer>
 
     <script>
-        $(document).ready(function() {
+        (function () {
+            var form = document.getElementById('smsb-form');
+            var codeSelect = document.getElementById('smsb-code');
+            var numberInput = document.getElementById('smsb-number');
+            var countInput = document.getElementById('smsb-count');
+            var recaptchaInput = document.getElementById('smsb-recaptcha');
+            var modeSms = document.getElementById('smsb-mode-sms');
+            var modeCall = document.getElementById('smsb-mode-call');
+            var modeHint = document.getElementById('smsb-mode-hint');
+            var statusBox = document.getElementById('smsb-status');
+            var progress = document.getElementById('smsb-progress');
+            var progressText = document.getElementById('smsb-progress-text');
+            var progressPct = document.getElementById('smsb-progress-pct');
+            var bar = document.getElementById('smsb-bar');
+            var startBtn = document.getElementById('smsb-start');
+            var startText = document.getElementById('smsb-start-text');
+            var stopBtn = document.getElementById('smsb-stop');
+            var successPanel = document.getElementById('smsb-success');
+            var successText = document.getElementById('smsb-success-text');
+            var noteBox = document.getElementById('smsb-note');
+            var csrf = document.querySelector('meta[name="csrf-token"]');
+            var csrfToken = csrf ? csrf.getAttribute('content') : '';
 
-            $("#count").on("input", function() {
-                if (parseInt($(this).val()) > 30) {
-                    $(this).val(30);
-                }
-            });
+            var SPEED_DELAY = { slow: 4000, medium: 2000, fast: 1000 };
+            var MAX_COUNT = 30;
 
-            $('#code').on('change', function() {
-                const selectedOption = $(this).find(':selected');
-                const fullData = selectedOption.data('item'); // Get the full data
+            var running = false;
+            var stopRequested = false;
+            var controller = null;
+            var total = 0;
+            var done = 0;
 
-                if (fullData.calls == 0) {
-                    $('#inlineRadio1').prop('checked', true);
-                    $('#inlineRadio2').prop('disabled', true).prop('checked', false);
+            function showStatus(type, html) {
+                statusBox.className = 'sb-status show ' + type;
+                statusBox.textContent = html;
+            }
+            function hideStatus() {
+                statusBox.className = 'sb-status';
+                statusBox.textContent = '';
+            }
+            function updateProgress() {
+                var pct = total > 0 ? Math.round((done / total) * 100) : 0;
+                bar.style.width = pct + '%';
+                progressText.textContent = done + ' / ' + total + ' sent';
+                progressPct.textContent = pct + '%';
+                if (noteBox) noteBox.textContent = done < total ? ('Call attempts are being sent one by one (' + done + ' of ' + total + ').') : 'All call attempts have been finished.';
+            }
+            function failRun(message) {
+                stopRequested = true;
+                setBusy(false);
+                progress.classList.remove('show');
+                showStatus('err', message);
+                if (noteBox) noteBox.textContent = message;
+            }
+            function selectedItem() {
+                var opt = codeSelect.options[codeSelect.selectedIndex];
+                if (!opt) return null;
+                try { return JSON.parse(opt.getAttribute('data-item')); } catch (e) { return null; }
+            }
+            function syncMode() {
+                var item = selectedItem();
+                var callsAllowed = !item || parseInt(item.calls, 10) !== 0;
+                if (!callsAllowed) {
+                    modeSms.checked = true;
+                    modeCall.disabled = true;
+                    modeHint.textContent = 'Call testing is not available for this region — SMS only.';
                 } else {
-                    $('#inlineRadio2').prop('disabled', false);
+                    modeCall.disabled = false;
+                    modeHint.textContent = 'Call testing is available for this region.';
                 }
+            }
+
+            countInput.addEventListener('input', function () {
+                var v = parseInt(countInput.value, 10);
+                if (isNaN(v)) return;
+                if (v > MAX_COUNT) countInput.value = MAX_COUNT;
+                if (v < 1 && countInput.value !== '') countInput.value = 1;
+                document.querySelectorAll('.sb-preset').forEach(function (b) {
+                    b.classList.toggle('active', parseInt(b.getAttribute('data-count'), 10) === parseInt(countInput.value, 10));
+                });
+            });
+            document.querySelectorAll('.sb-preset').forEach(function (b) {
+                b.addEventListener('click', function () {
+                    countInput.value = b.getAttribute('data-count');
+                    countInput.dispatchEvent(new Event('input'));
+                });
             });
 
+            codeSelect.addEventListener('change', syncMode);
+            syncMode();
 
-            const $form = $('#call-bomber-form');
-            const $recaptchaTokenInput = $('#recaptcha-token');
-            const $submitButton = $('#submit-button');
-            const $submitButtonText = $('#submitBtnText');
-            const $showSuccess = $('#showsuccess');
-            const $stopSMS = $('#stop-sms');
-            const $startSpinner = $('#startsms_spinner');
-            const $progressBar = $('#progress-bar');
-            const $progressContainer = $('#progress-container');
-            const $progressPanel = $('#call-progress-panel');
-            const $progressCount = $('#progress-count');
-            const $progressTotal = $('#progress-total');
-            const $progressPercentage = $('#progress-percentage');
-            const $progressNote = $('#call-progress-note');
+            function setBusy(busy) {
+                running = busy;
+                startBtn.disabled = busy;
+                startBtn.classList.toggle('loading', busy);
+                startText.textContent = busy ? 'Testing…' : 'Start test';
+                stopBtn.hidden = !busy;
+                codeSelect.disabled = busy;
+                numberInput.disabled = busy;
+                countInput.disabled = busy;
+            }
 
-            let xhr = null;
-            let totalRequests = 0;
-            let completedRequests = 0;
-            let stopRequested = false;
-
-            $form.on('submit', function(event) {
-                const speed = $('input[name="speed"]:checked').val();
-                let timeout = 1000;
-
-                switch (speed) {
-                    case 'slow':
-                        timeout = 4000;
-                        break;
-                    case 'medium':
-                        timeout = 2000;
-                        break;
-                    case 'fast':
-                        timeout = 1000;
-                        break;
+            function finish() {
+                setBusy(false);
+                progress.classList.remove('show');
+                if (!stopRequested && done >= total && total > 0) {
+                    form.style.display = 'none';
+                    successText.textContent = 'All ' + total + ' test requests were dispatched. Check the handset delivery report.';
+                    successPanel.classList.add('show');
+                    successPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
+            }
 
-                event.preventDefault();
-                $stopSMS.removeClass('d-none');
-
-                $submitButton.attr('disabled', 'disabled');
-                $submitButtonText.html('Testing...');
-                $startSpinner.removeClass('d-none');
-                $progressContainer.removeClass('d-none');
-                $progressPanel.addClass('is-active');
-                $showSuccess.removeClass('d-none');
-                stopRequested = false;
-
-                totalRequests = parseInt($('#count').val()) || 5; // Get count from user input
-                completedRequests = 0;
-                $progressTotal.text(totalRequests);
-                $progressCount.text(0);
-                $progressPercentage.text('0%');
-                $progressNote.text('Preparing secure request...');
-                updateProgress(0);
-
-                function sendRequest() {
-                    if (stopRequested || completedRequests >= totalRequests) return;
-
-                    $progressNote.text('Connecting to gateway ' + (completedRequests + 1) + ' of ' + totalRequests + '...');
-
-                    grecaptcha.ready(function() {
-                        grecaptcha.execute('6Le7S7kqAAAAAMvSkxFhOxaTZMiosSLf4mHkpCtb', {
-                            action: 'submit'
-                        }).then(function(token) {
-                            $recaptchaTokenInput.val(token);
-                            $.ajaxSetup({
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
-                                        .attr('content')
-                                }
-                            });
-                            xhr = $.ajax({
-                                type: 'POST',
-                                url: `{{ route('send-bomber') }}`,
-                                data: $form.serialize(),
-                                success: function(response) {
-                                    if (response && response.success === false) {
-                                        handleFailure(response.message || 'Request failed. Please try again.');
-                                        return;
-                                    }
-
-                                    completedRequests++;
-                                    updateProgress(completedRequests);
-                                    if (completedRequests < totalRequests &&
-                                        completedRequests < 30) {
-                                        setTimeout(() => {
-                                            sendRequest();
-                                        }, timeout);
-                                    } else {
-                                        $('#send-success').removeClass(
-                                            'd-none');
-                                        $form.addClass('d-none');
-                                        $progressNote.text('Call testing completed successfully.');
-                                        $stopSMS.addClass('d-none');
-                                        $submitButton.removeAttr('disabled');
-                                        $submitButtonText.html('Start Again');
-                                        $startSpinner.addClass('d-none');
-                                    }
-                                },
-                                error: function(xhr, textStatus, errorThrown) {
-                                    if (textStatus === 'abort') {
-                                        return;
-                                    }
-
-                                    console.error('Error:', textStatus,
-                                        errorThrown);
-                                    handleFailure('AJAX request failed. Please check the browser console or try again.');
-                                }
-                            });
+            function sendOne(delay) {
+                if (stopRequested || done >= total) { finish(); return; }
+                if (noteBox) noteBox.textContent = 'Connecting to gateway ' + (done + 1) + ' of ' + total + '...';
+                if (typeof grecaptcha === 'undefined' || !grecaptcha.execute) {
+                    showStatus('err', 'Captcha failed to load. Please refresh and try again.');
+                    setBusy(false);
+                    return;
+                }
+                grecaptcha.ready(function () {
+                    if (stopRequested) { finish(); return; }
+                    grecaptcha.execute('6Le7S7kqAAAAAMvSkxFhOxaTZMiosSLf4mHkpCtb', { action: 'submit' }).then(function (token) {
+                        if (stopRequested) { finish(); return; }
+                        recaptchaInput.value = token;
+                        controller = new AbortController();
+                        fetch('{{ route('send-bomber') }}', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken,
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Accept': 'application/json'
+                            },
+                            body: new FormData(form),
+                            signal: controller.signal
+                        }).then(function (res) { return res.json().catch(function () { return {}; }); }).then(function (data) {
+                            if (data && data.success === false) { failRun(data.message || 'Request failed. Please try again.'); return; }
+                            done++;
+                            updateProgress();
+                            if (done < total) {
+                                setTimeout(function () { sendOne(delay); }, delay);
+                            } else {
+                                finish();
+                            }
+                        }).catch(function (err) {
+                            if (err && err.name === 'AbortError') return;
+                            done++;
+                            updateProgress();
+                            if (done < total && !stopRequested) {
+                                setTimeout(function () { sendOne(delay); }, delay);
+                            } else {
+                                finish();
+                            }
                         });
+                    }).catch(function () {
+                        showStatus('err', 'Captcha verification failed. Please try again.');
+                        setBusy(false);
                     });
+                });
+            }
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                if (running) return;
+
+                var number = (numberInput.value || '').trim();
+                if (!number) {
+                    showStatus('err', 'Please enter the target phone number.');
+                    numberInput.focus();
+                    return;
                 }
+                total = parseInt(countInput.value, 10) || 0;
+                if (total < 1) total = 1;
+                if (total > MAX_COUNT) { total = MAX_COUNT; countInput.value = MAX_COUNT; }
 
-                // Rewarded interstitial
+                var speed = (form.querySelector('input[name="speed"]:checked') || {}).value || 'fast';
+                var delay = SPEED_DELAY[speed] || 1000;
 
-
-
-
-                sendRequest();
-                // Start the first request
-
+                hideStatus();
+                successPanel.classList.remove('show');
+                form.style.display = '';
+                done = 0;
+                stopRequested = false;
+                progress.classList.add('show');
+                updateProgress();
+                setBusy(true);
+                showStatus('ok', 'Test started — sending ' + total + ' request(s)…');
+                sendOne(delay);
             });
 
-            $stopSMS.on('click', function() {
+            stopBtn.addEventListener('click', function () {
                 stopRequested = true;
-                if (xhr) xhr.abort();
-                $stopSMS.addClass('d-none');
-                $form.removeClass('d-none');
-                $progressContainer.addClass('d-none');
-                $progressPanel.removeClass('is-active');
-                location.reload();
+                if (controller) { try { controller.abort(); } catch (e) {} }
+                showStatus('err', 'Stopping… finishing the current request.');
+                setBusy(false);
+                progress.classList.remove('show');
             });
 
-            function updateProgress(count) {
-                var percentage = (count / totalRequests) * 100;
-                $showSuccess.removeClass('d-none');
-                $showSuccess.html('<i class="bi bi-check-circle me-2"></i><strong>' + count +
-                    ' Call requests completed</strong>');
-                $progressBar.css('width', percentage + '%').attr('aria-valuenow', percentage);
-                $progressCount.text(count);
-                $progressPercentage.text(Math.round(percentage) + '%');
-                $progressNote.text(count < totalRequests ?
-                    'Call attempts are being sent one by one.' :
-                    'All call attempts have been finished.');
-            }
-
-            function handleFailure(message) {
-                stopRequested = true;
-                $submitButton.removeAttr('disabled');
-                $submitButtonText.html('Start Again');
-                $startSpinner.addClass('d-none');
-                $stopSMS.addClass('d-none');
-                $showSuccess.removeClass('d-none').removeClass('alert-success').addClass('alert-danger');
-                $showSuccess.html('<i class="bi bi-exclamation-triangle me-2"></i><strong>' + message + '</strong>');
-                $progressNote.text(message);
-            }
-        });
+            document.getElementById('smsb-again').addEventListener('click', function () {
+                successPanel.classList.remove('show');
+                form.style.display = '';
+                form.reset();
+                document.getElementById('smsb-fast').checked = true;
+                modeSms.checked = true;
+                syncMode();
+                hideStatus();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        })();
     </script>
-@stop
+</body>
+</html>

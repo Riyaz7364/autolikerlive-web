@@ -3,7 +3,7 @@
 <head>
 <x-monetag-notification-ad />
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="revisit-after" content="1 days" />
     <meta name="googlebot" content="index, follow" />
     <meta name="robots" content="all" />
@@ -25,9 +25,13 @@
     <meta name="twitter:description" content="@yield('description')" />
     <meta name="twitter:image" content="@hasSection('ogimage')@yield('ogimage')@else{{ asset('images/graphic.webp') }}@endif" />
 
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.webp">
-    <link rel="icon" type="image/webp" sizes="32x32" href="/images/favicons/favicon-32x32.webp">
-    <link rel="icon" type="image/webp" sizes="16x16" href="/images/favicons/favicon-16x16.webp">
+    @hasSection('favicons')
+        @yield('favicons')
+    @else
+        <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.webp">
+        <link rel="icon" type="image/webp" sizes="32x32" href="/images/favicons/favicon-32x32.webp">
+        <link rel="icon" type="image/webp" sizes="16x16" href="/images/favicons/favicon-16x16.webp">
+    @endif
 
     @vite(['resources/js/app.js'])
     @stack('styles')

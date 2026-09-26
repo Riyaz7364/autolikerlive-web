@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ChatReplyMail;
 use App\Models\ChatBlock;
 use App\Models\ChatConversation;
 use App\Models\ChatMessage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 
 class ChatAdminController extends Controller
 {
@@ -47,10 +50,13 @@ class ChatAdminController extends Controller
         $conv->update(['admin_unread' => 0, 'last_admin_seen_at' => now()]);
         $messages = $conv->messages()->orderBy('id')->limit(500)->get();
 
+        $guestOnline = $this->guestOnline($conv);
+
         if (request()->wantsJson()) {
             return response()->json([
                 'ok' => true,
                 'conversation' => $conv,
+                'guest_online' => $guestOnline,
                 'messages' => $messages->map(fn($m) => [
                     'id' => $m->id, 'sender' => $m->sender, 'body' => $m->body,
                     'at' => $m->created_at->toISOString(),
@@ -58,7 +64,7 @@ class ChatAdminController extends Controller
             ]);
         }
 
-        return view('admin.chats.show', compact('conv', 'messages'));
+        return view('admin.chats.show', compact('conv', 'messages', 'guestOnline'));
     }
 
     /** Admin reply — HTTP source of truth, then relay via Node. */
@@ -78,10 +84,13 @@ class ChatAdminController extends Controller
 
         $this->publishToNode($conv, $msg);
 
+        // Guest offline + email on file → also email the reply (3-min cooldown).
+        $emailed = $this->emailGuestIfOffline($conv, $msg);
+
         if ($request->wantsJson()) {
-            return response()->json(['ok' => true, 'message' => ['id' => $msg->id, 'sender' => 'admin', 'body' => $msg->body, 'at' => $msg->created_at->toISOString()]]);
+            return response()->json(['ok' => true, 'emailed' => $emailed, 'message' => ['id' => $msg->id, 'sender' => 'admin', 'body' => $msg->body, 'at' => $msg->created_at->toISOString()]]);
         }
-        return back();
+        return back()->with('success', $emailed ? 'Reply sent + emailed to guest (offline).' : 'Reply sent.');
     }
 
     /** Status control: pending | resolve | close | reopen. */
@@ -166,6 +175,41 @@ class ChatAdminController extends Controller
             'open' => (int) ChatConversation::where('status', 'open')->count(),
             'latest' => $latest,
         ]);
+    }
+
+    /** Guest counts as online if seen in the last 2 minutes (widget polls every ~3s). */
+    public static function guestOnline(ChatConversation $conv): bool
+    {
+        return $conv->last_guest_seen_at && $conv->last_guest_seen_at->gt(now()->subMinutes(2));
+    }
+
+    /**
+     * If the guest is offline and left an email address, email them the admin
+     * reply. 3-minute cooldown per conversation to avoid mail bursts.
+     * Never breaks the reply on mail failure. Returns true when emailed.
+     */
+    private function emailGuestIfOffline(ChatConversation $conv, ChatMessage $msg): bool
+    {
+        if (self::guestOnline($conv)) {
+            return false;
+        }
+        $email = trim((string) $conv->email);
+        if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return false;
+        }
+        $cooldownKey = 'chat_emailed_' . $conv->uuid;
+        if (Cache::has($cooldownKey)) {
+            return false;
+        }
+        try {
+            Mail::to($email)->send(new ChatReplyMail($conv, $msg));
+            Cache::put($cooldownKey, true, now()->addMinutes(3));
+            $conv->messages()->create(['sender' => 'system', 'body' => '📧 Reply emailed to ' . $email . ' (guest offline)']);
+            return true;
+        } catch (\Throwable $e) {
+            \Log::warning('Chat offline-email failed for ' . $conv->uuid . ': ' . $e->getMessage());
+            return false;
+        }
     }
 
     private function publishToNode(ChatConversation $conv, ChatMessage $msg): void

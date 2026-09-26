@@ -207,6 +207,10 @@ $allowedLangs = config('language.allowed_languages');
         Route::put('/admin/promotions/{id}', [\App\Http\Controllers\PromotionController::class, 'update'])->name('admin.promotions.update');
         Route::delete('/admin/promotions/{id}', [\App\Http\Controllers\PromotionController::class, 'destroy'])->name('admin.promotions.destroy');
         Route::post('/admin/promotions/{id}/toggle', [\App\Http\Controllers\PromotionController::class, 'toggle'])->name('admin.promotions.toggle');
+
+        Route::get('/admin/mails', [\App\Http\Controllers\AdminMailController::class, 'index'])->name('admin.mails.index');
+        Route::get('/admin/mails/{box}/{uid}', [\App\Http\Controllers\AdminMailController::class, 'show'])->name('admin.mails.show');
+        Route::delete('/admin/mails/{box}/{uid}', [\App\Http\Controllers\AdminMailController::class, 'destroy'])->name('admin.mails.destroy');
     });
 
 // Temp Mail

@@ -174,6 +174,33 @@
                 </div>
 
 
+                <!-- Back-to-back repeat modal: same link can't be submitted twice in a row -->
+                <div id="repeatModal" style="display:none; position:fixed; inset:0; z-index:2000; align-items:center; justify-content:center; padding:18px; background:rgba(10,25,47,.65);">
+                    <style>
+                        #repeatModal .repeat-card { background:#fff; border-radius:18px; max-width:440px; width:100%; padding:26px 22px 22px; text-align:center; box-shadow:0 24px 60px rgba(0,0,0,.35); position:relative; }
+                        #repeatModal .repeat-icon { width:58px; height:58px; margin:0 auto 12px; border-radius:50%; display:grid; place-items:center; font-size:28px; background:#fff4e0; }
+                        #repeatModal h4 { font-weight:800; font-size:19px; margin-bottom:8px; color:#1c1e21; }
+                        #repeatModal .repeat-ok { display:inline-block; font-size:12px; font-weight:700; color:#2fa84f; background:#e9f8ee; border-radius:999px; padding:4px 12px; margin-bottom:12px; }
+                        #repeatModal p { font-size:14px; color:#4b4f56; margin-bottom:10px; }
+                        #repeatModal .repeat-share { display:flex; gap:10px; margin-top:14px; }
+                        #repeatModal .repeat-btn { flex:1; border:0; border-radius:12px; padding:13px 10px; font-size:15px; font-weight:700; cursor:pointer; }
+                        #repeatModal .repeat-btn-share { background:linear-gradient(120deg,#1877f2,#0d65d9); color:#fff; }
+                        #repeatModal .repeat-btn-ok { background:#f0f2f5; color:#1c1e21; }
+                    </style>
+                    <div class="repeat-card" role="dialog" aria-modal="true" aria-labelledby="repeatModalTitle">
+                        <div class="repeat-icon">⏳</div>
+                        <h4 id="repeatModalTitle">Please wait your turn</h4>
+                        <span class="repeat-ok">✔ This is not an error</span>
+                        <p>This exact link was just submitted and is still the <strong>latest one in the queue</strong>.</p>
+                        <p>Fair-use rule: the same link <strong>can't be added twice in a row</strong>. You can submit this link again <strong>after someone else adds their link</strong>.</p>
+                        <p>💡 <strong>Tip:</strong> share this app with friends — more people joining means your turn comes faster.</p>
+                        <div class="repeat-share">
+                            <button type="button" id="repeatShareBtn" class="repeat-btn repeat-btn-share">📤 Share this app</button>
+                            <button type="button" id="repeatOkBtn" class="repeat-btn repeat-btn-ok">Got it</button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="card mt-4 mb-4 shadow-sm border-0">
                     <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
                         <h4 class="mb-0 text-primary"><i class="bi bi-info-circle me-2"></i> How to Use the Boost Feature</h4>
@@ -271,7 +298,80 @@
         }
         updateTimer();
 
-        $('#boostForm').on('submit', function() {
+        // ---- Fair-queue: same link can't be submitted twice in a row ----
+        var lastBoostLink = @json($lastBoostLink ?? null);
+        var repeatBlockedFromServer = @json(session('boost_repeat_blocked', false));
+
+        function normalizeBoostLink(u) {
+            u = (u || '').trim();
+            if (!u) return '';
+            var h = u.indexOf('#');
+            if (h !== -1) u = u.slice(0, h);
+            try {
+                var p = new URL(u, window.location.origin);
+                var host = p.protocol + '//' + p.hostname.toLowerCase();
+                var port = p.port;
+                if (port && !((p.protocol === 'http:' && port === '80') || (p.protocol === 'https:' && port === '443'))) {
+                    host += ':' + port;
+                }
+                return (host + p.pathname + p.search).replace(/\/+$/, '');
+            } catch (e) {
+                return u.replace(/\/+$/, '');
+            }
+        }
+
+        function openRepeatModal() {
+            var m = document.getElementById('repeatModal');
+            if (m) { m.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+        }
+        function closeRepeatModal() {
+            var m = document.getElementById('repeatModal');
+            if (m) { m.style.display = 'none'; document.body.style.overflow = ''; }
+        }
+
+        function shareBoostApp() {
+            var data = {
+                title: document.title,
+                text: 'Boost your Facebook profile free — join me here:',
+                url: window.location.href
+            };
+            if (navigator.share) {
+                navigator.share(data).catch(function () {});
+            } else if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(data.url).then(function () {
+                    alert('Link copied! Share it with your friends.');
+                }).catch(function () {
+                    prompt('Copy and share this link:', data.url);
+                });
+            } else {
+                prompt('Copy and share this link:', data.url);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var ok = document.getElementById('repeatOkBtn');
+            if (ok) ok.addEventListener('click', closeRepeatModal);
+            var share = document.getElementById('repeatShareBtn');
+            if (share) share.addEventListener('click', shareBoostApp);
+            var modal = document.getElementById('repeatModal');
+            if (modal) modal.addEventListener('click', function (e) {
+                if (e.target === modal) closeRepeatModal();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') closeRepeatModal();
+            });
+            // Server blocked the repeat (redirect back) -> show modal, not just a toast
+            if (repeatBlockedFromServer) openRepeatModal();
+        });
+
+        $('#boostForm').on('submit', function(e) {
+            // Instant check: same link as the latest in the queue -> stop, show modal
+            var current = normalizeBoostLink($('#link').val());
+            if (current && lastBoostLink && current === normalizeBoostLink(lastBoostLink)) {
+                e.preventDefault();
+                openRepeatModal();
+                return false;
+            }
             let btn = $('#submitBtn');
             btn.prop('disabled', true);
             btn.find('.spinner-border').removeClass('d-none');

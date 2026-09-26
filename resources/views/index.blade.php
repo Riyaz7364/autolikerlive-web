@@ -18,20 +18,21 @@
             .oh-hero p.sub { color: #c4cfe3; font-size: 1.02rem; margin: 0 0 1.25rem; }
             .oh-app-row { display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap; }
             .oh-app-row img { width: 56px; height: 56px; border-radius: 14px; }
-            .oh-btn { display: inline-block; background: #1877f2; color: #fff !important; font-weight: 700; padding: 0.7rem 1.4rem; border-radius: 10px; text-decoration: none; }
-            .oh-btn:hover { background: #0d65d9; text-decoration: none; }
+            .oh-btn { display: inline-block; background: #0b5ed7; color: #fff !important; font-weight: 700; padding: 0.7rem 1.4rem; border-radius: 10px; text-decoration: none; }
+            .oh-btn:hover { background: #0a58ca; text-decoration: none; }
             .oh-btn.ghost { background: transparent; border: 1.5px solid #3b82f6; color: #cfe2ff !important; }
-            .oh-hero-art img { width: 100%; height: auto; border-radius: 12px; display: block; }
+            .oh-hero-art img { width: 100%; height: auto; aspect-ratio: 16/9; border-radius: 12px; display: block; background: #111f38; }
             .oh-feats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; padding: 0 2rem 2rem; }
             .oh-feat { background: #111f38; border: 1px solid #22345c; border-radius: 12px; padding: 1.25rem 1.25rem 1.1rem; }
             .oh-feat h2 { color: #fff; font-size: 1.02rem; margin: 0 0 0.5rem; }
-            .oh-feat p { color: #aebad2; font-size: 0.88rem; margin: 0; }
+            .oh-feat p { color: #c3cfe6; font-size: 0.88rem; margin: 0; }
+            .oh-feat p a, .oh-dark-sec p a, .page-header p a { text-decoration: underline; text-underline-offset: 2px; }
             .oh-feat .ic { font-size: 1.5rem; }
             .oh-pills { padding: 0 2rem 2.25rem; }
             .oh-pills h2 { color: #fff; font-size: 1.05rem; margin: 0 0 0.9rem; text-align: center; }
             .oh-pill-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
-            .oh-pill-grid a { background: #1877f2; color: #fff !important; font-size: 0.8rem; font-weight: 600; padding: 0.42rem 0.85rem; border-radius: 6px; text-decoration: none; }
-            .oh-pill-grid a:hover { background: #0d65d9; text-decoration: none; }
+            .oh-pill-grid a { background: #0b5ed7; color: #fff !important; font-size: 0.8rem; font-weight: 600; padding: 0.42rem 0.85rem; border-radius: 6px; text-decoration: none; }
+            .oh-pill-grid a:hover { background: #0a58ca; text-decoration: none; }
             .oh-light { background: #f4f6fb; color: #1a1a2e; border-radius: 16px; padding: 2.25rem 2rem; margin-top: 1.5rem; }
             .oh-light h2 { color: #1a1a2e; font-size: 1.3rem; margin: 0 0 0.4rem; text-align: center; }
             .oh-light p.lead { text-align: center; color: #5b6478; font-size: 0.92rem; margin: 0 0 1.5rem; }
@@ -39,15 +40,15 @@
             .oh-blog-card { background: #fff; border: 1px solid #e3e8f2; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
             .oh-blog-card img { width: 100%; height: 150px; object-fit: cover; display: block; }
             .oh-blog-card .b-body { padding: 0.9rem 1rem 1rem; display: flex; flex-direction: column; gap: 0.4rem; flex: 1; }
-            .oh-blog-card .b-date { font-size: 0.72rem; color: #8a94a8; }
+            .oh-blog-card .b-date { font-size: 0.72rem; color: #5b6478; }
             .oh-blog-card .b-title { font-size: 0.88rem; font-weight: 700; color: #1a1a2e; line-height: 1.35; }
             .oh-blog-card .b-ex { font-size: 0.8rem; color: #5b6478; flex: 1; }
-            .oh-blog-card .b-more { font-size: 0.82rem; font-weight: 700; color: #1877f2; text-decoration: none; }
+            .oh-blog-card .b-more { font-size: 0.82rem; font-weight: 700; color: #0b5ed7; text-decoration: none; }
             .oh-dark-sec { background: #0b1526; color: #e8edf5; border-radius: 16px; padding: 2.25rem 2rem; margin-top: 1.5rem; }
             .oh-dark-sec h2 { color: #fff; font-size: 1.3rem; margin: 0 0 0.6rem; text-align: center; }
             .oh-dark-sec h3 { color: #fff; font-size: 1.02rem; margin: 1.4rem 0 0.5rem; }
-            .oh-dark-sec p, .oh-dark-sec li { color: #aebad2; font-size: 0.9rem; }
-            .oh-dark-sec a { color: #7fb3ff; }
+            .oh-dark-sec p, .oh-dark-sec li { color: #c3cfe6; font-size: 0.9rem; }
+            .oh-dark-sec a { color: #a8c8ff; }
             .oh-dark-sec ul { padding-left: 1.2rem; margin: 0.4rem 0; }
             .oh-video { max-width: 640px; margin: 1rem auto 0; }
             .oh-video button, .oh-video .oh-video-ph { display: block; width: 100%; aspect-ratio: 16/9; border: 0; border-radius: 10px; overflow: hidden; background: #000; cursor: pointer; padding: 0; position: relative; }

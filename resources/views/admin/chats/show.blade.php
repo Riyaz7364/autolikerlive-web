@@ -10,7 +10,10 @@
     <div class="card shadow-sm">
       <div class="card-header d-flex justify-content-between align-items-center">
         <span class="fw-bold">{{ $conv->name }} <small class="text-muted">{{ $conv->email }}</small></span>
-        <span class="badge bg-{{ $conv->status==='open'?'success':($conv->status==='blocked'?'danger':'secondary') }}">{{ $conv->status }}</span>
+        <span>
+          <span class="badge bg-{{ $guestOnline ? 'success' : 'secondary' }}">{{ $guestOnline ? '🟢 Guest online' : '⚪ Guest offline' }}</span>
+          <span class="badge bg-{{ $conv->status==='open'?'success':($conv->status==='blocked'?'danger':'secondary') }}">{{ $conv->status }}</span>
+        </span>
       </div>
       <div id="chat-thread" class="card-body" style="height:420px;overflow-y:auto;background:#f3f5f9">
         @foreach($messages as $m)
@@ -31,6 +34,13 @@
           <button class="btn btn-primary" {{ $conv->status==='blocked' ? 'disabled' : '' }}>Send</button>
         </form>
         <div class="small text-muted mt-1">Shortcuts: type <code>/thanks</code> for a canned reply. Live typing + sound on.</div>
+        @if (!$guestOnline)
+          @if ($conv->email)
+            <div class="alert alert-info py-2 px-3 mt-2 mb-0 small">⚪ Guest is offline — your reply will also be <strong>emailed to {{ $conv->email }}</strong>.</div>
+          @else
+            <div class="alert alert-warning py-2 px-3 mt-2 mb-0 small">⚪ Guest is offline and left <strong>no email</strong> — they won't see your reply until they return to the chat.</div>
+          @endif
+        @endif
       </div>
     </div>
   </div>

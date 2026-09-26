@@ -53,8 +53,8 @@ $shortOf = function ($promo) {
 .promo-theme-fb .promo-btn:hover{background:#e8f0fe;transform:translateY(-1px)}
 .promo-theme-instagram .promo-btn{background:#fff;color:#c13584}
 .promo-theme-instagram .promo-btn:hover{background:#fdf2f8;transform:translateY(-1px)}
-.promo-close{position:absolute;top:10px;right:12px;z-index:2;background:rgba(255,255,255,.15);border:0;color:#fff;
-  width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:15px;line-height:1}
+.promo-close{position:absolute;top:8px;right:10px;z-index:2;background:rgba(255,255,255,.15);border:0;color:#fff;
+  width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:15px;line-height:1}
 .promo-close:hover{background:rgba(255,255,255,.3)}
 .promo-meta{font-size:11px;color:rgba(255,255,255,.75);margin-top:10px;text-align:center}
 @media(max-width:520px){.promo-row{flex-direction:column}.promo-btn{width:100%}}
@@ -65,12 +65,12 @@ $shortOf = function ($promo) {
 .promo-compact-icon img{width:100%;height:100%;object-fit:cover}
 .promo-compact-name{flex:1;min-width:0;font-weight:800;font-size:14px;line-height:1.3}
 .promo-compact-name small{display:block;font-weight:500;font-size:11px;opacity:.8}
-.promo-compact-btn{flex-shrink:0;background:#fff;font-weight:800;font-size:12px;padding:8px 14px;border-radius:10px;text-decoration:none}
+.promo-compact-btn{flex-shrink:0;background:#fff;font-weight:800;font-size:14px;padding:12px 20px;border-radius:10px;text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
 .promo-theme-default .promo-compact-btn{color:#6d28d9}
 .promo-theme-fb .promo-compact-btn{color:#0d47a1}
 .promo-theme-instagram .promo-compact-btn{color:#c13584}
-.promo-compact-close{position:absolute;top:4px;right:6px;background:transparent;border:0;color:rgba(255,255,255,.7);
-  width:20px;height:20px;font-size:12px;cursor:pointer;line-height:1;padding:0}
+.promo-compact-close{position:absolute;top:2px;right:4px;background:transparent;border:0;color:rgba(255,255,255,.7);
+  width:32px;height:32px;font-size:14px;cursor:pointer;line-height:1;padding:0}
 .promo-compact-close:hover{color:#fff}
 </style>
 

@@ -206,6 +206,29 @@ class BoostServiceController extends Controller
             }
         }
 
+        // Fair-queue rule: the same link cannot be submitted twice in a row.
+        // It can be submitted again only after someone else adds their link.
+        $normalizedIncoming = $this->normalizeBoostLink($post_id);
+        if ($normalizedIncoming !== '') {
+            try {
+                $lastCandidates = [];
+                $lastLinkRow = Link::orderByDesc('id')->first();
+                if ($lastLinkRow && trim((string) $lastLinkRow->link) !== '') {
+                    $lastCandidates[] = $this->normalizeBoostLink($lastLinkRow->link);
+                }
+                $lastTimerRow = TiktokTimer::orderByDesc('updated_at')->first();
+                if ($lastTimerRow && trim((string) $lastTimerRow->link) !== '') {
+                    $lastCandidates[] = $this->normalizeBoostLink($lastTimerRow->link);
+                }
+                if (in_array($normalizedIncoming, $lastCandidates, true)) {
+                    toastr()->info('Please wait your turn — you can submit this link again after someone else adds their link.');
+                    return redirect()->back()->withInput()->with('boost_repeat_blocked', true)->with('boost_repeat_link', $post_id);
+                }
+            } catch (\Throwable $e) {
+                \Log::warning('Boost repeat-check skipped: ' . $e->getMessage());
+            }
+        }
+
         // Prepare payload for provider API (avoid reusing variable names like $query)
         $payload = [
             'key' => $key,
@@ -231,6 +254,40 @@ class BoostServiceController extends Controller
         Link::create($data);
         toastr()->success('Promotion started success!');
         return redirect()->back();
+    }
+
+    /**
+     * Normalize a boost link for fair-queue comparison:
+     * trim, drop fragment, lowercase scheme+host, drop default ports,
+     * remove trailing slash. Query string is kept as-is.
+     */
+    private function normalizeBoostLink(?string $url): string
+    {
+        $url = trim((string) $url);
+        if ($url === '') {
+            return '';
+        }
+        $hashPos = strpos($url, '#');
+        if ($hashPos !== false) {
+            $url = substr($url, 0, $hashPos);
+        }
+        $parts = parse_url($url);
+        if ($parts === false || !isset($parts['host'])) {
+            return rtrim($url, '/');
+        }
+        $scheme = isset($parts['scheme']) ? strtolower($parts['scheme']) . '://' : '';
+        $host = strtolower($parts['host']);
+        $port = '';
+        if (isset($parts['port'])) {
+            $isDefault = (($parts['scheme'] ?? '') === 'http' && (int) $parts['port'] === 80)
+                || (($parts['scheme'] ?? '') === 'https' && (int) $parts['port'] === 443);
+            if (!$isDefault) {
+                $port = ':' . $parts['port'];
+            }
+        }
+        $path = $parts['path'] ?? '';
+        $query = (isset($parts['query']) && $parts['query'] !== '') ? '?' . $parts['query'] : '';
+        return rtrim($scheme . $host . $port . $path . $query, '/');
     }
 
     private function saveTimer(Request $request, $link, $wait = 10, $user_id = null)

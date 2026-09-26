@@ -3,7 +3,7 @@
 <style>
 #al-chat-fab{position:fixed;right:20px;bottom:20px;z-index:99990;width:60px;height:60px;border-radius:50%;background:#0d6efd;border:none;cursor:pointer;box-shadow:0 6px 24px rgba(13,110,253,.45);display:flex;align-items:center;justify-content:center}
 #al-chat-fab svg{width:28px;height:28px;fill:#fff}
-#al-chat-live{position:absolute;top:2px;right:2px;min-width:14px;height:14px;border-radius:8px;background:#22c55e;border:2px solid #fff;font-size:9px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;padding:0 3px;animation:al-pulse 1.6s infinite}
+#al-chat-live{position:absolute;top:2px;right:2px;min-width:14px;height:14px;border-radius:8px;background:#15803d;border:2px solid #fff;font-size:9px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;padding:0 3px;animation:al-pulse 1.6s infinite}
 @keyframes al-pulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.6)}70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
 #al-chat-badge{position:absolute;top:-6px;left:-6px;min-width:22px;height:22px;border-radius:11px;background:#dc3545;color:#fff;font-size:12px;font-weight:700;display:none;align-items:center;justify-content:center;padding:0 5px}
 #al-chat-panel{position:fixed;right:20px;bottom:92px;z-index:99990;width:380px;max-width:calc(100vw - 24px);height:520px;max-height:calc(100vh - 120px);background:#fff;border-radius:16px;box-shadow:0 12px 48px rgba(0,0,0,.25);display:none;flex-direction:column;overflow:hidden;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}

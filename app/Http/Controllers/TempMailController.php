@@ -535,13 +535,25 @@ class TempMailController extends Controller
            //return $this->extractMessageData($message, $hash_id, $domainPrefix, $prefix);
 
 
-           $id = $this->decode_hash($hash_id);
+            $id = $this->decode_hash($hash_id);
 
-           $imap_id = substr($hash_id, 45);
+            if ($id === false || !is_numeric($id) || (int) $id < 1) {
+                return $this->expiredMessageResponse($hash_id, 'Invalid or expired message link.');
+            }
 
-           $client = $this->connection();
-           $folder = $client->getFolderByName('INBOX');
-           $message = $folder->query()->getMessageByUid($id);
+            $imap_id = substr($hash_id, 45);
+
+            $client = $this->connection();
+            $folder = $client->getFolderByName('INBOX');
+
+            // The UID may be gone (message deleted/expired between list and open).
+            $exists = $folder->query()->where('UID', (int) $id)->count();
+            if ($exists < 1) {
+                try { $client->disconnect(); } catch (\Throwable $e) {}
+                return $this->expiredMessageResponse($hash_id, 'This message no longer exists. It may have expired or been deleted.');
+            }
+
+            $message = $folder->query()->getMessageByUid($id);
            $email = $message->getAttributes()["to"][0]->mail;
 
            $message->setFlag('Seen');
@@ -573,7 +585,26 @@ class TempMailController extends Controller
    }
 
 
-   function decode_hash($hash)
+    /**
+     * Friendly response for links pointing at messages that are gone
+     * (expired, deleted, or invalid link) — not a system error.
+     */
+    protected function expiredMessageResponse($hash_id, $reason)
+    {
+        return [
+            'subject' => 'Message no longer available',
+            'from' => 'System',
+            'from_email' => 'system@example.com',
+            'to' => '',
+            'receivedAt' => now()->toDateTimeString(),
+            'id' => $hash_id,
+            'html' => false,
+            'content' => $reason . ' Temp-mail messages are automatically removed after a few days.',
+            'attachments' => []
+        ];
+    }
+
+    function decode_hash($hash)
    {
        $id = Hashids::decode($hash);
 
