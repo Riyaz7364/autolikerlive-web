@@ -1,13 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use App\Models\TiktokTimer;
 use App\APIs\InstaApi;
 use App\APIs\UserAgent;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -35,7 +33,7 @@ class InstagramController extends Controller
     public function freeIGViews(Request $request)
     {
         $user = Auth::user();
-        $timeLeft = $this->loadTimer($request);
+        $timeLeft = TiktokTimer::secondsLeft((string) getUserIP($request));
         return view('instagram.free_ig_views', compact(['user', 'timeLeft']));
     }
 
@@ -49,7 +47,7 @@ class InstagramController extends Controller
     {
         $user = Auth::user();
         $services = Service::where('loginType', $user->loginType)->get();
-        $timeLeft = $this->loadTimer($request, $user['uid']);
+        $timeLeft = TiktokTimer::secondsLeft((string) $user['uid']);
         // Latest submitted link per service type (for instant back-to-back repeat warning).
         $lastBoostLinksByType = [];
         try {
@@ -331,7 +329,7 @@ class InstagramController extends Controller
     public function freeLikes(Request $request)
     {
         $user = Auth::user();
-        $timeLeft = $this->loadTimer($request);
+        $timeLeft = TiktokTimer::secondsLeft((string) getUserIP($request));
         if ($user->loginType == 'FB') {
             return redirect()->back();
         }
@@ -341,7 +339,7 @@ class InstagramController extends Controller
     public function freeViews(Request $request)
     {
         $user = Auth::user();
-        $timeLeft = $this->loadTimer($request);
+        $timeLeft = TiktokTimer::secondsLeft((string) getUserIP($request));
         return view('instagram.free_views', compact(['user', 'timeLeft']));
     }
 
@@ -566,118 +564,13 @@ class InstagramController extends Controller
         return redirect(route('autoliker.dashboard'));
     }
 
-    ////  Free Instagram Likes
+    ////  Free Instagram Likes (orders go through the shared Bots\TiktokController@placeViewOrder)
     public function Index(Request $request)
     {
-        $timeRemains = $this->loadTimer($request);
-        return view('free-instagram-likes', ['timeLeft' => $timeRemains]);
-    }
-
-    public function placeViewOrder(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'post_id' => 'required',
+        return view('free-instagram-likes', [
+            'timeLeft' => TiktokTimer::secondsLeft((string) getUserIP($request)),
+            'lastInstagramLink' => TiktokTimer::lastLink(),
         ]);
-
-        if ($validator->fails()) {
-            return redirect()
-                ->back()
-                ->withErrors(['msg' => 'Video Link is Required']);
-        }
-
-        $g_api = 'https://www.google.com/recaptcha/api/siteverify';
-        $response = Http::asForm()->post($g_api, [
-            'secret' => '6LeBNncpAAAAAPY1mjoXSbhMlfQ5aubVIkfbqZdj',
-            'response' => $request['g-recaptcha-response'],
-        ]);
-        $json = $response->json();
-
-        if ($json['success'] == true) {
-            $timeRemains = $this->loadTimer($request);
-            if ($timeRemains > 0) {
-                return redirect()->back()->withErrors('Something is wrong');
-            }
-            $video_id = $request['post_id'];
-
-            $query = [
-                'key' => '1e42426c938c66c9a9823cdaa711b5e8',
-                'action' => 'add',
-                'service' => 82,
-                'link' => $video_id,
-                'quantity' => 10,
-            ];
-
-            $response = $this->curlCall($query);
-
-            // dd($response);
-
-            if (isset($response->error)) {
-                return redirect()
-                    ->back()
-                    ->withErrors(['message' => 'Something wrong contact admin!']);
-            }
-
-            $this->saveTimer($request);
-
-            return redirect()->back()->with('sucess', 'Link Added! Likes will send shortly!');
-        }
-
-        return redirect()->back()->withErrors('Fail to verify ReCaptcha');
     }
 
-    private function loadTimer(Request $request, $userId = null)
-    {
-        $timeRemains = 0;
-        $userIp = $userId ?? getUserIP($request);
-        $timerData = TiktokTimer::where('id', $userIp)->first();
-
-        if ($timerData) {
-            $currentTime = time();
-            $timerExpiration = $timerData->timer;
-
-            // Check if 900 seconds have passed
-            $timeLeft = $currentTime - $timerExpiration;
-            // dd($timeLeft);
-            if ($timeLeft < 0) {
-                $timeRemains = abs($timeLeft);
-            }
-        }
-        return $timeRemains;
-    }
-
-    private function saveTimer(Request $request)
-    {
-        $userIp = getUserIP($request);
-        $currentTime = time();
-        $timerExpiration = $currentTime + 600;
-
-        // Save or update timer data in the database
-        TiktokTimer::updateOrCreate(['id' => $userIp], ['timer' => $timerExpiration]);
-
-        // You can customize the response as needed
-        return response()->json(['message' => 'Timer saved successfully']);
-    }
-
-    private function curlCall($data)
-    {
-        $curl = curl_init();
-        curl_setopt_array($curl, [
-            CURLOPT_URL => 'https://jtsmmpanel.com/api/v2',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => http_build_query($data),
-            CURLOPT_HTTPHEADER => ['Content-Type: application/x-www-form-urlencoded'],
-        ]);
-
-        $response = json_decode(curl_exec($curl));
-
-        curl_close($curl);
-
-        return $response;
-    }
 }

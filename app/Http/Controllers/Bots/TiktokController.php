@@ -3,38 +3,24 @@
 namespace App\Http\Controllers\Bots;
 
 use Carbon\Carbon;
-use App\Models\Post;
-use App\Models\User;
 use RuntimeException;
-use App\APIs\InstaApi;
-use App\Models\UniqueLink;
 use App\Models\TiktokTimer;
 use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Wordpress;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
 class TiktokController extends Controller
 {
 
-    private $api;
-
-    function __construct(InstaApi $instaAPI){
-        $this->api = $instaAPI;
-    }
-
     public function Index(Request $request){
         $timeRemains = $this->loadTimer($request);
         // Latest submitted video in the queue (for instant back-to-back repeat warning).
         $lastTiktokLink = null;
         try {
-            $lastTimer = TiktokTimer::orderByDesc('updated_at')->first();
-            if ($lastTimer && trim((string) $lastTimer->link) !== '') {
-                $lastTiktokLink = $lastTimer->link;
-            }
+            $lastTiktokLink = TiktokTimer::lastLink();
         } catch (\Throwable $e) {
             $lastTiktokLink = null;
         }
@@ -75,7 +61,12 @@ class TiktokController extends Controller
             return redirect()->back()->withErrors(["msg" => "Video Link is Required"]);
         }
 
-        if(preg_match('/https?:\/\/[^\/]+\.tiktok\.com\/([^\/?]+)/', $request['link'], $match)){
+        if($request['type'] == "INSTA_LIKES" || $request['type'] == "INSTA_VIEWS"){
+            $video_code = $this->extractInstagramCode($request['link']);
+            if($video_code === ''){
+                return redirect()->back()->withErrors(["msg" => "Invalid Instagram Link"]);
+            }
+        }elseif(preg_match('/https?:\/\/[^\/]+\.tiktok\.com\/([^\/?]+)/', $request['link'], $match)){
             $video_code = $match[1];
         }elseif(preg_match('/\/(p|reel)\/([A-Za-z0-9_-]+)\/?/',$request['link'], $match)){
             $video_code = $match[2];
@@ -116,13 +107,8 @@ class TiktokController extends Controller
             );
 
 
-            if($request['type'] == "INSTA_LIKES" || $request['type'] == "INSTA_VIEWS"){
+            if($request['type'] == "INSTA_VIEWS"){
                 return redirect()->back()->withErrors("Maintenance - Use app to use this service");
-                $user = Auth::user();
-                $postData = $this->api->getInsta($video_code, 'post');
-                if($postData['data']['user']['id'] != $user['uid']){
-                    return redirect()->back()->withErrors("You can only add a link posted by the ".$user['username']);
-               }
             }
 
             switch ($request['type']) {
@@ -147,10 +133,10 @@ class TiktokController extends Controller
 
                     break;
                 case 'INSTA_LIKES':
-                    $query['service'] = 5393;
+                    $query['service'] = 5269;
                     $query['quantity'] = 10;
                     $wait = 10;
-                    $status = 0;
+                    $status = 1;
 
                     break;
                 case 'INSTA_VIEWS':
@@ -177,35 +163,24 @@ class TiktokController extends Controller
                 return redirect()->back()->withErrors(['message'=> 'Unknwon error']);
             }
 
-            if($request['type'] == 'INSTA_LIKES'){
-                $user = Auth::user();
-                $credits = $user->credits;
-                if($credits < 0){
-                    return redirect()->back()->withErrors(['message'=> 'Not enough credits']);
-                }else{
-                    $user->credits = $user->credits - 1;
-                    $user->save();
-                }
-            }
-
             if(TiktokTimer::where('link', $video_code)
             ->where('updated_at', '>=', Carbon::now()->subMinutes($wait))
             ->exists() || $this->loadTimer($request, $request['telegram_user_id'] ?? null) > 0){
                 return redirect()->back()->withErrors("Please wait $wait minutes before add link again.");
             }
 
-            // Fair-queue rule: the same video can't go twice in a row.
+            // Fair-queue rule: the same link can't go twice in a row.
             // It can be submitted again only after someone else adds their link.
-            $normalizedVideo = $this->normalizeTiktokLink($video_code);
+            $normalizedVideo = $this->normalizeQueueLink($video_code);
             if ($normalizedVideo !== '') {
                 try {
-                    $lastTimer = TiktokTimer::orderByDesc('updated_at')->first();
-                    if ($lastTimer && trim((string) $lastTimer->link) !== ''
-                        && $this->normalizeTiktokLink($lastTimer->link) === $normalizedVideo) {
-                        return redirect()->back()->withInput()->with('tiktok_repeat_blocked', true);
+                    $lastQueued = TiktokTimer::lastLink();
+                    if ($lastQueued !== null && $this->normalizeQueueLink($lastQueued) === $normalizedVideo) {
+                        $repeatKey = $request['type'] == 'INSTA_LIKES' ? 'instagram_repeat_blocked' : 'tiktok_repeat_blocked';
+                        return redirect()->back()->withInput()->with($repeatKey, true);
                     }
                 } catch (\Throwable $e) {
-                    \Log::warning('TikTok repeat-check skipped: ' . $e->getMessage());
+                    \Log::warning('Repeat-check skipped: ' . $e->getMessage());
                 }
             }
 
@@ -253,98 +228,6 @@ class TiktokController extends Controller
     }
 
 
-    // public function createShortLink(Request $request){
-    //     $validator = Validator::make($request->all(),[
-    //         'link' => 'required',
-    //         'type' => 'required',
-    //     ]);
-
-    //     if($validator->fails()){
-    //         return redirect()->back()->withErrors(["msg" => "Video Link is Required"]);
-    //     }
-
-    //     if(preg_match('/https?:\/\/[^\/]+\.tiktok\.com\/([^\/?]+)/', $request['link'], $match)){
-    //         $video_code = $match[1];
-    //     }elseif(preg_match('/\/(p|reel)\/([A-Za-z0-9_-]+)\/?/',$request['link'], $match)){
-    //         $video_code = $match[1];
-    //     }else{
-    //         return redirect()->back()->withErrors(["msg" => "Invalid Video Link"]);
-    //     }
-
-    //     // return redirect()->back()->withErrors(["msg" => "Out of fund - Please come back tommorow"]);
-
-    //     if(TiktokTimer::where('link', $video_code)
-    //     ->where('updated_at', '>=', Carbon::now()->subMinutes(10))
-    //     ->exists()){
-    //         return redirect()->back()->withErrors("Please wait 10 minutes before add same link again.");
-    //     }
-
-
-    //     $session = uniqid();
-
-    //     $provider = "smm";
-    //     $key = "bf7395babfc40228a2ba48e9c107f949";
-    //     $api = "https://smmsocialmedia.in/api/v2";
-    //     switch ($request['type']) {
-    //         case 'TIKTOK_LIKES':
-    //             $path = "free-tiktok-likes";
-    //             $service_id = 0;//4165;//1083;
-    //             $quantity = 10;
-    //             $provider = "jt";
-    //             $key = "fe4f16ef0e4ba44cf2932c1ba1844a663099afb6";
-    //             $api = "https://jtsmmpanel.com/api/v2";
-    //             break;
-    //         case 'FREE_TIKTOK':
-    //             $service_id = 7107;
-    //             $quantity = 100;
-    //             $path = "free-tiktok-views";
-    //             $provider = "smm";
-    //             $key = "fef081d0d82d678f3d64c3a5cc190179";
-    //             $api = "https://smmsocialmedia.in/api/v2";
-    //             break;
-    //         default:
-    //             $path = "free-instagram-likes";
-    //             $service_id = 4594;
-    //             $quantity = 10;
-    //             break;
-    //     }
-
-
-    //     $data = [
-    //         'key' => $key,
-    //         'api' => $api,
-    //         'link' => $request['link'],
-    //         'ip' => getUserIP($request),
-    //         'type' => $request['type'],
-    //         'video_id' => $video_code,
-    //         'path' => $path,
-    //         'from' => "WEB",
-    //         'provider' => $provider,
-    //         'service_id' => $service_id,
-    //         'quantity'  =>  $quantity,
-    //     ];
-
-
-    // 	$tech_post = Post::inRandomOrder()->first();
-    // 	$slug = $tech_post->slug;
-    //     $uniqueLink = new UniqueLink();
-    //     $uniqueLink->session = $session;
-    //     $uniqueLink->user_id = 0;
-    //     $uniqueLink->order_id = 0;
-    //     $uniqueLink->status = 0;
-    //     $uniqueLink->ip = getUserIP($request);
-    //     $uniqueLink->data = $data;
-    //     $uniqueLink->save();
-    //     // $url = "https://href.li/?https://free.webportal.club/session/$session";
-    //     $url = "https://href.li/?https://www.autolikerlive.com/tech/$slug?usg=$session";
-
-    //     $getShortJson = Http::get("https://pub.webportal.club/api?api=80473e335f437be37b9dc0ff6a88e216d36e9af2&url=".$url);
-    //     $shortLink = $getShortJson->json()['shortenedUrl'];
-
-    //     return redirect($shortLink);
-    // }
-
-
     public function checkOrder(Request $request){
         $validator = Validator::make($request->all(),[
             'id' => 'required',
@@ -366,34 +249,42 @@ class TiktokController extends Controller
 
 
     private function loadTimer(Request $request, $user_id = null){
-        $timeRemains = 0;
-        $userIp = $user_id ?? getUserIP($request);
-        $timerData = TiktokTimer::where('id', $userIp)->first();
-
-        if ($timerData) {
-            $currentTime = time();
-
-
-            $timerExpiration = $timerData->timer;
-
-            // Check if 900 seconds have passed
-            $timeLeft = ($currentTime - $timerExpiration);
-
-            // dd($timeLeft);
-            if ($timeLeft < 0) {
-                $timeRemains = abs($timeLeft);
-            }
-        }
-
-        return $timeRemains;
+        return TiktokTimer::secondsLeft((string) ($user_id ?? getUserIP($request)));
     }
 
     /**
-     * Normalize a TikTok video identifier for fair-queue comparison:
+     * Pull the comparable identifier out of an Instagram URL:
+     * instagram.com/p/<code>, /reel/<code>, /tv/<code> or a bare shortcode.
+     */
+    private function extractInstagramCode($link): string
+    {
+        $link = trim((string) $link);
+        if ($link === '') {
+            return '';
+        }
+
+        if (preg_match('#instagram\.com/(?:[^/?]+/)?(?:p|reel|reels|tv|share)/([A-Za-z0-9_-]+)#i', $link, $m)) {
+            return $m[1];
+        }
+
+        if (preg_match('#^(?:https?://)?(?:www\.)?instagram\.com/?([A-Za-z0-9_-]{5,})/?#i', $link, $m)) {
+            return $m[1];
+        }
+
+        // Bare shortcode pasted on its own.
+        if (preg_match('#^[A-Za-z0-9_-]{5,}$#', $link)) {
+            return $link;
+        }
+
+        return '';
+    }
+
+    /**
+     * Normalize a submitted link identifier for fair-queue comparison:
      * trim, drop fragment, lowercase scheme+host when URL-like,
      * remove trailing slash. Query string is kept as-is.
      */
-    private function normalizeTiktokLink(?string $url): string
+    private function normalizeQueueLink(?string $url): string
     {
         $url = trim((string) $url);
         if ($url === '') {
@@ -416,16 +307,7 @@ class TiktokController extends Controller
 
     private function saveTimer(Request $request, $link, $wait = 10, $user_id = null)
     {
-        $userIp = $user_id ?? getUserIP($request);
-        $currentTime = time();
-        $timerExpiration = $currentTime + ($wait*60);
-
-        // Save or update timer data in the database
-        TiktokTimer::updateOrCreate(
-            ['id' => $userIp],
-            ['timer' => $timerExpiration, 'link' => $link],
-
-        );
+        TiktokTimer::record((string) ($user_id ?? getUserIP($request)), (string) $link, (int) $wait);
 
         // You can customize the response as needed
         return response()->json(['message' => 'Timer saved successfully']);

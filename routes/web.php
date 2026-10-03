@@ -372,7 +372,7 @@ $allowedLangs = config('language.allowed_languages');
 
 
     Route::get('/free-instagram-likes', [InstagramController::class, 'Index'])->name("free-instagram-likes");
-    Route::post('/send-instagram-likes', [InstagramController::class, 'placeViewOrder'])->name("free-instagram-likes-post");
+    Route::post('/send-instagram-likes', [TiktokController::class, 'placeViewOrder'])->name("free-instagram-likes-post");
 
     // SMS Bomber WEB
     Route::get('/sms-bomber', [SMSbomberController::class, 'index'])->name("sms-bomber");
@@ -383,7 +383,6 @@ $allowedLangs = config('language.allowed_languages');
 
 
     Route::prefix('submit')->group(function () {
-        Route::post('free-service', [TiktokController::class, 'createShortLink'])->name('submit.free-service');
         Route::post('check-order', [TiktokController::class, 'checkOrder'])->name('submit.check-order');
     });
 
