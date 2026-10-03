@@ -27,6 +27,25 @@
     @if ($error)
         <div class="alert alert-danger">{{ $error }}</div>
     @elseif ($paginator)
+        @if (!empty($skipped))
+            <div class="alert alert-warning">
+                {{ $skipped }} message(s) could not be parsed (malformed headers) and were skipped.
+                @if (!empty($skippedUids))
+                    <ul class="mb-0 mt-2">
+                        @foreach ($skippedUids as $skippedUid)
+                            <li class="d-flex align-items-center gap-2">
+                                <span>UID {{ $skippedUid }}</span>
+                                <form method="POST" action="{{ route('admin.mails.destroy', ['box' => $boxKey, 'uid' => $skippedUid]) }}" onsubmit="return confirm('Delete this unreadable message (UID {{ $skippedUid }})?');" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                                </form>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
+        @endif
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <span><strong>{{ $paginator->total() }}</strong> message(s) <span class="text-muted small">(last 90 days, newest first)</span></span>

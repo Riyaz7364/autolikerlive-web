@@ -14,4 +14,14 @@ class Listing extends Model
     public $timestamps = false;
 
     protected $fillable = ['name', 'post_id', 'type'];
+
+    protected static function booted(): void
+    {
+        $flush = function () {
+            \Illuminate\Support\Facades\Cache::forget('listings_all_mini');
+            \Illuminate\Support\Facades\Cache::forget('homepage_linked_posts_v1');
+        };
+        static::saved($flush);
+        static::deleted($flush);
+    }
 }

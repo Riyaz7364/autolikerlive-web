@@ -5,6 +5,11 @@
 @section('keywords', 'auto liker live, autolikerlive, auto liker, facebook auto liker, facebook auto followers, instagram auto follow, fb liker 1000 likes, free facebook liker, auto react facebook, facebook auto followers, fb auto liker, facebook page liker')
 
 @section('content')
+@if (!isset($keyword) || !$keyword)
+@push('styles')
+<link rel="preload" as="image" href="{{ url('/storage/app-icons/home_promo.webp') }}" fetchpriority="high">
+@endpush
+@endif
 <div class="pb-20">
     @if (!isset($keyword) || !$keyword)
         {{-- ============ Old-style homepage (dark, 2025 restoration) ============ --}}
@@ -21,7 +26,7 @@
             .oh-btn { display: inline-block; background: #0b5ed7; color: #fff !important; font-weight: 700; padding: 0.7rem 1.4rem; border-radius: 10px; text-decoration: none; }
             .oh-btn:hover { background: #0a58ca; text-decoration: none; }
             .oh-btn.ghost { background: transparent; border: 1.5px solid #3b82f6; color: #cfe2ff !important; }
-            .oh-hero-art img { width: 100%; height: auto; aspect-ratio: 16/9; border-radius: 12px; display: block; background: #111f38; }
+            .oh-hero-art img { width: 100%; height: auto; aspect-ratio: 3/2; border-radius: 12px; display: block; background: #111f38; }
             .oh-feats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; padding: 0 2rem 2rem; }
             .oh-feat { background: #111f38; border: 1px solid #22345c; border-radius: 12px; padding: 1.25rem 1.25rem 1.1rem; }
             .oh-feat h2 { color: #fff; font-size: 1.02rem; margin: 0 0 0.5rem; }
@@ -74,13 +79,13 @@
                     <h1>Autoliker Live</h1>
                     <p class="sub">Download Autoliker Live: Get Auto Followers and Auto Likes on Your Account for Free!</p>
                     <div class="oh-app-row">
-                        <img src="{{ asset('images/icon.webp') }}" alt="Autoliker Live app icon" width="56" height="56">
+                        <img src="{{ asset('images/icon.webp') }}" alt="Autoliker Live app icon" width="56" height="56" decoding="async" fetchpriority="low">
                         <a href="{{ url('/download') }}" class="oh-btn">⬇ Download APP</a>
                         <a href="{{ url('auto-liker-1000-likes') }}" class="oh-btn ghost">Get 1000 Free Likes</a>
                     </div>
                 </div>
                 <div class="oh-hero-art">
-                    <img src="{{ url('/storage/app-icons/home_promo.webp') }}" alt="Autoliker Live - Facebook auto followers and auto likes" loading="eager" fetchpriority="high">
+                    <img src="{{ url('/storage/app-icons/home_promo.webp') }}" alt="Autoliker Live - Facebook auto followers and auto likes" width="768" height="512" loading="eager" fetchpriority="high" decoding="async">
                 </div>
             </div>
 
@@ -277,7 +282,7 @@
                 <a href="{{ route('game.show', $game->slug) }}" class="og-card">
                     <div class="og-img" style="background: linear-gradient(135deg, {{ $game->bg_color ?? '#1a1a2e' }}, {{ $game->bg_color ?? '#16213e' }}); overflow:hidden;">
                         @if ($game->thumbnail)
-                            <img src="{{ Storage::disk('public')->url($game->thumbnail) }}" alt="{{ $game->title }}" style="width:100%;height:100%;object-fit:cover;">
+                            <img src="{{ Storage::disk('public')->url($game->thumbnail) }}" alt="{{ $game->title }}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">
                         @else
                             @switch($game->slug)
                                 @case('which-bollywood-star-are-you') 🎬 @break

@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.autoliker')
 
 @section('title', 'Free Likes - Autolikerlive.com')
 @section('description',
@@ -11,248 +11,111 @@
 @endsection
 
 @section('content')
-    <main class="bg-light">
-        <div class="container mt-5">
-            <div class="row">
-                <h1 class="text-center">Free IG Likes</h1>
+    <h1 class="alk-page-title">Free IG Likes</h1>
 
+    @livewire('instagram.credits-component')
 
-                <x-instagram.logout :username="$user['username']" :logintype="$user['loginType']"></x-instagram.logout>
+    <section class="alk-card" aria-label="Free Instagram likes form">
+        <div class="alk-card-title"><i class="bi bi-heart-fill"></i> {{ __('messages.freeService.title', ['amount' => '10', 'service' => 'Instagram Likes', 'timer' => '5']) }}</div>
+        <p class="alk-muted">
+            {!! __('messages.freeService.subTitle', [
+                'service' => 'Instagram',
+                'amount' => '10',
+                'type' => 'Likes',
+                'timer' => '5',
+            ]) !!}
+        </p>
+        <p class="fw-bold text-danger mt-2">Cost 1 credit</p>
 
-                <x-instagram.options :logintype="$user['loginType']" :earntype="$user['earnType']"></x-instagram.options>
-                @livewire('instagram.credits-component')
+        <form method="post" action="{{ route('free-tiktok-views-post') }}" id="form">
+            @csrf
+            <input type="hidden" name="type" value="INSTA_LIKES">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        <li>{{ $errors->first() }}</li>
+                    </ul>
+                </div>
+            @endif
+            <div class="alk-field-row">
+                <input type="text" name="link" class="alk-input"
+                    placeholder="Paste your video link" aria-label="Paste your video link"
+                    aria-describedby="basic-addon2" inputmode="url" autocomplete="off">
+                <button class="alk-btn alk-btn-primary" id="sendViewsBtn" type="submit">Send Likes</button>
+            </div>
+            <div class="alk-turnstile">
+                <div class="cf-turnstile" data-sitekey="0x4AAAAAABUvrkxDbOApMo7H"></div>
+            </div>
+        </form>
 
+        <div class="mt-3 text-center">
+            <span id="countdown" class="alk-countdown">Ready</span>
+        </div>
 
-                <div class="mail-wrapper">
-                    <div class="mail-selection mb-3">
-                        <div class="border-dashes p-3 justify-content-center">
-                            <h1 class="h5 justify-content-center text-center">
-                                {{ __('messages.freeService.title', ['amount' => '10', 'service' => 'Instagram Likes', 'timer' => '5']) }}
-                            </h1>
-                            <h2 class="h6 text-center text-white justify-content-center p-3 text-muted">
-                                {!! __('messages.freeService.subTitle', [
-                                    'service' => 'Instagram',
-                                    'amount' => '10',
-                                    'type' => 'Likes',
-                                    'timer' => '5',
-                                ]) !!}</h2>
-                            <h3 class="text-danger">Cost 1 credit</h3>
-                            <form method="post" action="{{ route('free-tiktok-views-post') }}" id="form">
-                                @csrf
-                                <input type="hidden" name="type" value="INSTA_LIKES">
-                                @if ($errors->any())
-                                    <div class="alert alert-danger">
-                                        <ul>
-                                            <li>{{ $errors->first() }}</li>
-                                        </ul>
-                                    </div>
-                                @endif
-                                <div class="mb-3 flex gap-2 items-start">
-                                    <input type="text" name="link" class="border rounded px-3 py-2 w-full"
-                                        placeholder="Paste your video link" aria-label="Paste your video link"
-                                        aria-describedby="basic-addon2">
-
-                                    <div>
-                                        <button class="inline-flex items-center gap-2 bg-[var(--fb-blue)] text-white px-4 py-2 rounded-md font-semibold" id="sendViewsBtn" type="submit">Send Views</button>
-                                    </div>
-                                </div>
-                                <div class="cf-turnstile" data-sitekey="0x4AAAAAABUvrkxDbOApMo7H"></div>
-
-                            </form>
-                                <div class="flex flex-wrap pt-4 px-5 text-center">
-                                {!! getIcon('instagram', 'feature p-1 tiktokIcon') !!}
-                                {!! getIcon('instagram', 'feature p-2 tiktokIcon') !!}
-                                {!! getIcon('instagram', 'feature p-3 tiktokIcon') !!}
-
-                                <div id="countdown" class="col bg-green-600 text-white rounded px-4 py-2 uppercase text-center">
-                                    Ready
-                                </div>
-
-
-
+        @if (Session::has('sucess'))
+            <div class="alert alert-success mt-3">
+                <ul>
+                    <li>{{ Session::get('sucess') }}</li>
+                </ul>
+            </div>
+            <!-- Share Modal -->
+            <div class="modal fade show alk-share-modal" id="shareModal" tabindex="-1"
+                aria-labelledby="shareModalLabel" style="display: block;" aria-modal="true"
+                role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-dark">Thank You for Your Support! ❤️</h5>
+                            <button type="button" class="btn-close"
+                                onclick="document.querySelector('#shareModal').classList.remove('show')"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <p>We appreciate you using our service! Please share and help us grow. 🙏
+                            </p>
+                            <p class="h4 text-danger">(っ◔◡◔)っ ♥ share ♥</p>
+                            <!-- Social Share Buttons -->
+                            <div class="alk-share-grid">
+                                <a href="#" target="_blank" id="facebookShare" class="alk-mini-btn" style="background:#1877F2;color:#fff;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">Facebook</a>
+                                <a href="#" target="_blank" id="twitterShare" class="alk-mini-btn" style="background:#0ea5e9;color:#fff;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">Twitter</a>
+                                <a href="#" target="_blank" id="whatsappShare" class="alk-mini-btn" style="background:#16a34a;color:#fff;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">WhatsApp</a>
+                                <a href="#" target="_blank" id="telegramShare" class="alk-mini-btn" style="background:#e2e8f0;color:#000;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">Telegram</a>
+                                <a href="#" target="_blank" id="pinterestShare" class="alk-mini-btn" style="background:#dc2626;color:#fff;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">Pinterest</a>
+                                <a href="#" target="_blank" id="redditShare" class="alk-mini-btn" style="background:#facc15;color:#000;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">Reddit</a>
                             </div>
-
-                            @if (Session::has('sucess'))
-                                <div class="alert alert-success">
-                                    <ul>
-                                        <li>{{ Session::get('sucess') }}</li>
-                                    </ul>
-                                </div>
-                                <!-- Share Modal -->
-                                <div class="modal fade show" id="shareModal" tabindex="-1"
-                                    aria-labelledby="shareModalLabel" style="display: block;" aria-modal="true"
-                                    role="dialog">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title text-dark">Thank You for Your Support! ❤️</h5>
-                                                <button type="button" class="btn-close"
-                                                    onclick="document.querySelector('#shareModal').classList.remove('show')"></button>
-                                            </div>
-                                            <div class="modal-body text-center">
-                                                <p>We appreciate you using our service! Please share and help us grow. 🙏
-                                                </p>
-                                                <p class="h4 text-danger">(っ◔◡◔)っ ♥ share ♥</p>
-                                                <!-- Social Share Buttons -->
-                                                <div class="flex flex-wrap justify-center gap-2">
-                                                    <a href="#" target="_blank" id="facebookShare" class="inline-flex items-center gap-2 bg-[var(--fb-blue)] text-white px-3 py-2 rounded-md">Facebook</a>
-                                                    <a href="#" target="_blank" id="twitterShare" class="inline-flex items-center gap-2 bg-sky-500 text-white px-3 py-2 rounded-md">Twitter</a>
-                                                    <a href="#" target="_blank" id="whatsappShare" class="inline-flex items-center gap-2 bg-green-600 text-white px-3 py-2 rounded-md">WhatsApp</a>
-                                                    <a href="#" target="_blank" id="telegramShare" class="inline-flex items-center gap-2 bg-gray-200 text-black px-3 py-2 rounded-md">Telegram</a>
-                                                    <a href="#" target="_blank" id="pinterestShare" class="inline-flex items-center gap-2 bg-red-600 text-white px-3 py-2 rounded-md">Pinterest</a>
-                                                    <a href="#" target="_blank" id="redditShare" class="inline-flex items-center gap-2 bg-yellow-400 text-black px-3 py-2 rounded-md">Reddit</a>
-                                                    <a href="#" target="_blank" id="snapchatShare" class="inline-flex items-center gap-2 bg-gray-800 text-white px-3 py-2 rounded-md">Snapchat</a>
-                                                </div>
-                                                <a href="https://telegram.me/autolikerlive" class="inline-flex items-center gap-2 mt-5 bg-[#0088cc] text-white rounded px-3 py-2 font-semibold">{!! getIcon('telegram', 'telegramIcon') !!} Join Telegram Channel</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
+                            <a href="https://telegram.me/autolikerlive" class="alk-btn mt-3" style="background:#0088cc;color:#fff;min-height:48px;font-size:14px;">{!! getIcon('telegram', 'telegramIcon') !!} Join Telegram Channel</a>
                         </div>
                     </div>
-
-                    <div class="ad ad-250x250">
-                        <!-- Temp Mail Right adsbygoogle -->
-
-                    </div>
-                </div>
-                <div class="temp-emailbox-text text-center my-2">
-                    <p class="text-dark pt-2">I Understand and Agree with <a class="link"
-                            href="{{ url('privacy') }}">Privacy Policy</a> and <a class="link"
-                            href="{{ url('terms') }}">Terms of Uses</a></p>
                 </div>
             </div>
+        @endif
 
-            <section class="bg-light" id="no-ads-in-steps">
+        <p class="alk-muted text-center mt-3" style="font-size:13px;">I Understand and Agree with <a class="link"
+                href="{{ url('privacy') }}">Privacy Policy</a> and <a class="link"
+                href="{{ url('terms') }}">Terms of Uses</a></p>
+    </section>
 
-                <div class="text-center p-5">
-                    <h2 class="text-dark">{{ __('messages.freeService.howItsWork') }}</h2>
-                    <p>{{ __('messages.freeService.howItsWork_p1', ['service' => 'Instagram Likes', 'timer' => '5', 'amount' => '10']) }}
-                    </p>
-                </div>
-                <div class="row">
-                    <div class="col-md-3 col-lg-3 col-sm-12 card border border-white" style="background:#F5F2F2">
-                        <div class="card-body m-3">
-                            <h1 class="card-title"
-                                style="
-                                color: #DADADA;
-                                font-family: Helvetica, Sans-serif;
-                                font-size: 85px;
-                                font-weight: 600;">
-                                01.</h1>
-                            <h6 class="card-subtitle mb-2"
-                                style="
-                  color: #000000;
-                  font-family: Roboto, Sans-serif;
-                  font-size: 18px;
-                  font-weight: 700;
-                  line-height: 10px;">
-                                {{ __('messages.freeService.tour.step1') }}</h6>
-                            <p class="card-text">
-                                {{ __('messages.freeService.tour.step1_p1', ['service' => 'Likes', 'service' => 'Instagram video']) }}
-                            </p>
-                        </div>
-                    </div>
+    <div class="alk-ad" aria-label="Advertisement">
+        <x-ads.in-article />
+    </div>
 
-                    <div class="col-md-3 col-lg-3 col-sm-12 card border border-white" style="background:#F5F2F2">
-                        <div class="card-body m-3">
-                            <h1 class="card-title"
-                                style="
-                                color: #DADADA;
-                                font-family: Helvetica, Sans-serif;
-                                font-size: 85px;
-                                font-weight: 600;">
-                                02.</h1>
-                            <h6 class="card-subtitle mb-2"
-                                style="
-                  color: #000000;
-                  font-family: Roboto, Sans-serif;
-                  font-size: 18px;
-                  font-weight: 700;
-                  line-height: 10px;">
-                                {{ __('messages.freeService.tour.step2') }}</h6>
-                            <p class="card-text">
-                                {{ __('messages.freeService.tour.step2_p1', ['service' => 'Instagram video']) }}</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-lg-3 col-sm-12 card border border-white" style="background:#F5F2F2">
-                        <div class="card-body m-3">
-                            <h1 class="card-title"
-                                style="
-                                color: #DADADA;
-                                font-family: Helvetica, Sans-serif;
-                                font-size: 85px;
-                                font-weight: 600;">
-                                03.</h1>
-                            <h6 class="card-subtitle mb-2"
-                                style="
-                  color: #000000;
-                  font-family: Roboto, Sans-serif;
-                  font-size: 18px;
-                  font-weight: 700;
-                  line-height: 10px;">
-                                {{ __('messages.freeService.tour.step3') }}</h6>
-                            <p class="card-text">{{ __('messages.freeService.tour.step3_p1') }} </p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-lg-3 col-sm-12 card border border-white" style="background:#F5F2F2">
-                        <div class="card-body m-3">
-                            <h1 class="card-title"
-                                style="
-                                color: #DADADA;
-                                font-family: Helvetica, Sans-serif;
-                                font-size: 85px;
-                                font-weight: 600;">
-                                04.</h1>
-                            <h6 class="card-subtitle mb-2"
-                                style="
-                  color: #000000;
-                  font-family: Roboto, Sans-serif;
-                  font-size: 18px;
-                  font-weight: 700;
-                  line-height: 10px;">
-                                {{ __('messages.freeService.tour.step4', ['type' => 'Likes']) }}</h6>
-                            <p class="card-text">{{ __('messages.freeService.tour.step4_p1', ['type' => 'Likes']) }}</p>
-                        </div>
-                    </div>
+    <section class="alk-card" aria-label="How it works">
+        <div class="alk-card-title"><i class="bi bi-info-circle"></i> {{ __('messages.freeService.howItsWork') }}</div>
+        <p class="alk-muted">{{ __('messages.freeService.howItsWork_p1', ['service' => 'Instagram Likes', 'timer' => '5', 'amount' => '10']) }}</p>
+        <ol class="alk-steps">
+            <li><div><strong>{{ __('messages.freeService.tour.step1') }}</strong><br>{{ __('messages.freeService.tour.step1_p1', ['service' => 'Likes', 'service' => 'Instagram video']) }}</div></li>
+            <li><div><strong>{{ __('messages.freeService.tour.step2') }}</strong><br>{{ __('messages.freeService.tour.step2_p1', ['service' => 'Instagram video']) }}</div></li>
+            <li><div><strong>{{ __('messages.freeService.tour.step3') }}</strong><br>{{ __('messages.freeService.tour.step3_p1') }}</div></li>
+            <li><div><strong>{{ __('messages.freeService.tour.step4', ['type' => 'Likes']) }}</strong><br>{{ __('messages.freeService.tour.step4_p1', ['type' => 'Likes']) }}</div></li>
+        </ol>
+    </section>
 
-                </div>
-
-                <div class="row text-center p-5">
-
-                    <div class="col-md-4">
-                        <i class="bi bi-balloon-heart-fill infoicon"></i>
-                        <h4>{{ __('messages.freeService.howItsWork2') }}</h4>
-                        <p>
-                            {{ __('messages.freeService.howItsWork2_p1', [
-                                'service_name' => 'Instagram video',
-                                'service' => 'Instagram Likes',
-                                'timer' => '5',
-                            ]) }}
-                        </p>
-                    </div>
-                    <div class="col-md-4">
-                        <i class="bi bi-unlock-fill infoicon"></i>
-                        <h4>{{ __('messages.freeService.whyChooseUs') }}</h4>
-                        <p>
-                            {{ __('messages.freeService.whyChooseUs_p1', ['service_name' => 'Instagram']) }}
-                        </p>
-                    </div>
-                    <div class="col-md-4">
-                        <i class="bi bi-trophy-fill infoicon"></i>
-                        <h4>{{ __('messages.freeService.ourServices') }}</h4>
-                        <p>
-                            {!! __('messages.freeService.ourServices_p1', ['service' => 'Instagram Likes']) !!}
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-        </div>
-    </main>
-
-
+    <section class="alk-card" aria-label="Why choose us">
+        <ol class="alk-steps">
+            <li><div><strong>{{ __('messages.freeService.howItsWork2') }}</strong><br>{{ __('messages.freeService.howItsWork2_p1', ['service_name' => 'Instagram video', 'service' => 'Instagram Likes', 'timer' => '5']) }}</div></li>
+            <li><div><strong>{{ __('messages.freeService.whyChooseUs') }}</strong><br>{{ __('messages.freeService.whyChooseUs_p1', ['service_name' => 'Instagram']) }}</div></li>
+            <li><div><strong>{{ __('messages.freeService.ourServices') }}</strong><br>{!! __('messages.freeService.ourServices_p1', ['service' => 'Instagram Likes']) !!}</div></li>
+        </ol>
+    </section>
 
     <script data-cfasync="false">
         // Assuming $timeLeft is the total seconds

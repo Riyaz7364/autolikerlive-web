@@ -128,6 +128,9 @@ class ChatController extends Controller
     /** Fallback polling (used when WS unreachable) + marks admin messages read. */
     public function poll(Request $request)
     {
+        if (!config('chat.enabled')) {
+            return response()->json(['ok' => false], 503);
+        }
         $data = $request->validate([
             'uuid' => 'required|uuid',
             'token' => 'required|string|max:128',
@@ -159,6 +162,9 @@ class ChatController extends Controller
     /** Lightweight online check for the widget (drives online vs offline form). */
     public function status()
     {
+        if (!config('chat.enabled')) {
+            return response()->json(['ok' => false], 503);
+        }
         return response()->json(['ok' => true, 'admin_online' => $this->adminOnline()]);
     }
 

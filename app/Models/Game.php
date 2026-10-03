@@ -24,6 +24,15 @@ class Game extends Model
         'status',
     ];
 
+    protected static function booted(): void
+    {
+        $flush = function () {
+            \Illuminate\Support\Facades\Cache::forget('games_published');
+        };
+        static::saved($flush);
+        static::deleted($flush);
+    }
+
     public function layers(): HasMany
     {
         return $this->hasMany(GameLayer::class)->orderBy('sort_order');

@@ -1,91 +1,92 @@
-@extends('layouts.master')
+@extends('layouts.autoliker')
 
 @section('title', 'Dashboard '.$user['loginType'])
 @section('description', '')
 
-{{-- Auto ads are loaded once via layouts.master (<x-auto-ads />) --}}
+{{-- Auto ads are loaded via layouts.autoliker (top + anchor units) --}}
 
 @section('content')
-    <main class="bg-light">
-        <div class="container mt-5">
-            <div class="row">
-                <h1 class="text-center text-dark">Dashboard <span class="border rounded text-danger">{{ $user['loginType'] }}</span>
-                </h1>
+@php
+    $loginType = data_get($user, 'loginType', data_get($user, 'login_type', 'FB'));
+    $isFB = $loginType === 'FB';
+    $profilePic = url('storage/profiles/profile_' . data_get($user, 'uid')) . '.jpeg';
+@endphp
+    <h1 class="alk-page-title">Dashboard</h1>
 
-
-                <x-instagram.logout :username="$user['username']" :logintype="$user['loginType']"></x-instagram.logout>
-
-                <x-instagram.options :logintype="$user['loginType']" :earntype="$user['earnType']"></x-instagram.options>
-                {{-- <x-instagram.credits :credits="$user['credits']"></x-instagram.credits> --}}
-
-
-
-                <div class="card mb-3 mainb">
-                    <div class="card-body row">
-                        <div class="col-sm-12 col-xm-12 col-sm-12 col-md-3 col-lg-2">
-                            <img class="pic" src="{{ url('storage/profiles/profile_' . $user['uid']) }}.jpeg"
-                                alt="user image"> <br>
-
-                        </div>
-                        <div class="col-sm-12 col-xm-12 col-sm-12 col-md-9 col-lg-10">
-                            @if ($user['loginType'] == 'FB')
-                            <div class="facebook-btn text-center">Facebook Auto Liker</div>
-                        @else
-                            <div class="instgram-btn text-center text-white">Instagram Auto Liker</div>
-                        @endif
-                            <table class="table border-0">
-
-                                <tr>
-                                    <td>Name:</td>
-                                    <td>{{ $user['name'] }} | <span
-                                            class="text-danger fw-bold">{{ '@' . $user['username'] }}</span></td>
-                                </tr>
-                                @if ($user['bio'])
-                                    <tr>
-                                        <td>Bio:</td>
-                                        <td>{{ $user['bio'] }}</td>
-                                    </tr>
-                                @endif
-                                @if ($user['followings'])
-                                    <tr>
-                                        <td>followings:</td>
-                                        <td>{{ $user['followings'] }}</td>
-                                    </tr>
-                                @endif
-                                <tr>
-                                    <td>followers:</td>
-                                    <td>{{ $user['followers'] }}</td>
-                                </tr>
-                            </table>
-                        </div>
-
-                        <div class="card border-primary mb-3">
-                            <div class="card-body">
-                                <p class="fs15">If you have any bugs to report or any suggestions, please let us know!</p>
-                                <a href="/contact" class="btn btn-primary btn-sm fs15">SEND FEEDBACK</a>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="card mt-4 mb-4 shadow-sm border-0">
-                    <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
-                        <h4 class="mb-0 text-primary"><i class="bi bi-info-circle me-2"></i> Welcome to Your Dashboard</h4>
-                    </div>
-                    <div class="card-body text-secondary">
-                        <p>Your dashboard is the central hub for managing your account and activities on AutolikerLive.</p>
-                        <ul class="list-group list-group-flush mb-3 rounded">
-                            <li class="list-group-item bg-light border-0 mb-1"><strong>Profile Overview:</strong> View your connected account details, including your username, bio, followers, and followings.</li>
-                            <li class="list-group-item bg-light border-0 mb-1"><strong>Navigation:</strong> Use the action buttons above to start a new promotion, view your existing orders, or log out of your current session.</li>
-                            <li class="list-group-item bg-light border-0"><strong>Feedback & Support:</strong> We value your input! Use the 'Send Feedback' button if you encounter any issues or have suggestions to improve the platform.</li>
-                        </ul>
-                        <div class="alert alert-info mb-0 border-0">
-                            <strong>Note:</strong> Always ensure you are logged into the correct account before starting any promotions to avoid sending reactions to the wrong profile.
-                        </div>
-                    </div>
-                </div>
+    {{-- Profile hero --}}
+    <section class="alk-hero" aria-label="Profile overview">
+        <div class="alk-hero-top">
+            <img class="alk-hero-pic" src="{{ $profilePic }}" alt="Profile picture of {{ data_get($user, 'username') }}"
+                loading="lazy" onerror="this.onerror=null;this.src='/storage/profiles/dummy.png';">
+            <div style="min-width:0;">
+                <div class="alk-hero-name">{{ data_get($user, 'name') }}</div>
+                <div class="alk-hero-sub">{{ '@' . data_get($user, 'username') }}</div>
+                <span class="alk-hero-pill">{{ $isFB ? 'Facebook Auto Liker' : 'Instagram Auto Liker' }}</span>
             </div>
         </div>
-    </main>
+        <div class="alk-stats">
+            <div class="alk-stat">
+                <b>{{ data_get($user, 'followers', 0) }}</b>
+                <span>Followers</span>
+            </div>
+            <div class="alk-stat">
+                <b>{{ data_get($user, 'followings', '—') }}</b>
+                <span>Following</span>
+            </div>
+            <div class="alk-stat">
+                <b>{{ data_get($user, 'credits', 0) }}</b>
+                <span>Credits</span>
+            </div>
+        </div>
+    </section>
+
+    {{-- Quick actions --}}
+    <section class="alk-card" aria-label="Quick actions">
+        <div class="alk-card-title"><i class="bi bi-lightning-charge-fill"></i> Quick actions</div>
+        <div class="alk-grid">
+            <a href="{{ route('autoliker.boost') }}" class="alk-action is-boost">
+                <i class="bi bi-rocket-takeoff-fill"></i>
+                Boost Profile
+                <small>Send likes &amp; follows</small>
+            </a>
+            <a href="{{ route('autoliker.view') }}" class="alk-action">
+                <i class="bi bi-list-check text-primary"></i>
+                My Orders
+                <small>Track promotions</small>
+            </a>
+            <a href="{{ route('autoliker.earn') }}" class="alk-action">
+                <i class="bi bi-coin text-warning"></i>
+                Earn Credits
+                <small>Like &amp; follow to earn</small>
+            </a>
+            <a href="{{ route('autoliker.settings') }}" class="alk-action">
+                <i class="bi bi-gear-fill text-secondary"></i>
+                Settings
+                <small>Earn source &amp; more</small>
+            </a>
+        </div>
+    </section>
+
+    <div class="alk-ad" aria-label="Advertisement">
+        <x-ads.in-article />
+    </div>
+
+    {{-- Help --}}
+    <section class="alk-card" aria-label="How your dashboard works">
+        <div class="alk-card-title"><i class="bi bi-info-circle"></i> How it works</div>
+        <ol class="alk-steps">
+            <li><div><strong>Boost</strong> sends likes or follows to your public post or profile.</div></li>
+            <li><div><strong>Orders</strong> shows live progress — pause, resume or delete anytime.</div></li>
+            <li><div><strong>Earn</strong> gives you credits for engaging with others' posts.</div></li>
+        </ol>
+        <div class="alk-note">
+            <span>💡</span>
+            <span>Always boost the correct account — check the username in the top bar before submitting.</span>
+        </div>
+        <div class="text-center mt-3">
+            <a href="/contact" class="alk-btn" style="border:2px solid var(--alk-border); min-height:48px; font-size:14px;">
+                Send feedback
+            </a>
+        </div>
+    </section>
 @endsection

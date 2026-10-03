@@ -8,6 +8,8 @@
 @section('description',
     'Download our free Android apps: RajeLiker for Facebook from Google Play, and InstaLiker for Instagram — auto-like comments on any post.')
 @section('keywords', 'rajeliker app, rajeliker apk download, instaliker apk, instaliker app download, instagram comment liker app, facebook auto liker app')
+{{-- Full-width: hero takes all space, no sidebar (desktop + mobile). --}}
+@section('full-width', '1')
 
     @push('styles')
         <style>
@@ -484,20 +486,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-lg-4 text-center">
-                            <svg viewBox="0 0 200 200" style="width:min(190px,44vw);height:auto" role="img" aria-label="Download apps to your phone illustration">
-                                <circle cx="28" cy="42" r="4" fill="#ffffff" opacity=".25"/>
-                                <circle cx="172" cy="58" r="3" fill="#ffffff" opacity=".3"/>
-                                <circle cx="162" cy="162" r="5" fill="#ffffff" opacity=".2"/>
-                                <circle cx="38" cy="160" r="2.5" fill="#ffffff" opacity=".35"/>
-                                <rect x="65" y="18" width="70" height="142" rx="14" fill="rgba(255,255,255,.12)" stroke="#ffffff" stroke-width="3"/>
-                                <line x1="90" y1="30" x2="110" y2="30" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity=".7"/>
-                                <circle cx="100" cy="94" r="26" fill="#ffffff"/>
-                                <path d="M100 81v19m0 0l-8-8m8 8l8-8" stroke="#667eea" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M87 111h26" stroke="#667eea" stroke-width="4" stroke-linecap="round"/>
-                                <line x1="92" y1="148" x2="108" y2="148" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity=".7"/>
-                            </svg>
-                        </div>
+
                     </div>
                 </div>
 

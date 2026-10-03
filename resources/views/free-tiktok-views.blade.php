@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <x-monetag-notification-ad />
+    <x-ads.admaven-page-push />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="robots" content="index, follow" />
@@ -27,7 +27,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/tool-header.css') }}">
 
-    <x-auto-ads />
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
     <script type="application/ld+json">
@@ -544,14 +543,6 @@
     </section>
 
 
-    {{-- Ad Slot 1: Above the fold --}}
-    <div class="ad-slot ad-leader hide-mobile">
-        <x-ads.leaderboard />
-    </div>
-    <div class="ad-slot ad-leader show-mobile">
-        <x-ads.mobile-banner />
-    </div>
-
     <!-- ============ Main layout ============ -->
     <div class="layout">
 
@@ -585,11 +576,6 @@
                         <span>Example: <code>https://www.tiktok.com/@user/video/1234567890</code></span>
                     </div>
 
-                    {{-- Ad Slot 2: Inside tool card --}}
-                    <div class="tool-ad-slot">
-                        <x-ads.in-article />
-                    </div>
-
                     @if ($errors->any())
                         <div class="result fail">
                             <p>{{ $errors->first() }}</p>
@@ -616,11 +602,6 @@
 
             {{-- Cross-promo: managed in Admin > Promotions --}}
             <x-promo-banner placement="tiktok_views" />
-
-            {{-- Ad Slot 3: Between tool and content --}}
-            <div class="ad-slot ad-inline">
-                <x-ads.in-article />
-            </div>
 
             <!-- How it works -->
             <section>
@@ -675,11 +656,6 @@
                     </div>
                 </div>
             </section>
-
-            {{-- Ad Slot 4: Mid-content --}}
-            <div class="ad-slot ad-inline">
-                <x-ads.sidebar />
-            </div>
 
             <!-- Info section -->
             <section class="info-section">
@@ -752,11 +728,6 @@
 
     </div>
 
-    {{-- Ad Slot 5: Bottom --}}
-    <div class="ad-slot ad-leader show-mobile">
-        <x-ads.mobile-banner />
-    </div>
-
     <!-- ============ Footer ============ -->
     <footer class="site-footer">
         <div class="footer-links">
@@ -768,6 +739,33 @@
         </div>
         <div class="copy">&copy; autolikerlive.com &mdash; For entertainment purposes only.</div>
     </footer>
+
+    <!-- Back-to-back repeat modal: same video can't go twice in a row -->
+    <div id="repeatModal" style="display:none; position:fixed; inset:0; z-index:2000; align-items:center; justify-content:center; padding:18px; background:rgba(10,25,47,.65);">
+        <style>
+            #repeatModal .repeat-card { background:#fff; border-radius:18px; max-width:440px; width:100%; padding:26px 22px 22px; text-align:center; box-shadow:0 24px 60px rgba(0,0,0,.35); }
+            #repeatModal .repeat-icon { width:58px; height:58px; margin:0 auto 12px; border-radius:50%; display:grid; place-items:center; font-size:28px; background:#fff4e0; }
+            #repeatModal h4 { font-weight:800; font-size:19px; margin-bottom:8px; color:#1c1e21; }
+            #repeatModal .repeat-ok { display:inline-block; font-size:12px; font-weight:700; color:#2fa84f; background:#e9f8ee; border-radius:999px; padding:4px 12px; margin-bottom:12px; }
+            #repeatModal p { font-size:14px; color:#4b4f56; margin-bottom:10px; }
+            #repeatModal .repeat-share { display:flex; gap:10px; margin-top:14px; }
+            #repeatModal .repeat-btn { flex:1; border:0; border-radius:12px; padding:13px 10px; font-size:15px; font-weight:700; cursor:pointer; font-family:inherit; }
+            #repeatModal .repeat-btn-share { background:linear-gradient(120deg,#010101,#fe2c55); color:#fff; }
+            #repeatModal .repeat-btn-ok { background:#f0f2f5; color:#1c1e21; }
+        </style>
+        <div class="repeat-card" role="dialog" aria-modal="true" aria-labelledby="repeatModalTitle">
+            <div class="repeat-icon">⏳</div>
+            <h4 id="repeatModalTitle">Please wait your turn</h4>
+            <span class="repeat-ok">✔ This is not an error</span>
+            <p>This exact video was just submitted and is still the <strong>latest one in the queue</strong>.</p>
+            <p>Fair-use rule: the same video <strong>can't be added twice in a row</strong>. You can submit this video again <strong>after someone else adds their video</strong>.</p>
+            <p>💡 <strong>Tip:</strong> share this app with friends — more people joining means your turn comes faster.</p>
+            <div class="repeat-share">
+                <button type="button" id="repeatShareBtn" class="repeat-btn repeat-btn-share">📤 Share this app</button>
+                <button type="button" id="repeatOkBtn" class="repeat-btn repeat-btn-ok">Got it</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         (function () {
@@ -819,8 +817,86 @@
                 }
             }
 
+            // ---- Fair-queue: same video can't go twice in a row ----
+            var lastTiktokLink = @json($lastTiktokLink ?? null);
+            var repeatBlockedFromServer = @json(session('tiktok_repeat_blocked', false));
+
+            function normalizeTiktokLink(u) {
+                u = (u || '').trim();
+                if (!u) return '';
+                var h = u.indexOf('#');
+                if (h !== -1) u = u.slice(0, h);
+                try {
+                    var p = new URL(u, window.location.origin);
+                    return (p.protocol + '//' + p.hostname.toLowerCase() + p.pathname + p.search).replace(/\/+$/, '').toLowerCase();
+                } catch (e) {
+                    return u.replace(/\/+$/, '').toLowerCase();
+                }
+            }
+
+            function openRepeatModal() {
+                var m = document.getElementById('repeatModal');
+                if (m) { m.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+            }
+            function closeRepeatModal() {
+                var m = document.getElementById('repeatModal');
+                if (m) { m.style.display = 'none'; document.body.style.overflow = ''; }
+            }
+
+            function shareTiktokApp() {
+                var data = {
+                    title: document.title,
+                    text: 'Get free TikTok views — join me here:',
+                    url: window.location.href
+                };
+                if (navigator.share) {
+                    navigator.share(data).catch(function () {});
+                } else if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(data.url).then(function () {
+                        alert('Link copied! Share it with your friends.');
+                    }).catch(function () {
+                        prompt('Copy and share this link:', data.url);
+                    });
+                } else {
+                    prompt('Copy and share this link:', data.url);
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                var ok = document.getElementById('repeatOkBtn');
+                if (ok) ok.addEventListener('click', closeRepeatModal);
+                var share = document.getElementById('repeatShareBtn');
+                if (share) share.addEventListener('click', shareTiktokApp);
+                var modal = document.getElementById('repeatModal');
+                if (modal) modal.addEventListener('click', function (e) {
+                    if (e.target === modal) closeRepeatModal();
+                });
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape') closeRepeatModal();
+                });
+                if (repeatBlockedFromServer) openRepeatModal();
+            });
+
+            // Mirror of the backend video-code extraction (TiktokController@placeViewOrder).
+            function extractVideoCode(link) {
+                var m;
+                link = link || '';
+                m = link.match(/https?:\/\/[^\/]+\.tiktok\.com\/([^\/?]+)/);
+                if (m) return m[1];
+                m = link.match(/\/(p|reel)\/([A-Za-z0-9_-]+)\/?/);
+                if (m) return m[2];
+                return link;
+            }
+
             if (form) {
-                form.addEventListener('submit', function () {
+                form.addEventListener('submit', function (e) {
+                    var linkInput = form.querySelector('input[name="link"]');
+                    var current = normalizeTiktokLink(extractVideoCode(linkInput ? linkInput.value : ''));
+                    if (current && lastTiktokLink && current === normalizeTiktokLink(lastTiktokLink)) {
+                        e.preventDefault();
+                        openRepeatModal();
+                        return false;
+                    }
                     sendViewsBtn.classList.add('loading');
                     sendViewsBtn.disabled = true;
                     loadingBar.classList.add('active');

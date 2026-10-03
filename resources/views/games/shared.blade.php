@@ -58,6 +58,7 @@
 
         <a href="{{ route('game.show', $game->slug) }}" class="btn-try">{{ $game->og_title ?: 'Try it yourself!' }}</a>
 
+        @if(config('ads.adsense_enabled'))
         <div style="margin-top:20px; text-align:center;">
             <ins class="adsbygoogle"
                  style="display:inline-block;width:728px;height:90px"
@@ -72,6 +73,7 @@
                  data-ad-slot="5606482216"></ins>
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
+        @endif
 
         <div class="footer-note">For entertainment purposes only &bull; autolikerlive.com</div>
     </div>

@@ -919,6 +919,7 @@ button {
 </div>
 
     <div class="container">
+        @if(config('ads.adsense_enabled'))
         <!-- AdSense Sidebar (desktop) -->
         <div class="ad-sidebar-fixed">
             <ins class="adsbygoogle"
@@ -927,6 +928,7 @@ button {
                  data-ad-slot="5562818408"></ins>
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
+        @endif
         <!-- Header -->
         <div class="header">
             <div style="display: flex; align-items: center; gap: 10px;">
@@ -1183,6 +1185,7 @@ button {
             </div>
         </div>
 
+        @if(config('ads.adsense_enabled'))
         <!-- AdSense Banner -->
         <div style="margin: 20px; text-align: center;">
             <ins class="adsbygoogle"
@@ -1191,6 +1194,7 @@ button {
                  data-ad-slot="7888884839"></ins>
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
+        @endif
 
         <!-- Support Section -->
         <div class="support-section">

@@ -140,9 +140,9 @@ class BoostServiceController extends Controller
             }
         } else {
             $data['edge_count'] = 0;
-            // $post_id was set above to the resolved 'next' URL (or story URL). Use that
-            // as the link to send to the provider instead of the temporary $query string.
-            $data['link'] = $query;
+            // Store the actual submitted link (profile URL or resolved share URL)
+            // so fair-queue comparisons have a real value to match against.
+            $data['link'] = $post_id;
             if ($service_node != 'fbuser' && $actor_id != $user['uid']) {
                 toastr()->error('You can only add a link posted by the ' . $user['username']);
                 return redirect()->back();
@@ -162,9 +162,9 @@ class BoostServiceController extends Controller
         }
 
         $config = match ($service_type) {
-            'followers' => ['quantity' => 10, 'wait' => 60],
-            'reactions' => ['quantity' => 10, 'wait' => 60,],
-            default => ['quantity' => 10, 'wait' => 60],
+            'followers' => ['quantity' => 10, 'wait' => 30],
+            'reactions' => ['quantity' => 10, 'wait' => 30,],
+            default => ['quantity' => 10, 'wait' => 30],
         };
 
 
@@ -206,21 +206,15 @@ class BoostServiceController extends Controller
             }
         }
 
-        // Fair-queue rule: the same link cannot be submitted twice in a row.
-        // It can be submitted again only after someone else adds their link.
+        // Fair-queue rule (per service type): the same link cannot be submitted
+        // twice in a row for the same type. It can be submitted again only
+        // after someone else adds their link.
         $normalizedIncoming = $this->normalizeBoostLink($post_id);
-        if ($normalizedIncoming !== '') {
+        if ($normalizedIncoming !== '' && $service_type) {
             try {
-                $lastCandidates = [];
-                $lastLinkRow = Link::orderByDesc('id')->first();
-                if ($lastLinkRow && trim((string) $lastLinkRow->link) !== '') {
-                    $lastCandidates[] = $this->normalizeBoostLink($lastLinkRow->link);
-                }
-                $lastTimerRow = TiktokTimer::orderByDesc('updated_at')->first();
-                if ($lastTimerRow && trim((string) $lastTimerRow->link) !== '') {
-                    $lastCandidates[] = $this->normalizeBoostLink($lastTimerRow->link);
-                }
-                if (in_array($normalizedIncoming, $lastCandidates, true)) {
+                $lastOfType = Link::where('service', $service_type)->orderByDesc('id')->first();
+                if ($lastOfType && trim((string) $lastOfType->link) !== ''
+                    && $this->normalizeBoostLink($lastOfType->link) === $normalizedIncoming) {
                     toastr()->info('Please wait your turn — you can submit this link again after someone else adds their link.');
                     return redirect()->back()->withInput()->with('boost_repeat_blocked', true)->with('boost_repeat_link', $post_id);
                 }

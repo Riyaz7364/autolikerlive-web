@@ -38,7 +38,7 @@
     <div class="preview-frame">
         <div class="preview-img" id="previewEmoji" style="background: linear-gradient(135deg, {{ $game->bg_color ?? '#1a1a2e' }}, {{ $game->bg_color ?? '#16213e' }}); overflow:hidden;">
             @if ($game->thumbnail)
-                <img src="{{ Storage::disk('public')->url($game->thumbnail) }}" alt="{{ $game->title }}" style="width:100%;height:100%;object-fit:cover;">
+                <img src="{{ Storage::disk('public')->url($game->thumbnail) }}" alt="{{ $game->title }}" fetchpriority="high" style="width:100%;height:100%;object-fit:cover;">
             @else
                 @switch($game->slug)
                     @case('which-bollywood-star-are-you') 🎬 @break

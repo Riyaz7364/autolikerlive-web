@@ -25,9 +25,16 @@ class ListingController extends Controller
 {
     public function Index(Request $request){
 
-        $listings = Listing::select('id','name','post_id')->get();
+        $keywordRaw = (string) $request->input('keyword', '');
 
-        $keyword = str_replace("-", " ", $request['keyword']); // Replaced keyword
+        // Cached lookups: these tables rarely change, but every homepage hit
+        // was paying 3 full table scans. File-cache keeps warm TTFB ~100ms
+        // and cold TTFB bounded even when the blog API is slow.
+        $listings = \Illuminate\Support\Facades\Cache::remember('listings_all_mini', 60, function () {
+            return Listing::select('id','name','post_id')->get();
+        });
+
+        $keyword = str_replace("-", " ", $keywordRaw); // Replaced keyword
         $matchingListing = null;
 
         foreach ($listings as $listing) {
@@ -41,36 +48,40 @@ class ListingController extends Controller
         }else{
             $posts = null;
         }
-        $tags = Tag::get();
-        $games = Game::where('status', 'published')->orderBy('created_at', 'desc')->get();
+        $tags = \Illuminate\Support\Facades\Cache::remember('tags_all', 60, function () {
+            return Tag::get();
+        });
+        $games = \Illuminate\Support\Facades\Cache::remember('games_published', 10, function () {
+            return Game::where('status', 'published')->orderBy('created_at', 'desc')->get();
+        });
         View::share('tags',$tags);
         View::share('posts',$posts);
         View::share('listings',$listings);
         View::share('games',$games);
 
-        // Homepage blog feed (latest 3 posts, cached; null on API failure -> section hides).
+        // Homepage blog feed (latest 3 posts, cached 6h; null on API failure -> section hides).
         $latestPosts = null;
-        if (!isset($request['keyword']) || !$request['keyword']) {
-            $feed = $this->cURL('https://www.autolikerlive.com/blog/api/latest-posts?limit=3');
+        if ($keywordRaw === '') {
+            $feed = $this->cURL('https://www.autolikerlive.com/blog/api/latest-posts?limit=3', 360);
             if ($feed && isset($feed->posts) && is_array($feed->posts)) {
                 $latestPosts = $feed->posts;
             }
         }
         View::share('latestPosts',$latestPosts);
 
-        if(Listing::where('name', str_replace("-",' ', $request['keyword']))->exists()){
+        if($keywordRaw !== '' && Listing::where('name', str_replace("-",' ', $keywordRaw))->exists()){
             return view('landing', [
-                'keyword' => str_replace("-", " ", $request['keyword']),
+                'keyword' => str_replace("-", " ", $keywordRaw),
                 'posts' => $posts,
                 'listing' => $matchingListing,
             ]);
         }
 
-        if(Tag::where('name', str_replace("-",' ', $request['keyword']))->exists()){
-            return view('index', ['keyword'=> $request['keyword'], "home" => true]);
+        if($keywordRaw !== '' && Tag::where('name', str_replace("-",' ', $keywordRaw))->exists()){
+            return view('index', ['keyword'=> $keywordRaw, "home" => true]);
         }
 
-        if (isset($request['keyword'])) {
+        if ($keywordRaw !== '') {
             $slug = strtolower(trim($request['keyword'], '/'));
 
             // Renamed pages keep their equity (301 to the new URL)
@@ -87,17 +98,23 @@ class ListingController extends Controller
             return redirect()->route('index', [], 301);
         }
 
-        $linkedListings = Listing::whereNotNull('post_id')->select('id', 'name', 'post_id')->get();
-        $linkedPosts = [];
-        foreach ($linkedListings as $ll) {
-            $blogPost = $this->cURL('https://www.autolikerlive.com/blog/api/post/' . $ll->post_id);
-            if ($blogPost && isset($blogPost->title)) {
-                $linkedPosts[] = [
-                    'name' => trim($ll->name),
-                    'slug' => str_replace(' ', '-', strtolower(trim($ll->name))),
-                ];
+        // Single cache key for the whole pill list: previously every key
+        // expiry triggered N sequential self-HTTP requests in one page view
+        // (cold TTFB ~1.3s). Now one miss rebuilds once per 24h.
+        $linkedPosts = \Illuminate\Support\Facades\Cache::remember('homepage_linked_posts_v1', 1440, function () {
+            $linkedListings = Listing::whereNotNull('post_id')->select('id', 'name', 'post_id')->get();
+            $out = [];
+            foreach ($linkedListings as $ll) {
+                $blogPost = $this->cURL('https://www.autolikerlive.com/blog/api/post/' . $ll->post_id, 1440);
+                if ($blogPost && isset($blogPost->title)) {
+                    $out[] = [
+                        'name' => trim($ll->name),
+                        'slug' => str_replace(' ', '-', strtolower(trim($ll->name))),
+                    ];
+                }
             }
-        }
+            return $out;
+        });
 
         return view('index', compact('linkedPosts'));
     }
@@ -181,8 +198,8 @@ class ListingController extends Controller
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 8);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 2);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 4);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);

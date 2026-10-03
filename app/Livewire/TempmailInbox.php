@@ -17,9 +17,13 @@ class TempmailInbox extends Component
     ];
 
 
-    public function mount()
+    public function mount($prefill = null)
     {
-        $this->messages = collect();
+        if (is_array($prefill) && isset($prefill['messages'])) {
+            $this->messages = collect($prefill);
+        } else {
+            $this->messages = collect();
+        }
     }
 
     public function checkInbox(){

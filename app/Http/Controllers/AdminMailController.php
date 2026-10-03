@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Webklex\PHPIMAP\ClientManager;
+use Webklex\PHPIMAP\IMAP;
 
 class AdminMailController extends Controller
 {
@@ -79,17 +80,29 @@ class AdminMailController extends Controller
         $perPage = 20;
         $error = null;
         $paginator = null;
+        $skipped = 0;
+        $skippedUids = [];
 
         try {
             $client = $this->connect($boxes[$boxKey]);
             $folder = $client->getFolderByName('INBOX');
 
             // Last 90 days cap so big mailboxes stay fast; paginate newest-first in PHP.
-            $messages = $folder->query()->since(Carbon::now()->subDays(90)->format('d-M-Y'))->get();
+            // NOTE: fetch UID-by-UID instead of one bulk ->get(). A single message with
+            // malformed headers makes the IMAP library's bulk FETCH parser throw
+            // ("Undefined array key 2" / count(string)), which previously nuked the
+            // whole inbox view. Per-message isolation lets us skip just the bad one.
+            $uids = $folder->query()->since(Carbon::now()->subDays(90)->format('d-M-Y'))->search();
 
             $rows = [];
-            foreach ($messages as $message) {
-                $rows[] = $this->summarize($message);
+            foreach ($uids as $uid) {
+                try {
+                    $rows[] = $this->summarize($folder->query()->getMessageByUid($uid));
+                } catch (\Throwable $e) {
+                    $skipped++;
+                    $skippedUids[] = $uid;
+                    \Log::warning("AdminMail skipped unparseable message UID {$uid} in {$boxKey}: " . $e->getMessage());
+                }
             }
             $client->disconnect();
 
@@ -120,6 +133,8 @@ class AdminMailController extends Controller
             'search' => $search,
             'paginator' => $paginator,
             'error' => $error,
+            'skipped' => $skipped,
+            'skippedUids' => $skippedUids,
         ]);
     }
 
@@ -180,9 +195,24 @@ class AdminMailController extends Controller
 
             return redirect()->route('admin.mails.index', ['box' => $box])->with('success', 'Message deleted.');
         } catch (\Throwable $e) {
-            \Log::error('AdminMail delete error: ' . $e->getMessage());
+            \Log::warning('AdminMail normal delete failed for UID ' . $uid . ', trying raw delete: ' . $e->getMessage());
 
-            return redirect()->route('admin.mails.index', ['box' => $box])->withErrors(['mail' => 'Delete failed: ' . $e->getMessage()]);
+            // Fallback for messages with malformed headers that the IMAP library
+            // cannot parse (constructor throws before we can flag them): set the
+            // \Deleted flag directly by UID without fetching anything.
+            try {
+                $client = $this->connect($boxes[$box]);
+                $client->openFolder('INBOX');
+                $client->getConnection()->store(['\Deleted'], $uid, null, '+', true, IMAP::ST_UID);
+                $client->expunge();
+                $client->disconnect();
+
+                return redirect()->route('admin.mails.index', ['box' => $box])->with('success', 'Message deleted.');
+            } catch (\Throwable $e2) {
+                \Log::error('AdminMail delete error: ' . $e2->getMessage());
+
+                return redirect()->route('admin.mails.index', ['box' => $box])->withErrors(['mail' => 'Delete failed: ' . $e2->getMessage()]);
+            }
         }
     }
 }

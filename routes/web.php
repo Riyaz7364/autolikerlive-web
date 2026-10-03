@@ -214,8 +214,31 @@ $allowedLangs = config('language.allowed_languages');
     });
 
 // Temp Mail
-    Route::get('/temp-mail', function () {
-        return view('temp-mail');
+    Route::get('/temp-mail', function (\Illuminate\Http\Request $request) {
+        // Deep-link support: /temp-mail?email=name@domain loads that inbox
+        // (only for active domains; otherwise the usual session/random applies).
+        if ($request->filled('email')) {
+            $parts = explode('@', trim($request->get('email')));
+            if (count($parts) === 2 && $parts[0] !== '' && \App\Models\Tempmail::where('status', 1)->where('name', $parts[1])->exists()) {
+                session(['email' => $parts[0] . '@' . $parts[1]]);
+            }
+        }
+        // Prefill inbox server-side so mail shows on first paint even if
+        // the Livewire poll hasn't fired yet.
+        $prefill = null;
+        if (session()->has('email')) {
+            try {
+                $data = app('App\Http\Controllers\TempMailController')->allMessages(
+                    new \Illuminate\Http\Request(['email' => session('email')])
+                );
+                if (is_array($data) && ($data['status'] ?? false) === true) {
+                    $prefill = $data;
+                }
+            } catch (\Throwable $e) {
+                $prefill = null;
+            }
+        }
+        return view('temp-mail', compact('prefill'));
     })->name('temp-mail');
 
     Route::get('/temp-mail-test', function () {

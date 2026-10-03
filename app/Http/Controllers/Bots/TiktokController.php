@@ -28,7 +28,17 @@ class TiktokController extends Controller
 
     public function Index(Request $request){
         $timeRemains = $this->loadTimer($request);
-        return view('free-tiktok-views', ['timeLeft' => $timeRemains, "agent" => new Agent()]);
+        // Latest submitted video in the queue (for instant back-to-back repeat warning).
+        $lastTiktokLink = null;
+        try {
+            $lastTimer = TiktokTimer::orderByDesc('updated_at')->first();
+            if ($lastTimer && trim((string) $lastTimer->link) !== '') {
+                $lastTiktokLink = $lastTimer->link;
+            }
+        } catch (\Throwable $e) {
+            $lastTiktokLink = null;
+        }
+        return view('free-tiktok-views', ['timeLeft' => $timeRemains, "agent" => new Agent(), 'lastTiktokLink' => $lastTiktokLink]);
     }
 
     public function selectService(Request $request){
@@ -182,6 +192,21 @@ class TiktokController extends Controller
             ->where('updated_at', '>=', Carbon::now()->subMinutes($wait))
             ->exists() || $this->loadTimer($request, $request['telegram_user_id'] ?? null) > 0){
                 return redirect()->back()->withErrors("Please wait $wait minutes before add link again.");
+            }
+
+            // Fair-queue rule: the same video can't go twice in a row.
+            // It can be submitted again only after someone else adds their link.
+            $normalizedVideo = $this->normalizeTiktokLink($video_code);
+            if ($normalizedVideo !== '') {
+                try {
+                    $lastTimer = TiktokTimer::orderByDesc('updated_at')->first();
+                    if ($lastTimer && trim((string) $lastTimer->link) !== ''
+                        && $this->normalizeTiktokLink($lastTimer->link) === $normalizedVideo) {
+                        return redirect()->back()->withInput()->with('tiktok_repeat_blocked', true);
+                    }
+                } catch (\Throwable $e) {
+                    \Log::warning('TikTok repeat-check skipped: ' . $e->getMessage());
+                }
             }
 
             $response = $this->curlCall($query);
@@ -361,6 +386,32 @@ class TiktokController extends Controller
         }
 
         return $timeRemains;
+    }
+
+    /**
+     * Normalize a TikTok video identifier for fair-queue comparison:
+     * trim, drop fragment, lowercase scheme+host when URL-like,
+     * remove trailing slash. Query string is kept as-is.
+     */
+    private function normalizeTiktokLink(?string $url): string
+    {
+        $url = trim((string) $url);
+        if ($url === '') {
+            return '';
+        }
+        $hashPos = strpos($url, '#');
+        if ($hashPos !== false) {
+            $url = substr($url, 0, $hashPos);
+        }
+        $parts = parse_url($url);
+        if ($parts === false || !isset($parts['host'])) {
+            return strtolower(rtrim($url, '/'));
+        }
+        $scheme = isset($parts['scheme']) ? strtolower($parts['scheme']) . '://' : '';
+        $host = strtolower($parts['host']);
+        $path = $parts['path'] ?? '';
+        $query = (isset($parts['query']) && $parts['query'] !== '') ? '?' . $parts['query'] : '';
+        return rtrim($scheme . $host . $path . $query, '/');
     }
 
     private function saveTimer(Request $request, $link, $wait = 10, $user_id = null)

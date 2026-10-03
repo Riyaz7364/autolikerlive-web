@@ -22,11 +22,9 @@
     <meta name="twitter:description" content="Get 1000 free Facebook likes instantly with our auto liker tool. Boost your Facebook posts with real reactions from active users." />
     <meta name="twitter:image" content="{{ url('/images/fb-liker-1000-likes.webp') }}" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
+    {{-- CWV 2026-09-29: external Inter webfont removed (2 preconnects + CSS +
+         5 font files on the critical path). System stack renders identically
+         for this UI and saves ~300-600ms LCP on low-end mobile. --}}
     <link rel="preconnect" href="https://challenges.cloudflare.com">
 
     <x-auto-ads />
@@ -155,7 +153,7 @@
         html { -webkit-text-size-adjust: 100%; }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             color: var(--ink);
             background:
                 radial-gradient(1000px 480px at 12% -10%, rgba(102, 126, 234, .16), transparent 60%),
@@ -834,13 +832,13 @@
                     </div>
                     {{-- Reactions available --}}
                     <div class="reactions-row">
-                        <span class="reaction-chip"><img src="/reaction/like.png" width="22" height="22" loading="lazy" decoding="async" alt="Like"> Like</span>
-                        <span class="reaction-chip"><img src="/reaction/love.png" width="22" height="22" loading="lazy" decoding="async" alt="Love"> Love</span>
-                        <span class="reaction-chip"><img src="/reaction/care.png" width="22" height="22" loading="lazy" decoding="async" alt="Care"> Care</span>
-                        <span class="reaction-chip"><img src="/reaction/haha.png" width="22" height="22" loading="lazy" decoding="async" alt="Haha"> Haha</span>
-                        <span class="reaction-chip"><img src="/reaction/wow.png" width="22" height="22" loading="lazy" decoding="async" alt="Wow"> Wow</span>
-                        <span class="reaction-chip"><img src="/reaction/sad.png" width="22" height="22" loading="lazy" decoding="async" alt="Sad"> Sad</span>
-                        <span class="reaction-chip"><img src="/reaction/engry.png" width="22" height="22" loading="lazy" decoding="async" alt="Angry"> Angry</span>
+                        <span class="reaction-chip"><img src="/reaction/like.png" width="22" height="22" loading="lazy" decoding="async" fetchpriority="low" alt="Like"> Like</span>
+                        <span class="reaction-chip"><img src="/reaction/love.png" width="22" height="22" loading="lazy" decoding="async" fetchpriority="low" alt="Love"> Love</span>
+                        <span class="reaction-chip"><img src="/reaction/care.png" width="22" height="22" loading="lazy" decoding="async" fetchpriority="low" alt="Care"> Care</span>
+                        <span class="reaction-chip"><img src="/reaction/haha.png" width="22" height="22" loading="lazy" decoding="async" fetchpriority="low" alt="Haha"> Haha</span>
+                        <span class="reaction-chip"><img src="/reaction/wow.png" width="22" height="22" loading="lazy" decoding="async" fetchpriority="low" alt="Wow"> Wow</span>
+                        <span class="reaction-chip"><img src="/reaction/sad.png" width="22" height="22" loading="lazy" decoding="async" fetchpriority="low" alt="Sad"> Sad</span>
+                        <span class="reaction-chip"><img src="/reaction/engry.png" width="22" height="22" loading="lazy" decoding="async" fetchpriority="low" alt="Angry"> Angry</span>
                     </div>
                 </form>
 
@@ -1071,10 +1069,13 @@
                 </button>
             </div>
             <div class="modal-sub">Follow this short video to change your Facebook settings, then come back and try again.</div>
-            {{-- Lite YouTube facade: iframe is injected only when the modal opens (saves ~500KB JS on load) --}}
+            {{-- Lite YouTube facade: thumbnail AND iframe load only after the user
+                 opens the modal (saves a cross-origin connection + ~500KB JS on
+                 page load). Auto-open on failed login shows the steps first;
+                 the video loads on tap. --}}
             <div style="position:relative;">
                 <button type="button" class="modal-video-facade" id="ytFacade" aria-label="Play tutorial video">
-                    <img src="https://i.ytimg.com/vi/ALOXKMY_fNE/hqdefault.jpg" alt="" loading="lazy" decoding="async" width="560" height="315">
+                    <img data-src="https://i.ytimg.com/vi/ALOXKMY_fNE/hqdefault.jpg" alt="" width="560" height="315" decoding="async" fetchpriority="low">
                     <span class="play"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
                 </button>
                 <div id="ytSlot"></div>
@@ -1120,8 +1121,19 @@
                 if (facade) facade.style.display = 'none';
             }
 
-            function openModal() {
-                loadYoutube();
+            // Thumbnail fetches only once the modal is actually needed.
+            function primeFacade() {
+                var facade = document.getElementById('ytFacade');
+                if (!facade) return;
+                var img = facade.querySelector('img[data-src]');
+                if (img && !img.getAttribute('src')) img.src = img.getAttribute('data-src');
+            }
+            // withVideo=true only from an explicit play tap; auto-open and the
+            // "Watch how to fix it" button show the steps + facade thumbnail so
+            // no YouTube bytes compete with the page's own INP window.
+            function openModal(withVideo) {
+                if (withVideo) loadYoutube();
+                else primeFacade();
                 requestAnimationFrame(function () {
                     modal.classList.add('show');
                     document.body.style.overflow = 'hidden';
@@ -1133,7 +1145,7 @@
             }
 
             var openBtn = document.getElementById('openTutorialBtn');
-            if (openBtn) openBtn.addEventListener('click', openModal, { passive: true });
+            if (openBtn) openBtn.addEventListener('click', function () { openModal(false); }, { passive: true });
             var closeBtn = document.getElementById('closeModalBtn');
             if (closeBtn) closeBtn.addEventListener('click', closeModal, { passive: true });
             var ytFacade = document.getElementById('ytFacade');
@@ -1147,7 +1159,7 @@
             });
 
             // Defer auto-open past first paint so it never blocks INP measurement
-            if (autoFail) requestAnimationFrame(function () { setTimeout(openModal, 0); });
+            if (autoFail) requestAnimationFrame(function () { setTimeout(function () { openModal(false); }, 0); });
 
             var form = document.querySelector('.tool-form');
             var searchBtn = document.getElementById('searchBtn');
@@ -1174,7 +1186,12 @@
                 }, { passive: true });
             }
 
-            // Lazy Turnstile (explicit render): load only when idle/visible, never blocking INP
+            // Lazy Turnstile (explicit render): the widget's JS (~200KB + main-
+            // thread render) used to load on page view because the tool card
+            // sits above the fold — any tap racing that download inflated INP
+            // past 200ms. Now it loads on first form interaction (any submitter
+            // must focus/type first) with a 12s idle fallback so the captcha is
+            // still ready for slow readers who never touch the form early.
             var turnstileBox = document.getElementById('cf-turnstile-box');
             var turnstileDone = false;
             function loadTurnstile() {
@@ -1191,22 +1208,17 @@
                 };
                 document.head.appendChild(s);
             }
-            function scheduleTurnstile() {
-                if ('requestIdleCallback' in window) requestIdleCallback(loadTurnstile, { timeout: 4000 });
-                else setTimeout(loadTurnstile, 2500);
+            var toolForm = document.querySelector('.tool-form');
+            if (toolForm) {
+                ['pointerdown', 'focus', 'input'].forEach(function (ev) {
+                    toolForm.addEventListener(ev, loadTurnstile, { once: true, passive: true, capture: true });
+                });
+                // If the captcha was already solved once this session, the form
+                // submits instantly — still guarantee load before submit.
+                toolForm.addEventListener('submit', loadTurnstile, { capture: true });
             }
-            if (turnstileBox && 'IntersectionObserver' in window) {
-                var io = new IntersectionObserver(function (entries) {
-                    if (entries[0].isIntersecting) { loadTurnstile(); io.disconnect(); }
-                }, { rootMargin: '200px' });
-                io.observe(turnstileBox);
-                setTimeout(loadTurnstile, 6000); // fallback if never scrolled into view
-            } else {
-                scheduleTurnstile();
-            }
-            // If user focuses the input first, ensure captcha is coming up
-            var userInput = document.querySelector('.tool-form input[name="username"]');
-            if (userInput) userInput.addEventListener('focus', loadTurnstile, { once: true, passive: true });
+            if ('requestIdleCallback' in window) requestIdleCallback(loadTurnstile, { timeout: 12000 });
+            else setTimeout(loadTurnstile, 10000);
 
             // AdSense slot pushes are handled lazily inside each x-ads component
             // (IntersectionObserver + requestIdleCallback), so nothing to do here.

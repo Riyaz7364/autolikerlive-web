@@ -1,53 +1,30 @@
-@extends('layouts.master')
+@extends('layouts.autoliker')
 
 @section('title', 'Settings - ' . $user['loginType'])
 @section('description', '')
 
-
-@push('styles')
-@endpush
-
 @section('content')
-    <main class="bg-light">
-        <div class="container mt-5">
-            <div class="row">
-                <h1 class="text-center">Settings <span class="border rounded text-danger">{{ $user['loginType'] }}</span>
-                </h1>
+    <h1 class="alk-page-title">Settings</h1>
 
+    <section class="alk-card" aria-label="Earn source settings">
+        <div class="alk-card-title"><i class="bi bi-gear-fill"></i> Earn source</div>
+        <p class="alk-muted" style="margin-bottom:14px;">Choose which platform you want to earn credits from.</p>
 
-                <x-instagram.logout :username="$user['username']" :logintype="$user['loginType']"></x-instagram.logout>
+        <form method="post" action="{{ route('autoliker.settings.update') }}">
+            @csrf
+            <label class="alk-radio">
+                <input type="radio" name="earn_source" value="FB"
+                    {{ data_get($user, 'earnType') == 'FB' ? 'checked' : '' }}>
+                <span>📘 Facebook <span class="alk-muted">— like &amp; follow FB posts</span></span>
+            </label>
 
-                <x-instagram.options :logintype="$user['loginType']" :earntype="$user['earnType']"></x-instagram.options>
-                <x-instagram.credits :credits="$user['credits']"></x-instagram.credits>
+            <label class="alk-radio">
+                <input type="radio" name="earn_source" value="IG"
+                    {{ data_get($user, 'earnType') == 'IG' ? 'checked' : '' }}>
+                <span>📸 Instagram <span class="alk-muted">— like &amp; follow IG posts</span></span>
+            </label>
 
-
-
-                <div class="card mb-3 mainb">
-                    <div class="card-body row">
-
-                        <form method="post" action="{{ route('autoliker.settings.update') }}">
-                            @csrf
-                            <h3>Select Earn Credits Source:</h3>
-
-                            <label>
-                                <input type="radio" name="earn_source" value="FB"
-                                    {{ $user['earnType'] == 'FB' ? 'checked' : '' }}>
-                                Facebook
-                            </label><br>
-
-                            <label>
-                                <input type="radio" name="earn_source" value="IG"
-                                    {{ $user['earnType'] == 'IG' ? 'checked' : '' }}>
-                                Instagram
-                            </label><br><br>
-
-                            <button class="btn btn-danger" type="submit">Save Settings</button>
-                        </form>
-
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+            <button class="alk-btn alk-btn-primary mt-2" type="submit">Save Settings</button>
+        </form>
+    </section>
 @endsection

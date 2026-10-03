@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<x-monetag-notification-ad />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="revisit-after" content="1 days" />
     <meta name="googlebot" content="index, follow" />
+    <meta name='admaven-placement' content=Bqdg8rjw8>
     <meta name="robots" content="all" />
     <meta name="author" content="AutolikerLive" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -36,12 +36,18 @@
     @vite(['resources/js/app.js'])
     @stack('styles')
     @yield('javascripts')
-    <x-auto-ads />
+    @if (!trim($__env->yieldContent('no-auto-ads')))
+        <x-auto-ads />
+    @endif
 </head>
 <body>
     <x-navbar />
     <main>
         <div class="container">
+            @if (trim($__env->yieldContent('full-width')))
+                {{-- Full-width page (no sidebar): hero takes all space. --}}
+                @yield('content')
+            @else
             <div class="blog-layout">
                 <div class="blog-main">
                     @yield('content')
@@ -93,6 +99,7 @@
                     @endif
                 </aside>
             </div>
+            @endif
         </div>
     </main>
 

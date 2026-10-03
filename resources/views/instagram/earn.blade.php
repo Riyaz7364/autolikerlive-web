@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.autoliker')
 
 @section('title', 'Earn credits ' . $user['loginType'])
 @section('description', 'Earn Credits')
@@ -14,122 +14,72 @@
 @endpush
 
 @section('content')
-    <main class="bg-light">
-        <div class="container mt-5">
-            <div class="row">
-                <h1 class="text-center text-dark">Earn Credits</h1>
+    <h1 class="alk-page-title">Earn Credits</h1>
 
+    @livewire('instagram.credits-component')
 
-                <x-instagram.logout :username="$user['username']" :logintype="$user['loginType']"></x-instagram.logout>
+    <section class="alk-card alk-earn-task" aria-label="Earn task">
+        <div class="alk-card-title" style="justify-content:center;"><i class="bi bi-coin"></i> Do task, get credits</div>
 
-                <x-instagram.options :logintype="$user['loginType']" :earntype="$user['earnType']"></x-instagram.options>
-                @livewire('instagram.credits-component')
+        <!-- result alert -->
+        <div id="result_alert" class="alert text-white mt-2 d-none" role="alert"></div>
 
+        <!-- result spinner -->
+        <img id="result_spinner" class="d-none" src="/autoliker/img/result_load.svg"
+            draggable="false" alt="loading">
 
+        <br>
 
-                <div class="mt-2 mb-2" style="height: auto !important;">
-
-                    <div class="col-md-8" style="height: auto !important;">
-                        <div class="card text-dark bg-white mt-3 mb-2 border-dark text-center fs15">
-                            <div class="card-body">
-
-
-
-                                <!-- result alert -->
-                                <div id="result_alert" class="alert text-white mt-2 d-none" role="alert">
-
-                                </div>
-
-                                <!-- result spinner -->
-                                <img id="result_spinner" class="d-none" src="/autoliker/img/result_load.svg"
-                                    draggable="false" alt="loading">
-
-
-
-                                <br>
-
-                                <!-- promotion spinner -->
-                                <img id="promotion_spinner" class="loading"
-                                    src="{{ url('assets/images/promotion_load.svg') }}" draggable="false" alt="loading">
-                                <input type="hidden" id="frsc" value="">
-                                <!-- promotion -->
-                                <div id="promotion" class="d-none">
-                                    <h5 class="card-title">
-                                        Earn <b id="forpoints" style="color:green">1 </b>
-                                        Credit
-                                        <span id="showText"> By
-                                            <b style="color:green;"> Liking </b> This Reel From
-                                            <b style="color:#6610f2"> </b>.
-                                        </span>
-                                    </h5>
-                                    <button class="btn btn-success" id="actionbtn">Like</button>
-
-                                </div>
-                                <!-- promotion alert -->
-                                <div id="promotion_alert" class="alert bg-warning text-white mt-2 d-none" role="alert">
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div class="text-center mt-2 mb-2" style="min-height: 0px !important; height: auto !important;">
-                            <!-- Google Ads -->
-                        </div>
-                        <!-- Temp Mail Center  adsbygoogle-->
-
-                        <div class="alert bg-info text-white text-center fs15 mt-2 mb-2">
-                            <b>NOTE: Do not close the tab too fast, else credit will not be added.
-                            </b>
-                            <br>
-                            <b>NOTE: If you are following, but credits not added, try changing the account from which
-                                you are following.
-                            </b>
-                        </div>
-
-                        <center>
-                            <div class="card border-primary mb-3 fs15">
-                                <div class="card-body">
-                                    <p>If you have any bugs to report or any suggestions, please let us know!</p>
-                                    <a href="/contact" class="btn btn-primary btn-sm">SEND FEEDBACK</a>
-                                </div>
-                            </div>
-                        </center>
-                    </div>
-
-                    <div class="col-md-4">
-
-                        <div class="card border-primary mb-3 fs15">
-                            <h3 class="card-title text-center bg-primary text-white my-auto"><img class="m-1"
-                                    src="{{ url('assets/images/gift-box.png') }}" alt="Daily bonus"
-                                    style="width: 50px;">Claim Daily Bonus!</h3>
-                            <div class="card-body">
-                                <p class="text-center">After completing 10 promotions daily, you can claim your daily bonus.
-                                    You will receive credits between 10 to 50 daily.</p>
-
-
-                                <div class="text-center">
-
-                                    <div id="claim_result" class="alert bg-warning text-white text-center my-4 d-none"
-                                        role="alert">
-                                        A simple primary alert—check it out!
-                                    </div>
-
-
-                                    <div id="claim_spinner" class="d-none">
-                                        <img src="{{ url('assets/images/claim.svg') }}" draggable="false" alt="loading"
-                                            style="height: 150px;">
-                                    </div>
-
-                                    <button class="btn btn-primary" id="claim">Claim Daily Bonus</button>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- promotion spinner -->
+        <img id="promotion_spinner" class="loading"
+            src="{{ url('assets/images/promotion_load.svg') }}" draggable="false" alt="loading">
+        <input type="hidden" id="frsc" value="">
+        <!-- promotion -->
+        <div id="promotion" class="d-none">
+            <h5 class="card-title alk-earn-points">
+                Earn <b id="forpoints" style="color:green">1 </b>
+                Credit
+                <span id="showText"> By
+                    <b style="color:green;"> Liking </b> This Reel From
+                    <b style="color:#6610f2"> </b>.
+                </span>
+            </h5>
+            <button class="alk-btn alk-btn-primary" style="max-width:280px; margin:0 auto;" id="actionbtn">Like</button>
         </div>
-    </main>
+        <!-- promotion alert -->
+        <div id="promotion_alert" class="alert bg-warning text-white mt-2 d-none" role="alert">
+        </div>
+
+        <div class="alk-note">
+            <span>⚠️</span>
+            <span><strong>Do not close the tab too fast,</strong> else credit will not be added. If credits don't arrive, try engaging from a different account.</span>
+        </div>
+    </section>
+
+    <div class="alk-ad" aria-label="Advertisement">
+        <x-ads.in-article />
+    </div>
+
+    <section class="alk-card text-center" aria-label="Daily bonus">
+        <div class="alk-card-title" style="justify-content:center;">🎁 Claim Daily Bonus!</div>
+        <p class="alk-muted">After completing 10 promotions daily, claim <strong>10–50 bonus credits</strong>.</p>
+
+        <div id="claim_result" class="alert text-white text-center my-3 d-none" role="alert">
+            A simple primary alert—check it out!
+        </div>
+
+        <div id="claim_spinner" class="d-none">
+            <img src="{{ url('assets/images/claim.svg') }}" draggable="false" alt="loading"
+                style="height: 150px;">
+        </div>
+
+        <button class="alk-btn alk-btn-primary" id="claim">Claim Daily Bonus</button>
+    </section>
+
+    <section class="alk-card text-center" aria-label="Feedback">
+        <p class="alk-muted">Found a bug or have a suggestion? We read everything.</p>
+        <a href="/contact" class="alk-btn" style="border:2px solid var(--alk-border); min-height:48px; font-size:14px;">Send feedback</a>
+    </section>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
     <script>
