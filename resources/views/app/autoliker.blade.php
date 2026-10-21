@@ -987,9 +987,9 @@ button {
                 <button class="tab-btn active" data-tab="reactions">
                     <i class="fas fa-magic"></i> Reactions
                 </button>
-                <button class="tab-btn followers-tab" data-tab="followers">
+                <!-- <button class="tab-btn followers-tab" data-tab="followers">
                     <i class="fas fa-user-plus"></i> Followers
-                </button>
+                </button> -->
                 <button class="tab-btn comments-tab" data-tab="comments">
                     <i class="fas fa-comment-dots"></i> Comments
                 </button>

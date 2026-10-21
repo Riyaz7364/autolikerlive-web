@@ -26,9 +26,11 @@
     <link rel="stylesheet" href="{{ asset('css/tool-header.css') }}">
     <x-auto-ads />
 
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ url('images/favicons/temp-mail/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ url('images/favicons/temp-mail/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ url('images/favicons/temp-mail/favicon-16x16.png') }}">
+    <link rel="icon" type="image/png" href="{{ url('/storage/temp-mail/favicon-96x96.png') }}" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="{{ url('/storage/temp-mail/favicon.svg') }}" />
+    <link rel="shortcut icon" href="{{ url('/storage/temp-mail/favicon.ico') }}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url('/storage/temp-mail/apple-touch-icon.png') }}" />
+    <link rel="manifest" href="{{ url('/storage/temp-mail/site.webmanifest') }}" />
 
     <style>
         :root {

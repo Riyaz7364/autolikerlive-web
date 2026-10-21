@@ -127,4 +127,32 @@ return [
         ])),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Firebase App Check
+    |--------------------------------------------------------------------------
+    |
+    | appcheck_enforce guards the app-facing temp-mail API. It default true
+    | so every production request must carry a valid X-Firebase-AppCheck
+    | token (issued for OUR Firebase app). The test suite flips it off.
+    |
+    */
+    'firebase' => [
+        'appcheck_enforce' => env('FIREBASE_APPCHECK_ENFORCE', true),
+
+        // Human-readable project ID. Used to validate the service account.
+        'project_id' => env('FIREBASE_PROJECT_ID', 'temp-mail-e39fe'),
+
+        // App Check JWTs use the numeric project number in their aud/iss
+        // claims (projects/610463736485), not the human-readable project ID.
+        'project_number' => env('FIREBASE_PROJECT_NUMBER', '610463736485'),
+
+        // The Android app ID that must appear in the token's sub claim.
+        'app_id' => env('FIREBASE_APP_ID', '1:610463736485:android:747df09ec27a30e116634c'),
+
+        // Path to the Firebase service-account JSON. Keep it outside the
+        // public webroot; storage/app is not web-accessible.
+        'credentials' => env('FIREBASE_CREDENTIALS', storage_path('app/firebase/service-account.json')),
+    ],
+
 ];

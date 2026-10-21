@@ -70,6 +70,25 @@ Route::get('/download/apk/{appName}', [DownloadController::class, 'apk'])
      ->where('appName', '[a-zA-Z0-9_\-]+')
      ->name('apk.download.app');
 
+// NetShort Video Downloader (canonical SEO URL).
+Route::get('/netshort-video-downloader', [\App\Http\Controllers\EpisodeDownloadController::class, 'show'])
+     ->name('netshort-video-downloader.show');
+Route::post('/netshort-video-downloader', [\App\Http\Controllers\EpisodeDownloadController::class, 'fetch'])
+     ->middleware('throttle:30,1')
+     ->name('netshort-video-downloader.fetch');
+// Force-download proxy (signed URL, streams MP4 as attachment).
+Route::get('/netshort-video-downloader/download', [\App\Http\Controllers\EpisodeDownloadController::class, 'download'])
+     ->name('netshort-video-downloader.download');
+
+// Legacy URL: keep equity, 301 to canonical (GET). POST kept for old forms/bots.
+Route::get('/episode-download', function (Request $request) {
+    $qs = $request->getQueryString();
+    return redirect()->to('/netshort-video-downloader'.($qs ? '?'.$qs : ''), 301);
+});
+Route::post('/episode-download', [\App\Http\Controllers\EpisodeDownloadController::class, 'fetch'])
+     ->middleware('throttle:30,1')
+     ->name('episode-download.fetch');
+
 
 Route::get('/gsc/oauth2callback', function (Request $request) {
     $hasCode = $request->filled('code');
@@ -214,6 +233,15 @@ $allowedLangs = config('language.allowed_languages');
     });
 
 // Temp Mail
+    // Privacy policy for the Temp Mail mobile app (Waseela).
+    Route::get('/temp-mail/privacy', function () {
+        return view('temp-mail-privacy');
+    })->name('temp-mail.privacy');
+
+    Route::get('/temp-mail-privacy', function () {
+        return redirect('/temp-mail/privacy', 301);
+    });
+
     Route::get('/temp-mail', function (\Illuminate\Http\Request $request) {
         // Deep-link support: /temp-mail?email=name@domain loads that inbox
         // (only for active domains; otherwise the usual session/random applies).

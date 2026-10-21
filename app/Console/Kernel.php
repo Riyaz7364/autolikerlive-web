@@ -16,6 +16,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('app:update-order-status')->everyMinute();
         $schedule->command('app:reset-premium')->hourly();
         $schedule->command('sitemap:generate')->daily();
+        // Temp mail push: poll the catch-all IMAP mailbox for active app
+        // inboxes and broadcast fresh messages over Reverb.
+        $schedule->command('tempmail:watch')->everyMinute();
         // $schedule->command('blog:publish-daily')->dailyAt('09:15')->withoutOverlapping();
     }
 

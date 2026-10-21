@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <x-ads.admaven-page-push />
+    <x-auto-ads />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="robots" content="index, follow" />
@@ -600,6 +600,10 @@
                 <p style="color: var(--muted); font-size: 12px; text-align: center; margin-top: 10px;">Results may vary depending on TikTok activity. Use responsibly.</p>
             </div>
 
+            <!-- Ads -->
+            <div class="ad-slot ad-leader hide-mobile"><x-ads.leaderboard /></div>
+            <div class="ad-slot show-mobile"><x-ads.mobile-banner /></div>
+
             {{-- Cross-promo: managed in Admin > Promotions --}}
             <x-promo-banner placement="tiktok_views" />
 
@@ -664,6 +668,9 @@
                 <p>Our tool delivers 100 views per request with a 10-minute cooldown. This means you can consistently grow your video's view count throughout the day. All views come from real engagement, making your growth look natural and authentic.</p>
                 <p>We are one of the most popular and effective places to promote your TikTok videos. Through hard work and dedication, we have become known as one of the best platforms for free TikTok engagement. Users enjoy using our service to boost their content and grow their presence on TikTok.</p>
             </section>
+
+            <!-- In-article ad -->
+            <div class="ad-slot ad-inline"><x-ads.in-article /></div>
 
             <!-- FAQ -->
             <section>

@@ -34,7 +34,7 @@
             @php
                 $msgId = is_array($message) ? $message['id'] : (is_object($message) ? $message->id : '');
             @endphp
-            <a href="{{ url('') }}/message/view/{{ $msgId }}" class="msg-row">
+            <a href="{{ url('') }}/message/view/{{ $msgId }}" class="msg-row" data-msg-id="{{ $msgId }}">
                 <span class="msg-cell msg-main">
                     <span class="msg-sender">
                         <span class="msg-dot {{ $message['is_seen'] ? 'is-not-active' : 'is-active' }}"></span>

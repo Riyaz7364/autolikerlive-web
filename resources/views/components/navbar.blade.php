@@ -2,6 +2,16 @@
     $sid = request()->cookie('game_session');
     $gameSession = $sid ? \App\Models\GameSession::find($sid) : null;
     $isLoggedIn = (bool) $gameSession;
+
+    // Highlight the Tools menu while browsing any tool page.
+    $toolPaths = [
+        'services', 'auto-liker-1000-likes', 'facebook-auto-reaction', 'facebook-page-liker',
+        'facebook-auto-followers', 'auto-friend-request', 'instagram-comment-liker',
+        'free-instagram-likes', 'free-tiktok-views', 'free-tiktok-likes',
+        'netshort-video-downloader', 'youtube_thumbnail_extractor', 'sms-bomber',
+        'temp-mail', 'message/view', 'findmyfbid',
+    ];
+    $isToolPage = collect($toolPaths)->contains(fn ($p) => request()->is($p) || request()->is($p . '/*'));
 @endphp
 
 <nav class="fb-nav">
@@ -10,6 +20,38 @@
         .fb-nav-menu a { color: #4b5563; font-size: 14px; font-weight: 600; padding: 8px 12px; border-radius: 8px; text-decoration: none; white-space: nowrap; }
         .fb-nav-menu a:hover { background: #f3f4f6; color: #111827; text-decoration: none; }
         .fb-nav-menu a.active { color: #1877f2; background: #e8f0fe; }
+        .fb-nav-tools { position: relative; }
+        .fb-nav-tools-btn {
+            display: inline-flex; align-items: center; gap: 4px;
+            background: none; border: none; cursor: pointer;
+            color: #4b5563; font-family: inherit; font-size: 14px; font-weight: 600;
+            padding: 8px 12px; border-radius: 8px; white-space: nowrap;
+        }
+        .fb-nav-tools-btn:hover, .fb-nav-tools-btn.open { background: #f3f4f6; color: #111827; }
+        .fb-nav-tools-btn.active { color: #1877f2; background: #e8f0fe; }
+        .fb-nav-tools-btn svg { transition: transform .2s; }
+        .fb-nav-tools-btn.open svg { transform: rotate(180deg); }
+        .fb-nav-tools-menu {
+            display: none; position: absolute; top: calc(100% + 10px); right: 0;
+            width: 560px; max-width: calc(100vw - 32px);
+            background: #fff; border: 1px solid #e5e7eb; border-radius: 14px;
+            box-shadow: 0 18px 44px rgba(0,0,0,.18), 0 2px 6px rgba(0,0,0,.08);
+            padding: 10px; z-index: 250;
+        }
+        .fb-nav-tools-menu.show { display: block; }
+        .fb-nav-menu .fb-nav-tools-all {
+            display: block; padding: 10px 12px; border-radius: 8px;
+            background: #eef4ff; color: #1877f2; font-weight: 700; font-size: 14px;
+        }
+        .fb-nav-menu .fb-nav-tools-all:hover { background: #e0ebff; color: #1877f2; }
+        .fb-nav-tools-divider { height: 1px; background: #eef0f3; margin: 8px 4px; }
+        .fb-nav-tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+        .fb-nav-menu .fb-nav-tools-grid a {
+            display: flex; align-items: center; gap: 8px;
+            padding: 9px 12px; border-radius: 8px;
+            color: #374151; font-size: 13.5px; font-weight: 500;
+        }
+        .fb-nav-menu .fb-nav-tools-grid a:hover { background: #f3f4f6; color: #111827; }
         @media (max-width: 900px) { .fb-nav-menu { display: none; } }
     </style>
     <div class="fb-nav-inner">
@@ -22,6 +64,34 @@
             <a href="{{ url('/download') }}" class="{{ request()->is('download*') ? 'active' : '' }}">Download</a>
             <a href="{{ url('auto-liker-1000-likes') }}" class="{{ request()->is('auto-liker-1000-likes') ? 'active' : '' }}">FB Liker</a>
             <a href="{{ route('games.hub') }}" class="{{ request()->is('games*') || request()->is('game*') ? 'active' : '' }}">Games</a>
+            <div class="fb-nav-tools">
+                <button type="button" class="fb-nav-tools-btn {{ $isToolPage ? 'active' : '' }}" id="navToolsBtn"
+                    onclick="toggleNavTools(event)" aria-haspopup="true" aria-expanded="false" aria-controls="navToolsMenu">
+                    Tools
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 10l5 5 5-5z"/></svg>
+                </button>
+                <div class="fb-nav-tools-menu" id="navToolsMenu" role="menu" aria-label="All free tools">
+                    <a href="{{ url('services') }}" class="fb-nav-tools-all" role="menuitem">🔧 All Free Tools</a>
+                    <div class="fb-nav-tools-divider"></div>
+                    <div class="fb-nav-tools-grid">
+                        <a href="{{ url('auto-liker-1000-likes') }}" role="menuitem">👍 FB Auto Liker</a>
+                        <a href="{{ url('facebook-auto-reaction') }}" role="menuitem">⚡ Auto Reactions</a>
+                        <a href="{{ url('facebook-page-liker') }}" role="menuitem">📄 Page Liker</a>
+                        <a href="{{ url('facebook-auto-followers') }}" role="menuitem">👥 Auto Followers</a>
+                        <a href="{{ url('auto-friend-request') }}" role="menuitem">🤝 Auto Friend Request</a>
+                        <a href="{{ url('instagram-comment-liker') }}" role="menuitem">📸 IG Comment Liker</a>
+                        <a href="{{ route('free-instagram-likes') }}" role="menuitem">❤️ Instagram Likes</a>
+                        <a href="{{ route('free-tiktok-views') }}" role="menuitem">🎬 TikTok Views</a>
+                        <a href="{{ route('free-tiktok-likes') }}" role="menuitem">🎵 TikTok Likes</a>
+                        <a href="{{ route('netshort-video-downloader.show') }}" role="menuitem">🎬 NetShort Downloader</a>
+                        <a href="{{ route('youtube_thumbnail_extractor') }}" role="menuitem">🖼️ YouTube Thumbnail Extractor</a>
+                        <a href="{{ route('sms-bomber') }}" role="menuitem">💬 SMS Bomber</a>
+                        <a href="{{ route('temp-mail') }}" role="menuitem">📧 Temp Mail</a>
+                        <a href="{{ url('findmyfbid') }}" role="menuitem">🆔 Find My FB ID</a>
+                        <a href="{{ route('games.hub') }}" role="menuitem">🎮 Games</a>
+                    </div>
+                </div>
+            </div>
             <a href="{{ url('/blog/') }}" class="{{ request()->is('blog*') ? 'active' : '' }}">Blog</a>
             <a href="{{ url('contact') }}" class="{{ request()->is('contact') ? 'active' : '' }}">Contact</a>
         </div>
@@ -88,12 +158,20 @@
         <a href="{{ url('services') }}" class="fb-tools-panel-item fb-tools-panel-all">🔧 All Free Tools</a>
         <div class="fb-tools-panel-divider"></div>
         <a href="{{ url('auto-liker-1000-likes') }}" class="fb-tools-panel-item">👍 FB Auto Liker</a>
+        <a href="{{ url('facebook-auto-reaction') }}" class="fb-tools-panel-item">⚡ Auto Reactions</a>
+        <a href="{{ url('facebook-page-liker') }}" class="fb-tools-panel-item">📄 Page Liker</a>
+        <a href="{{ url('facebook-auto-followers') }}" class="fb-tools-panel-item">👥 Auto Followers</a>
+        <a href="{{ url('auto-friend-request') }}" class="fb-tools-panel-item">🤝 Auto Friend Request</a>
         <a href="{{ url('instagram-comment-liker') }}" class="fb-tools-panel-item">📸 IG Comment Liker</a>
+        <a href="{{ route('free-instagram-likes') }}" class="fb-tools-panel-item">❤️ Instagram Likes</a>
         <a href="{{ route('free-tiktok-views') }}" class="fb-tools-panel-item">📹 TikTok Views</a>
         <a href="{{ route('free-tiktok-likes') }}" class="fb-tools-panel-item">❤️ TikTok Likes</a>
-        <a href="{{ route('free-instagram-likes') }}" class="fb-tools-panel-item">📸 Instagram Likes</a>
+        <a href="{{ route('netshort-video-downloader.show') }}" class="fb-tools-panel-item">🎬 NetShort Downloader</a>
+        <a href="{{ route('youtube_thumbnail_extractor') }}" class="fb-tools-panel-item">🖼️ YouTube Thumbnail Extractor</a>
         <a href="{{ route('sms-bomber') }}" class="fb-tools-panel-item">💬 SMS Bomber</a>
         <a href="{{ route('temp-mail') }}" class="fb-tools-panel-item">📧 Temp Mail</a>
+        <a href="{{ url('findmyfbid') }}" class="fb-tools-panel-item">🆔 Find My FB ID</a>
+        <a href="{{ route('games.hub') }}" class="fb-tools-panel-item">🎮 Games</a>
     </div>
 </div>
 
@@ -116,4 +194,37 @@ function toggleToolsPanel() {
     document.getElementById('toolsPanel').classList.toggle('open');
     document.getElementById('toolsOverlay').classList.toggle('show');
 }
+
+function toggleNavTools(event) {
+    if (event) event.stopPropagation();
+    const btn = document.getElementById('navToolsBtn');
+    const menu = document.getElementById('navToolsMenu');
+    if (!btn || !menu) return;
+
+    const isOpen = menu.classList.toggle('show');
+    btn.classList.toggle('open', isOpen);
+    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+}
+
+document.addEventListener('click', function (e) {
+    const menu = document.getElementById('navToolsMenu');
+    const btn = document.getElementById('navToolsBtn');
+    if (!menu || !btn || !menu.classList.contains('show')) return;
+    if (!menu.contains(e.target) && !btn.contains(e.target)) {
+        menu.classList.remove('show');
+        btn.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+    }
+});
+
+document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    const menu = document.getElementById('navToolsMenu');
+    const btn = document.getElementById('navToolsBtn');
+    if (menu && menu.classList.contains('show')) {
+        menu.classList.remove('show');
+        btn.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+    }
+});
 </script>

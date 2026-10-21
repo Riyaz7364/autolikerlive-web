@@ -36,6 +36,23 @@ class TempmailInbox extends Component
 
         $this->messages = collect($data);
         $this->dispatch('show-loader');
+
+        // Lightweight payload so the page can detect *new* arrivals
+        // (sound + toast + highlight). First poll just seeds the ids.
+        $msgs = [];
+        if (is_array($data) && ($data['status'] ?? false) === true
+            && isset($data['messages']) && is_array($data['messages'])) {
+            foreach ($data['messages'] as $m) {
+                if (is_array($m) && isset($m['id'])) {
+                    $msgs[] = [
+                        'id' => $m['id'],
+                        'subject' => mb_substr((string) ($m['subject'] ?? '(no subject)'), 0, 80),
+                        'from' => mb_substr((string) ($m['from'] ?? ($m['from_email'] ?? 'Unknown')), 0, 60),
+                    ];
+                }
+            }
+        }
+        $this->dispatch('inbox-updated', messages: $msgs);
     }
 
     public function render()

@@ -22,9 +22,7 @@ class TempMailController extends Controller
    protected $clientManager;
 
    function __construct(){
-        // $this->mailbox = '{82.180.146.92:993/imap/ssl/novalidate-cert}INBOX';
-        // $this->username = 'master@autolikerlive.com';
-        // $this->password = 'VaQGHUgqhjGWE8AQLLlnNiEjo';
+
         $this->clientManager = new ClientManager(base_path('config/imap.php'));
    }
 
@@ -638,4 +636,25 @@ class TempMailController extends Controller
        }
        return $email_lifetime * 1;
    }
-}
+
+    public function getMail(Request $request){
+        $validator = Validator::make($request->all(), [
+            'email'=>'required',
+        ]);
+
+
+        if($validator->fails()){
+            return response()->json([
+                'success'=>false,
+                'message'=> $validator->errors()
+            ]);
+        }
+        
+        $allMessages = $this->allMessages($request);
+        return response()->json([
+            'success'=>true,
+            'data'=> $allMessages
+        ]);
+    }
+
+   }

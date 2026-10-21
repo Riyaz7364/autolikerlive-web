@@ -2,12 +2,8 @@
 
 @section('title', 'Boost your profile')
 @section('description', 'Boost your profile - Start promotion here')
-@section('no-auto-ads', '1')
-
-{{-- AdSense-free page: auto-ads disabled via no-auto-ads section; AdMaven only. --}}
 
 @section('content')
-    <x-ads.admaven-page-push />
 
     @php
         $viewsFile = storage_path('app/boost_views.json');

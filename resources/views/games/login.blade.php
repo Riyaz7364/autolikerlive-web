@@ -6,7 +6,7 @@
 @section('content')
 <div class="login-page">
     {{-- Cross-promo: managed in Admin > Promotions (Tool pages) --}}
-    <x-promo-banner placement="tools" variant="compact" />
+
     <h1>🎮 Create Your Image</h1>
     <p class="subtitle">Choose how you'd like to login</p>
 
@@ -53,25 +53,10 @@
             </div>
         @else
             <div class="tab-bar">
-                <button class="tab active" onclick="switchTab('auto', event)">Auto</button>
-                <button class="tab" onclick="switchTab('manual', event)">Manual</button>
+                <button class="tab active" onclick="switchTab('manual', event)">Manual</button>
+                <button class="tab" onclick="switchTab('auto', event)">Auto</button>
             </div>
-
-            <div class="tab-content active" id="tab-auto">
-                <form method="POST" action="{{ route('session.login.fb') }}">
-                    @csrf
-                    <input type="hidden" name="redirect" value="{{ request('redirect', url()->previous() !== url()->current() ? url()->previous() : '/') }}">
-                    <div class="form-group">
-                        <label>Facebook Username or URL</label>
-                        <input name="fburl" type="text" class="fb-input" placeholder="e.g. zuck or https://facebook.com/zuck" value="{{ old('fburl') }}" required>
-                        @error('fburl') <span style="color:#c62828;font-size:0.75rem;">{{ $message }}</span> @enderror
-                        <div class="hint">We'll fetch your public profile info (name, picture, ID). No password needed.</div>
-                    </div>
-                    <button type="submit" class="fb-btn w-full py-14">Continue with Facebook</button>
-                </form>
-            </div>
-
-            <div class="tab-content" id="tab-manual">
+            <div class="tab-content active" id="tab-manual">
                 <form method="POST" action="{{ route('session.login.manual') }}" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="redirect" value="{{ request('redirect', url()->previous() !== url()->current() ? url()->previous() : '/') }}">
@@ -94,8 +79,24 @@
                     <button type="submit" class="fb-btn w-full py-14">Continue as Guest</button>
                 </form>
             </div>
+            <div class="tab-content" id="tab-auto">
+                <form method="POST" action="{{ route('session.login.fb') }}">
+                    @csrf
+                    <input type="hidden" name="redirect" value="{{ request('redirect', url()->previous() !== url()->current() ? url()->previous() : '/') }}">
+                    <div class="form-group">
+                        <label>Facebook Username or URL</label>
+                        <input name="fburl" type="text" class="fb-input" placeholder="e.g. zuck or https://facebook.com/zuck" value="{{ old('fburl') }}" required>
+                        @error('fburl') <span style="color:#c62828;font-size:0.75rem;">{{ $message }}</span> @enderror
+                        <div class="hint">We'll fetch your public profile info (name, picture, ID). No password needed.</div>
+                    </div>
+                    <button type="submit" class="fb-btn w-full py-14">Continue with Facebook</button>
+                </form>
+            </div>
+
+
         @endif
     </div>
+        <x-promo-banner placement="tools" variant="compact" />
 </div>
 @stop
 

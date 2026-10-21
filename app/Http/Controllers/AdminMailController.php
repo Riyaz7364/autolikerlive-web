@@ -29,7 +29,7 @@ class AdminMailController extends Controller
     private function connect(array $box)
     {
         $client = (new ClientManager())->make([
-            'host' => env('TEMP_IMAP_HOST', 'mail.autolikerlive.com'),
+            'host' => env('TEMP_IMAP_HOST', 'mail.bharatiyagharseva.com'),
             'port' => (int) env('TEMP_IMAP_PORT', 993),
             'protocol' => 'imap',
             'encryption' => 'ssl',

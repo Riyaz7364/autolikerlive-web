@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="revisit-after" content="1 days" />
     <meta name="googlebot" content="index, follow" />
-    <meta name='admaven-placement' content=Bqdg8rjw8>
     <meta name="robots" content="all" />
     <meta name="author" content="AutolikerLive" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -109,6 +108,7 @@
                 <a href="{{ url('/') }}">Games</a>
                 <a href="{{ url('services') }}">Free Tools</a>
                 <a href="{{ url('auto-liker-1000-likes') }}">FB Auto Liker</a>
+                <a href="{{ route('youtube_thumbnail_extractor') }}">YouTube Thumbnail</a>
                 <a href="{{ url('privacy') }}">Privacy</a>
                 <a href="{{ url('terms') }}">Terms</a>
             </div>

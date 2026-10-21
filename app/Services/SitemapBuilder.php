@@ -37,6 +37,7 @@ class SitemapBuilder
             '/sms-bomber',
             '/call-bomber',
             '/findmyfbid',
+            '/netshort-video-downloader',
             '/youtube_thumbnail_extractor',
             '/free-tiktok-views',
             '/free-tiktok-likes',

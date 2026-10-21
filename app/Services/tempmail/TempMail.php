@@ -21,9 +21,10 @@ class TempMailController
    protected $clientManager;
 
    function __construct(){
-        $this->mailbox = '{82.180.146.92:993/imap/ssl/novalidate-cert}INBOX';
-        $this->username = 'master@autolikerlive.com';
-        $this->password = 'Riyaz@7364';
+        $host = env('TEMP_IMAP_HOST', 'mail.bharatiyagharseva.com');
+        $this->mailbox = '{'.$host.':993/imap/ssl/novalidate-cert}INBOX';
+        $this->username = env('TEMP_IMAP_USERNAME', 'master@autolikerlive.com');
+        $this->password = env('TEMP_IMAP_PASSWORD', '');
         $this->clientManager = new ClientManager(base_path('config/imap.php'));
    }
 
@@ -31,12 +32,12 @@ class TempMailController
    {
        $client = $this->clientManager->make([
            'protocol'      => 'imap',
-           'host' => '82.180.146.92',
+           'host' => env('TEMP_IMAP_HOST', 'mail.bharatiyagharseva.com'),
            'port' => '993',
            'encryption' => 'ssl',
            'validate_cert' => false,
-           'username' => 'master@autolikerlive.com',
-           'password' => 'Riyaz@7364',
+           'username' => env('TEMP_IMAP_USERNAME', 'master@autolikerlive.com'),
+           'password' => env('TEMP_IMAP_PASSWORD', ''),
            'authentication' => null,
        ]);
 

@@ -127,8 +127,29 @@ Route::get('getCookies', function () {
 });
 
 // Temp Mail Routes
-Route::prefix('tempmail-tester')->group(function () {
+// The legacy auth-test endpoint (web IMAP debugging) stays here.
+Route::prefix('tempmail')->group(function () {
     Route::get('auth-test', [TempMailController::class, 'AuthTest']);
 });
+
+// -------------------------------------------------------------
+// Temp Mail API — only OUR app may call any of it:
+//   * appcheck: Firebase App Check token verified against our Firebase
+//     project (cannot be spoofed by another app or plain HTTP client).
+//   * inbox_token: every read/delete additionally requires the secret
+//     issued by POST /tempmail/create — the mailbox owner's key.
+//   * websocket push: private channels authorized through
+//     POST /tempmail/broadcasting/auth (requires App Check as well).
+// -------------------------------------------------------------
+Route::prefix('tempmail')
+    ->middleware(['appcheck', 'throttle:'.(config('tempmail-api.rate_limit') ?: 60).',1'])
+    ->group(function () {
+        Route::post('create', [\App\Http\Controllers\Api\TempMailApiController::class, 'create'])->name('tempmail.create');
+        Route::post('get-mail', [\App\Http\Controllers\Api\TempMailApiController::class, 'getMail'])->name('tempmail.get-mail');
+        Route::post('message', [\App\Http\Controllers\Api\TempMailApiController::class, 'message'])->name('tempmail.message');
+        Route::post('delete', [\App\Http\Controllers\Api\TempMailApiController::class, 'delete'])->name('tempmail.delete');
+        Route::post('broadcasting/auth', [\App\Http\Controllers\Api\TempMailApiController::class, 'broadcastAuth'])->name('tempmail.broadcast-auth');
+    });
+
 
 

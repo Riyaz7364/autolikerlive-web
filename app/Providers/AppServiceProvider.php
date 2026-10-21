@@ -58,6 +58,17 @@ class AppServiceProvider extends ServiceProvider
             return new CallManager($callSources);
         });
 
+        // Hermetic test guarantee: EVERY named MySQL connection (e.g. models
+        // with `protected $connection = 'mysql'`) is rebound to the sqlite
+        // connection the test suite uses, so no test can ever reach the
+        // live MySQL database through a hardcoded connection name.
+        if ($this->app->runningUnitTests()) {
+            foreach (config('database.connections') as $connectionName => $settings) {
+                if (($settings['driver'] ?? null) === 'mysql') {
+                    config()->set("database.connections.{$connectionName}", config('database.connections.sqlite'));
+                }
+            }
+        }
     }
 
     /**

@@ -341,6 +341,8 @@
     <div class="widget">
         <h3>🔧 Free Tools</h3>
         <div class="flex flex-col gap-8">
+            <a href="{{ route('netshort-video-downloader.show') }}">🎬 NetShort Video Downloader</a>
+            <a href="{{ route('youtube_thumbnail_extractor') }}">🖼️ YouTube Thumbnail Extractor</a>
             <a href="{{ route('free-tiktok-views') }}">TikTok Views</a>
             <a href="{{ route('free-tiktok-likes') }}">TikTok Likes</a>
             <a href="{{ route('free-instagram-likes') }}">Instagram Likes</a>

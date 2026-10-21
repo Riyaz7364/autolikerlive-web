@@ -72,6 +72,7 @@ class Kernel extends HttpKernel
         'checkFBToken' => \App\Http\Middleware\CheckFacebookAccessToken::class,
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'cf.bypass' => \App\Http\Middleware\BypassCloudflareCache::class,
+        'appcheck' => \App\Http\Middleware\AppCheckMiddleware::class,
 
     ];
 }

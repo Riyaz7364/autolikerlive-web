@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <x-auto-ads />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="robots" content="index, follow" />
@@ -668,6 +669,9 @@
             <p>Our tool delivers 10 likes per request with a 10-minute cooldown, so you can keep growing a post's like count throughout the day. To keep the service genuinely free and fair for everybody, the same post can't be the most recent one in the queue twice &mdash; once someone else submits a post, yours becomes eligible again.</p>
             <p>We are one of the most popular and effective places to promote Instagram posts. Through hard work and dedication, we have become known as one of the best platforms for free Instagram engagement. Users enjoy using our service to boost their content and grow their presence on Instagram.</p>
         </section>
+
+        <!-- In-article ad -->
+        <div class="ad-slot"><x-ads.in-article /></div>
 
         <!-- FAQ -->
         <section>

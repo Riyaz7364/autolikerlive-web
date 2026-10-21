@@ -261,6 +261,7 @@
         <button class="sv-tab" onclick="filterTools('facebook')">Facebook</button>
         <button class="sv-tab" onclick="filterTools('instagram')">Instagram</button>
         <button class="sv-tab" onclick="filterTools('tiktok')">TikTok</button>
+        <button class="sv-tab" onclick="filterTools('downloaders')">Downloaders</button>
         <button class="sv-tab" onclick="filterTools('utility')">Utility</button>
         <button class="sv-tab" onclick="filterTools('games')">Games</button>
     </div>
@@ -361,6 +362,21 @@
             </div>
         </div>
 
+        <div class="sv-category-section show" data-cat="downloaders">
+            <div class="sv-section-title"><span class="sv-dot ut"></span> Video Downloaders</div>
+            <div class="sv-grid">
+                <a href="{{ route('netshort-video-downloader.show') }}" class="sv-card sv-featured">
+                    <div class="sv-card-icon">🎬</div>
+                    <div class="sv-card-body">
+                        <span class="sv-badge sv-badge-new">New</span>
+                        <h5>NetShort Video Downloader</h5>
+                        <p>Download NetShort videos & drama episodes as MP4 in 720p HD or 1080p Full HD. Free, no watermark.</p>
+                        <span class="sv-card-btn">Use Tool <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/></svg></span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
         <div class="sv-category-section show" data-cat="utility">
             <div class="sv-section-title"><span class="sv-dot ut"></span> Utility Tools</div>
             <div class="sv-grid">
@@ -385,6 +401,15 @@
                     <div class="sv-card-body">
                         <h5>Find My FB ID</h5>
                         <p>Find your Facebook profile ID using your profile URL.</p>
+                        <span class="sv-card-btn">Use Tool <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/></svg></span>
+                    </div>
+                </a>
+                <a href="{{ route('youtube_thumbnail_extractor') }}" class="sv-card">
+                    <div class="sv-card-icon ut-bg">🖼️</div>
+                    <div class="sv-card-body">
+                        <span class="sv-badge sv-badge-new">New</span>
+                        <h5>YouTube Thumbnail Extractor</h5>
+                        <p>Download any YouTube video thumbnail in HD, SD and max resolution.</p>
                         <span class="sv-card-btn">Use Tool <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/></svg></span>
                     </div>
                 </a>

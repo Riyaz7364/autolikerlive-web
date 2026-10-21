@@ -22,6 +22,12 @@
     <meta name="twitter:description" content="{{ __('messages.tempMail.meta_desc') }}" />
     <meta name="twitter:image" content="https://www.autolikerlive.com/blog/storage/uploads/2025/05/ChatGPT-Image-May-1-2025-08_11_55-AM.webp" />
 
+    <link rel="icon" type="image/png" href="{{ url('/storage/temp-mail/favicon-96x96.png') }}" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="{{ url('/storage/temp-mail/favicon.svg') }}" />
+    <link rel="shortcut icon" href="{{ url('/storage/temp-mail/favicon.ico') }}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url('/storage/temp-mail/apple-touch-icon.png') }}" />
+    <link rel="manifest" href="{{ url('/storage/temp-mail/site.webmanifest') }}" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@500;600;700&display=swap" rel="stylesheet">
@@ -513,6 +519,99 @@
             text-overflow: ellipsis;
         }
         .msg-time { text-align: right; font-size: 12px; font-style: italic; color: var(--muted); white-space: nowrap; }
+        .msg-row-new {
+            border-color: var(--tm) !important;
+            animation: msgNewIn .55s ease, msgNewGlow 3.2s ease .55s;
+        }
+        @keyframes msgNewIn {
+            from { opacity: 0; transform: translateY(-12px); }
+            to { opacity: 1; transform: none; }
+        }
+        @keyframes msgNewGlow {
+            0%, 55% { box-shadow: 0 0 0 4px rgba(13, 148, 136, .28); }
+            100% { box-shadow: 0 6px 16px rgba(13, 148, 136, .12); }
+        }
+
+        /* Sound toggle in inbox header */
+        .sound-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid #bfe9df;
+            background: #ecfaf7;
+            color: var(--tm-dark);
+            cursor: pointer;
+            padding: 0;
+            position: relative;
+        }
+        .sound-toggle svg { width: 17px; height: 17px; }
+        .sound-toggle .slash { display: none; }
+        .sound-toggle.is-muted { color: #9aa0a6; background: #f1f3f4; border-color: var(--border); }
+        .sound-toggle.is-muted .slash { display: block; }
+        .inbox-head .head-right { display: inline-flex; align-items: center; gap: 8px; }
+
+        /* New-mail toast (bottom-right, separate from copy toast) */
+        .newMailToast {
+            position: fixed;
+            right: 1.25rem;
+            bottom: 1.25rem;
+            z-index: 400;
+            width: min(360px, calc(100vw - 2.5rem));
+            background: #fff;
+            border: 0;
+            border-left: 5px solid var(--tm);
+            border-radius: 14px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            animation: newToastIn .35s ease;
+        }
+        @keyframes newToastIn {
+            from { opacity: 0; transform: translateY(14px) scale(.97); }
+            to { opacity: 1; transform: none; }
+        }
+        .newMailToast .nm-head {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 12px 14px 6px;
+            font-weight: 800;
+            font-size: 14px;
+            color: var(--tm-dark);
+        }
+        .newMailToast .nm-head svg { width: 19px; height: 19px; flex-shrink: 0; }
+        .newMailToast .nm-body { padding: 0 14px 8px; font-size: 13px; color: var(--ink); }
+        .newMailToast .nm-body .nm-subject {
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .newMailToast .nm-body .nm-from { color: var(--muted); font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .newMailToast .nm-foot { display: flex; gap: 8px; padding: 0 14px 13px; }
+        .newMailToast .nm-view {
+            flex: 1;
+            text-align: center;
+            background: var(--tm-grad);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 10px;
+            border-radius: 9px;
+        }
+        .newMailToast .nm-view:hover { color: #fff; text-decoration: none; }
+        .newMailToast .nm-close {
+            border: 2px solid var(--border);
+            background: #fff;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 12px;
+            cursor: pointer;
+            color: var(--muted);
+        }
 
         /* ============ Sections ============ */
         .tm-section-title {
@@ -713,7 +812,12 @@
                             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
                             {{ __('messages.tempMail.inboxTitle') }}
                         </h3>
-                        <span class="live-dot"><span class="dot"></span> Live · {{ __('messages.tempMail.inboxSub') }}</span>
+                        <span class="head-right">
+                            <span class="live-dot"><span class="dot"></span> Live · {{ __('messages.tempMail.inboxSub') }}</span>
+                            <button type="button" id="soundToggle" class="sound-toggle" title="New-mail sound on/off" aria-label="Toggle new-mail sound" aria-pressed="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0" fill="currentColor" stroke="none"/><line class="slash" x1="3" y1="3" x2="21" y2="21" stroke-width="2.4"/></svg>
+                            </button>
+                        </span>
                     </div>
                     <div class="inbox-col-head">
                         <span>{{ __('messages.tempMail.inboxSender') }}</span>
@@ -761,7 +865,7 @@
         <div class="tm-footer-links">
             <a href="{{ url('/') }}">Home</a>
             <a href="{{ url('services') }}">All Tools</a>
-            <a href="{{ url('privacy') }}">Privacy</a>
+            <a href="{{ url('temp-mail/privacy') }}">Privacy</a>
             <a href="{{ url('terms') }}">Terms</a>
             <a href="{{ url('contact') }}">Contact</a>
         </div>
@@ -772,6 +876,22 @@
     <div class="toast fixedToast" id="copyToast" role="status" aria-live="polite" aria-atomic="true">
         <div class="toast-body">
             <strong>{{ __('messages.tempMail.copied') }}</strong>
+        </div>
+    </div>
+
+    <!-- ============ New-mail notification toast (sound + popup) ============ -->
+    <div class="newMailToast d-none" id="newMailToast" role="status" aria-live="polite" aria-atomic="true">
+        <div class="nm-head">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            <span id="nmTitle">New email received</span>
+        </div>
+        <div class="nm-body">
+            <div class="nm-subject" id="nmSubject"></div>
+            <div class="nm-from" id="nmFrom"></div>
+        </div>
+        <div class="nm-foot">
+            <a href="#" class="nm-view" id="nmView">View message</a>
+            <button type="button" class="nm-close" id="nmClose">Dismiss</button>
         </div>
     </div>
 
@@ -923,11 +1043,146 @@
             return name;
         }
 
+        /* ============ New-mail sound + popup notifications ============ */
+        var tmBaseTitle = document.title;
+        var tmKnownIds = new Set();
+        var tmSeededEmail = '';
+        var tmSoundOn = (function () {
+            try { return localStorage.getItem('tm_sound') !== 'off'; } catch (e) { return true; }
+        })();
+        var tmAudioCtx = null;
+        var tmTitleTimer = null;
+
+        function tmUnlockAudio() {
+            try {
+                if (!tmAudioCtx) {
+                    var AC = window.AudioContext || window.webkitAudioContext;
+                    if (AC) tmAudioCtx = new AC();
+                }
+                if (tmAudioCtx && tmAudioCtx.state === 'suspended') tmAudioCtx.resume();
+            } catch (e) {}
+        }
+        document.addEventListener('pointerdown', tmUnlockAudio, { once: true });
+        document.addEventListener('keydown', tmUnlockAudio, { once: true });
+
+        // Two-tone chime, generated — no audio file needed.
+        function tmPlayChime() {
+            if (!tmSoundOn) return;
+            try {
+                tmUnlockAudio();
+                if (!tmAudioCtx) return;
+                var now = tmAudioCtx.currentTime;
+                [[880, 0], [1318.5, 0.16]].forEach(function (note) {
+                    var osc = tmAudioCtx.createOscillator();
+                    var gain = tmAudioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.value = note[0];
+                    gain.gain.setValueAtTime(0.0001, now + note[1]);
+                    gain.gain.exponentialRampToValueAtTime(0.35, now + note[1] + 0.03);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + note[1] + 0.5);
+                    osc.connect(gain).connect(tmAudioCtx.destination);
+                    osc.start(now + note[1]);
+                    osc.stop(now + note[1] + 0.55);
+                });
+            } catch (e) {}
+        }
+
+        function tmSyncSoundToggle() {
+            var btn = document.getElementById('soundToggle');
+            if (!btn) return;
+            btn.classList.toggle('is-muted', !tmSoundOn);
+            btn.setAttribute('aria-pressed', tmSoundOn ? 'true' : 'false');
+            btn.title = tmSoundOn ? 'New-mail sound on (click to mute)' : 'New-mail sound off (click to unmute)';
+        }
+
+        function tmFlashTitle(count) {
+            try {
+                document.title = '(' + count + ') New mail - ' + tmBaseTitle;
+                if (tmTitleTimer) clearTimeout(tmTitleTimer);
+                tmTitleTimer = setTimeout(function () { document.title = tmBaseTitle; }, 12000);
+            } catch (e) {}
+        }
+        window.addEventListener('focus', function () { document.title = tmBaseTitle; });
+
+        function tmShowNewMailToast(fresh) {
+            var toast = document.getElementById('newMailToast');
+            if (!toast || !fresh.length) return;
+            var first = fresh[0];
+            var extra = fresh.length > 1 ? ' (+' + (fresh.length - 1) + ' more)' : '';
+            document.getElementById('nmTitle').textContent = 'New email received' + extra;
+            document.getElementById('nmSubject').textContent = first.subject || '(no subject)';
+            document.getElementById('nmFrom').textContent = first.from || '';
+            document.getElementById('nmView').href = window.location.origin + '/message/view/' + encodeURIComponent(first.id);
+            toast.classList.remove('d-none');
+            // Re-trigger entrance animation on repeat arrivals.
+            toast.style.animation = 'none';
+            void toast.offsetWidth;
+            toast.style.animation = '';
+            clearTimeout(toast._hideT);
+            toast._hideT = setTimeout(function () { toast.classList.add('d-none'); }, 15000);
+        }
+
+        function tmHighlightNewRows(fresh) {
+            // Livewire morphs the list first; wait a tick, then mark the rows.
+            setTimeout(function () {
+                fresh.forEach(function (m) {
+                    var row = document.querySelector('.msg-row[data-msg-id="' + CSS.escape(String(m.id)) + '"]');
+                    if (row) row.classList.add('msg-row-new');
+                });
+            }, 200);
+        }
+
+        function tmHandleInboxUpdate(payload) {
+            var msgs = [];
+            if (payload) {
+                if (Array.isArray(payload.messages)) msgs = payload.messages;
+                else if (Array.isArray(payload)) msgs = payload;
+                else if (payload.id) msgs = [payload];
+            }
+            var boxEl = document.getElementById('mailbox');
+            var currentEmail = boxEl ? boxEl.value : '';
+            // New address (or first poll): seed silently, no sound.
+            if (!tmSeededEmail || tmSeededEmail !== currentEmail) {
+                tmSeededEmail = currentEmail;
+                tmKnownIds = new Set(msgs.map(function (m) { return String(m.id); }));
+                return;
+            }
+            var fresh = msgs.filter(function (m) { return !tmKnownIds.has(String(m.id)); });
+            msgs.forEach(function (m) { tmKnownIds.add(String(m.id)); });
+            if (!fresh.length) return;
+            tmPlayChime();
+            tmShowNewMailToast(fresh);
+            tmHighlightNewRows(fresh);
+            tmFlashTitle(fresh.length);
+        }
+
         document.addEventListener('livewire:init', () => {
             Livewire.on('show-loader', (event) => {
                 showLoader();
                 setTimeout(function () { hideLoader(); }, 1000);
             });
+            Livewire.on('inbox-updated', (payload) => {
+                tmHandleInboxUpdate(payload);
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            tmSyncSoundToggle();
+            var btn = document.getElementById('soundToggle');
+            if (btn) {
+                btn.addEventListener('click', function () {
+                    tmSoundOn = !tmSoundOn;
+                    try { localStorage.setItem('tm_sound', tmSoundOn ? 'on' : 'off'); } catch (e) {}
+                    tmSyncSoundToggle();
+                    if (tmSoundOn) tmPlayChime(); // audible confirmation
+                });
+            }
+            var nmClose = document.getElementById('nmClose');
+            if (nmClose) {
+                nmClose.addEventListener('click', function () {
+                    document.getElementById('newMailToast').classList.add('d-none');
+                });
+            }
         });
     </script>
 @include('components.chat-widget')
