@@ -25,4 +25,8 @@ return [
     // When true, GET-MAIL without an inbox_token is still allowed (legacy
     // behaviour, any verified app can read any mailbox). Keep false.
     'allow_unowned_access' => (bool) env('TEMPMAIL_ALLOW_UNOWNED_ACCESS', false),
+
+    // Temporary diagnostic: log each TempMail API response body (secrets and
+    // mailbox tokens are redacted). Disable after debugging.
+    'log_responses' => (bool) env('TEMPMAIL_LOG_RESPONSES', false),
 ];

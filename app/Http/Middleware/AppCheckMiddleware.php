@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Kreait\Firebase\Factory;
 use RuntimeException;
 use Throwable;
@@ -25,6 +26,18 @@ class AppCheckMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
+        $logAccepted = (bool) config('services.firebase.appcheck_log_accepted', false);
+
+        if ($logAccepted) {
+            Log::info('App Check request received.', [
+                'method' => $request->method(),
+                'path' => $request->path(),
+                'ip' => $request->ip(),
+                'has_app_check_header' => $request->hasHeader('X-Firebase-AppCheck'),
+                'user_agent' => $request->userAgent(),
+            ]);
+        }
+
         if (in_array(config('services.firebase.appcheck_enforce', true), [false, 'disable'], true)) {
             $request->attributes->set('appcheck.user', 'app-instance');
 
@@ -34,12 +47,21 @@ class AppCheckMiddleware
         $appCheckToken = $request->header('X-Firebase-AppCheck');
 
         if (!$appCheckToken) {
+            if ($logAccepted) {
+                Log::warning('App Check header missing.', [
+                    'method' => $request->method(),
+                    'path' => $request->path(),
+                    'ip' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                ]);
+            }
+
             return response()->json(['error' => 'Invalid request taken'], 401);
         }
 
         $projectId = trim((string) config('services.firebase.project_id'));
         $projectNumber = trim((string) config('services.firebase.project_number'));
-        $expectedAppId = trim((string) config('services.firebase.app_id'));
+        $expectedAppIds = $this->expectedAppIds();
         $credentials = config('services.firebase.credentials');
 
         try {
@@ -56,13 +78,17 @@ class AppCheckMiddleware
                 throw new RuntimeException('App Check token issuer does not match the configured project number.');
             }
 
-            if ($expectedAppId !== '' && $verified->appId !== $expectedAppId) {
+            if ($expectedAppIds !== [] && !in_array($verified->appId, $expectedAppIds, true)) {
                 Log::warning('App Check token app ID mismatch.', [
-                    'expected_app_id' => $expectedAppId,
+                    'expected_app_ids' => $expectedAppIds,
                     'token_app_id' => $verified->appId,
                     'aud' => $verified->token->aud,
                     'iss' => $verified->token->iss,
                     'sub' => $verified->token->sub,
+                    'method' => $request->method(),
+                    'path' => $request->path(),
+                    'ip' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
                 ]);
 
                 return response()->json(['error' => 'Unknown Invalid request taken'], 403);
@@ -77,21 +103,151 @@ class AppCheckMiddleware
                 'app_id' => $verified->appId,
             ]);
 
-            return $next($request);
+            if ($logAccepted) {
+                Log::info('App Check token accepted.', [
+                    'app_id' => $verified->appId,
+                    'method' => $request->method(),
+                    'path' => $request->path(),
+                    'ip' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                ]);
+            }
+
+            $response = $next($request);
+
+            if (config('tempmail-api.log_responses', false)
+                && str_starts_with($request->path(), 'api/tempmail/')) {
+                Log::info('TempMail API response.', [
+                    'method' => $request->method(),
+                    'path' => $request->path(),
+                    'status' => $response->getStatusCode(),
+                    'body' => $this->responseBodyForLog($response),
+                ]);
+            }
+
+            if ($logAccepted) {
+                Log::info('App Check request completed.', [
+                    'app_id' => $verified->appId,
+                    'method' => $request->method(),
+                    'path' => $request->path(),
+                    'status' => $response->getStatusCode(),
+                    'user_agent' => $request->userAgent(),
+                ]);
+            }
+
+            return $response;
         } catch (Throwable $e) {
             Log::warning('App Check verification failed.', [
                 'reason' => $e->getMessage(),
                 'exception' => $e::class,
                 'claims' => $this->unverifiedClaims($appCheckToken),
+                'method' => $request->method(),
+                'path' => $request->path(),
+                'ip' => $request->ip(),
+                'user_agent' => $request->userAgent(),
                 'project_id' => $projectId,
                 'project_number' => $projectNumber,
-                'expected_app_id' => $expectedAppId,
+                'expected_app_ids' => $expectedAppIds,
                 'credentials_file' => is_string($credentials) ? $credentials : get_debug_type($credentials),
                 'credentials_file_exists' => is_string($credentials) && is_file($credentials),
             ]);
 
             return response()->json(['error' => 'Unknown Invalid request taken'], 403);
         }
+    }
+
+    /**
+     * Build a redacted, size-limited representation of an API response.
+     */
+    private function responseBodyForLog(mixed $response): mixed
+    {
+        $content = $response->getContent();
+
+        if (!is_string($content) || $content === '') {
+            return null;
+        }
+
+        $decoded = json_decode($content, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return Str::limit($content, 4000);
+        }
+
+        $redacted = $this->redactForLog($decoded);
+        $encoded = json_encode($redacted, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+
+        return $encoded === false ? $redacted : Str::limit($encoded, 12000);
+    }
+
+    /**
+     * Remove secrets from a decoded response before writing it to logs.
+     */
+    private function redactForLog(mixed $value): mixed
+    {
+        if (!is_array($value)) {
+            return $value;
+        }
+
+        $redacted = [];
+
+        foreach ($value as $key => $item) {
+            $normalized = strtolower((string) $key);
+
+            if (in_array($normalized, [
+                'inbox_token',
+                'email_token',
+                'auth',
+                'token',
+                'password',
+                'secret',
+                'authorization',
+                'x-firebase-appcheck',
+            ], true)) {
+                $redacted[$key] = '[redacted]';
+                continue;
+            }
+
+            if ($normalized === 'channel'
+                && is_string($item)
+                && str_starts_with($item, 'inbox.')) {
+                $redacted[$key] = 'inbox.[redacted]';
+                continue;
+            }
+
+            $redacted[$key] = $this->redactForLog($item);
+        }
+
+        return $redacted;
+    }
+
+    /**
+     * App IDs allowed to mint App Check tokens for this project.
+     *
+     * FIREBASE_APP_IDS may contain a comma-separated list (release + debug).
+     * FIREBASE_APP_ID remains supported as a single-value fallback.
+     *
+     * @return array<int, string>
+     */
+    private function expectedAppIds(): array
+    {
+        $configured = config('services.firebase.app_ids', []);
+
+        if (!is_array($configured)) {
+            $configured = [$configured];
+        }
+
+        $appIds = array_values(array_filter(array_map(
+            static fn ($appId) => is_string($appId) ? trim($appId) : '',
+            $configured
+        )));
+
+        if ($appIds !== []) {
+            return $appIds;
+        }
+
+        $single = trim((string) config('services.firebase.app_id', ''));
+
+        return $single === '' ? [] : [$single];
     }
 
     /**

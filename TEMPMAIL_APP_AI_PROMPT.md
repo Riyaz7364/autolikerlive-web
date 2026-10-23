@@ -57,7 +57,10 @@ Firebase project values:
 ```text
 project ID:     temp-mail-e39fe
 project number: 610463736485
-Android app ID: 1:610463736485:android:747df09ec27a30e116634c
+
+Android app IDs accepted by the backend:
+- Play Store / release: 1:610463736485:android:44746b7286ac396716634c
+- Debug / emulator:     1:610463736485:android:747df09ec27a30e116634c
 ```
 
 The app must let the Firebase App Check SDK set the header. The SDK sends a
@@ -66,7 +69,7 @@ JWT; never send the debug-token UUID manually. The backend verifies:
 - the JWT signature against `https://firebaseappcheck.googleapis.com/v1/jwks`
 - `aud` contains `projects/610463736485`
 - `iss` is `https://firebaseappcheck.googleapis.com/610463736485`
-- `sub` is `1:610463736485:android:747df09ec27a30e116634c`
+- `sub` is one of the two Android app IDs above
 
 A missing header returns:
 

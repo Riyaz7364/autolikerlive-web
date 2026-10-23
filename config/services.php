@@ -140,6 +140,11 @@ return [
     'firebase' => [
         'appcheck_enforce' => env('FIREBASE_APPCHECK_ENFORCE', true),
 
+        // Temporary diagnostic: log accepted App Check requests and their
+        // controller response status. Disable after debugging to avoid log
+        // volume from polling clients.
+        'appcheck_log_accepted' => env('FIREBASE_APPCHECK_LOG_ACCEPTED', false),
+
         // Human-readable project ID. Used to validate the service account.
         'project_id' => env('FIREBASE_PROJECT_ID', 'temp-mail-e39fe'),
 
@@ -147,7 +152,18 @@ return [
         // claims (projects/610463736485), not the human-readable project ID.
         'project_number' => env('FIREBASE_PROJECT_NUMBER', '610463736485'),
 
-        // The Android app ID that must appear in the token's sub claim.
+        // Android app IDs allowed in the token's sub claim. Keep both the
+        // Play Store (release) app and the debug app so emulator builds and
+        // production builds can authenticate. Comma-separated in .env.
+        'app_ids' => array_values(array_filter(array_map(
+            'trim',
+            explode(',', (string) env(
+                'FIREBASE_APP_IDS',
+                env('FIREBASE_APP_ID', '1:610463736485:android:44746b7286ac396716634c,1:610463736485:android:747df09ec27a30e116634c')
+            ))
+        ))),
+
+        // Backward-compatible single app ID fallback.
         'app_id' => env('FIREBASE_APP_ID', '1:610463736485:android:747df09ec27a30e116634c'),
 
         // Path to the Firebase service-account JSON. Keep it outside the
