@@ -240,6 +240,8 @@ class TempMailController extends Controller
         $tag = $extractEmail['tag'];
 
 
+       $client = null;
+
        try {
            $client = $this->connection();
            $folder = $client->getFolderByName('INBOX');
@@ -249,13 +251,24 @@ class TempMailController extends Controller
                : $folder->query()->to($email)->since(Carbon::now()->subDays($time)->format('d-M-Y'))->get();
 
            return $this->formatResponse($email, $messages, $domainPrefix, $prefix, $client);
-       } catch (\Exception $e) {
+       } catch (\Throwable $e) {
+           // Keep the details in the server log — never leak paths/traces to clients.
+           report($e);
+
            return [
                'status' => false,
                'mailbox' => "Unable to retrieve emails at this time. Please try Again",
-               'messages' => $e->getMessage(),
-               'trace' => $e->getTraceAsString()
+               'messages' => 'Please try again in a moment.',
            ];
+       } finally {
+           // Make sure a failed fetch cannot leak the IMAP connection.
+           if ($client !== null) {
+               try {
+                   $client->disconnect();
+               } catch (\Throwable $e) {
+                   // The connection is already gone — nothing to clean up.
+               }
+           }
        }
    }
 
@@ -317,7 +330,7 @@ class TempMailController extends Controller
 
         $hash_id = $this->encode_hash($id);
 
-        return Cache::remember($hash_id, 10000 * 60, function () use ($message, $hash_id, $domainPrefix, $prefix) {
+        $build = function () use ($message, $hash_id, $domainPrefix, $prefix) {
 
             Statistic::firstOrCreate(
                 ['key' => 'messages', 'value' => $hash_id], // Check for existence based on these fields
@@ -326,7 +339,16 @@ class TempMailController extends Controller
 
 
             return $this->extractMessageData($message, $hash_id, $domainPrefix, $prefix);
-        });
+        };
+
+        try {
+            return Cache::remember($hash_id, 10000 * 60, $build);
+        } catch (\Throwable $e) {
+            // A cache outage (permissions, full disk, ...) must not blank the inbox.
+            report($e);
+
+            return $build();
+        }
     }
 
     protected function extractMessageData($message, $hash_id, $domainPrefix, $prefix, $client = null, $seenFlag = false)

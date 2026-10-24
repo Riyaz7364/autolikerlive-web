@@ -95,14 +95,14 @@ class TempMailController
                : $folder->query()->to($email)->since(Carbon::now()->subDays($time)->format('d-M-Y'))->limit(50)->get();
 
            return $this->formatResponse($email, $messages, $domainPrefix, $prefix, $client);
-       } catch (\Exception $e) {
+       } catch (\Throwable $e) {
+           // Legacy service — keep logs server-side only.
+           report($e);
+
            return [
                 'status' => false,
                 'mailbox' => "Unable to retrieve emails at this time. Please try Again",
-                'messages' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'stack' => $e->getTraceAsString(),
+                'messages' => 'Please try again in a moment.',
            ];
        }
    }
@@ -167,7 +167,7 @@ class TempMailController
 
         $hash_id = $this->encode_hash($id, 'mail') .'0';
 
-        return Cache::remember($hash_id, 10000 * 60, function () use ($message, $hash_id, $domainPrefix, $prefix) {
+        $build = function () use ($message, $hash_id, $domainPrefix, $prefix) {
 
             Statistic::firstOrCreate(
                 ['key' => 'messages', 'value' => $hash_id], // Check for existence based on these fields
@@ -176,7 +176,16 @@ class TempMailController
 
 
             return $this->extractMessageData($message, $hash_id, $domainPrefix, $prefix);
-        });
+        };
+
+        try {
+            return Cache::remember($hash_id, 10000 * 60, $build);
+        } catch (\Throwable $e) {
+            // A cache outage must not blank the inbox.
+            report($e);
+
+            return $build();
+        }
     }
 
     protected function extractMessageData($message, $hash_id, $domainPrefix, $prefix, $client = null, $seenFlag = false)

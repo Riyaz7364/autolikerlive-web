@@ -113,6 +113,7 @@
                 <a href="{{ route('game.editor.create') }}" class="list-group-item list-group-item-action">+ New Game</a>
                 <a href="{{ route('admin.app-releases.index') }}" class="list-group-item list-group-item-action">App Updates</a>
                 <a href="{{ route('admin.promotions.index') }}" class="list-group-item list-group-item-action">📣 Promotions</a>
+                <a href="{{ route('admin.autoliker-services.index') }}" class="list-group-item list-group-item-action">⚡ AutoLiker Services</a>
             </div>
         </div>
         <div class="card shadow-sm">

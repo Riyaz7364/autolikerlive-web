@@ -136,6 +136,14 @@ class TempMailApiController extends \Illuminate\Routing\Controller
 
         $result = $this->webmailer->allMessages(new Request(['email' => $inbox->email]));
 
+        // The webmailer degrades to a status=false array on IMAP/cache errors.
+        if (! is_array($result) || ($result['status'] ?? false) !== true) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Mailbox temporarily unavailable. Please try again.',
+            ], 503);
+        }
+
         // Detect NEW messages (uids not seen before) and push them out.
         try {
             $this->broadcastNew($inbox, $result);

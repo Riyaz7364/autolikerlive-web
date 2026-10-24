@@ -871,10 +871,113 @@ button {
     border: 0;
 }
 
+/* Static order (SMM) service box */
+.order-box {
+    border: 2px solid #e3e8f0;
+    border-radius: 14px;
+    padding: 14px;
+    background: linear-gradient(180deg, #f8faff, #eef3ff);
+    margin-bottom: 18px;
+}
+.order-box-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+.order-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #1877f2;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .3px;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+.order-rate {
+    font-size: 13px;
+    color: #36537a;
+    font-weight: 700;
+}
+.order-qty-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.qty-step {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    border-radius: 10px;
+    border: 1px solid #c9d7ee;
+    background: #fff;
+    color: #1877f2;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+}
+.qty-step:active { transform: scale(.96); }
+.qty-step:disabled { opacity: .4; cursor: not-allowed; }
+.order-qty {
+    flex: 1;
+    min-width: 0;
+    height: 42px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1b2b45;
+    background: #fff;
+    border: 1px solid #c9d7ee;
+    border-radius: 10px;
+    -moz-appearance: textfield;
+}
+.order-qty::-webkit-outer-spin-button,
+.order-qty::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.order-total-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed #c9d7ee;
+    font-size: 14px;
+    color: #36537a;
+}
+.order-total { font-size: 18px; color: #0f9d58; }
+.order-hint {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #6b7c93;
+    line-height: 1.5;
+}
+.order-hint.bad { color: #c62828; font-weight: 700; }
+
     </style>
 </head>
 
 <body>
+@php
+    $services = $services ?? [];
+    $serviceLike = $services['like'] ?? [];
+    $serviceFollow = $services['follow'] ?? [];
+    $serviceComment = $services['comment'] ?? [];
+
+    $likeMode = $serviceLike['mode'] ?? 'websocket';
+    $followMode = $serviceFollow['mode'] ?? 'websocket';
+    $commentMode = $serviceComment['mode'] ?? 'websocket';
+
+    $likeEnabled = (bool) ($serviceLike['enabled'] ?? false);
+    $followEnabled = (bool) ($serviceFollow['enabled'] ?? false);
+    $commentEnabled = (bool) ($serviceComment['enabled'] ?? false);
+
+    $firstTab = $likeEnabled ? 'reactions' : ($followEnabled ? 'followers' : ($commentEnabled ? 'comments' : null));
+@endphp
 <!-- Modal structure -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
@@ -961,7 +1064,7 @@ button {
 
         <div class="info row">
            <div class="item">
-            <i class="fa-solid fa-warehouse"></i> <strong>Store Credits: {{ $credits['storage'] }}</strong>
+            <i class="fa-solid fa-warehouse"></i> <strong>Store Credits: <span class="storage-credits-value">{{ $credits['storage'] }}</span></strong>
            </div>
         <div class="item">
                 <button id="openModalBtn" class="btn-primary"> <i class="fa-solid fa-warehouse"></i> Open Storage</button>
@@ -984,19 +1087,36 @@ button {
         <div class="tabs-container">
             <!-- Tabs Navigation -->
             <div class="tabs-navigation">
-                <button class="tab-btn active" data-tab="reactions">
-                    <i class="fas fa-magic"></i> Reactions
-                </button>
-                <!-- <button class="tab-btn followers-tab" data-tab="followers">
-                    <i class="fas fa-user-plus"></i> Followers
-                </button> -->
-                <button class="tab-btn comments-tab" data-tab="comments">
-                    <i class="fas fa-comment-dots"></i> Comments
-                </button>
+                @if ($likeEnabled)
+                    <button class="tab-btn {{ $firstTab === 'reactions' ? 'active' : '' }}" data-tab="reactions">
+                        <i class="fas fa-magic"></i> Reactions
+                    </button>
+                @endif
+                @if ($followEnabled)
+                    <button class="tab-btn followers-tab {{ $firstTab === 'followers' ? 'active' : '' }}" data-tab="followers">
+                        <i class="fas fa-user-plus"></i> Followers
+                    </button>
+                @endif
+                @if ($commentEnabled)
+                    <button class="tab-btn comments-tab {{ $firstTab === 'comments' ? 'active' : '' }}" data-tab="comments">
+                        <i class="fas fa-comment-dots"></i> Comments
+                    </button>
+                @endif
             </div>
 
+            @if ($firstTab === null)
+                <div class="tab-content active">
+                    <div class="form-section">
+                        <div class="note">
+                            <i class="fas fa-info-circle"></i> All services are temporarily unavailable. Please check back later.
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            @if ($likeEnabled)
             <!-- Reactions Tab Content -->
-            <div class="tab-content active" id="reactions-tab">
+            <div class="tab-content {{ $firstTab === 'reactions' ? 'active' : '' }}" id="reactions-tab">
                 <div class="panel-header">
                     <h2><i class="fas fa-magic"></i> Liker Panel</h2>
                     <p>Enter public post link to add reactions</p>
@@ -1051,6 +1171,12 @@ button {
                                 </div>
                             </div>
                         </div>
+                        @if ($likeMode === 'order')
+                            @include('app.partials.autoliker-order-box', [
+                                'service' => $serviceLike,
+                                'accent' => '#1877f2',
+                            ])
+                        @else
                         <div class="form-group">
                             <label>Choose Method:</label>
                             <div class="reaction-options">
@@ -1060,22 +1186,29 @@ button {
                                 </div>
                                 <div class="reaction-item send-method" data-reaction="storage">
                                     <div><i class="fa-solid fa-warehouse"></i></div>
-                                    <div class="reaction-label">STORAGE Credits {{ $credits['storage'] }}</div>
+                                    <div class="reaction-label">STORAGE Credits <span class="storage-credits-value">{{ $credits['storage'] }}</span></div>
                                 </div>
                             </div>
                         </div>
+                        @endif
 
                         <button type="submit" class="submit-btn" id="submitBtn">
-                            <i class="fa-solid fa-paper-plane fa-shake"></i> Send
+                            @if ($likeMode === 'order')
+                                <i class="fa-solid fa-bolt"></i> Place Order
+                            @else
+                                <i class="fa-solid fa-paper-plane fa-shake"></i> Send
+                            @endif
                         </button>
                     </form>
 
                     <div id="responseMessage"></div>
                 </div>
             </div>
+            @endif
 
+            @if ($followEnabled)
             <!-- Followers Tab Content -->
-            <div class="tab-content" id="followers-tab">
+            <div class="tab-content {{ $firstTab === 'followers' ? 'active' : '' }}" id="followers-tab">
                 <div class="panel-header" style="background: linear-gradient(135deg, #667eea, #764ba2);">
                     <h2><i class="fas fa-user-plus"></i> Followers Tool</h2>
                     <p>Enter profile link to gain followers</p>
@@ -1088,7 +1221,14 @@ button {
                     </div>
 
                     <div class="note" style="background: #ffe0b2; color: #e65100; border-left-color: #ff9800;">
-                        <i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong> Followers cost <strong>3x more</strong> than reactions!
+                        <i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong>
+                        @if ($followMode === 'order')
+                            Each follower costs <strong>{{ (int) $serviceFollow['cost'] }} storage credits</strong>.
+                            Minimum order: <strong>{{ (int) $serviceFollow['min'] }}</strong> followers
+                            ({{ (int) $serviceFollow['min'] * (int) $serviceFollow['cost'] }} credits).
+                        @else
+                            Followers cost <strong>3x more</strong> than reactions!
+                        @endif
                     </div>
 
                     <form id="followersForm">
@@ -1101,6 +1241,12 @@ button {
                             <div class="tut-hint"><i class="fas fa-circle-play"></i> Link not found or invalid? <a href="#" class="open-fb-video">Watch this 30-sec fix</a></div>
                         </div>
 
+                        @if ($followMode === 'order')
+                            @include('app.partials.autoliker-order-box', [
+                                'service' => $serviceFollow,
+                                'accent' => '#667eea',
+                            ])
+                        @else
                         <div class="form-group">
                             <label>Choose Method:</label>
                             <div class="reaction-options">
@@ -1110,22 +1256,29 @@ button {
                                 </div>
                                 <div class="reaction-item send-method-followers" data-reaction="storage">
                                     <div><i class="fa-solid fa-warehouse"></i></div>
-                                    <div class="reaction-label">STORAGE Credits {{ $credits['storage'] }}</div>
+                                    <div class="reaction-label">STORAGE Credits <span class="storage-credits-value">{{ $credits['storage'] }}</span></div>
                                 </div>
                             </div>
                         </div>
+                        @endif
 
                         <button type="submit" class="submit-btn" id="submitFollowersBtn" style="background: linear-gradient(135deg, #667eea, #764ba2);">
-                            <i class="fa-solid fa-user-plus fa-shake"></i> Send Followers
+                            @if ($followMode === 'order')
+                                <i class="fa-solid fa-bolt"></i> Place Order
+                            @else
+                                <i class="fa-solid fa-user-plus fa-shake"></i> Send Followers
+                            @endif
                         </button>
                     </form>
 
                     <div id="followersResponseMessage"></div>
                 </div>
             </div>
+            @endif
 
+            @if ($commentEnabled)
             <!-- Comments Tab Content -->
-            <div class="tab-content" id="comments-tab">
+            <div class="tab-content {{ $firstTab === 'comments' ? 'active' : '' }}" id="comments-tab">
                 <div class="panel-header" style="background: linear-gradient(135deg, #f97316, #f59e0b);">
                     <h2><i class="fas fa-comment-dots"></i> Comments Tool</h2>
                     <p>Enter public post link and comment text to send comments.</p>
@@ -1137,7 +1290,13 @@ button {
                     </div>
 
                     <div class="note" style="background: #fff3cd; color: #856404; border-left-color: #ffecb5;">
-                        <i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong> Comments cost <strong>10x more</strong> than reactions and must not contain abuse or bad words.
+                        <i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong>
+                        @if ($commentMode === 'order')
+                            Each comment costs <strong>{{ (int) $serviceComment['cost'] }} storage credits</strong>.
+                            Minimum order: <strong>{{ (int) $serviceComment['min'] }}</strong>.
+                        @else
+                            Comments cost <strong>10x more</strong> than reactions and must not contain abuse or bad words.
+                        @endif
                     </div>
 
                     <form id="commentsForm">
@@ -1156,6 +1315,18 @@ button {
                             <textarea id="commentText" class="url-input" rows="2" maxlength="120" style="height: auto; max-height: 100px; resize: vertical; overflow: auto;" placeholder="Enter your comment here"></textarea>
                         </div>
 
+                        @if ($commentMode === 'order')
+                            <div style="margin-bottom: 20px;">
+                                <button type="button" id="generateCommentBtn" class="submit-btn" style="background: linear-gradient(135deg, #0ea5e9, #2563eb);">
+                                    <i class="fas fa-robot"></i> Auto Generate
+                                </button>
+                            </div>
+
+                            @include('app.partials.autoliker-order-box', [
+                                'service' => $serviceComment,
+                                'accent' => '#f97316',
+                            ])
+                        @else
                         <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: flex-start;">
                             <button type="button" id="generateCommentBtn" class="submit-btn" style="flex: 0 1 190px; min-width: 160px; max-width: 220px; background: linear-gradient(135deg, #0ea5e9, #2563eb);">
                                 <i class="fas fa-robot"></i> Auto Generate
@@ -1169,20 +1340,26 @@ button {
                                     </div>
                                     <div class="reaction-item send-method-comments" data-reaction="storage">
                                         <div><i class="fa-solid fa-warehouse"></i></div>
-                                        <div class="reaction-label">STORAGE Credits {{ $credits['storage'] }}</div>
+                                        <div class="reaction-label">STORAGE Credits <span class="storage-credits-value">{{ $credits['storage'] }}</span></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        @endif
 
                         <button type="submit" class="submit-btn" id="submitCommentsBtn" style="background: linear-gradient(135deg, #f97316, #d97706);">
-                            <i class="fa-solid fa-paper-plane fa-shake"></i> Send Comments
+                            @if ($commentMode === 'order')
+                                <i class="fa-solid fa-bolt"></i> Place Order
+                            @else
+                                <i class="fa-solid fa-paper-plane fa-shake"></i> Send Comments
+                            @endif
                         </button>
                     </form>
 
                     <div id="commentsResponseMessage"></div>
                 </div>
             </div>
+            @endif
         </div>
 
         @if(config('ads.adsense_enabled'))
@@ -1237,6 +1414,10 @@ button {
     </div>
 
     <script>
+        const APP_SERVICES = @json($services);
+        const APP_SERVICE_KEYS = { reaction: 'like', followers: 'follow', comments: 'comment' };
+        const ORDER_URL = @json(route('app.autoliker.order'));
+
         let selectedReaction = 1;
         let selectedMethod = 'timer';
         let selectedMethodFollowers = 'timer';
@@ -1254,6 +1435,7 @@ button {
             setupMethodHandlers();
             setupFollowersMethodHandlers();
             setupCommentsMethodHandlers();
+            setupOrderBoxes();
             setupTabs();
             updateTimer();
         });
@@ -1377,28 +1559,216 @@ button {
             syncTaskFlags();
         }
 
+        function serviceConfig(kind) {
+            return APP_SERVICES[APP_SERVICE_KEYS[kind]] || {};
+        }
+
+        function serviceIsOrder(kind) {
+            return serviceConfig(kind).mode === 'order';
+        }
+
+        function orderBoxFor(kind) {
+            return document.querySelector('.order-box[data-service="' + APP_SERVICE_KEYS[kind] + '"]');
+        }
+
+        function orderQuantityFor(kind) {
+            var box = orderBoxFor(kind);
+            if (!box) return 0;
+            var qty = parseInt(box.querySelector('.order-qty').value, 10);
+            return isNaN(qty) ? 0 : qty;
+        }
+
+        function orderCostFor(kind) {
+            var cost = parseInt(serviceConfig(kind).cost, 10) || 0;
+            return orderQuantityFor(kind) * cost;
+        }
+
+        function updateStorageDisplays() {
+            document.querySelectorAll('.storage-credits-value').forEach(function (el) {
+                el.textContent = storageCredits;
+            });
+            var totalEl = document.getElementById('totalCredits');
+            if (totalEl) totalEl.textContent = storageCredits;
+            refreshSendButtons();
+        }
+
         function refreshSendButtons() {
-            // Central place to compute enabled/disabled, always respecting running tasks
-            if (!sendTaskState.reaction.running) {
-                if (selectedMethod === 'storage') sendButtonEL.disabled = storageCredits <= 0;
-                else sendButtonEL.disabled = timeLeft > 0;
-                sendButtonEL.classList.remove('sending');
+            // Central place to compute enabled/disabled, always respecting running tasks.
+            // Order services are not timer-bound: they only need enough storage credits
+            // for quantity × credits-per-unit.
+            var buttons = [
+                { kind: 'reaction', btn: sendButtonEL, method: function () { return selectedMethod; } },
+                { kind: 'followers', btn: sendFollowersButtonEL, method: function () { return selectedMethodFollowers; } },
+                { kind: 'comments', btn: sendCommentsButtonEL, method: function () { return selectedMethodComments; } }
+            ];
+
+            buttons.forEach(function (item) {
+                var btn = item.btn;
+                if (!btn) return;
+
+                var st = sendTaskState[item.kind];
+                if (st.running || st.done) {
+                    btn.disabled = true;
+                    return;
+                }
+
+                if (serviceIsOrder(item.kind)) {
+                    var cost = orderCostFor(item.kind);
+                    btn.disabled = cost <= 0 || storageCredits < cost;
+                } else if (item.method() === 'storage') {
+                    btn.disabled = storageCredits <= 0;
+                } else {
+                    btn.disabled = timeLeft > 0;
+                }
+                btn.classList.remove('sending');
+            });
+        }
+
+        function setupOrderBoxes() {
+            document.querySelectorAll('.order-box').forEach(function (box) {
+                var input = box.querySelector('.order-qty');
+                if (!input) return;
+
+                var min = parseInt(box.dataset.min, 10) || 1;
+                var max = parseInt(box.dataset.max, 10) || min;
+                var cost = parseInt(box.dataset.cost, 10) || 0;
+
+                function sync() {
+                    var qty = parseInt(input.value, 10);
+                    if (isNaN(qty)) qty = min;
+                    qty = Math.min(max, Math.max(min, qty));
+                    input.value = qty;
+
+                    var totalEl = box.querySelector('[data-total]');
+                    if (totalEl) totalEl.textContent = (qty * cost) + ' credits';
+
+                    box.querySelectorAll('.qty-step').forEach(function (step) {
+                        var dir = parseInt(step.dataset.step, 10);
+                        step.disabled = dir < 0 ? qty <= min : qty >= max;
+                    });
+
+                    refreshSendButtons();
+                }
+
+                box.querySelectorAll('.qty-step').forEach(function (step) {
+                    step.addEventListener('click', function () {
+                        var dir = parseInt(step.dataset.step, 10);
+                        var qty = parseInt(input.value, 10);
+                        if (isNaN(qty)) qty = min;
+                        input.value = Math.min(max, Math.max(min, qty + dir));
+                        sync();
+                    });
+                });
+
+                input.addEventListener('input', sync);
+                input.addEventListener('change', sync);
+                sync();
+            });
+        }
+
+        function showTaskError(kind, message) {
+            var els = getTaskEls(kind);
+            if (els.msgBox) {
+                els.msgBox.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-triangle"></i> ' + message + '</div>';
             } else {
-                sendButtonEL.disabled = true;
+                alert(message);
             }
-            if (!sendTaskState.followers.running) {
-                if (selectedMethodFollowers === 'storage') sendFollowersButtonEL.disabled = storageCredits <= 0;
-                else sendFollowersButtonEL.disabled = timeLeft > 0;
-                sendFollowersButtonEL.classList.remove('sending');
+        }
+
+        async function placeOrder(kind) {
+            var cfg = serviceConfig(kind);
+            var box = orderBoxFor(kind);
+            if (!box) { showTaskError(kind, 'Order service is not configured.'); return; }
+
+            var min = parseInt(box.dataset.min, 10) || 1;
+            var max = parseInt(box.dataset.max, 10) || min;
+            var quantity = parseInt(box.querySelector('.order-qty').value, 10);
+            if (isNaN(quantity)) quantity = min;
+            quantity = Math.min(max, Math.max(min, quantity));
+            box.querySelector('.order-qty').value = quantity;
+
+            var unitCost = parseInt(cfg.cost, 10) || 0;
+            var totalCost = quantity * unitCost;
+
+            var link = '';
+            var comment = '';
+            var reaction = 0;
+
+            if (kind === 'reaction') {
+                link = ($('#postUrl').val() || '').trim();
+                reaction = selectedReaction;
+                if (!link) { showTaskError(kind, 'Please enter post link.'); return; }
+            } else if (kind === 'followers') {
+                link = ($('#profileUrl').val() || '').trim();
+                if (!link) { showTaskError(kind, 'Please enter profile link.'); return; }
             } else {
-                sendFollowersButtonEL.disabled = true;
+                link = ($('#commentPostUrl').val() || '').trim();
+                comment = ($('#commentText').val() || '').trim();
+                if (!link || !comment) { showTaskError(kind, 'Please enter post link and comment text.'); return; }
             }
-            if (!sendTaskState.comments.running) {
-                if (selectedMethodComments === 'storage') sendCommentsButtonEL.disabled = storageCredits <= 0;
-                else sendCommentsButtonEL.disabled = timeLeft > 0;
-                sendCommentsButtonEL.classList.remove('sending');
-            } else {
-                sendCommentsButtonEL.disabled = true;
+
+            if (storageCredits < totalCost) {
+                showTaskError(kind, 'Not enough storage credits. This order costs ' + totalCost + ' credits.');
+                return;
+            }
+
+            if (!startSendTask(kind, 'Placing order…')) return;
+
+            var els = getTaskEls(kind);
+            if (els.msgBox) {
+                els.msgBox.innerHTML = '<div class="ws-loader"><span class="btn-spinner"></span><span>Placing order… please wait</span></div>';
+            }
+
+            try {
+                var response = await fetch(ORDER_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: JSON.stringify({
+                        service: APP_SERVICE_KEYS[kind],
+                        link: link,
+                        quantity: quantity,
+                        comment: comment,
+                        reaction: reaction,
+                    }),
+                });
+
+                var data = await response.json().catch(function () { return {}; });
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.message || 'Order could not be placed.');
+                }
+
+                if (typeof data.storage === 'number') {
+                    storageCredits = data.storage;
+                    updateStorageDisplays();
+                }
+
+                var st = sendTaskState[kind];
+                st.running = false;
+                st.done = true;
+                syncTaskFlags();
+
+                if (els.btn) {
+                    els.btn.disabled = true;
+                    els.btn.classList.remove('sending');
+                    els.btn.innerHTML = '<i class="fas fa-check-circle"></i> Order placed';
+                }
+
+                if (els.msgBox) {
+                    els.msgBox.innerHTML = '<div class="success-message"><i class="fas fa-check-circle"></i> ' +
+                        (data.message || 'Order placed successfully.') +
+                        ' Order #' + data.order_id + ' — ' + data.quantity + ' × ' + unitCost +
+                        ' = ' + data.cost + ' credits.</div>';
+                }
+
+                setTimeout(function () { window.location.reload(); }, 2500);
+            } catch (err) {
+                failSendTask(kind, err.message || 'Order failed. Your credits were not charged.');
             }
         }
 
@@ -1416,15 +1786,12 @@ button {
             });
 
             if (timeLeft <= 0) {
-                // Never re-enable a running/succeeded task — only page reload clears it
-                sendButtonEL.disabled = sendTaskState.reaction.running || sendTaskState.reaction.done ? true : false;
-                sendFollowersButtonEL.disabled = sendTaskState.followers.running || sendTaskState.followers.done ? true : false;
-                sendCommentsButtonEL.disabled = sendTaskState.comments.running || sendTaskState.comments.done ? true : false;
                 storeButtonEL.disabled = false;
                 if (timerEl) timerEl.innerHTML = '⸜(｡˃ ᵕ ˂ )⸝♡';
-            } else {
                 refreshSendButtons();
+            } else {
                 storeButtonEL.disabled = true;
+                refreshSendButtons();
                 timeLeft--;
                 setTimeout(updateTimer, 1000);
             }
@@ -1546,6 +1913,10 @@ button {
                 window.flutter_inappwebview.callHandler('showInterstitialAd');
             }
 
+            if (serviceIsOrder('comments')) {
+                return placeOrder('comments');
+            }
+
             if (!startSendTask('comments', 'Sending Comments…')) return;
             const postId = $('#commentPostUrl').val();
             const comment = $('#commentText').val().trim();
@@ -1623,6 +1994,10 @@ button {
                 window.flutter_inappwebview.callHandler('showInterstitialAd');
             }
 
+            if (serviceIsOrder('followers')) {
+                return placeOrder('followers');
+            }
+
             if (!startSendTask('followers', 'Sending Followers…')) return;
             const profileId = $('#profileUrl').val();
             if (!profileId) {
@@ -1691,6 +2066,10 @@ button {
 
             if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
                 window.flutter_inappwebview.callHandler('showInterstitialAd');
+            }
+
+            if (serviceIsOrder('reaction')) {
+                return placeOrder('reaction');
             }
 
             if (!startSendTask('reaction', 'Sending…')) return;

@@ -29,6 +29,7 @@ Route::prefix('app')->name('app.')->group(function () {
     // AutoLiker Routes (for EAAF tokens)
     Route::get('/autoliker', [AppController::class, 'autolikerDashboard'])->name('autoliker');
     Route::post('/autoliker/submit-reaction', [AppController::class, 'submitAutoLikerReaction'])->name('autoliker.reaction');
+    Route::post('/autoliker/order', [AppController::class, 'submitAutoLikerOrder'])->name('autoliker.order');
     Route::get('/autoliker/stats', [AppController::class, 'getAutoLikerStats'])->name('autoliker.stats');
 
     // Health Check

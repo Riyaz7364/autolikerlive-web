@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\Link;
+use App\Services\AutolikerServiceConfig;
 use phpseclib3\Crypt\AES;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
@@ -355,7 +358,10 @@ class AppController extends Controller
 
         $session = Session::get('facebook_user')['session'] ?? null;
 
-        return view('app.autoliker', compact(['user', 'credits', 'session']));
+        // Delivery mode / pricing / visibility are managed from the admin panel.
+        $services = AutolikerServiceConfig::all();
+
+        return view('app.autoliker', compact(['user', 'credits', 'session', 'services']));
     }
 
     /**
@@ -1427,6 +1433,180 @@ class AppController extends Controller
                 'message' => 'Unable to access posts data',
             ]);
         }
+    }
+
+    // Place an AutoLiker order on the SMM provider (static order service)
+    public function submitAutoLikerOrder(Request $request)
+    {
+        $user = Session::get('facebook_user');
+
+        if (!$user || ($user['app_type'] ?? null) !== 'autoliker') {
+            return response()->json([
+                'success' => false,
+                'message' => 'AutoLiker session required. Please login again.',
+            ], 401);
+        }
+
+        $data = $request->validate([
+            'service' => 'required|in:like,follow,comment',
+            'link' => 'required|string|max:2000',
+            'quantity' => 'nullable|integer|min:1|max:100000',
+            'comment' => 'nullable|string|max:500',
+            'reaction' => 'nullable|integer',
+        ]);
+
+        $service = AutolikerServiceConfig::get($data['service']);
+
+        if (!$service) {
+            return response()->json(['success' => false, 'message' => 'Unknown service.'], 422);
+        }
+
+        if (!$service['enabled']) {
+            return response()->json(['success' => false, 'message' => 'This service is currently disabled.'], 422);
+        }
+
+        if ($service['mode'] !== 'order') {
+            return response()->json(['success' => false, 'message' => 'This service does not use order delivery.'], 422);
+        }
+
+        $providerId = $service['provider']['id'] ?? null;
+        if (!$providerId) {
+            Log::error('AutoLiker order service has no provider id', ['service' => $data['service']]);
+            return response()->json(['success' => false, 'message' => 'Order service is not configured yet.'], 503);
+        }
+
+        $min = max(1, (int) $service['min']);
+        $max = max($min, (int) $service['max']);
+        $quantity = (int) ($data['quantity'] ?? $service['quantity']);
+        if ($quantity < $min || $quantity > $max) {
+            return response()->json([
+                'success' => false,
+                'message' => "Quantity must be between {$min} and {$max}.",
+            ], 422);
+        }
+
+        $link = trim($data['link']);
+        $comment = trim((string) ($data['comment'] ?? ''));
+
+        if ($service['key'] === 'comment' && $comment === '') {
+            return response()->json(['success' => false, 'message' => 'Please enter a comment.'], 422);
+        }
+
+        $unitCost = max(0, (int) $service['cost']);
+        $totalCost = $unitCost * $quantity;
+        $userId = (string) ($user['id'] ?? '');
+
+        if ($userId === '') {
+            return response()->json(['success' => false, 'message' => 'Invalid user session.'], 401);
+        }
+
+        $connection = DB::connection('mysql2');
+        $storage = (int) ($connection->table('users')->where('id', $userId)->value('storage') ?? 0);
+
+        if ($storage < $totalCost) {
+            return response()->json([
+                'success' => false,
+                'message' => "Not enough storage credits. This order costs {$totalCost} credits.",
+                'storage' => $storage,
+                'cost' => $totalCost,
+            ], 422);
+        }
+
+        // Reserve credits atomically before contacting the provider. If the
+        // provider rejects the order the exact amount is refunded below.
+        $reserved = $connection->table('users')
+            ->where('id', $userId)
+            ->where('storage', '>=', $totalCost)
+            ->decrement('storage', $totalCost);
+
+        if (!$reserved) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Not enough storage credits.',
+            ], 422);
+        }
+
+        $api = $service['provider']['api'] ?? AutolikerServiceConfig::PROVIDER_API;
+        $key = $service['provider']['key'] ?? AutolikerServiceConfig::PROVIDER_KEY;
+
+        $payload = [
+            'key' => $key,
+            'action' => 'add',
+            'service' => $providerId,
+            'link' => $link,
+            'quantity' => $quantity,
+        ];
+
+        if ($service['key'] === 'comment') {
+            $commentField = $service['provider']['comment_field'] ?? 'comments';
+            $payload[$commentField] = $comment;
+        }
+
+        try {
+            $response = Http::asForm()
+                ->connectTimeout(10)
+                ->timeout(25)
+                ->post($api, $payload);
+
+            if ($response->failed()) {
+                throw new \RuntimeException('Provider HTTP ' . $response->status());
+            }
+
+            $json = $response->json();
+            $providerOrderId = $json['order'] ?? $json['order_id'] ?? null;
+
+            if (!$providerOrderId || !empty($json['error'])) {
+                $providerError = is_array($json)
+                    ? ($json['error'] ?? $json['message'] ?? 'Provider rejected the order')
+                    : 'Provider returned an invalid response';
+                throw new \RuntimeException((string) $providerError);
+            }
+        } catch (\Throwable $e) {
+            $connection->table('users')->where('id', $userId)->increment('storage', $totalCost);
+
+            Log::error('AutoLiker order failed', [
+                'service' => $data['service'],
+                'user_id' => $userId,
+                'cost' => $totalCost,
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Order could not be placed. Your credits were not charged.',
+            ], 502);
+        }
+
+        // Keep a row in the existing links table so app:update-order-status
+        // can keep tracking the provider order.
+        try {
+            $linkService = match ($service['key']) {
+                'follow' => 'followers',
+                'comment' => 'comments',
+                default => 'likes',
+            };
+
+            Link::create([
+                'uid' => $userId,
+                'order_id' => (string) $providerOrderId,
+                'limit' => $quantity,
+                'link' => $link,
+                'edge_count' => 0,
+                'service' => $linkService,
+                'loginType' => 'FB',
+            ]);
+        } catch (\Throwable $e) {
+            Log::warning('AutoLiker order placed but links row could not be saved: ' . $e->getMessage());
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Order placed successfully.',
+            'order_id' => (string) $providerOrderId,
+            'quantity' => $quantity,
+            'cost' => $totalCost,
+            'storage' => (int) ($connection->table('users')->where('id', $userId)->value('storage') ?? 0),
+        ]);
     }
 
     // Save User credits to storage

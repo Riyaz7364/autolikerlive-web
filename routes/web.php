@@ -227,6 +227,11 @@ $allowedLangs = config('language.allowed_languages');
         Route::delete('/admin/promotions/{id}', [\App\Http\Controllers\PromotionController::class, 'destroy'])->name('admin.promotions.destroy');
         Route::post('/admin/promotions/{id}/toggle', [\App\Http\Controllers\PromotionController::class, 'toggle'])->name('admin.promotions.toggle');
 
+        // AutoLiker services — visibility, WebSocket vs SMM order delivery, pricing
+        Route::get('/admin/autoliker-services', [\App\Http\Controllers\AutolikerServiceAdminController::class, 'index'])->name('admin.autoliker-services.index');
+        Route::put('/admin/autoliker-services', [\App\Http\Controllers\AutolikerServiceAdminController::class, 'update'])->name('admin.autoliker-services.update');
+        Route::post('/admin/autoliker-services/{id}/toggle', [\App\Http\Controllers\AutolikerServiceAdminController::class, 'toggle'])->name('admin.autoliker-services.toggle');
+
         Route::get('/admin/mails', [\App\Http\Controllers\AdminMailController::class, 'index'])->name('admin.mails.index');
         Route::get('/admin/mails/{box}/{uid}', [\App\Http\Controllers\AdminMailController::class, 'show'])->name('admin.mails.show');
         Route::delete('/admin/mails/{box}/{uid}', [\App\Http\Controllers\AdminMailController::class, 'destroy'])->name('admin.mails.destroy');
