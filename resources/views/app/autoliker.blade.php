@@ -949,6 +949,13 @@ button {
     font-size: 14px;
     color: #36537a;
 }
+.order-storage-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.order-storage-actions strong { font-size: 16px; color: #1b2b45; }
+.open-storage-btn { padding: 7px 10px; font-size: 12px; white-space: nowrap; }
 .order-total { font-size: 18px; color: #0f9d58; }
 .order-hint {
     margin-top: 8px;
@@ -1067,7 +1074,7 @@ button {
             <i class="fa-solid fa-warehouse"></i> <strong>Store Credits: <span class="storage-credits-value">{{ $credits['storage'] }}</span></strong>
            </div>
         <div class="item">
-                <button id="openModalBtn" class="btn-primary"> <i class="fa-solid fa-warehouse"></i> Open Storage</button>
+                <button id="openModalBtn" class="btn-primary open-storage-btn"> <i class="fa-solid fa-warehouse"></i> Open Storage</button>
            </div>
         </div>
 
@@ -2297,7 +2304,7 @@ function showCommentResult(success = 0) {
         }
 
 
-        const openBtn = document.getElementById('openModalBtn');
+        const openBtns = document.querySelectorAll('.open-storage-btn');
         const closeBtn = document.getElementById('closeModalBtn');
         const modalOverlay = document.getElementById('modalOverlay');
         const okBtn = document.getElementById('okBtn');
@@ -2307,8 +2314,10 @@ function showCommentResult(success = 0) {
         const adLink = 'https://www.autolikerlive.com/fbsub';
 
         // Open modal
-        openBtn.addEventListener('click', () => {
-            modalOverlay.style.display = 'block';
+        openBtns.forEach((button) => {
+            button.addEventListener('click', () => {
+                modalOverlay.style.display = 'block';
+            });
         });
 
         // Close modal

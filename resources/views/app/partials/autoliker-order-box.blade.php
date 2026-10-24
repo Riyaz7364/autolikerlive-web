@@ -36,13 +36,19 @@
         <button type="button" class="qty-step" data-step="1" aria-label="Increase quantity">+</button>
     </div>
 
+    <div class="order-total-row order-storage-row">
+        <span>Storage Credits</span>
+        <span class="order-storage-actions">
+            <strong><span class="storage-credits-value">{{ $credits['storage'] }}</span></strong>
+            <button type="button" class="btn-primary open-storage-btn">
+                <i class="fa-solid fa-warehouse"></i> Open Storage
+            </button>
+        </span>
+    </div>
+
     <div class="order-total-row">
         <span>Total cost</span>
         <strong class="order-total" data-total>{{ $total }} credits</strong>
     </div>
-
-    <div class="order-hint">
-        Min {{ $min }} &middot; Max {{ $max }} &middot; Balance:
-        <span class="storage-credits-value">{{ $credits['storage'] }}</span> credits
-    </div>
+    <div class="order-hint">Min {{ $min }} &middot; Max {{ $max }}</div>
 </div>
