@@ -7,6 +7,7 @@
         <div class="video-ad-gate__stage" hidden>
             <video class="video-ad-gate__video" playsinline></video>
             <div class="video-ad-gate__ad-container"></div>
+            <button type="button" class="video-ad-gate__skip" hidden>Skip ad</button>
         </div>
         <p class="video-ad-gate__status" role="status" aria-live="polite">Loading video advertisement...</p>
         <button type="button" class="video-ad-gate__play" disabled>Play video ad</button>
@@ -27,6 +28,8 @@
     .video-ad-gate__video,
     .video-ad-gate__ad-container { position: absolute; inset: 0; width: 100%; height: 100%; }
     .video-ad-gate__video { object-fit: contain; }
+    .video-ad-gate__skip { position: absolute; z-index: 3; top: 12px; right: 12px; min-height: 44px; padding: 10px 16px; border: 1px solid rgba(255,255,255,.7); border-radius: 6px; background: rgba(0,0,0,.8); color: #fff; font: 700 15px Arial, sans-serif; cursor: pointer; }
+    .video-ad-gate__skip[hidden] { display: none !important; }
     .video-ad-gate__status { min-height: 1.4em; }
     .video-ad-gate__play,
     .video-ad-gate__cancel { min-height: 44px; margin: 4px; padding: 10px 18px; border: 0; border-radius: 8px; font-weight: 700; cursor: pointer; }
@@ -61,8 +64,10 @@
         var adContainer = gate.querySelector('.video-ad-gate__ad-container');
         var status = gate.querySelector('.video-ad-gate__status');
         var playButton = gate.querySelector('.video-ad-gate__play');
+        var skipButton = gate.querySelector('.video-ad-gate__skip');
         var pendingAction = null;
         var activeCleanup = null;
+        var currentAdsManager = null;
         var sdkReady = false;
         var sdkFailed = false;
         var previousOverflow = '';
@@ -174,6 +179,7 @@
 
             playButton.hidden = true;
             stage.hidden = false;
+            skipButton.hidden = true;
             setStatus('Starting advertisement...');
 
             var ima = window.google.ima;
@@ -198,6 +204,7 @@
                 } catch (error) {
                     console.error('Could not destroy the video ad manager:', error);
                 }
+                if (currentAdsManager === adsManager) currentAdsManager = null;
                 try {
                     if (adsLoader) adsLoader.destroy();
                 } catch (error) {
@@ -209,6 +216,7 @@
                 video.load();
                 adContainer.replaceChildren();
                 stage.hidden = true;
+                skipButton.hidden = true;
 
                 if (success && resume) {
                     continueRequest();
@@ -230,6 +238,7 @@
                     if (settled) return;
                     try {
                         adsManager = event.getAdsManager(video);
+                        currentAdsManager = adsManager;
                         adsManager.addEventListener(ima.AdErrorEvent.Type.AD_ERROR, function (error) {
                             console.error('IMA video ad error:', error && error.getError ? error.getError() : error);
                             cleanup(false, 'The advertisement could not play. Please try again.');
@@ -237,9 +246,12 @@
                         adsManager.addEventListener(ima.AdEvent.Type.COMPLETE, function () {
                             completedAds++;
                         });
+                        adsManager.addEventListener(ima.AdEvent.Type.SKIPPABLE_STATE_CHANGED, function () {
+                            skipButton.hidden = !adsManager.getAdSkippableState();
+                        });
                         adsManager.addEventListener(ima.AdEvent.Type.SKIPPED, function () {
                             skipped = true;
-                            cleanup(false, 'Please watch the complete advertisement to continue.');
+                            cleanup(true, '', true);
                         });
                         adsManager.addEventListener(ima.AdEvent.Type.ALL_ADS_COMPLETED, function () {
                             cleanup(completedAds > 0 && !skipped, 'Please watch the complete advertisement to continue.', true);
@@ -313,6 +325,14 @@
         }
 
         playButton.addEventListener('click', runAd);
+        skipButton.addEventListener('click', function () {
+            if (!currentAdsManager || skipButton.hidden) return;
+            try {
+                currentAdsManager.skip();
+            } catch (error) {
+                console.error('Could not skip the video ad:', error);
+            }
+        });
         gate.querySelector('.video-ad-gate__close').addEventListener('click', closeGate);
         gate.querySelector('.video-ad-gate__cancel').addEventListener('click', closeGate);
         gate.querySelector('.video-ad-gate__backdrop').addEventListener('click', closeGate);
