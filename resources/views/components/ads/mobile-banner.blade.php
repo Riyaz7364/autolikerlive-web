@@ -1,4 +1,4 @@
-@if(config('ads.adsense_enabled'))
+@if(\App\Support\Ads::unitEnabled('adsense_mobile_banner'))
 <div class="ad-container my-3 text-center d-block d-md-none" style="overflow:hidden;min-height:50px;">
     <ins class="adsbygoogle"
          style="display:inline-block;width:320px;height:50px"

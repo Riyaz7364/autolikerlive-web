@@ -10,18 +10,18 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
-    /**
-     * The sqlite test database lives in memory per connection. The default
-     * connection is migrated by RefreshDatabase (where used); any OTHER
-     * connection rebound to sqlite in AppServiceProvider gets its own
-     * in-memory database and therefore needs the schema too.
-     */
     protected function setUp(): void
     {
         parent::setUp();
 
-        if (app()->runningUnitTests() && config('database.default') === 'sqlite') {
-            // Default connection: suites WITHOUT RefreshDatabase need a schema.
+        if (app()->runningUnitTests()) {
+            if (
+                config('database.default') !== 'sqlite'
+                || config('database.connections.sqlite.database') !== ':memory:'
+            ) {
+                throw new \RuntimeException('Tests must use the in-memory SQLite database.');
+            }
+
             if (! Schema::connection(config('database.default'))->hasTable('migrations')) {
                 Artisan::call('migrate', ['--force' => true]);
             }

@@ -107,10 +107,6 @@ class TiktokController extends Controller
             );
 
 
-            if($request['type'] == "INSTA_VIEWS"){
-                return redirect()->back()->withErrors("Maintenance - Use app to use this service");
-            }
-
             switch ($request['type']) {
                 case 'TIKTOK_LIKES':
                     $query['service'] = 5838;
@@ -140,10 +136,10 @@ class TiktokController extends Controller
 
                     break;
                 case 'INSTA_VIEWS':
-                    $query['service'] = 4761;
-                    $query['quantity'] = 100;
+                    $query['service'] = 7518;
+                    $query['quantity'] = 1000;
                     $wait = 10;
-                    $status = 0;
+                    $status = 1;
 
                     break;
                 default:
@@ -176,7 +172,9 @@ class TiktokController extends Controller
                 try {
                     $lastQueued = TiktokTimer::lastLink();
                     if ($lastQueued !== null && $this->normalizeQueueLink($lastQueued) === $normalizedVideo) {
-                        $repeatKey = $request['type'] == 'INSTA_LIKES' ? 'instagram_repeat_blocked' : 'tiktok_repeat_blocked';
+                        $repeatKey = in_array($request['type'], ['INSTA_LIKES', 'INSTA_VIEWS'], true)
+                            ? 'instagram_repeat_blocked'
+                            : 'tiktok_repeat_blocked';
                         return redirect()->back()->withInput()->with($repeatKey, true);
                     }
                 } catch (\Throwable $e) {

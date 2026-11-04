@@ -242,7 +242,7 @@
         <p>Boost your online presence with our free, safe, and instant tools. No login required.</p>
         <div class="sv-stats">
             <div class="sv-stat-item">
-                <div class="sv-stat-num">12+</div>
+                <div class="sv-stat-num">13+</div>
                 <div class="sv-stat-label">Free Tools</div>
             </div>
             <div class="sv-stat-item">
@@ -257,13 +257,13 @@
     </div>
 
     <div class="sv-tabs">
-        <button class="sv-tab active" onclick="filterTools('all')">All Tools</button>
-        <button class="sv-tab" onclick="filterTools('facebook')">Facebook</button>
-        <button class="sv-tab" onclick="filterTools('instagram')">Instagram</button>
-        <button class="sv-tab" onclick="filterTools('tiktok')">TikTok</button>
-        <button class="sv-tab" onclick="filterTools('downloaders')">Downloaders</button>
-        <button class="sv-tab" onclick="filterTools('utility')">Utility</button>
-        <button class="sv-tab" onclick="filterTools('games')">Games</button>
+        <button class="sv-tab active" onclick="filterTools('all', this)">All Tools</button>
+        <button class="sv-tab" onclick="filterTools('facebook', this)">Facebook</button>
+        <button class="sv-tab" onclick="filterTools('instagram', this)">Instagram</button>
+        <button class="sv-tab" onclick="filterTools('tiktok', this)">TikTok</button>
+        <button class="sv-tab" onclick="filterTools('downloaders', this)">Downloaders</button>
+        <button class="sv-tab" onclick="filterTools('utility', this)">Utility</button>
+        <button class="sv-tab" onclick="filterTools('games', this)">Games</button>
     </div>
 
     <div id="sv-all">
@@ -336,6 +336,15 @@
                         <span class="sv-card-btn">Use Tool <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/></svg></span>
                     </div>
                 </a>
+                <a href="{{ route('free-instagram-views') }}" class="sv-card">
+                    <div class="sv-card-icon ig-bg">👁️</div>
+                    <div class="sv-card-body">
+                        <span class="sv-badge sv-badge-free">Free</span>
+                        <h5>Instagram Auto Views</h5>
+                        <p>Get 1,000 free views on your Instagram posts and reels. No login required.</p>
+                        <span class="sv-card-btn">Use Tool <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/></svg></span>
+                    </div>
+                </a>
             </div>
         </div>
 
@@ -391,8 +400,9 @@
                 <a href="{{ route('temp-mail') }}" class="sv-card">
                     <div class="sv-card-icon ut-bg">📧</div>
                     <div class="sv-card-body">
+                        <span class="sv-badge" style="background:#ccfbf1;color:#0f766e">📱 Android app</span>
                         <h5>Temp Mail</h5>
-                        <p>Get a temporary disposable email. Protect your privacy.</p>
+                        <p>Get a temporary disposable email. Now also a free Android app on Google Play.</p>
                         <span class="sv-card-btn">Use Tool <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/></svg></span>
                     </div>
                 </a>
@@ -458,9 +468,9 @@
 
 @push('scripts')
 <script>
-function filterTools(cat) {
+function filterTools(cat, tab) {
     document.querySelectorAll('.sv-tab').forEach(function(t) { t.classList.remove('active'); });
-    event.target.classList.add('active');
+    tab.classList.add('active');
     document.querySelectorAll('.sv-category-section').forEach(function(s) {
         if (cat === 'all') {
             s.classList.add('show');

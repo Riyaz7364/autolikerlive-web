@@ -600,6 +600,11 @@
             <p style="color: var(--muted); font-size: 12px; text-align: center; margin-top: 10px;">Results may vary depending on Instagram activity. Use responsibly.</p>
         </div>
 
+        <div class="info-section">
+            Want free views for your Instagram post or reel?
+            <a href="{{ route('free-instagram-views') }}">Try Instagram Auto Views</a>.
+        </div>
+
         <!-- Ads -->
         <div class="ad-slot ad-leader hide-mobile"><x-ads.leaderboard /></div>
         <div class="ad-slot show-mobile"><x-ads.mobile-banner /></div>

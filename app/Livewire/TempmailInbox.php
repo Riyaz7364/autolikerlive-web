@@ -13,7 +13,7 @@ class TempmailInbox extends Component
     protected Collection $messages;
 
     protected $listeners = [
-        'refreshInbox'  => 'checkInbox',
+        'refreshInbox' => 'checkInbox',
     ];
 
 
@@ -26,13 +26,14 @@ class TempmailInbox extends Component
         }
     }
 
-    public function checkInbox(){
+    public function checkInbox()
+    {
         // dd(Session::get('email'));
         $request = new Request([
             'email' => Session::get('email'),
         ]);
 
-         $data = app('App\Http\Controllers\TempMailController')->messages($request);
+        $data = app('App\Http\Controllers\TempMailController')->messages($request);
 
         $this->messages = collect($data);
         $this->dispatch('show-loader');
@@ -40,8 +41,10 @@ class TempmailInbox extends Component
         // Lightweight payload so the page can detect *new* arrivals
         // (sound + toast + highlight). First poll just seeds the ids.
         $msgs = [];
-        if (is_array($data) && ($data['status'] ?? false) === true
-            && isset($data['messages']) && is_array($data['messages'])) {
+        if (
+            is_array($data) && ($data['status'] ?? false) === true
+            && isset($data['messages']) && is_array($data['messages'])
+        ) {
             foreach ($data['messages'] as $m) {
                 if (is_array($m) && isset($m['id'])) {
                     $msgs[] = [

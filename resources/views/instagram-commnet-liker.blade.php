@@ -302,6 +302,9 @@
             </div>
         </header>
 
+        {{-- Adsterra top banner — toggleable via Admin > Ads Manager --}}
+        <x-ads.adsterra-banner />
+
         <div class="text-center" role="complementary" aria-label="Advertisement">
             <div class="ad-label">Advertisement</div>
             <div class="ad-slot"><x-ads.leaderboard /></div>

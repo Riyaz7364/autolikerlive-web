@@ -575,6 +575,9 @@
         </div>
     </section>
 
+    {{-- Adsterra top banner — toggleable via Admin > Ads Manager --}}
+    <x-ads.adsterra-banner />
+
     {{-- Ad Slot 1: Above the fold --}}
     <div class="ad-slot ad-leader hide-mobile">
         <x-ads.leaderboard />
@@ -655,6 +658,11 @@
                 </div>
                 <p style="color: var(--muted); font-size: 12px; text-align: center; margin-top: 10px;">Results may vary depending on TikTok activity. Use responsibly.</p>
             </div>
+
+            <p style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center;color:var(--muted);">
+                Need views for an Instagram post or reel?
+                <a href="{{ route('free-instagram-views') }}">Try Free Instagram Auto Views</a>.
+            </p>
 
             {{-- Cross-promo: managed in Admin > Promotions --}}
             <x-promo-banner placement="tiktok_likes" />

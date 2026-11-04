@@ -43,6 +43,8 @@
     <x-navbar />
     <main>
         <div class="container">
+            {{-- Adsterra top banner — toggleable via Admin > Ads Manager --}}
+            <x-ads.adsterra-banner />
             @if (trim($__env->yieldContent('full-width')))
                 {{-- Full-width page (no sidebar): hero takes all space. --}}
                 @yield('content')
@@ -53,13 +55,11 @@
                 </div>
                 <aside class="blog-sidebar">
                     <x-ads.sidebar />
+                    {{-- Adsterra banner 2 (300x250) — toggleable via Admin > Ads Manager --}}
+                    <x-ads.adsterra-banner-2 />
                     @hasSection('sidebar')
                         @yield('sidebar')
                     @else
-                        <div class="widget">
-                            <h3>⚠️ Disclaimer</h3>
-                            <p>These games are for <strong>entertainment purposes only</strong>. All images are auto-generated and do not reflect real traits, abilities, or facts.</p>
-                        </div>
 
                         <div class="widget">
         <div class="container mx-auto px-4">
@@ -119,6 +119,9 @@
     </footer>
 
     @yield('footer')
+    <x-ads.adsterra-smart-link />
     @include('components.chat-widget')
+    @stack('scripts')
+
 </body>
 </html>

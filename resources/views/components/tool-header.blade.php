@@ -15,6 +15,7 @@
 @php
     $brandUrl = $brandUrl ?? url('/');
     $logoAlt = $logoAlt ?? ($brand . ' logo');
+    $downloadIsExternal = $downloadUrl && ! str_starts_with($downloadUrl, url('/'));
 @endphp
 
 {{-- Shared sticky tool header. Styles live in public/css/tool-header.css --}}
@@ -35,7 +36,8 @@
             <a href="{{ url('services') }}" class="tool-ghost tool-hide-sm">All Tools</a>
             <a href="{{ url('/') }}" class="tool-ghost">Home</a>
             @if ($downloadUrl)
-                <a href="{{ $downloadUrl }}" class="tool-ghost tool-dl">⬇ {{ $downloadLabel }}</a>
+                <a href="{{ $downloadUrl }}" class="tool-ghost tool-dl"
+                   @if ($downloadIsExternal) target="_blank" rel="noopener noreferrer" @endif>@unless ($downloadIsExternal)⬇ @endunless{{ $downloadLabel }}</a>
             @endif
         </nav>
     </div>

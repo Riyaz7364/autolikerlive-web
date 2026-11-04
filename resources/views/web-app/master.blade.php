@@ -53,6 +53,8 @@
 
     @yield('content')
 
+    <x-ads.adsterra-smart-link />
+
 
     <!-- Footer-->
     <footer class="bg-dark py-4 mt-auto d-none d-sm-block">

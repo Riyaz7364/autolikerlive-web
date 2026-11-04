@@ -109,6 +109,7 @@
                 <a href="{{ route('admin.listings.index') }}" class="list-group-item list-group-item-action">Listings Manager</a>
                 <a href="{{ route('admin.listings.create') }}" class="list-group-item list-group-item-action">+ New Listing</a>
                 <a href="{{ route('admin.facebook-settings') }}" class="list-group-item list-group-item-action">Facebook Settings</a>
+                <a href="{{ route('admin.ads.index') }}" class="list-group-item list-group-item-action">Ads Manager</a>
                 <a href="{{ route('game.editor.list') }}" class="list-group-item list-group-item-action">Games Control Panel</a>
                 <a href="{{ route('game.editor.create') }}" class="list-group-item list-group-item-action">+ New Game</a>
                 <a href="{{ route('admin.app-releases.index') }}" class="list-group-item list-group-item-action">App Updates</a>

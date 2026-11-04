@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Http\Controllers\TempMailController;
 use App\Models\Statistic;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Tests\TestCase;
@@ -17,8 +16,6 @@ use Vinkla\Hashids\Facades\Hashids;
  */
 class TempMailErrorHandlingTest extends TestCase
 {
-    use RefreshDatabase;
-
     protected function setUp(): void
     {
         parent::setUp();

@@ -1,4 +1,4 @@
-@if(config('ads.adsense_enabled'))
+@if(\App\Support\Ads::unitEnabled('adsense_in_article'))
 <div class="ad-container my-4 text-center" style="overflow:hidden;min-height:120px;">
     <ins class="adsbygoogle"
          style="display:block; text-align:center;"

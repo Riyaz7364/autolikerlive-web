@@ -1029,7 +1029,7 @@ button {
 </div>
 
     <div class="container">
-        @if(config('ads.adsense_enabled'))
+        @if(\App\Support\Ads::unitEnabled('adsense_sidebar'))
         <!-- AdSense Sidebar (desktop) -->
         <div class="ad-sidebar-fixed">
             <ins class="adsbygoogle"
@@ -1369,7 +1369,10 @@ button {
             @endif
         </div>
 
-        @if(config('ads.adsense_enabled'))
+        {{-- Adsterra top banner — toggleable via Admin > Ads Manager --}}
+        <x-ads.adsterra-banner />
+
+        @if(\App\Support\Ads::unitEnabled('adsense_leaderboard'))
         <!-- AdSense Banner -->
         <div style="margin: 20px; text-align: center;">
             <ins class="adsbygoogle"
@@ -2413,6 +2416,7 @@ function showCommentResult(success = 0) {
         // Auto refresh stats every 30 seconds
         setInterval(loadUserStats, 30000);
     </script>
+
 </body>
 
 </html>

@@ -6,7 +6,6 @@ use App\Events\InboxMessageReceived;
 use App\Models\TempInbox;
 use App\Models\Tempmail;
 use Database\Seeders\TestFixturesSeeder;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
@@ -17,8 +16,6 @@ use Tests\TestCase;
  */
 class TempMailApiTest extends TestCase
 {
-    use RefreshDatabase;
-
     protected function setUp(): void
     {
         parent::setUp();

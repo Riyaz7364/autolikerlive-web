@@ -243,6 +243,7 @@
         <footer class="policy-footer">
             &copy; {{ date('Y') }} Waseela &middot; Temp Mail &ndash; Disposable Email &middot;
             <a href="{{ url('temp-mail') }}">Open Temp Mail</a> &middot;
+            <a href="https://play.google.com/store/apps/details?id=com.tempmail.autolikerlive" target="_blank" rel="noopener noreferrer">Get the Android app</a> &middot;
             <a href="{{ url('privacy') }}">Website Privacy Policy</a>
         </footer>
     </div>

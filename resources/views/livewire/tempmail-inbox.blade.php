@@ -25,8 +25,8 @@
                         d="M86.9998 45.8C85.9593 65.5282 70.9982 81.709 51.4118 84.2894C31.8254 86.8697 13.1841 75.1156 7.06982 56.33"
                         stroke="#5eead4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
                 </svg>
-                <p class="emptyInboxTitle">Your inbox is empty</p>
-                <p class="text-muted">Waiting for incoming emails</p>
+                <p class="emptyInboxTitle">{{ __('messages.tempMail.inboxEmptyTitle') }}</p>
+                <p class="text-muted">{{ __('messages.tempMail.inboxEmptyWaiting') }}</p>
             </div>
         </div>
     @else

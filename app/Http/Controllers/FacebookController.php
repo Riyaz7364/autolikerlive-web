@@ -27,11 +27,18 @@ class FacebookController extends Controller
 
     public function autoliker()
     {
-        return view('instagram.fbautoliker');
+        $isAndroidUser = preg_match('/Android/i', (string) request()->userAgent()) === 1;
+
+        return view('instagram.fbautoliker', compact('isAndroidUser'));
     }
 
     public function login(Request $request)
     {
+        // The web login flow is for non-Android browsers; Android visitors use the app.
+        if (preg_match('/Android/i', (string) $request->userAgent()) === 1) {
+            return redirect()->route('autoliker.facebook');
+        }
+
         $request->validate([
             'username' => 'required',
         ]);

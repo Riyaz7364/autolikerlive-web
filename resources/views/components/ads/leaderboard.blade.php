@@ -1,4 +1,4 @@
-@if(config('ads.adsense_enabled'))
+@if(\App\Support\Ads::unitEnabled('adsense_leaderboard'))
 <div class="ad-container my-4 text-center d-none d-md-block" style="overflow:hidden;min-height:90px;">
     <ins class="adsbygoogle"
          style="display:block"

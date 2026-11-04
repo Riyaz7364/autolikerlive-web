@@ -28,6 +28,11 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{{ url('/storage/temp-mail/apple-touch-icon.png') }}" />
     <link rel="manifest" href="{{ url('/storage/temp-mail/site.webmanifest') }}" />
 
+    {{-- Android app promotion: smart-app meta + app-link alternate --}}
+    <meta name="google-play-app" content="app-id=com.tempmail.autolikerlive" />
+    <meta name="application-name" content="Temp Mail – Disposable Email" />
+    <link rel="alternate" href="android-app://com.tempmail.autolikerlive/https/www.autolikerlive.com/temp-mail" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@500;600;700&display=swap" rel="stylesheet">
@@ -67,6 +72,37 @@
   },
   "url": "{{ Request::url() }}",
   "image": "https://www.autolikerlive.com/blog/storage/uploads/2025/05/ChatGPT-Image-May-1-2025-08_11_55-AM.webp"
+}
+</script>
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MobileApplication",
+  "name": "Temp Mail – Disposable Email",
+  "operatingSystem": "Android",
+  "applicationCategory": "UtilitiesApplication",
+  "installUrl": "https://play.google.com/store/apps/details?id=com.tempmail.autolikerlive",
+  "url": "https://play.google.com/store/apps/details?id=com.tempmail.autolikerlive",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock"
+  },
+  "description": "The official Temp Mail – Disposable Email Android app. Get a free temporary email address, copy it in one tap, and check new messages from your phone. No signup required.",
+  "featureList": [
+    "Free disposable temporary email address",
+    "One-tap copy of your temp address",
+    "Refresh the inbox to check new messages",
+    "No registration required",
+    "Available on Google Play for Android"
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "AutoLikerLive",
+    "url": "https://autolikerlive.com"
+  }
 }
 </script>
 
@@ -219,6 +255,9 @@
         }
         .tm-trust-pill svg { width: 16px; height: 16px; color: var(--tm); flex-shrink: 0; }
         .tm-hero .tm-card { text-align: left; margin-top: 26px; }
+        .tm-hero-app { display: block; max-width: 540px; margin: 16px auto 0; text-align: left; }
+        .tm-hero-app .tmapp-compact-icon { width: 38px; height: 38px; }
+        @media (max-width: 620px) { .tm-hero-app { margin-top: 14px; } }
 
         /* ============ Ad slots ============ */
         .ad-slot { overflow: hidden; text-align: center; margin: 22px auto; padding: 6px 0; }
@@ -435,6 +474,7 @@
         }
         .inbox-col-head span:last-child { text-align: right; }
         .inbox-body { min-height: 260px; padding: 6px 0; }
+        .inbox-refresh-status { margin: 8px 18px; font-size: 13px; }
 
         /* Empty state (used by livewire component) */
         .inbox-empty {
@@ -676,7 +716,7 @@
         /* ============ Page loader bar ============ */
         .pageLoader {
             position: fixed;
-            top: 0;
+            top: 67px;
             left: 0;
             width: 0;
             height: 4px;
@@ -713,7 +753,9 @@
     <div class="pageLoader"></div>
 
     <!-- ============ Header (shared) ============ -->
-    <x-tool-header brand="Temp Mail" theme="teal">
+    <x-tool-header brand="Temp Mail" theme="teal"
+        downloadUrl="https://play.google.com/store/apps/details?id=com.tempmail.autolikerlive"
+        downloadLabel="Get the app">
         <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
     </x-tool-header>
 
@@ -740,6 +782,9 @@
                     Auto-Delete
                 </span>
             </div>
+
+            {{-- Android app highlight (above the fold) --}}
+            <x-temp-mail-app-promo variant="compact" class="tm-hero-app" />
 
             <!-- Mail address card — full width, above the fold -->
             <div class="tm-card">
@@ -824,9 +869,14 @@
                         <span>{{ __('messages.tempMail.inboxSubject') }}</span>
                         <span>{{ __('messages.tempMail.inboxView') }}</span>
                     </div>
-                    <div class="inbox-body inboxWarpMain" id="messageList">
+                    <div class="inbox-body inboxWarpMain" id="messageList"
+                        data-empty-title="{{ __('messages.tempMail.inboxEmptyTitle') }}"
+                        data-empty-detail="{{ __('messages.tempMail.inboxEmptyWaiting') }}">
                         @livewire('tempmail-inbox', ['prefill' => $prefill ?? null])
                     </div>
+                    <p id="inboxRefreshStatus" class="inbox-refresh-status text-danger d-none"
+                        data-error-message="{{ __('messages.tempMail.inboxRefreshError') }}"
+                        role="status" aria-live="polite"></p>
                 </div>
 
                 <aside class="tm-split-ad">
@@ -835,6 +885,9 @@
                     </div>
                 </aside>
             </div>
+
+            {{-- Full Android app highlight --}}
+            <x-temp-mail-app-promo />
 
             <!-- Info sections -->
             <section class="tm-section-card">
@@ -866,6 +919,7 @@
             <a href="{{ url('/') }}">Home</a>
             <a href="{{ url('services') }}">All Tools</a>
             <a href="{{ url('temp-mail/privacy') }}">Privacy</a>
+            <a href="https://play.google.com/store/apps/details?id=com.tempmail.autolikerlive" target="_blank" rel="noopener noreferrer">Android App</a>
             <a href="{{ url('terms') }}">Terms</a>
             <a href="{{ url('contact') }}">Contact</a>
         </div>
@@ -934,6 +988,8 @@
                     $('#email_id').val(response.data.email);
                     $('#email_id').prop('disabled', false);
 
+                    if (!window.Livewire) tmStartInboxFallback();
+
                     var emails = response.data.list;
                     $('#name_domain').empty();
                     emails.forEach(function (e) {
@@ -962,7 +1018,7 @@
                             var modalEl = document.getElementById('changeMailModal');
                             var modal = bootstrap.Modal.getInstance(modalEl);
                             if (modal) modal.hide();
-                            Livewire.dispatch('refreshInbox');
+                            tmRequestInboxRefresh();
                         }
                     })
                     .catch(function () {
@@ -976,7 +1032,7 @@
             });
 
             $('#click-to-refresh').click(function () {
-                Livewire.dispatch('refreshInbox');
+                tmRequestInboxRefresh();
             });
 
             $('#click-to-change').click(function () {
@@ -986,6 +1042,7 @@
                         $('#mailbox').val(response.data.email);
                         $('#email_id').val(response.data.email);
                         $('#email_id').prop('disabled', false);
+                        tmRequestInboxRefresh();
                         hideLoader();
                     })
                     .catch(function () {
@@ -995,6 +1052,10 @@
         });
 
         function showLoader() {
+            if (tmLoaderHideTimer !== null) {
+                clearTimeout(tmLoaderHideTimer);
+                tmLoaderHideTimer = null;
+            }
             var loader = document.querySelector('.pageLoader');
             if (loader) {
                 loader.style.height = '4px';
@@ -1002,7 +1063,19 @@
             }
         }
 
+        function scheduleLoaderHide() {
+            if (tmLoaderHideTimer !== null) clearTimeout(tmLoaderHideTimer);
+            tmLoaderHideTimer = window.setTimeout(function () {
+                tmLoaderHideTimer = null;
+                hideLoader();
+            }, 1000);
+        }
+
         function hideLoader() {
+            if (tmLoaderHideTimer !== null) {
+                clearTimeout(tmLoaderHideTimer);
+                tmLoaderHideTimer = null;
+            }
             var loader = document.querySelector('.pageLoader');
             if (loader) {
                 loader.style.width = '0';
@@ -1047,11 +1120,14 @@
         var tmBaseTitle = document.title;
         var tmKnownIds = new Set();
         var tmSeededEmail = '';
+        var tmLoaderHideTimer = null;
         var tmSoundOn = (function () {
             try { return localStorage.getItem('tm_sound') !== 'off'; } catch (e) { return true; }
         })();
         var tmAudioCtx = null;
         var tmTitleTimer = null;
+        var tmInboxRefreshTimer = null;
+        var tmInboxRefreshInFlight = false;
 
         function tmUnlockAudio() {
             try {
@@ -1123,7 +1199,7 @@
         }
 
         function tmHighlightNewRows(fresh) {
-            // Livewire morphs the list first; wait a tick, then mark the rows.
+            // Wait for the list update before marking new rows.
             setTimeout(function () {
                 fresh.forEach(function (m) {
                     var row = document.querySelector('.msg-row[data-msg-id="' + CSS.escape(String(m.id)) + '"]');
@@ -1156,10 +1232,141 @@
             tmFlashTitle(fresh.length);
         }
 
+        function tmRequestInboxRefresh() {
+            if (window.Livewire && typeof Livewire.dispatch === 'function') {
+                Livewire.dispatch('refreshInbox');
+                return;
+            }
+
+            tmRefreshInbox();
+        }
+
+        function tmStartInboxFallback() {
+            if (window.Livewire) return;
+
+            if (tmInboxRefreshTimer === null) {
+                tmInboxRefreshTimer = window.setInterval(tmRefreshInbox, 5000);
+            }
+            tmRefreshInbox();
+        }
+
+        function tmRefreshInbox() {
+            var email = document.getElementById('mailbox')?.value || '';
+            if (!email.includes('@') || tmInboxRefreshInFlight) return;
+
+            tmInboxRefreshInFlight = true;
+            var status = document.getElementById('inboxRefreshStatus');
+            showLoader();
+
+            axios.post(`{{ route('allMessages') }}`, { email: email })
+                .then(function (response) {
+                    var data = response.data;
+                    if (!data || data.status !== true || !Array.isArray(data.messages)) {
+                        throw new Error('Inbox refresh returned an invalid response.');
+                    }
+
+                    tmRenderInbox(data.messages);
+                    tmHandleInboxUpdate(data);
+                    if (status) {
+                        status.textContent = '';
+                        status.classList.add('d-none');
+                    }
+                })
+                .catch(function (error) {
+                    console.error('Unable to refresh the temp-mail inbox.', error);
+                    if (status) {
+                        status.textContent = status.dataset.errorMessage;
+                        status.classList.remove('d-none');
+                    }
+                })
+                .finally(function () {
+                    tmInboxRefreshInFlight = false;
+                    scheduleLoaderHide();
+                });
+        }
+
+        function tmRenderInbox(messages) {
+            var inbox = document.getElementById('messageList');
+            if (!inbox) return;
+            inbox.replaceChildren();
+
+            if (messages.length === 0) {
+                var empty = document.createElement('div');
+                empty.className = 'inbox-empty';
+                var emptyMessage = document.createElement('div');
+                emptyMessage.className = 'inbox-empty-msg';
+                var title = document.createElement('p');
+                title.className = 'emptyInboxTitle';
+                title.textContent = inbox.dataset.emptyTitle;
+                var detail = document.createElement('p');
+                detail.className = 'text-muted';
+                detail.textContent = inbox.dataset.emptyDetail;
+                emptyMessage.append(title, detail);
+                empty.appendChild(emptyMessage);
+                inbox.appendChild(empty);
+                return;
+            }
+
+            messages.slice().sort(function (a, b) {
+                return new Date(b.receivedAt).getTime() - new Date(a.receivedAt).getTime();
+            }).forEach(function (message) {
+                if (!message || message.id === undefined || message.id === null) return;
+
+                var row = document.createElement('a');
+                row.href = window.location.origin + '/message/view/' + encodeURIComponent(message.id);
+                row.className = 'msg-row';
+                row.dataset.msgId = String(message.id);
+
+                var main = document.createElement('span');
+                main.className = 'msg-cell msg-main';
+                var sender = document.createElement('span');
+                sender.className = 'msg-sender';
+                var dot = document.createElement('span');
+                dot.className = 'msg-dot ' + (message.is_seen ? 'is-not-active' : 'is-active');
+                var senderName = document.createTextNode(message.from || '');
+                sender.append(dot, senderName);
+                var subject = document.createElement('small');
+                subject.className = 'msg-subject';
+                subject.textContent = message.subject || '';
+                main.append(sender, subject);
+
+                var fromEmail = document.createElement('span');
+                fromEmail.className = 'msg-cell msg-email';
+                fromEmail.textContent = message.from_email || '';
+                var receivedAt = document.createElement('span');
+                receivedAt.className = 'msg-cell msg-time';
+                receivedAt.textContent = tmFormatReceivedAt(message.receivedAt);
+
+                row.append(main, fromEmail, receivedAt);
+                inbox.appendChild(row);
+            });
+        }
+
+        function tmFormatReceivedAt(value) {
+            var date = new Date(String(value || '').replace(' ', 'T'));
+            if (Number.isNaN(date.getTime())) return String(value || '');
+
+            var seconds = Math.round((date.getTime() - Date.now()) / 1000);
+            var units = [
+                ['year', 31536000],
+                ['month', 2592000],
+                ['day', 86400],
+                ['hour', 3600],
+                ['minute', 60],
+                ['second', 1]
+            ];
+            var relativeTime = new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' });
+            for (var i = 0; i < units.length; i++) {
+                if (Math.abs(seconds) >= units[i][1] || units[i][0] === 'second') {
+                    return relativeTime.format(Math.round(seconds / units[i][1]), units[i][0]);
+                }
+            }
+        }
+
         document.addEventListener('livewire:init', () => {
             Livewire.on('show-loader', (event) => {
                 showLoader();
-                setTimeout(function () { hideLoader(); }, 1000);
+                scheduleLoaderHide();
             });
             Livewire.on('inbox-updated', (payload) => {
                 tmHandleInboxUpdate(payload);
@@ -1167,6 +1374,7 @@
         });
 
         document.addEventListener('DOMContentLoaded', function () {
+            if (!window.Livewire) tmStartInboxFallback();
             tmSyncSoundToggle();
             var btn = document.getElementById('soundToggle');
             if (btn) {

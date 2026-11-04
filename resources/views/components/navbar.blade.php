@@ -7,7 +7,7 @@
     $toolPaths = [
         'services', 'auto-liker-1000-likes', 'facebook-auto-reaction', 'facebook-page-liker',
         'facebook-auto-followers', 'auto-friend-request', 'instagram-comment-liker',
-        'free-instagram-likes', 'free-tiktok-views', 'free-tiktok-likes',
+        'free-instagram-likes', 'free-instagram-views', 'free-tiktok-views', 'free-tiktok-likes',
         'netshort-video-downloader', 'youtube_thumbnail_extractor', 'sms-bomber',
         'temp-mail', 'message/view', 'findmyfbid',
     ];
@@ -81,6 +81,7 @@
                         <a href="{{ url('auto-friend-request') }}" role="menuitem">🤝 Auto Friend Request</a>
                         <a href="{{ url('instagram-comment-liker') }}" role="menuitem">📸 IG Comment Liker</a>
                         <a href="{{ route('free-instagram-likes') }}" role="menuitem">❤️ Instagram Likes</a>
+                        <a href="{{ route('free-instagram-views') }}" role="menuitem">👁️ Instagram Auto Views</a>
                         <a href="{{ route('free-tiktok-views') }}" role="menuitem">🎬 TikTok Views</a>
                         <a href="{{ route('free-tiktok-likes') }}" role="menuitem">🎵 TikTok Likes</a>
                         <a href="{{ route('netshort-video-downloader.show') }}" role="menuitem">🎬 NetShort Downloader</a>
@@ -164,6 +165,7 @@
         <a href="{{ url('auto-friend-request') }}" class="fb-tools-panel-item">🤝 Auto Friend Request</a>
         <a href="{{ url('instagram-comment-liker') }}" class="fb-tools-panel-item">📸 IG Comment Liker</a>
         <a href="{{ route('free-instagram-likes') }}" class="fb-tools-panel-item">❤️ Instagram Likes</a>
+        <a href="{{ route('free-instagram-views') }}" class="fb-tools-panel-item">👁️ Instagram Auto Views</a>
         <a href="{{ route('free-tiktok-views') }}" class="fb-tools-panel-item">📹 TikTok Views</a>
         <a href="{{ route('free-tiktok-likes') }}" class="fb-tools-panel-item">❤️ TikTok Likes</a>
         <a href="{{ route('netshort-video-downloader.show') }}" class="fb-tools-panel-item">🎬 NetShort Downloader</a>

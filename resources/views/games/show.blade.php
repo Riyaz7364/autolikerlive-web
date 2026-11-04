@@ -219,11 +219,6 @@
             @endforeach
         </div>
     @endif
-
-    <div class="widget">
-        <h3>⚠️ Disclaimer</h3>
-        <p>For entertainment purposes only. Results are randomly generated.</p>
-    </div>
 @stop
 
 @push('footer')

@@ -37,6 +37,9 @@
                     <a class="nav-link {{ $isActive('admin.facebook-settings') ? 'active' : '' }}" href="{{ route('admin.facebook-settings') }}">&#128293; Facebook Settings</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link {{ $isActive('admin.ads') ? 'active' : '' }}" href="{{ route('admin.ads.index') }}">&#128202; Ads Manager</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link {{ $isActive('game.editor') ? 'active' : '' }}" href="{{ route('game.editor.list') }}">&#127918; Games Control</a>
                 </li>
                 <li class="nav-item">

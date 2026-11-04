@@ -214,6 +214,9 @@ return [
     'tempMail.inboxSubject' => 'SUBJECT',
     'tempMail.inboxView' => 'VIEW',
     'tempMail.inboxSub' => 'New messages appear automatically — no need to refresh.',
+    'tempMail.inboxEmptyTitle' => 'Your inbox is empty',
+    'tempMail.inboxEmptyWaiting' => 'Waiting for incoming emails',
+    'tempMail.inboxRefreshError' => 'Unable to refresh the inbox. Please try again.',
     'tempMail.changeModalTitle' => 'Change Email',
     'tempMail.changeModalAlias' => 'Email Alias',
     'tempMail.changeModalDomain' => 'Domain',
@@ -337,7 +340,6 @@ return [
                             </ul>',
 
 ];
-
 
 
 

@@ -125,6 +125,7 @@
                     <a href="{{ route('free-tiktok-likes') }}">TikTok Likes</a>
                     <a href="{{ route('findmyfbid') }}">Find My FB ID</a>
                     <a href="{{ route('temp-mail') }}">Temp Mail</a>
+                    <a href="https://play.google.com/store/apps/details?id=com.tempmail.autolikerlive" target="_blank" rel="noopener noreferrer">Temp Mail Android App</a>
                     <a href="{{ route('sms-bomber') }}">SMS Bomber</a>
                     <a href="{{ url('/download') }}">Download App</a>
                     @if (isset($linkedPosts) && count($linkedPosts) > 0)

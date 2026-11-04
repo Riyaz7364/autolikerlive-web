@@ -1,4 +1,4 @@
-@if(config('ads.adsense_enabled'))
+@if(\App\Support\Ads::unitEnabled('adsense_anchor'))
 <div class="alk-anchor d-md-none" id="alkAnchorAd" style="display:none;">
     <button type="button" class="alk-anchor-close" aria-label="Close ad"
         onclick="document.getElementById('alkAnchorAd').style.display='none';document.body.classList.remove('has-anchor');">✕</button>

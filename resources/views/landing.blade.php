@@ -420,6 +420,8 @@
             </div>
 
             <x-ads.in-article />
+            {{-- Adsterra native in-read ad — toggleable via Admin > Ads Manager --}}
+            <x-ads.adsterra-native />
         </div>
     @else
         <div class="no-post-banner">

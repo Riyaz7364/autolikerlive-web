@@ -4,10 +4,10 @@
 @endphp
 @extends('layouts.master')
 
-@section('title', 'Download RajeLiker & InstaLiker Apps')
+@section('title', 'Download RajeLiker, InstaLiker & Temp Mail Apps')
 @section('description',
-    'Download our free Android apps: RajeLiker for Facebook from Google Play, and InstaLiker for Instagram — auto-like comments on any post.')
-@section('keywords', 'rajeliker app, rajeliker apk download, instaliker apk, instaliker app download, instagram comment liker app, facebook auto liker app')
+    'Download our free Android apps: RajeLiker for Facebook, InstaLiker for Instagram, and Temp Mail – Disposable Email on Google Play.')
+@section('keywords', 'rajeliker app, rajeliker apk download, instaliker apk, instaliker app download, instagram comment liker app, facebook auto liker app, temp mail app, disposable email app, temp mail android')
 {{-- Full-width: hero takes all space, no sidebar (desktop + mobile). --}}
 @section('full-width', '1')
 
@@ -416,7 +416,7 @@
                             <div class="text-center text-lg-start">
                                 <h1 class="fw-bolder display-4 mb-3 text-white">Download Our Apps
                                 </h1>
-                                <p class="lead mb-4 fs-5">RajeLiker for Facebook · InstaLiker for Instagram — free Android apps.</p>
+                                <p class="lead mb-4 fs-5">RajeLiker for Facebook · InstaLiker for Instagram · Temp Mail for Android — free apps.</p>
                                 <div class="row g-4">
                                     <!-- RajeLiker for Facebook via Google Play -->
                                     <div class="col-md-6">
@@ -484,6 +484,27 @@
                                     @endforeach
                                 </div>
                                 @endif
+                            </div>
+                        </div>
+
+                        <!-- Temp Mail Android app highlight -->
+                        <div class="col-lg-4 mt-4 mt-lg-0">
+                            <div class="p-3 p-md-4 rounded-4 h-100 text-center text-md-start" style="background:rgba(13,148,136,.28);border:1px solid rgba(45,212,191,.65);box-shadow:0 14px 34px rgba(0,0,0,.18)">
+                                <span class="badge mb-3" style="background:#0d9488">📱 Now on Google Play</span>
+                                <div class="d-flex align-items-center gap-3 mb-3 justify-content-center justify-content-md-start">
+                                    <img src="{{ url('/storage/temp-mail/web-app-manifest-192x192.png') }}" alt="Temp Mail app icon" width="64" height="64" style="border-radius:16px;background:#fff" loading="lazy">
+                                    <div>
+                                        <h3 class="fw-bold mb-1 text-white">Temp Mail</h3>
+                                        <span class="badge" style="background:#0f766e">Disposable Email</span>
+                                    </div>
+                                </div>
+                                <p class="small mb-3" style="color:rgba(255,255,255,.78)">Take your disposable inbox anywhere — one tap to copy your address, instant refresh for new mail, no signup.</p>
+                                <a href="https://play.google.com/store/apps/details?id=com.tempmail.autolikerlive" target="_blank" rel="noopener noreferrer"
+                                    class="market-btn google-btn" role="button" style="width:100%;justify-content:center">
+                                    <span class="market-button-subtitle">Temp Mail · Get it on</span>
+                                    <span class="market-button-title">Google Play</span>
+                                </a>
+                                <p class="small mt-2 mb-0" style="color:rgba(255,255,255,.55)">Free · No signup · Android</p>
                             </div>
                         </div>
 

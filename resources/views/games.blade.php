@@ -42,11 +42,6 @@
 
 @section('sidebar')
     <div class="widget">
-        <h3>⚠️ Disclaimer</h3>
-        <p>These games are for <strong>entertainment purposes only</strong>. All images are auto-generated and do not reflect real traits, abilities, or facts.</p>
-    </div>
-
-    <div class="widget">
         <h3>🔧 Free Tools</h3>
         <div class="flex flex-col gap-8">
             <a href="{{ route('free-tiktok-views') }}">TikTok Views</a>

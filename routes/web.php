@@ -76,8 +76,9 @@ Route::get('/netshort-video-downloader', [\App\Http\Controllers\EpisodeDownloadC
 Route::post('/netshort-video-downloader', [\App\Http\Controllers\EpisodeDownloadController::class, 'fetch'])
      ->middleware('throttle:30,1')
      ->name('netshort-video-downloader.fetch');
-// Force-download proxy (signed URL, streams MP4 as attachment).
+// Force-download proxy (signed URL, streams MP4 or converts HLS as attachment).
 Route::get('/netshort-video-downloader/download', [\App\Http\Controllers\EpisodeDownloadController::class, 'download'])
+     ->middleware('throttle:10,1')
      ->name('netshort-video-downloader.download');
 
 // Legacy URL: keep equity, 301 to canonical (GET). POST kept for old forms/bots.
@@ -209,6 +210,10 @@ $allowedLangs = config('language.allowed_languages');
         // Facebook Settings
         Route::get('/admin/facebook-settings', [\App\Http\Controllers\FacebookSettingsController::class, 'index'])->name('admin.facebook-settings');
         Route::put('/admin/facebook-settings', [\App\Http\Controllers\FacebookSettingsController::class, 'update'])->name('admin.facebook-settings.update');
+
+        // Advertisement Manager — AdSense + Adsterra networks & ad units
+        Route::get('/admin/ads', [\App\Http\Controllers\AdsController::class, 'index'])->name('admin.ads.index');
+        Route::put('/admin/ads', [\App\Http\Controllers\AdsController::class, 'update'])->name('admin.ads.update');
 
         // App Updates (APK releases per app, looked up by app_name)
         Route::get('/admin/app-updates', [\App\Http\Controllers\AppReleaseController::class, 'index'])->name('admin.app-releases.index');
@@ -406,6 +411,8 @@ $allowedLangs = config('language.allowed_languages');
 
     Route::get('/free-instagram-likes', [InstagramController::class, 'Index'])->name("free-instagram-likes");
     Route::post('/send-instagram-likes', [TiktokController::class, 'placeViewOrder'])->name("free-instagram-likes-post");
+    Route::get('/free-instagram-views', [InstagramController::class, 'freeInstagramViews'])->name("free-instagram-views");
+    Route::post('/send-instagram-views', [TiktokController::class, 'placeViewOrder'])->name("free-instagram-views-post");
 
     // SMS Bomber WEB
     Route::get('/sms-bomber', [SMSbomberController::class, 'index'])->name("sms-bomber");
@@ -538,5 +545,3 @@ $allowedLangs = config('language.allowed_languages');
 
 
 // });
-
-

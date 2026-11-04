@@ -573,4 +573,12 @@ class InstagramController extends Controller
         ]);
     }
 
+    public function freeInstagramViews(Request $request)
+    {
+        return view('free-instagram-views', [
+            'timeLeft' => TiktokTimer::secondsLeft((string) getUserIP($request)),
+            'lastInstagramLink' => TiktokTimer::lastLink(),
+        ]);
+    }
+
 }

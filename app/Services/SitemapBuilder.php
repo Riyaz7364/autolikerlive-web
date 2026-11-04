@@ -42,6 +42,7 @@ class SitemapBuilder
             '/free-tiktok-views',
             '/free-tiktok-likes',
             '/free-instagram-likes',
+            '/free-instagram-views',
             '/free-tiktok-views-iframe',
             '/auto-liker-1000-likes',
             '/auto-liker-instagram',

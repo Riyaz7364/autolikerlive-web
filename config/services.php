@@ -2,6 +2,11 @@
 
 return [
 
+    'ffmpeg' => [
+        'binary' => env('FFMPEG_BINARY', 'ffmpeg'),
+        'timeout' => (int) env('FFMPEG_TIMEOUT', 600),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Third Party Services
