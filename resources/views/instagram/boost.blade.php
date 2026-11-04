@@ -101,7 +101,7 @@
         <section class="alk-card" aria-label="Boost form">
             <div class="alk-card-title"><i class="bi bi-rocket-takeoff-fill"></i> New boost</div>
             <div class="container" style="padding:0;">
-                <form id="boostForm" action="{{ route('autoliker.boost.submit2') }}" method="post">
+                <form id="boostForm" action="{{ route('autoliker.boost.submit2') }}" method="post" data-video-ad-gate>
                     @csrf
 
                     <label for="service" class="alk-form-label">Reaction Type (Facebook):</label>
@@ -346,4 +346,5 @@
             });
         })();
     </script>
+    @include('components.ads.video-gate', ['mode' => 'forms'])
 @endsection

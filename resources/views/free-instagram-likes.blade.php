@@ -552,7 +552,7 @@
                 Enter your Instagram post URL to get 10 free likes
             </div>
 
-            <form method="POST" action="{{ route('free-instagram-likes-post') }}" class="tool-form" id="form">
+            <form method="POST" action="{{ route('free-instagram-likes-post') }}" class="tool-form" id="form" data-video-ad-gate>
                 @csrf
                 <input type="hidden" name="type" value="INSTA_LIKES">
                 <div class="input-row">
@@ -934,5 +934,6 @@
         })();
     </script>
 @include('components.chat-widget')
+@include('components.ads.video-gate', ['mode' => 'forms'])
 </body>
 </html>

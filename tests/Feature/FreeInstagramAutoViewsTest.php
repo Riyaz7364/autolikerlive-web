@@ -14,7 +14,9 @@ class FreeInstagramAutoViewsTest extends TestCase
             ->assertSee('Free Instagram Auto Views')
             ->assertSee('1,000 Free Views')
             ->assertSee('name="type" value="INSTA_VIEWS"', false)
-            ->assertSee('action="' . route('free-instagram-views-post') . '"', false);
+            ->assertSee('action="' . route('free-instagram-views-post') . '"', false)
+            ->assertSee('data-video-ad-gate', false)
+            ->assertSee('Watch a video ad to continue');
 
         $this->assertContains('/free-instagram-views', SitemapBuilder::staticPaths());
         $this->assertStringContainsString(

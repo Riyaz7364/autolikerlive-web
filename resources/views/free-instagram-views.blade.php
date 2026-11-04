@@ -552,7 +552,7 @@
                 Enter your Instagram post or reel URL to get 1,000 free views
             </div>
 
-            <form method="POST" action="{{ route('free-instagram-views-post') }}" class="tool-form" id="form">
+            <form method="POST" action="{{ route('free-instagram-views-post') }}" class="tool-form" id="form" data-video-ad-gate>
                 @csrf
                 <input type="hidden" name="type" value="INSTA_VIEWS">
                 <div class="input-row">
@@ -929,5 +929,6 @@
         })();
     </script>
 @include('components.chat-widget')
+@include('components.ads.video-gate', ['mode' => 'forms'])
 </body>
 </html>

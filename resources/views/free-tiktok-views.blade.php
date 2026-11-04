@@ -553,7 +553,7 @@
                     Enter your TikTok video URL to get 100 free views
                 </div>
 
-                <form method="POST" action="{{ route('free-tiktok-views-post') }}" class="tool-form" id="form">
+                <form method="POST" action="{{ route('free-tiktok-views-post') }}" class="tool-form" id="form" data-video-ad-gate>
                     @csrf
                     <input type="hidden" name="type" value="FREE_TIKTOK">
                     <div class="input-row">
@@ -935,5 +935,6 @@
         })();
     </script>
 @include('components.chat-widget')
+@include('components.ads.video-gate', ['mode' => 'forms'])
 </body>
 </html>

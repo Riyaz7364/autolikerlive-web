@@ -1919,10 +1919,6 @@ button {
         $('#submitCommentsBtn').on('click', async function(e) {
             e.preventDefault();
 
-            if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
-                window.flutter_inappwebview.callHandler('showInterstitialAd');
-            }
-
             if (serviceIsOrder('comments')) {
                 return placeOrder('comments');
             }
@@ -2000,10 +1996,6 @@ button {
         $('#submitFollowersBtn').on('click', async function(e) {
             e.preventDefault();
 
-            if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
-                window.flutter_inappwebview.callHandler('showInterstitialAd');
-            }
-
             if (serviceIsOrder('followers')) {
                 return placeOrder('followers');
             }
@@ -2072,12 +2064,6 @@ button {
 
         $('#submitBtn').on('click', async function(e) {
             e.preventDefault();
-
-
-            if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
-                window.flutter_inappwebview.callHandler('showInterstitialAd');
-            }
-
             if (serviceIsOrder('reaction')) {
                 return placeOrder('reaction');
             }
@@ -2417,6 +2403,7 @@ function showCommentResult(success = 0) {
         setInterval(loadUserStats, 30000);
     </script>
 
+    @include('components.ads.video-gate', ['mode' => 'app'])
 </body>
 
 </html>

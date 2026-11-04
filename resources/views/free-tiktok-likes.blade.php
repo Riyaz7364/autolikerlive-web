@@ -606,7 +606,7 @@
                     </div>
                 </div>
 
-                <form method="POST" action="{{ route('free-tiktok-views-post') }}" class="tool-form" id="form">
+                <form method="POST" action="{{ route('free-tiktok-likes-post') }}" class="tool-form" id="form" data-video-ad-gate>
                     @csrf
                     <input type="hidden" name="type" value="TIKTOK_LIKES">
                     <div class="input-row">
@@ -916,5 +916,6 @@
         })();
     </script>
 @include('components.chat-widget')
+@include('components.ads.video-gate', ['mode' => 'forms'])
 </body>
 </html>
