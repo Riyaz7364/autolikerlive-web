@@ -27,11 +27,12 @@
 
     @yield('javascripts')
 
-
+    <x-auto-ads />
     <script></script>
 </head>
 
 <body>
+    <x-ads.top />
     @yield('content')
 </body>
 

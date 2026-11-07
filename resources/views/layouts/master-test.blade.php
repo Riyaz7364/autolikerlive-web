@@ -68,6 +68,7 @@ bg-dark
 
 
 ">
+    <x-ads.top />
     @yield('content')
 
 

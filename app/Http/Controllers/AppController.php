@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Link;
 use App\Services\AutolikerServiceConfig;
+use App\Services\FacebookShareUrlResolver;
 use phpseclib3\Crypt\AES;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -288,7 +289,7 @@ class AppController extends Controller
                 return redirect('/app/autoliker');
             }
         }
-        if($hasSession) {
+        if ($hasSession) {
             \Log::debug("Line: 144 - RajeLiker ", ['user' => $user]);
         }
         $config = $this->appConfig;
@@ -1061,6 +1062,16 @@ class AppController extends Controller
                 );
             }
 
+            $postUrl = parse_url($request->post_url);
+            parse_str($postUrl['query'] ?? '', $postQuery);
+            $postId = $postQuery['story_fbid'] ?? $postQuery['fbid'] ?? null;
+
+            if (!$postId && preg_match('~/(?:posts|videos|reel|reels)/(\d+)~i', $postUrl['path'] ?? '', $matches)) {
+                $postId = $matches[1];
+            }
+
+            $postId ??= $request->post_url;
+
             \Log::info(' Line: 882 🎯 AutoLiker Reaction Request', [
                 'user_id' => $user['id'],
                 'post_url' => $request->post_url,
@@ -1509,6 +1520,19 @@ class AppController extends Controller
                 'message' => "Not enough storage credits. This order costs {$totalCost} credits.",
                 'storage' => $storage,
                 'cost' => $totalCost,
+            ], 422);
+        }
+
+        try {
+            $link = app(FacebookShareUrlResolver::class)->resolve($link);
+        } catch (\RuntimeException $exception) {
+            Log::warning('Facebook share URL could not be resolved for AutoLiker order', [
+                'service' => $data['service'],
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Could not resolve this Facebook share link. Please use its direct Facebook URL and try again.',
             ], 422);
         }
 

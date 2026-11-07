@@ -28,6 +28,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://www.google.com/recaptcha/api.js?render=6Le7S7kqAAAAAMvSkxFhOxaTZMiosSLf4mHkpCtb" async defer></script>
+    <x-auto-ads />
 
     <script type="application/ld+json">
     {
@@ -329,6 +330,8 @@
             </nav>
         </div>
     </header>
+
+    <x-ads.top />
 
     <div class="sb-wrap">
 

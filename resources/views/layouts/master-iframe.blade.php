@@ -35,6 +35,7 @@
 </head>
 
 <body class="d-flex flex-column bg-dark">
+    <x-ads.top />
     @yield('content')
 </body>
 

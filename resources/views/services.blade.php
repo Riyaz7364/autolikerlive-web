@@ -461,9 +461,6 @@
         </div>
     </div>
 
-    <x-ads.leaderboard />
-    <x-ads.mobile-banner />
-
 @stop
 
 @push('scripts')

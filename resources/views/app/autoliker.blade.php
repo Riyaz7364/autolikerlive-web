@@ -17,8 +17,11 @@
             z-index: 50;
             display: none;
         }
+
         @media (min-width: 769px) {
-            .ad-sidebar-fixed { display: block; }
+            .ad-sidebar-fixed {
+                display: block;
+            }
         }
     </style>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -432,6 +435,7 @@
             font-size: 14px;
             border-left: 4px solid #ffc107;
         }
+
         .info {
             background: #0085ad;
             color: #ffffff;
@@ -493,14 +497,19 @@
         .floating-action:hover {
             transform: scale(1.1);
         }
+
         .row {
             display: flex;
-            justify-content: space-between; /* adds space between items */
+            justify-content: space-between;
+            /* adds space between items */
             padding: 10px;
         }
-          .item {
-            flex: 1; /* optional: makes items take equal width */
-            margin: 0 10px; /* optional: adds margin between items */
+
+        .item {
+            flex: 1;
+            /* optional: makes items take equal width */
+            margin: 0 10px;
+            /* optional: adds margin between items */
             align-content: center;
         }
 
@@ -570,474 +579,543 @@
         }
 
         /* SHow Model */
-          /* Overlay background */
-            .modal-overlay {
-                display: none; /* hidden by default */
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0,0,0,0.5);
-                z-index: 1000;
-            }
+        /* Overlay background */
+        .modal-overlay {
+            display: none;
+            /* hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
 
-            /* Modal box */
-            .modal {
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background-color: #fff;
-                padding: 20px 30px;
-                border-radius: 8px;
-                min-width: 300px;
-                max-width: 90%;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-                z-index: 1001;
-            }
+        /* Modal box */
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px 30px;
+            border-radius: 8px;
+            min-width: 300px;
+            max-width: 90%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+        }
 
-            .ad-popup-overlay {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.7);
-                z-index: 1100;
-                padding: 20px;
-                overflow-y: auto;
-            }
+        .ad-popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1100;
+            padding: 20px;
+            overflow-y: auto;
+        }
 
-            .ad-popup {
-                position: relative;
-                margin: 50px auto;
-                background: linear-gradient(135deg, #1d4ed8, #2563eb);
-                color: white;
-                border-radius: 18px;
-                max-width: 420px;
-                padding: 25px 25px 20px;
-                box-shadow: 0 20px 50px rgba(0,0,0,0.35);
-            }
+        .ad-popup {
+            position: relative;
+            margin: 50px auto;
+            background: linear-gradient(135deg, #1d4ed8, #2563eb);
+            color: white;
+            border-radius: 18px;
+            max-width: 420px;
+            padding: 25px 25px 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+        }
 
-            .ad-popup-header {
-                font-size: 24px;
-                font-weight: 900;
-                margin-bottom: 14px;
-                text-align: center;
-                letter-spacing: 0.5px;
-                text-transform: uppercase;
-            }
+        .ad-popup-header {
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 14px;
+            text-align: center;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
 
-            .ad-popup-body {
-                font-size: 16px;
-                line-height: 1.75;
-                margin-bottom: 22px;
-            }
+        .ad-popup-body {
+            font-size: 16px;
+            line-height: 1.75;
+            margin-bottom: 22px;
+        }
 
-            .ad-popup-link {
-                display: block;
-                background: rgba(255,255,255,0.12);
-                padding: 16px 18px;
-                border-radius: 16px;
-                margin: 14px 0;
-                word-break: break-all;
-                color: #fff;
-                text-decoration: none;
-                border: 1px solid rgba(255,255,255,0.22);
-                font-weight: 600;
-                box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
-            }
+        .ad-popup-link {
+            display: block;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 16px 18px;
+            border-radius: 16px;
+            margin: 14px 0;
+            word-break: break-all;
+            color: #fff;
+            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            font-weight: 600;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+        }
 
-            .ad-popup-actions {
-                display: flex;
-                gap: 12px;
-                justify-content: center;
-                flex-wrap: wrap;
-            }
+        .ad-popup-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
 
-            .copy-btn,
-            .ad-close-btn {
-                border: none;
-                border-radius: 16px;
-                font-size: 15px;
-                padding: 14px 20px;
-                cursor: pointer;
-                transition: all 0.28s ease;
-            }
+        .copy-btn,
+        .ad-close-btn {
+            border: none;
+            border-radius: 16px;
+            font-size: 15px;
+            padding: 14px 20px;
+            cursor: pointer;
+            transition: all 0.28s ease;
+        }
 
-            .copy-btn {
-                background: #fee440;
-                color: #1f2937;
-                font-weight: 800;
-                box-shadow: 0 12px 28px rgba(254, 228, 64, 0.18);
-            }
+        .copy-btn {
+            background: #fee440;
+            color: #1f2937;
+            font-weight: 800;
+            box-shadow: 0 12px 28px rgba(254, 228, 64, 0.18);
+        }
 
-            .copy-btn:hover {
-                background: #fbbf24;
-                transform: translateY(-1px);
-            }
+        .copy-btn:hover {
+            background: #fbbf24;
+            transform: translateY(-1px);
+        }
 
-            .ad-close-btn {
-                position: absolute;
-                top: 14px;
-                right: 14px;
-                background: rgba(255,255,255,0.18);
-                color: #fff;
-                width: 52px;
-                height: 52px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 24px;
-                line-height: 1;
-                box-shadow: 0 12px 30px rgba(0,0,0,0.25);
-            }
+        .ad-close-btn {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: rgba(255, 255, 255, 0.18);
+            color: #fff;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            line-height: 1;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+        }
 
-            .ad-close-btn:hover {
-                background: rgba(255,255,255,0.28);
-                transform: scale(1.03);
-            }
-/* Close button */
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
-}
-/* Header */
-.modal-header {
-  font-size: 22px;
-  font-weight: bold;
-  margin-bottom: 15px;
-}
+        .ad-close-btn:hover {
+            background: rgba(255, 255, 255, 0.28);
+            transform: scale(1.03);
+        }
 
-/* Body */
-.modal-body {
-  margin-bottom: 20px;
-  font-size: 16px;
-}
+        /* Close button */
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
 
-/* Timer & Credits */
-.timer {
-  font-size: 28px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10px;
-}
+        /* Header */
+        .modal-header {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
 
-.credits-info {
-  font-size: 16px;
-  color: #555;
-  margin-bottom: 20px;
-}
+        /* Body */
+        .modal-body {
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
 
-/* Buttons */
-button {
-  padding: 10px 18px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background 0.3s ease;
-}
+        /* Timer & Credits */
+        .timer {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
 
-.btn-primary {
-  background-color: #4CAF50;
-  color: white;
-}
+        .credits-info {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        /* Buttons */
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #4CAF50;
+            color: white;
+        }
 
 
-.btn-primary:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
+        .btn-primary:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
 
-.btn-gold {
-  background-color: #dfaf2b;
-  color: white;
-}
+        .btn-gold {
+            background-color: #dfaf2b;
+            color: white;
+        }
 
-/* Support Section */
-.support-section {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    padding: 20px;
-    margin: 20px;
-    border-radius: 15px;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
-}
+        /* Support Section */
+        .support-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        }
 
-.support-section h3 {
-    font-size: 20px;
-    margin-bottom: 10px;
-}
+        .support-section h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
 
-.support-section p {
-    font-size: 16px;
-    margin: 0;
-}
+        .support-section p {
+            font-size: 16px;
+            margin: 0;
+        }
 
-.telegram-btn {
-    background: rgba(255, 255, 255, 0.3);
-    color: white;
-    padding: 8px 15px;
-    border-radius: 20px;
-    text-decoration: none;
-    display: inline-block;
-    font-weight: 700;
-    transition: all 0.3s;
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    font-size: 16px;
-}
+        .telegram-btn {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 700;
+            transition: all 0.3s;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            font-size: 16px;
+        }
 
-.telegram-btn:hover {
-    background: rgba(255, 255, 255, 0.4);
-    transform: scale(1.05);
-}
+        .telegram-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
+        }
 
-/* Link-not-found video hint (one line) */
-.tut-hint {
-    margin-top: 8px;
-    font-size: 13px;
-    color: #666;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.tut-hint a {
-    color: #1877f2;
-    font-weight: 700;
-    text-decoration: none;
-    cursor: pointer;
-}
-.tut-hint a:hover { text-decoration: underline; }
+        /* Link-not-found video hint (one line) */
+        .tut-hint {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-/* FB settings video modal */
-.fb-video-overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.7);
-    z-index: 1200;
-    padding: 18px;
-    align-items: center;
-    justify-content: center;
-}
-.fb-video-overlay.show { display: flex; }
-.fb-video-modal {
-    position: relative;
-    background: #fff;
-    border-radius: 14px;
-    max-width: 560px;
-    width: 100%;
-    padding: 18px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
-}
-.fb-video-modal h4 { font-size: 16px; margin-bottom: 12px; padding-right: 36px; }
-.fb-video-close {
-    position: absolute;
-    top: 10px; right: 10px;
-    width: 32px; height: 32px;
-    border-radius: 50%;
-    border: 0;
-    background: #f0f2f5;
-    color: #333;
-    font-size: 18px;
-    cursor: pointer;
-    display: grid;
-    place-items: center;
-    padding: 0;
-}
-.fb-video-close:hover { background: #e4e6eb; }
-.fb-video-wrap {
-    position: relative;
-    width: 100%;
-    padding-bottom: 56.25%;
-    background: #000;
-    border-radius: 10px;
-    overflow: hidden;
-}
-.fb-video-wrap iframe {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    border: 0;
-}
+        .tut-hint a {
+            color: #1877f2;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+        }
 
-/* Static order (SMM) service box */
-.order-box {
-    border: 2px solid #e3e8f0;
-    border-radius: 14px;
-    padding: 14px;
-    background: linear-gradient(180deg, #f8faff, #eef3ff);
-    margin-bottom: 18px;
-}
-.order-box-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
-}
-.order-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: #1877f2;
-    color: #fff;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: .3px;
-    padding: 4px 10px;
-    border-radius: 20px;
-}
-.order-rate {
-    font-size: 13px;
-    color: #36537a;
-    font-weight: 700;
-}
-.order-qty-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.qty-step {
-    width: 42px;
-    height: 42px;
-    flex: 0 0 42px;
-    border-radius: 10px;
-    border: 1px solid #c9d7ee;
-    background: #fff;
-    color: #1877f2;
-    font-size: 22px;
-    font-weight: 700;
-    line-height: 1;
-    cursor: pointer;
-}
-.qty-step:active { transform: scale(.96); }
-.qty-step:disabled { opacity: .4; cursor: not-allowed; }
-.order-qty {
-    flex: 1;
-    min-width: 0;
-    height: 42px;
-    text-align: center;
-    font-size: 18px;
-    font-weight: 700;
-    color: #1b2b45;
-    background: #fff;
-    border: 1px solid #c9d7ee;
-    border-radius: 10px;
-    -moz-appearance: textfield;
-}
-.order-qty::-webkit-outer-spin-button,
-.order-qty::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-.order-total-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px dashed #c9d7ee;
-    font-size: 14px;
-    color: #36537a;
-}
-.order-storage-actions {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-.order-storage-actions strong { font-size: 16px; color: #1b2b45; }
-.open-storage-btn { padding: 7px 10px; font-size: 12px; white-space: nowrap; }
-.order-total { font-size: 18px; color: #0f9d58; }
-.order-hint {
-    margin-top: 8px;
-    font-size: 12px;
-    color: #6b7c93;
-    line-height: 1.5;
-}
-.order-hint.bad { color: #c62828; font-weight: 700; }
+        .tut-hint a:hover {
+            text-decoration: underline;
+        }
 
+        /* FB settings video modal */
+        .fb-video-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1200;
+            padding: 18px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fb-video-overlay.show {
+            display: flex;
+        }
+
+        .fb-video-modal {
+            position: relative;
+            background: #fff;
+            border-radius: 14px;
+            max-width: 560px;
+            width: 100%;
+            padding: 18px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+        }
+
+        .fb-video-modal h4 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            padding-right: 36px;
+        }
+
+        .fb-video-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 0;
+            background: #f0f2f5;
+            color: #333;
+            font-size: 18px;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            padding: 0;
+        }
+
+        .fb-video-close:hover {
+            background: #e4e6eb;
+        }
+
+        .fb-video-wrap {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .fb-video-wrap iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* Static order (SMM) service box */
+        .order-box {
+            border: 2px solid #e3e8f0;
+            border-radius: 14px;
+            padding: 14px;
+            background: linear-gradient(180deg, #f8faff, #eef3ff);
+            margin-bottom: 18px;
+        }
+
+        .order-box-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .order-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #1877f2;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: .3px;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .order-rate {
+            font-size: 13px;
+            color: #36537a;
+            font-weight: 700;
+        }
+
+        .order-qty-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qty-step {
+            width: 42px;
+            height: 42px;
+            flex: 0 0 42px;
+            border-radius: 10px;
+            border: 1px solid #c9d7ee;
+            background: #fff;
+            color: #1877f2;
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .qty-step:active {
+            transform: scale(.96);
+        }
+
+        .qty-step:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+        }
+
+        .order-qty {
+            flex: 1;
+            min-width: 0;
+            height: 42px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1b2b45;
+            background: #fff;
+            border: 1px solid #c9d7ee;
+            border-radius: 10px;
+            -moz-appearance: textfield;
+        }
+
+        .order-qty::-webkit-outer-spin-button,
+        .order-qty::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .order-total-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed #c9d7ee;
+            font-size: 14px;
+            color: #36537a;
+        }
+
+        .order-storage-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .order-storage-actions strong {
+            font-size: 16px;
+            color: #1b2b45;
+        }
+
+        .open-storage-btn {
+            padding: 7px 10px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .order-total {
+            font-size: 18px;
+            color: #0f9d58;
+        }
+
+        .order-hint {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #6b7c93;
+            line-height: 1.5;
+        }
+
+        .order-hint.bad {
+            color: #c62828;
+            font-weight: 700;
+        }
     </style>
 </head>
 
 <body>
-@php
-    $services = $services ?? [];
-    $serviceLike = $services['like'] ?? [];
-    $serviceFollow = $services['follow'] ?? [];
-    $serviceComment = $services['comment'] ?? [];
+    @php
+        $services = $services ?? [];
+        $serviceLike = $services['like'] ?? [];
+        $serviceFollow = $services['follow'] ?? [];
+        $serviceComment = $services['comment'] ?? [];
 
-    $likeMode = $serviceLike['mode'] ?? 'websocket';
-    $followMode = $serviceFollow['mode'] ?? 'websocket';
-    $commentMode = $serviceComment['mode'] ?? 'websocket';
+        $likeMode = $serviceLike['mode'] ?? 'websocket';
+        $followMode = $serviceFollow['mode'] ?? 'websocket';
+        $commentMode = $serviceComment['mode'] ?? 'websocket';
 
-    $likeEnabled = (bool) ($serviceLike['enabled'] ?? false);
-    $followEnabled = (bool) ($serviceFollow['enabled'] ?? false);
-    $commentEnabled = (bool) ($serviceComment['enabled'] ?? false);
+        $likeEnabled = (bool) ($serviceLike['enabled'] ?? false);
+        $followEnabled = (bool) ($serviceFollow['enabled'] ?? false);
+        $commentEnabled = (bool) ($serviceComment['enabled'] ?? false);
 
-    $firstTab = $likeEnabled ? 'reactions' : ($followEnabled ? 'followers' : ($commentEnabled ? 'comments' : null));
-@endphp
-<!-- Modal structure -->
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
-    <span class="close-btn" id="closeModalBtn">&times;</span>
-    <div class="modal-header">Store Credits</div>
-    <div class="modal-body">
-      <div class="timer countdown" data-timer="{{ $credits['remainingTime'] }}">00:10</div>
-      <div class="credits-info" id="creditsInfo">
-        Total Credits: <span id="totalCredits">{{ $credits['storage'] }}</span> / <span id="maxCredits">{{ $credits['limit'] }}</span>
-      </div>
-      <form action="{{ route('app.autoliker.saveCredits') }}" method="POST">
-        @csrf
-        <button type="submit" id="storeCreditsBtn" class="btn-primary">Store Credits</button>
-      </form>
-      <p style="margin-top:10px; font-size:12px; color:#888;">Note: Timer converts to credits when ready.</p>
+        $firstTab = $likeEnabled ? 'reactions' : ($followEnabled ? 'followers' : ($commentEnabled ? 'comments' : null));
+    @endphp
+    <!-- Modal structure -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <span class="close-btn" id="closeModalBtn">&times;</span>
+            <div class="modal-header">Store Credits</div>
+            <div class="modal-body">
+                <div class="timer countdown" data-timer="{{ $credits['remainingTime'] }}">00:10</div>
+                <div class="credits-info" id="creditsInfo">
+                    Total Credits: <span id="totalCredits">{{ $credits['storage'] }}</span> / <span
+                        id="maxCredits">{{ $credits['limit'] }}</span>
+                </div>
+                <form action="{{ route('app.autoliker.saveCredits') }}" method="POST">
+                    @csrf
+                    <button type="submit" id="storeCreditsBtn" class="btn-primary">Store Credits</button>
+                </form>
+                <p style="margin-top:10px; font-size:12px; color:#888;">Note: Timer converts to credits when ready.</p>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-<div class="ad-popup-overlay" id="adPopupOverlay">
-  <div class="ad-popup">
-    <button class="ad-close-btn" id="closeAdPopupBtn" aria-label="Close ad">×</button>
-    <div class="ad-popup-header">Special Offer</div>
-    <div class="ad-popup-body">
-      <p>Boost your Facebook followers instantly with this link:</p>
-      <a class="ad-popup-link" href="https://www.autolikerlive.com/fbsub" target="_blank" rel="noreferrer noopener">https://www.autolikerlive.com/fbsub</a>
-      <div class="ad-popup-actions">
-        <button type="button" class="copy-btn" id="copyAdLinkBtn">Copy Link</button>
-      </div>
+    <div class="ad-popup-overlay" id="adPopupOverlay">
+        <div class="ad-popup">
+            <button class="ad-close-btn" id="closeAdPopupBtn" aria-label="Close ad">×</button>
+            <div class="ad-popup-header">Special Offer</div>
+            <div class="ad-popup-body">
+                <p>Boost your Facebook followers instantly with this link:</p>
+                <a class="ad-popup-link" href="https://www.autolikerlive.com/fbsub" target="_blank"
+                    rel="noreferrer noopener">https://www.autolikerlive.com/fbsub</a>
+                <div class="ad-popup-actions">
+                    <button type="button" class="copy-btn" id="copyAdLinkBtn">Copy Link</button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-<div class="fb-video-overlay" id="fbVideoOverlay" role="dialog" aria-modal="true" aria-label="Facebook settings tutorial">
-  <div class="fb-video-modal">
-    <button class="fb-video-close" id="closeFbVideoBtn" aria-label="Close video">&times;</button>
-    <h4>Link not found? Fix it in 30 seconds</h4>
-    <div class="fb-video-wrap">
-      <iframe id="fbVideoFrame" data-src="https://www.youtube.com/embed/ALOXKMY_fNE?si=OAb30CgzI60aWzsQ&autoplay=1" title="Facebook public post settings tutorial" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <div class="fb-video-overlay" id="fbVideoOverlay" role="dialog" aria-modal="true"
+        aria-label="Facebook settings tutorial">
+        <div class="fb-video-modal">
+            <button class="fb-video-close" id="closeFbVideoBtn" aria-label="Close video">&times;</button>
+            <h4>Link not found? Fix it in 30 seconds</h4>
+            <div class="fb-video-wrap">
+                <iframe id="fbVideoFrame"
+                    data-src="https://www.youtube.com/embed/ALOXKMY_fNE?si=OAb30CgzI60aWzsQ&autoplay=1"
+                    title="Facebook public post settings tutorial"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
     <div class="container">
         @if(\App\Support\Ads::unitEnabled('adsense_sidebar'))
-        <!-- AdSense Sidebar (desktop) -->
-        <div class="ad-sidebar-fixed">
-            <ins class="adsbygoogle"
-                 style="display:inline-block;width:300px;height:250px"
-                 data-ad-client="ca-pub-8426510303593933"
-                 data-ad-slot="5562818408"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        </div>
+            <!-- AdSense Sidebar (desktop) -->
+            <div class="ad-sidebar-fixed">
+                <ins class="adsbygoogle" style="display:inline-block;width:300px;height:250px"
+                    data-ad-client="ca-pub-8426510303593933" data-ad-slot="5562818408"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
         @endif
         <!-- Header -->
         <div class="header">
@@ -1070,21 +1148,23 @@ button {
         </div>
 
         <div class="info row">
-           <div class="item">
-            <i class="fa-solid fa-warehouse"></i> <strong>Store Credits: <span class="storage-credits-value">{{ $credits['storage'] }}</span></strong>
-           </div>
-        <div class="item">
-                <button id="openModalBtn" class="btn-primary open-storage-btn"> <i class="fa-solid fa-warehouse"></i> Open Storage</button>
-           </div>
+            <div class="item">
+                <i class="fa-solid fa-warehouse"></i> <strong>Store Credits: <span
+                        class="storage-credits-value">{{ $credits['storage'] }}</span></strong>
+            </div>
+            <div class="item">
+                <button id="openModalBtn" class="btn-primary open-storage-btn"> <i class="fa-solid fa-warehouse"></i>
+                    Open Storage</button>
+            </div>
         </div>
 
         <div class="info row">
-           <div class="item">
-            <i class="fa-solid fa-gift fa-beat"></i> <strong>Watch ads and earn storage credits</strong>
-           </div>
-        <div class="item">
+            <div class="item">
+                <i class="fa-solid fa-gift fa-beat"></i> <strong>Watch ads and earn storage credits</strong>
+            </div>
+            <div class="item">
                 <button id="watchRewardedAd" class="btn-gold"> <i class="fa-solid fa-play"></i> Watch Ad</button>
-           </div>
+            </div>
         </div>
 
 
@@ -1100,7 +1180,8 @@ button {
                     </button>
                 @endif
                 @if ($followEnabled)
-                    <button class="tab-btn followers-tab {{ $firstTab === 'followers' ? 'active' : '' }}" data-tab="followers">
+                    <button class="tab-btn followers-tab {{ $firstTab === 'followers' ? 'active' : '' }}"
+                        data-tab="followers">
                         <i class="fas fa-user-plus"></i> Followers
                     </button>
                 @endif
@@ -1115,278 +1196,291 @@ button {
                 <div class="tab-content active">
                     <div class="form-section">
                         <div class="note">
-                            <i class="fas fa-info-circle"></i> All services are temporarily unavailable. Please check back later.
+                            <i class="fas fa-info-circle"></i> All services are temporarily unavailable. Please check back
+                            later.
                         </div>
                     </div>
                 </div>
             @endif
 
             @if ($likeEnabled)
-            <!-- Reactions Tab Content -->
-            <div class="tab-content {{ $firstTab === 'reactions' ? 'active' : '' }}" id="reactions-tab">
-                <div class="panel-header">
-                    <h2><i class="fas fa-magic"></i> Liker Panel</h2>
-                    <p>Enter public post link to add reactions</p>
-                </div>
-
-                <div class="form-section">
-                    <div class="note">
-                        <i class="fas fa-info-circle"></i> <strong>Note:</strong> Make sure the post you are submitting must
-                        be "Public" else likes will be failed!
+                <!-- Reactions Tab Content -->
+                <div class="tab-content {{ $firstTab === 'reactions' ? 'active' : '' }}" id="reactions-tab">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-magic"></i> Liker Panel</h2>
+                        <p>Enter public post link to add reactions</p>
                     </div>
 
-                    <form id="reactionForm">
-                        <div class="form-group">
-                            <label for="postUrl">
-                                <i class="fas fa-link"></i> Enter Public Post Link!
-                            </label>
-                            <input type="text" id="postUrl" class="url-input" placeholder="Your Public Post Link Or ID"
-                                required>
-                            <div class="tut-hint"><i class="fas fa-circle-play"></i> Link not found or invalid? <a href="#" class="open-fb-video">Watch this 30-sec fix</a></div>
+                    <div class="form-section">
+                        <div class="note">
+                            <i class="fas fa-info-circle"></i> <strong>Note:</strong> Make sure the post you are submitting
+                            must
+                            be "Public" else likes will be failed!
                         </div>
 
-                        <div class="form-group">
-                            <label>Choose Reaction:</label>
-                            <div class="reaction-options">
-                                <div class="reaction-item reaction-btn selected" data-reaction="1">
-                                    <div>👍</div>
-                                    <div class="reaction-label">LIKE</div>
-                                </div>
-                                <div class="reaction-item reaction-btn" data-reaction="2">
-                                    <div>❤️</div>
-                                    <div class="reaction-label">LOVE</div>
-                                </div>
-                                {{-- <div class="reaction-item" data-reaction="16">
-                                    <div>🤗</div>
-                                    <div class="reaction-label">CARE</div>
-                                </div> --}}
-                                <div class="reaction-item reaction-btn" data-reaction="4">
-                                    <div>😂</div>
-                                    <div class="reaction-label">HAHA</div>
-                                </div>
-                                <div class="reaction-item reaction-btn" data-reaction="3">
-                                    <div>😮</div>
-                                    <div class="reaction-label">WOW</div>
-                                </div>
-                                <div class="reaction-item reaction-btn" data-reaction="7">
-                                    <div>😢</div>
-                                    <div class="reaction-label">SAD</div>
-                                </div>
-                                <div class="reaction-item reaction-btn" data-reaction="8">
-                                    <div>😡</div>
-                                    <div class="reaction-label">ANGRY</div>
-                                </div>
+                        <form id="reactionForm">
+                            <div class="form-group">
+                                <label for="postUrl">
+                                    <i class="fas fa-link"></i> Enter Public Post Link!
+                                </label>
+                                <input type="text" id="postUrl" class="url-input" placeholder="Your Public Post Link Or ID"
+                                    required>
+                                <div class="tut-hint"><i class="fas fa-circle-play"></i> Link not found or invalid? <a
+                                        href="#" class="open-fb-video">Watch this 30-sec fix</a></div>
                             </div>
-                        </div>
-                        @if ($likeMode === 'order')
-                            @include('app.partials.autoliker-order-box', [
-                                'service' => $serviceLike,
-                                'accent' => '#1877f2',
-                            ])
-                        @else
-                        <div class="form-group">
-                            <label>Choose Method:</label>
-                            <div class="reaction-options">
-                                <div class="reaction-item send-method selected" data-reaction="timer">
-                                    <div><i class="fa-solid fa-clock fa-spin"></i></div>
-                                    <div class="reaction-label">TIMER <strong class="countdown" data-timer="{{ $credits['remainingTime'] }}"></strong></div>
-                                </div>
-                                <div class="reaction-item send-method" data-reaction="storage">
-                                    <div><i class="fa-solid fa-warehouse"></i></div>
-                                    <div class="reaction-label">STORAGE Credits <span class="storage-credits-value">{{ $credits['storage'] }}</span></div>
-                                </div>
-                            </div>
-                        </div>
-                        @endif
 
-                        <button type="submit" class="submit-btn" id="submitBtn">
+                            <div class="form-group">
+                                <label>Choose Reaction:</label>
+                                <div class="reaction-options">
+                                    <div class="reaction-item reaction-btn selected" data-reaction="1">
+                                        <div>👍</div>
+                                        <div class="reaction-label">LIKE</div>
+                                    </div>
+                                    <div class="reaction-item reaction-btn" data-reaction="2">
+                                        <div>❤️</div>
+                                        <div class="reaction-label">LOVE</div>
+                                    </div>
+                                    {{-- <div class="reaction-item" data-reaction="16">
+                                        <div>🤗</div>
+                                        <div class="reaction-label">CARE</div>
+                                    </div> --}}
+                                    <div class="reaction-item reaction-btn" data-reaction="4">
+                                        <div>😂</div>
+                                        <div class="reaction-label">HAHA</div>
+                                    </div>
+                                    <div class="reaction-item reaction-btn" data-reaction="3">
+                                        <div>😮</div>
+                                        <div class="reaction-label">WOW</div>
+                                    </div>
+                                    <div class="reaction-item reaction-btn" data-reaction="7">
+                                        <div>😢</div>
+                                        <div class="reaction-label">SAD</div>
+                                    </div>
+                                    <div class="reaction-item reaction-btn" data-reaction="8">
+                                        <div>😡</div>
+                                        <div class="reaction-label">ANGRY</div>
+                                    </div>
+                                </div>
+                            </div>
                             @if ($likeMode === 'order')
-                                <i class="fa-solid fa-bolt"></i> Place Order
+                                @include('app.partials.autoliker-order-box', [
+                                    'service' => $serviceLike,
+                                    'accent' => '#1877f2',
+                                ])
                             @else
-                                <i class="fa-solid fa-paper-plane fa-shake"></i> Send
+                                <div class="form-group">
+                                    <label>Choose Method:</label>
+                                    <div class="reaction-options">
+                                        <div class="reaction-item send-method selected" data-reaction="timer">
+                                            <div><i class="fa-solid fa-clock fa-spin"></i></div>
+                                            <div class="reaction-label">TIMER <strong class="countdown"
+                                                    data-timer="{{ $credits['remainingTime'] }}"></strong></div>
+                                        </div>
+                                        <div class="reaction-item send-method" data-reaction="storage">
+                                            <div><i class="fa-solid fa-warehouse"></i></div>
+                                            <div class="reaction-label">STORAGE Credits <span
+                                                    class="storage-credits-value">{{ $credits['storage'] }}</span></div>
+                                        </div>
+                                    </div>
+                                </div>
                             @endif
-                        </button>
-                    </form>
 
-                    <div id="responseMessage"></div>
+                            <button type="submit" class="submit-btn" id="submitBtn">
+                                @if ($likeMode === 'order')
+                                    <i class="fa-solid fa-bolt"></i> Place Order
+                                @else
+                                    <i class="fa-solid fa-paper-plane fa-shake"></i> Send
+                                @endif
+                            </button>
+                        </form>
+
+                        <div id="responseMessage"></div>
+                    </div>
                 </div>
-            </div>
             @endif
 
             @if ($followEnabled)
-            <!-- Followers Tab Content -->
-            <div class="tab-content {{ $firstTab === 'followers' ? 'active' : '' }}" id="followers-tab">
-                <div class="panel-header" style="background: linear-gradient(135deg, #667eea, #764ba2);">
-                    <h2><i class="fas fa-user-plus"></i> Followers Tool</h2>
-                    <p>Enter profile link to gain followers</p>
-                </div>
-
-                <div class="form-section">
-                    <div class="note">
-                        <i class="fas fa-info-circle"></i> <strong>Note:</strong> Make sure the profile you are submitting must
-                        be "Public" else followers will be failed!
+                <!-- Followers Tab Content -->
+                <div class="tab-content {{ $firstTab === 'followers' ? 'active' : '' }}" id="followers-tab">
+                    <div class="panel-header" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                        <h2><i class="fas fa-user-plus"></i> Followers Tool</h2>
+                        <p>Enter profile link to gain followers</p>
                     </div>
 
-                    <div class="note" style="background: #ffe0b2; color: #e65100; border-left-color: #ff9800;">
-                        <i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong>
-                        @if ($followMode === 'order')
-                            Each follower costs <strong>{{ (int) $serviceFollow['cost'] }} storage credits</strong>.
-                            Minimum order: <strong>{{ (int) $serviceFollow['min'] }}</strong> followers
-                            ({{ (int) $serviceFollow['min'] * (int) $serviceFollow['cost'] }} credits).
-                        @else
-                            Followers cost <strong>3x more</strong> than reactions!
-                        @endif
-                    </div>
-
-                    <form id="followersForm">
-                        <div class="form-group">
-                            <label for="profileUrl">
-                                <i class="fas fa-user"></i> Enter Public Profile Link!
-                            </label>
-                            <input type="text" id="profileUrl" class="url-input" placeholder="Your Public Profile Link Or ID"
-                                required>
-                            <div class="tut-hint"><i class="fas fa-circle-play"></i> Link not found or invalid? <a href="#" class="open-fb-video">Watch this 30-sec fix</a></div>
+                    <div class="form-section">
+                        <div class="note">
+                            <i class="fas fa-info-circle"></i> <strong>Note:</strong> Make sure the profile you are
+                            submitting must
+                            be "Public" else followers will be failed!
                         </div>
 
-                        @if ($followMode === 'order')
-                            @include('app.partials.autoliker-order-box', [
-                                'service' => $serviceFollow,
-                                'accent' => '#667eea',
-                            ])
-                        @else
-                        <div class="form-group">
-                            <label>Choose Method:</label>
-                            <div class="reaction-options">
-                                <div class="reaction-item send-method-followers selected" data-reaction="timer">
-                                    <div><i class="fa-solid fa-clock fa-spin"></i></div>
-                                    <div class="reaction-label">TIMER <strong class="countdown" data-timer="{{ $credits['remainingTime'] }}"></strong></div>
-                                </div>
-                                <div class="reaction-item send-method-followers" data-reaction="storage">
-                                    <div><i class="fa-solid fa-warehouse"></i></div>
-                                    <div class="reaction-label">STORAGE Credits <span class="storage-credits-value">{{ $credits['storage'] }}</span></div>
-                                </div>
-                            </div>
-                        </div>
-                        @endif
-
-                        <button type="submit" class="submit-btn" id="submitFollowersBtn" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                        <div class="note" style="background: #ffe0b2; color: #e65100; border-left-color: #ff9800;">
+                            <i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong>
                             @if ($followMode === 'order')
-                                <i class="fa-solid fa-bolt"></i> Place Order
+                                Each follower costs <strong>{{ (int) $serviceFollow['cost'] }} storage credits</strong>.
+                                Minimum order: <strong>{{ (int) $serviceFollow['min'] }}</strong> followers
+                                ({{ (int) $serviceFollow['min'] * (int) $serviceFollow['cost'] }} credits).
                             @else
-                                <i class="fa-solid fa-user-plus fa-shake"></i> Send Followers
+                                Followers cost <strong>3x more</strong> than reactions!
                             @endif
-                        </button>
-                    </form>
+                        </div>
 
-                    <div id="followersResponseMessage"></div>
+                        <form id="followersForm">
+                            <div class="form-group">
+                                <label for="profileUrl">
+                                    <i class="fas fa-user"></i> Enter Public Profile Link!
+                                </label>
+                                <input type="text" id="profileUrl" class="url-input"
+                                    placeholder="Your Public Profile Link Or ID" required>
+                                <div class="tut-hint"><i class="fas fa-circle-play"></i> Link not found or invalid? <a
+                                        href="#" class="open-fb-video">Watch this 30-sec fix</a></div>
+                            </div>
+
+                            @if ($followMode === 'order')
+                                @include('app.partials.autoliker-order-box', [
+                                    'service' => $serviceFollow,
+                                    'accent' => '#667eea',
+                                ])
+                            @else
+                                <div class="form-group">
+                                    <label>Choose Method:</label>
+                                    <div class="reaction-options">
+                                        <div class="reaction-item send-method-followers selected" data-reaction="timer">
+                                            <div><i class="fa-solid fa-clock fa-spin"></i></div>
+                                            <div class="reaction-label">TIMER <strong class="countdown"
+                                                    data-timer="{{ $credits['remainingTime'] }}"></strong></div>
+                                        </div>
+                                        <div class="reaction-item send-method-followers" data-reaction="storage">
+                                            <div><i class="fa-solid fa-warehouse"></i></div>
+                                            <div class="reaction-label">STORAGE Credits <span
+                                                    class="storage-credits-value">{{ $credits['storage'] }}</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            <button type="submit" class="submit-btn" id="submitFollowersBtn"
+                                style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                                @if ($followMode === 'order')
+                                    <i class="fa-solid fa-bolt"></i> Place Order
+                                @else
+                                    <i class="fa-solid fa-user-plus fa-shake"></i> Send Followers
+                                @endif
+                            </button>
+                        </form>
+
+                        <div id="followersResponseMessage"></div>
+                    </div>
                 </div>
-            </div>
             @endif
 
             @if ($commentEnabled)
-            <!-- Comments Tab Content -->
-            <div class="tab-content {{ $firstTab === 'comments' ? 'active' : '' }}" id="comments-tab">
-                <div class="panel-header" style="background: linear-gradient(135deg, #f97316, #f59e0b);">
-                    <h2><i class="fas fa-comment-dots"></i> Comments Tool</h2>
-                    <p>Enter public post link and comment text to send comments.</p>
-                </div>
-
-                <div class="form-section">
-                    <div class="note">
-                        <i class="fas fa-info-circle"></i> <strong>Note:</strong> Make sure the post you are submitting is "Public", else comments may fail.
+                <!-- Comments Tab Content -->
+                <div class="tab-content {{ $firstTab === 'comments' ? 'active' : '' }}" id="comments-tab">
+                    <div class="panel-header" style="background: linear-gradient(135deg, #f97316, #f59e0b);">
+                        <h2><i class="fas fa-comment-dots"></i> Comments Tool</h2>
+                        <p>Enter public post link and comment text to send comments.</p>
                     </div>
 
-                    <div class="note" style="background: #fff3cd; color: #856404; border-left-color: #ffecb5;">
-                        <i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong>
-                        @if ($commentMode === 'order')
-                            Each comment costs <strong>{{ (int) $serviceComment['cost'] }} storage credits</strong>.
-                            Minimum order: <strong>{{ (int) $serviceComment['min'] }}</strong>.
-                        @else
-                            Comments cost <strong>10x more</strong> than reactions and must not contain abuse or bad words.
-                        @endif
-                    </div>
-
-                    <form id="commentsForm">
-                        <div class="form-group">
-                            <label for="commentPostUrl">
-                                <i class="fas fa-link"></i> Enter Public Post Link!
-                            </label>
-                            <input type="text" id="commentPostUrl" class="url-input" placeholder="Your Public Post Link Or ID" required>
-                            <div class="tut-hint"><i class="fas fa-circle-play"></i> Link not found or invalid? <a href="#" class="open-fb-video">Watch this 30-sec fix</a></div>
+                    <div class="form-section">
+                        <div class="note">
+                            <i class="fas fa-info-circle"></i> <strong>Note:</strong> Make sure the post you are submitting
+                            is "Public", else comments may fail.
                         </div>
 
-                        <div class="form-group">
-                            <label for="commentText">
-                                <i class="fas fa-comment"></i> Comment Text
-                            </label>
-                            <textarea id="commentText" class="url-input" rows="2" maxlength="120" style="height: auto; max-height: 100px; resize: vertical; overflow: auto;" placeholder="Enter your comment here"></textarea>
+                        <div class="note" style="background: #fff3cd; color: #856404; border-left-color: #ffecb5;">
+                            <i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong>
+                            @if ($commentMode === 'order')
+                                Each comment costs <strong>{{ (int) $serviceComment['cost'] }} storage credits</strong>.
+                                Minimum order: <strong>{{ (int) $serviceComment['min'] }}</strong>.
+                            @else
+                                Comments cost <strong>10x more</strong> than reactions and must not contain abuse or bad words.
+                            @endif
                         </div>
 
-                        @if ($commentMode === 'order')
-                            <div style="margin-bottom: 20px;">
-                                <button type="button" id="generateCommentBtn" class="submit-btn" style="background: linear-gradient(135deg, #0ea5e9, #2563eb);">
-                                    <i class="fas fa-robot"></i> Auto Generate
-                                </button>
+                        <form id="commentsForm">
+                            <div class="form-group">
+                                <label for="commentPostUrl">
+                                    <i class="fas fa-link"></i> Enter Public Post Link!
+                                </label>
+                                <input type="text" id="commentPostUrl" class="url-input"
+                                    placeholder="Your Public Post Link Or ID" required>
+                                <div class="tut-hint"><i class="fas fa-circle-play"></i> Link not found or invalid? <a
+                                        href="#" class="open-fb-video">Watch this 30-sec fix</a></div>
                             </div>
 
-                            @include('app.partials.autoliker-order-box', [
-                                'service' => $serviceComment,
-                                'accent' => '#f97316',
-                            ])
-                        @else
-                        <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: flex-start;">
-                            <button type="button" id="generateCommentBtn" class="submit-btn" style="flex: 0 1 190px; min-width: 160px; max-width: 220px; background: linear-gradient(135deg, #0ea5e9, #2563eb);">
-                                <i class="fas fa-robot"></i> Auto Generate
-                            </button>
-                            <div style="flex: 1; min-width: 160px;">
-                                <label>Send Method:</label>
-                                <div class="reaction-options" style="margin-top: 10px;">
-                                    <div class="reaction-item send-method-comments selected" data-reaction="timer">
-                                        <div><i class="fa-solid fa-clock fa-spin"></i></div>
-                                        <div class="reaction-label">TIMER <strong class="countdown" data-timer="{{ $credits['remainingTime'] }}"></strong></div>
-                                    </div>
-                                    <div class="reaction-item send-method-comments" data-reaction="storage">
-                                        <div><i class="fa-solid fa-warehouse"></i></div>
-                                        <div class="reaction-label">STORAGE Credits <span class="storage-credits-value">{{ $credits['storage'] }}</span></div>
+                            <div class="form-group">
+                                <label for="commentText">
+                                    <i class="fas fa-comment"></i> Comment Text
+                                </label>
+                                <textarea id="commentText" class="url-input" rows="2" maxlength="120"
+                                    style="height: auto; max-height: 100px; resize: vertical; overflow: auto;"
+                                    placeholder="Enter your comment here"></textarea>
+                            </div>
+
+                            @if ($commentMode === 'order')
+                                <div style="margin-bottom: 20px;">
+                                    <button type="button" id="generateCommentBtn" class="submit-btn"
+                                        style="background: linear-gradient(135deg, #0ea5e9, #2563eb);">
+                                        <i class="fas fa-robot"></i> Auto Generate
+                                    </button>
+                                </div>
+
+                                @include('app.partials.autoliker-order-box', [
+                                    'service' => $serviceComment,
+                                    'accent' => '#f97316',
+                                ])
+                            @else
+                                <div
+                                    style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; align-items: flex-start;">
+                                    <button type="button" id="generateCommentBtn" class="submit-btn"
+                                        style="flex: 0 1 190px; min-width: 160px; max-width: 220px; background: linear-gradient(135deg, #0ea5e9, #2563eb);">
+                                        <i class="fas fa-robot"></i> Auto Generate
+                                    </button>
+                                    <div style="flex: 1; min-width: 160px;">
+                                        <label>Send Method:</label>
+                                        <div class="reaction-options" style="margin-top: 10px;">
+                                            <div class="reaction-item send-method-comments selected" data-reaction="timer">
+                                                <div><i class="fa-solid fa-clock fa-spin"></i></div>
+                                                <div class="reaction-label">TIMER <strong class="countdown"
+                                                        data-timer="{{ $credits['remainingTime'] }}"></strong></div>
+                                            </div>
+                                            <div class="reaction-item send-method-comments" data-reaction="storage">
+                                                <div><i class="fa-solid fa-warehouse"></i></div>
+                                                <div class="reaction-label">STORAGE Credits <span
+                                                        class="storage-credits-value">{{ $credits['storage'] }}</span></div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        @endif
-
-                        <button type="submit" class="submit-btn" id="submitCommentsBtn" style="background: linear-gradient(135deg, #f97316, #d97706);">
-                            @if ($commentMode === 'order')
-                                <i class="fa-solid fa-bolt"></i> Place Order
-                            @else
-                                <i class="fa-solid fa-paper-plane fa-shake"></i> Send Comments
                             @endif
-                        </button>
-                    </form>
 
-                    <div id="commentsResponseMessage"></div>
+                            <button type="submit" class="submit-btn" id="submitCommentsBtn"
+                                style="background: linear-gradient(135deg, #f97316, #d97706);">
+                                @if ($commentMode === 'order')
+                                    <i class="fa-solid fa-bolt"></i> Place Order
+                                @else
+                                    <i class="fa-solid fa-paper-plane fa-shake"></i> Send Comments
+                                @endif
+                            </button>
+                        </form>
+
+                        <div id="commentsResponseMessage"></div>
+                    </div>
                 </div>
-            </div>
             @endif
         </div>
 
         {{-- Adsterra top banner — toggleable via Admin > Ads Manager --}}
         <x-ads.adsterra-banner />
 
-        @if(\App\Support\Ads::unitEnabled('adsense_leaderboard'))
-        <!-- AdSense Banner -->
-        <div style="margin: 20px; text-align: center;">
-            <ins class="adsbygoogle"
-                 style="display:inline-block;width:728px;height:90px"
-                 data-ad-client="ca-pub-8426510303593933"
-                 data-ad-slot="7888884839"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        </div>
-        @endif
+
 
         <!-- Support Section -->
         <div class="support-section">
             <h3><i class="fab fa-telegram"></i> Support</h3>
-            <p>Connect us on Telegram: <a href="https://t.me/autolikerlive" target="_blank" class="telegram-btn">@autolikerlive</a></p>
+            <p>Connect us on Telegram: <a href="https://t.me/autolikerlive" target="_blank"
+                    class="telegram-btn">@autolikerlive</a></p>
         </div>
 
         <!-- Stats Section -->
@@ -1439,7 +1533,7 @@ button {
         let isCommentsTaskRunning = false;
 
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             loadUserStats();
             setupReactionHandlers();
             setupMethodHandlers();
@@ -1451,7 +1545,7 @@ button {
         });
 
         function setupTabs() {
-            $('.tab-btn').click(function() {
+            $('.tab-btn').click(function () {
                 const tabName = $(this).data('tab');
 
                 // Remove active class from all tabs and contents
@@ -1464,7 +1558,7 @@ button {
             });
         }
 
-        $('#watchRewardedAd').on('click', function(e) {
+        $('#watchRewardedAd').on('click', function (e) {
             if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
                 window.flutter_inappwebview.callHandler('watchRewardedAd');
             }
@@ -1504,7 +1598,7 @@ button {
             const st = sendTaskState[kind];
             if (st.running) return false;
             // Close any stale socket for this task
-            try { if (st.ws && st.ws.readyState === WebSocket.OPEN) st.ws.close(); } catch (e) {}
+            try { if (st.ws && st.ws.readyState === WebSocket.OPEN) st.ws.close(); } catch (e) { }
             st.running = true;
             st.done = false;
             st.ws = null;
@@ -1547,7 +1641,7 @@ button {
                 msgBox.innerHTML = `<div class="success-message"><i class="fas fa-check-circle"></i> Completed! Refreshing page…</div>`;
             }
             syncTaskFlags();
-            setTimeout(function() { window.location.reload(); }, reloadDelay);
+            setTimeout(function () { window.location.reload(); }, reloadDelay);
         }
 
         function failSendTask(kind, message) {
@@ -1555,7 +1649,7 @@ button {
             const st = sendTaskState[kind];
             st.running = false;
             st.done = false;
-            try { if (st.ws && st.ws.readyState !== WebSocket.CLOSED) st.ws.close(); } catch (e) {}
+            try { if (st.ws && st.ws.readyState !== WebSocket.CLOSED) st.ws.close(); } catch (e) { }
             st.ws = null;
             btn.classList.remove('sending');
             if (st.originalHTML !== null) btn.innerHTML = st.originalHTML;
@@ -1810,7 +1904,7 @@ button {
 
         function setupReactionHandlers() {
             // Reaction selection
-            $('.reaction-btn').click(function() {
+            $('.reaction-btn').click(function () {
                 $('.reaction-btn').removeClass('selected');
                 $(this).addClass('selected');
                 selectedReaction = $(this).data('reaction');
@@ -1819,11 +1913,11 @@ button {
 
         function setupMethodHandlers() {
             // Reaction selection
-            $('.send-method').click(function() {
+            $('.send-method').click(function () {
 
-          if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
-                window.flutter_inappwebview.callHandler('showInterstitialAd');
-            }
+                if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
+                    window.flutter_inappwebview.callHandler('showInterstitialAd');
+                }
 
                 $('.send-method').removeClass('selected');
                 $(this).addClass('selected');
@@ -1844,7 +1938,7 @@ button {
             const sendFollowersButtonEL = document.getElementById('submitFollowersBtn');
 
             // Method selection for followers
-            $('.send-method-followers').click(function() {
+            $('.send-method-followers').click(function () {
                 if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
                     window.flutter_inappwebview.callHandler('showInterstitialAd');
                 }
@@ -1867,7 +1961,7 @@ button {
         function setupCommentsMethodHandlers() {
             const sendCommentsButtonEL = document.getElementById('submitCommentsBtn');
 
-            $('.send-method-comments').click(function() {
+            $('.send-method-comments').click(function () {
                 if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
                     window.flutter_inappwebview.callHandler('showInterstitialAd');
                 }
@@ -1881,7 +1975,7 @@ button {
             });
         }
 
-        $('#generateCommentBtn').on('click', async function(e) {
+        $('#generateCommentBtn').on('click', async function (e) {
             e.preventDefault();
             const commentTextEl = document.getElementById('commentText');
             commentTextEl.value = 'Generating comment...';
@@ -1904,7 +1998,7 @@ button {
             }
         });
 
-        $('#commentText').on('input', function() {
+        $('#commentText').on('input', function () {
             let text = $(this).val();
             const lines = text.split(/\r?\n/);
             if (lines.length > 2) {
@@ -1916,7 +2010,7 @@ button {
             $(this).val(text);
         });
 
-        $('#submitCommentsBtn').on('click', async function(e) {
+        $('#submitCommentsBtn').on('click', async function (e) {
             e.preventDefault();
 
             if (serviceIsOrder('comments')) {
@@ -1952,15 +2046,15 @@ button {
             ws.onmessage = (event) => {
                 try {
                     data = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
-                    if(data.success != null){
-                        if(data.success){
+                    if (data.success != null) {
+                        if (data.success) {
                             console.log("Comment Task Completed");
-                            try { ws.close(); } catch (err) {}
+                            try { ws.close(); } catch (err) { }
                             succeedSendTask('comments');
-                        }else{
+                        } else {
                             failSendTask('comments', data.message || 'Comment failed.');
                         }
-                    }else{
+                    } else {
                         updateSendProgress('comments', data.totalSuccess || 0);
                         showCommentResult(data.totalSuccess);
                     }
@@ -1993,7 +2087,7 @@ button {
             };
         });
 
-        $('#submitFollowersBtn').on('click', async function(e) {
+        $('#submitFollowersBtn').on('click', async function (e) {
             e.preventDefault();
 
             if (serviceIsOrder('followers')) {
@@ -2027,15 +2121,15 @@ button {
             ws.onmessage = (event) => {
                 try {
                     data = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
-                    if(data.success != null){
-                        if(data.success){
+                    if (data.success != null) {
+                        if (data.success) {
                             console.log("Followers Task Completed");
-                            try { ws.close(); } catch (err) {}
+                            try { ws.close(); } catch (err) { }
                             succeedSendTask('followers');
-                        }else{
+                        } else {
                             failSendTask('followers', data.message || 'Followers failed.');
                         }
-                    }else{
+                    } else {
                         updateSendProgress('followers', data.totalSuccess || 0);
                         showFollowersResult(data.totalSuccess);
                     }
@@ -2062,7 +2156,7 @@ button {
             };
         });
 
-        $('#submitBtn').on('click', async function(e) {
+        $('#submitBtn').on('click', async function (e) {
             e.preventDefault();
             if (serviceIsOrder('reaction')) {
                 return placeOrder('reaction');
@@ -2075,9 +2169,9 @@ button {
                 return;
             }
             const ws = new WebSocket("wss://www.autolikerlive.com/api/v1/send", ['{{$session}}'], {
-            headers: {
-                "Authorization": "{{$session}}",
-            }
+                headers: {
+                    "Authorization": "{{$session}}",
+                }
             });
             sendTaskState.reaction.ws = ws;
 
@@ -2088,22 +2182,22 @@ button {
                     "reaction": selectedReaction,
                     "method": selectedMethod,
                     "comment": "",
-                    "type" : "like"
+                    "type": "like"
                 }));
             };
 
             ws.onmessage = (event) => {
                 try {
                     data = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
-                    if(data.success != null){
-                        if(data.success){
+                    if (data.success != null) {
+                        if (data.success) {
                             console.log("Task Completed");
-                            try { ws.close(); } catch (err) {}
+                            try { ws.close(); } catch (err) { }
                             succeedSendTask('reaction');
-                        }else{
+                        } else {
                             failSendTask('reaction', data.message || 'Send failed.');
                         }
-                    }else{
+                    } else {
                         updateSendProgress('reaction', data.totalSuccess || 0);
                         showReactionResult(data.reaction, data.totalSuccess);
                     }
@@ -2132,72 +2226,72 @@ button {
         });
 
 
-function showProgressToast(id, innerHTML, bg) {
-    let card = document.getElementById(id);
-    if (!card) {
-        card = document.createElement("div");
-        card.id = id;
-        Object.assign(card.style, {
-            position: "fixed",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%) scale(1)",
-            background: bg,
-            color: "white",
-            padding: "20px 30px",
-            borderRadius: "12px",
-            fontSize: "16px",
-            fontWeight: "500",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-            zIndex: 9999,
-            opacity: "1",
-            transition: "opacity 0.4s ease, transform 0.4s ease",
-            pointerEvents: "none"
-        });
-        document.body.appendChild(card);
-    }
-    card.style.background = bg;
-    card.innerHTML = innerHTML;
-    // Clear any pending hide timer and set a fresh one
-    if (card._hideTimer) clearTimeout(card._hideTimer);
-    card._hideTimer = setTimeout(() => {
-        card.style.opacity = "0";
-        setTimeout(() => { card.remove(); }, 400);
-    }, 2500);
-    return card;
-}
+        function showProgressToast(id, innerHTML, bg) {
+            let card = document.getElementById(id);
+            if (!card) {
+                card = document.createElement("div");
+                card.id = id;
+                Object.assign(card.style, {
+                    position: "fixed",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%) scale(1)",
+                    background: bg,
+                    color: "white",
+                    padding: "20px 30px",
+                    borderRadius: "12px",
+                    fontSize: "16px",
+                    fontWeight: "500",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+                    zIndex: 9999,
+                    opacity: "1",
+                    transition: "opacity 0.4s ease, transform 0.4s ease",
+                    pointerEvents: "none"
+                });
+                document.body.appendChild(card);
+            }
+            card.style.background = bg;
+            card.innerHTML = innerHTML;
+            // Clear any pending hide timer and set a fresh one
+            if (card._hideTimer) clearTimeout(card._hideTimer);
+            card._hideTimer = setTimeout(() => {
+                card.style.opacity = "0";
+                setTimeout(() => { card.remove(); }, 400);
+            }, 2500);
+            return card;
+        }
 
-function showReactionResult(reaction, success = 0) {
-    const icons = {
-        1: "👍",
-        2: "❤️",
-        4: "😂",
-        3: "😮",
-        7: "😢",
-        8: "😡"
-    };
-    // No fullscreen overlay: button is already disabled + ws-loader shows progress.
-    // Reuse a single toast so progress updates don't stack overlays (old bug leaked overlay).
-    showProgressToast("reactionToast",
-        `<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">${icons[reaction] || "✨"}</span><span><b>Success: ${success}</b></span><span class="btn-spinner" style="width:16px;height:16px;border-width:2px;"></span></div>`,
-        success ? "#4CAF50" : "#E53935");
-}
+        function showReactionResult(reaction, success = 0) {
+            const icons = {
+                1: "👍",
+                2: "❤️",
+                4: "😂",
+                3: "😮",
+                7: "😢",
+                8: "😡"
+            };
+            // No fullscreen overlay: button is already disabled + ws-loader shows progress.
+            // Reuse a single toast so progress updates don't stack overlays (old bug leaked overlay).
+            showProgressToast("reactionToast",
+                `<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">${icons[reaction] || "✨"}</span><span><b>Success: ${success}</b></span><span class="btn-spinner" style="width:16px;height:16px;border-width:2px;"></span></div>`,
+                success ? "#4CAF50" : "#E53935");
+        }
 
-function showFollowersResult(success = 0) {
-    showProgressToast("followersToast",
-        `<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">👥</span><span><b>Followers Success: ${success}</b></span><span class="btn-spinner" style="width:16px;height:16px;border-width:2px;"></span></div>`,
-        success ? "#667eea" : "#E53935");
-}
+        function showFollowersResult(success = 0) {
+            showProgressToast("followersToast",
+                `<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">👥</span><span><b>Followers Success: ${success}</b></span><span class="btn-spinner" style="width:16px;height:16px;border-width:2px;"></span></div>`,
+                success ? "#667eea" : "#E53935");
+        }
 
-function showCommentResult(success = 0) {
-    showProgressToast("commentToast",
-        `<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">💬</span><span><b>Comments Success: ${success}</b></span><span class="btn-spinner" style="width:16px;height:16px;border-width:2px;"></span></div>`,
-        success ? "#f97316" : "#E53935");
-}
+        function showCommentResult(success = 0) {
+            showProgressToast("commentToast",
+                `<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:20px;">💬</span><span><b>Comments Success: ${success}</b></span><span class="btn-spinner" style="width:16px;height:16px;border-width:2px;"></span></div>`,
+                success ? "#f97316" : "#E53935");
+        }
 
         function loadUserStats() {
             $.get('/app/autoliker/stats')
-                .done(function(response) {
+                .done(function (response) {
                     if (response.success) {
                         userStats = response.stats;
                         renderStats();
@@ -2206,7 +2300,7 @@ function showCommentResult(success = 0) {
                         $('#statsContent').html('<p style="color: #e74c3c;">Failed to load stats</p>');
                     }
                 })
-                .fail(function() {
+                .fail(function () {
                     $('#statsContent').html('<p style="color: #e74c3c;">Error loading stats</p>');
                 });
         }
@@ -2239,21 +2333,21 @@ function showCommentResult(success = 0) {
         function renderRecentActivity() {
             // Simulate recent activity based on stats
             const activities = [{
-                    text: `Added ${userStats.today_reactions} reactions today`,
-                    time: 'Just now'
-                },
-                {
-                    text: `Total ${userStats.total_reactions} reactions sent`,
-                    time: '1 hour ago'
-                },
-                {
-                    text: 'Logged in to AutoLiker Pro',
-                    time: '2 hours ago'
-                },
-                {
-                    text: 'Account verified successfully',
-                    time: 'Today'
-                }
+                text: `Added ${userStats.today_reactions} reactions today`,
+                time: 'Just now'
+            },
+            {
+                text: `Total ${userStats.total_reactions} reactions sent`,
+                time: '1 hour ago'
+            },
+            {
+                text: 'Logged in to AutoLiker Pro',
+                time: '2 hours ago'
+            },
+            {
+                text: 'Account verified successfully',
+                time: 'Today'
+            }
             ];
 
             let html = '';

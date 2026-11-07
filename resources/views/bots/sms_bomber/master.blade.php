@@ -47,6 +47,7 @@
     <meta property="og:image" content="{{ asset('images/graphic.webp') }}" />
 
     @yield('javascripts')
+    <x-auto-ads />
 
 </head>
 
@@ -54,6 +55,7 @@
 
 
 
+    <x-ads.top />
     @yield('content')
 
 

@@ -51,6 +51,7 @@
 
 
 
+    <x-ads.top />
     @yield('content')
 
     <x-ads.adsterra-smart-link />

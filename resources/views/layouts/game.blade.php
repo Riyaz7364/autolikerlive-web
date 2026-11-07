@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+    
+    <x-auto-ads />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="revisit-after" content="1 days" />
@@ -31,7 +34,6 @@
     @vite(['resources/js/game-app.js'])
     @stack('styles')
     @yield('javascripts')
-    <x-auto-ads />
 </head>
     <body>
         <x-navbar />
@@ -40,6 +42,7 @@
         @endif
         <main>
             <div class="container">
+                <x-ads.top />
                 <div class="blog-layout">
                     <div class="blog-main">
                         @yield('content')

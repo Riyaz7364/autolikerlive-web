@@ -429,9 +429,6 @@
         </div>
     @endif
 
-    <x-ads.leaderboard />
-    <x-ads.mobile-banner />
-
     <div class="cta-banner">
         <h3>Need Help With Something Else?</h3>
         <p>We have free tools for Facebook, Instagram, TikTok and more.</p>

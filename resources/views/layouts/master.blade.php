@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="revisit-after" content="1 days" />
@@ -35,14 +36,15 @@
     @vite(['resources/js/app.js'])
     @stack('styles')
     @yield('javascripts')
-    @if (!trim($__env->yieldContent('no-auto-ads')))
+
         <x-auto-ads />
-    @endif
+
 </head>
 <body>
     <x-navbar />
     <main>
         <div class="container">
+            <x-ads.top />
             {{-- Adsterra top banner — toggleable via Admin > Ads Manager --}}
             <x-ads.adsterra-banner />
             @if (trim($__env->yieldContent('full-width')))
