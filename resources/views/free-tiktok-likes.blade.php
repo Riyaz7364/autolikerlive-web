@@ -215,11 +215,16 @@
 
         /* ============ Ad slots ============ */
         .ad-slot {
-            overflow: hidden;
+            overflow:visible;
             text-align: center;
             margin: 22px auto;
             padding: 6px 0;
+            width:100%; max-width:100%;
         }
+        .ad-slot .ad-container,.ad-slot ins.adsbygoogle{width:100% !important;max-width:100%;}
+        .ad-slot .ad-container.my-4,.ad-slot .ad-container.my-3{margin-top:0 !important;margin-bottom:0 !important;}
+        @media (max-width:767.98px){.ad-slot .d-none{display:none !important}.ad-slot .d-md-none{display:block !important}.ad-slot.ad-leader{padding:12px 0 4px}}
+        @media (min-width:768px){.ad-slot .d-none{display:block !important}.ad-slot .d-md-none{display:none !important}.ad-slot .d-md-block{display:block !important}}
         .ad-slot.ad-leader { max-width: 1100px; padding: 22px 24px 6px; }
         .ad-slot.ad-inline { max-width: 1100px; padding: 4px 0; }
         .hide-mobile { display: block; }
@@ -917,5 +922,6 @@
     </script>
 @include('components.chat-widget')
 @include('components.ads.video-gate', ['mode' => 'forms'])
+    <x-ads.anchor />
 </body>
 </html>

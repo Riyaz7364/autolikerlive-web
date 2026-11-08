@@ -158,7 +158,11 @@
         /* Header styles live in public/css/tool-header.css (<x-tool-header />) */
 
         /* ============ Ad slots ============ */
-        .ad-slot { overflow: hidden; text-align: center; margin: 22px auto; padding: 6px 0; }
+        .ad-slot { overflow:visible; text-align: center; margin: 22px auto; padding: 6px 0; width:100%;max-width:100%; }
+        .ad-slot .ad-container,.ad-slot ins.adsbygoogle{width:100% !important;max-width:100%;}
+        .ad-slot .ad-container.my-4,.ad-slot .ad-container.my-3{margin-top:0 !important;margin-bottom:0 !important;}
+        @media (max-width:767.98px){.ad-slot .d-none{display:none !important}.ad-slot .d-md-none{display:block !important}.ad-slot.ad-leader{padding:12px 0 4px}}
+        @media (min-width:768px){.ad-slot .d-none{display:block !important}.ad-slot .d-md-none{display:none !important}.ad-slot .d-md-block{display:block !important}}
         .ad-slot > div { margin: 0 !important; }
         .ad-slot .ad-container { text-align: center; }
         .ad-slot .d-none { display: block; }
@@ -930,5 +934,6 @@
     </script>
 @include('components.chat-widget')
 @include('components.ads.video-gate', ['mode' => 'forms'])
+    <x-ads.anchor />
 </body>
 </html>

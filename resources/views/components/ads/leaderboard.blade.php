@@ -1,7 +1,7 @@
 @if(\App\Support\Ads::unitEnabled('adsense_leaderboard'))
-<div class="ad-container my-4 text-center d-none d-md-block" style="overflow:hidden;min-height:90px;">
+<div class="ad-container my-4 text-center d-none d-md-block" style="overflow:visible;min-height:90px;width:100%;">
     <ins class="adsbygoogle"
-         style="display:block"
+         style="display:block;width:100%;min-height:90px"
          data-ad-client="ca-pub-8426510303593933"
          data-ad-slot="7888884839"
          data-ad-format="auto"

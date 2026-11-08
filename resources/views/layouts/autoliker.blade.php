@@ -20,6 +20,16 @@
 
     @vite(['resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('css/autoliker-app.css') }}">
+    <style>
+        .alk-ad { width: 100%; max-width: 100%; margin: 12px auto; text-align: center; overflow: visible; }
+        .alk-ad .ad-container, .alk-ad ins.adsbygoogle { width: 100% !important; max-width: 100%; }
+        .alk-ad .ad-container.my-4, .alk-ad .ad-container.my-3 { margin-top: 0 !important; margin-bottom: 0 !important; }
+        .alk-ad .d-none { display: block; }
+        .alk-ad .d-block { display: block; }
+        .alk-ad .d-md-block, .alk-ad .d-md-none { }
+        @media (max-width: 767.98px) { .alk-ad .d-none { display: none !important; } .alk-ad .d-md-none { display: block !important; } }
+        @media (min-width: 768px) { .alk-ad .d-none { display: block !important; } .alk-ad .d-md-none { display: none !important; } .alk-ad .d-md-block { display: block !important; } }
+    </style>
     @stack('styles')
     @yield('javascripts')
     @if (!trim($__env->yieldContent('no-auto-ads')))

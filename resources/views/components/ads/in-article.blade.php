@@ -1,7 +1,7 @@
 @if(\App\Support\Ads::unitEnabled('adsense_in_article'))
-<div class="ad-container my-4 text-center" style="overflow:hidden;min-height:120px;">
+<div class="ad-container my-4 text-center" style="overflow:visible;min-height:120px;width:100%;">
     <ins class="adsbygoogle"
-         style="display:block; text-align:center;"
+         style="display:block;width:100%;text-align:center;min-height:120px"
          data-ad-layout="in-article"
          data-ad-format="fluid"
          data-ad-client="ca-pub-8426510303593933"

@@ -345,7 +345,9 @@
 
             /* ============ Ad slots ============ */
             .ad-slot {
-                overflow: hidden;
+                width: 100%;
+                max-width: 100%;
+                overflow: visible;
                 text-align: center;
                 margin: 22px auto;
                 padding: 6px 0;
@@ -361,12 +363,36 @@
                 padding: 4px 0;
             }
 
+            .ad-slot .ad-container,
+            .ad-slot ins.adsbygoogle {
+                width: 100% !important;
+                max-width: 100%;
+            }
+
+            .ad-slot .ad-container.my-4,
+            .ad-slot .ad-container.my-3 {
+                margin-top: 0 !important;
+                margin-bottom: 0 !important;
+            }
+
             .hide-mobile {
                 display: block;
             }
 
             .show-mobile {
                 display: none;
+            }
+
+            @media (max-width: 767.98px) {
+                .ad-slot.ad-leader {
+                    padding: 12px 0 4px;
+                }
+                .hide-mobile {
+                    display: none !important;
+                }
+                .show-mobile {
+                    display: block !important;
+                }
             }
 
             /* ============ Main layout ============ */
@@ -1308,8 +1334,11 @@
     <div class="layout">
 
         <!-- Ad slot -->
-        <div class="ad-slot ad-leader">
+        <div class="ad-slot ad-leader hide-mobile">
             <x-ads.leaderboard />
+        </div>
+        <div class="ad-slot show-mobile">
+            <x-ads.mobile-banner />
         </div>
 
 
@@ -1641,9 +1670,6 @@
             </div>
         </section>
 
-        <div class="ad-slot ad-leader show-mobile">
-            <x-ads.mobile-banner />
-        </div>
         <div class="ad-slot ad-inline">
             <x-ads.in-article />
         </div>
@@ -1842,6 +1868,7 @@
             // (IntersectionObserver + requestIdleCallback), so nothing to do here.
         })();
     </script>
+    <x-ads.anchor />
 </body>
 
 </html>

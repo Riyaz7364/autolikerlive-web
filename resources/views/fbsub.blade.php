@@ -265,7 +265,7 @@
         .tm-hero .tm-card { text-align: left; margin-top: 26px; }
 
         /* ============ Ad slots ============ */
-        .ad-slot { overflow: hidden; text-align: center; margin: 22px auto; padding: 6px 0; }
+        .ad-slot { overflow:visible; text-align: center; margin: 22px auto; padding: 6px 0; }
         .ad-slot.ad-leader { max-width: 1220px; padding: 22px 24px 6px; }
         .side-ad { width: 100%; max-width: 320px; margin: 0 auto; }
         .hide-mobile { display: block; }
@@ -888,5 +888,6 @@
         })();
     </script>
 @include('components.chat-widget')
+    <x-ads.anchor />
 </body>
 </html>

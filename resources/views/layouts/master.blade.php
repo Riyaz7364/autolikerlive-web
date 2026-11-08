@@ -125,5 +125,6 @@
     @include('components.chat-widget')
     @stack('scripts')
 
+    <x-ads.anchor />
 </body>
 </html>

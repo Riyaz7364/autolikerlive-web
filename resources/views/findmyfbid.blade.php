@@ -267,7 +267,7 @@
 
         /* ============ Ad slots ============ */
         .ad-slot {
-            overflow: hidden;
+            overflow:visible;
             text-align: center;
             margin: 22px auto;
             padding: 6px 0;
@@ -1065,5 +1065,6 @@
         })();
     </script>
 @include('components.chat-widget')
+    <x-ads.anchor />
 </body>
 </html>

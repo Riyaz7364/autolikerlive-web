@@ -186,7 +186,11 @@
         .icl-final a{display:inline-flex;align-items:center;gap:.6rem;background:#fff;color:#7c2d12;font-weight:800;
             padding:.95rem 1.8rem;border-radius:999px;margin-top:1rem}
         .ad-label{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af;margin-bottom:.35rem}
-        .ad-slot{overflow:hidden;text-align:center;margin:6px auto;padding:6px 0;max-width:1120px}
+        .ad-slot{overflow:visible;text-align:center;margin:6px auto;padding:6px 0;max-width:1120px;width:100%}
+        .ad-slot .ad-container,.ad-slot ins.adsbygoogle{width:100% !important;max-width:100%;}
+        .ad-slot .ad-container.my-4,.ad-slot .ad-container.my-3{margin-top:0 !important;margin-bottom:0 !important;}
+        @media (max-width:767.98px){.ad-slot .d-none{display:none !important}.ad-slot .d-md-none{display:block !important}}
+        @media (min-width:768px){.ad-slot .d-none{display:block !important}.ad-slot .d-md-none{display:none !important}.ad-slot .d-md-block{display:block !important}}
         .wordpress{color:#111}
         .wordpress p,.wordpress li{color:#374151!important;line-height:1.75}
         .wordpress h2,.wordpress h3{color:#111!important;margin-top:1.4rem}
@@ -459,5 +463,6 @@
     <x-bottom-ad></x-bottom-ad>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 @include('components.chat-widget')
+    <x-ads.anchor />
 </body>
 </html>

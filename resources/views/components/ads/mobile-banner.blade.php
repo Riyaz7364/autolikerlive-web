@@ -1,7 +1,7 @@
 @if(\App\Support\Ads::unitEnabled('adsense_mobile_banner'))
-<div class="ad-container my-3 text-center d-block d-md-none" style="overflow:hidden;min-height:50px;">
+<div class="ad-container my-3 text-center d-block d-md-none" style="overflow:visible;min-height:50px;width:100%;">
     <ins class="adsbygoogle"
-         style="display:inline-block;width:320px;height:50px"
+         style="display:block;width:100%;max-width:320px;height:50px;margin:0 auto"
          data-ad-client="ca-pub-8426510303593933"
          data-ad-slot="5606482216"></ins>
     <script>

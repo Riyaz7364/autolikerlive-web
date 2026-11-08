@@ -115,5 +115,6 @@
         @yield('footer')
         @include('components.chat-widget')
         
-    </body>
+        <x-ads.anchor />
+</body>
     </html>

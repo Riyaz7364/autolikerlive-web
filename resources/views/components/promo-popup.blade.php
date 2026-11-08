@@ -31,9 +31,9 @@ foreach ($popups as $pp) {
 
 @if($popups->count())
 <style>
-.promo-modal-overlay{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.65);backdrop-filter:blur(3px)}
+.promo-modal-overlay{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:16px;overflow-y:auto;background:rgba(0,0,0,.65);backdrop-filter:blur(3px)}
 .promo-modal-overlay.show{display:flex}
-.promo-modal{width:100%;max-width:440px;border-radius:20px;overflow:hidden;position:relative;color:#fff;animation:promoPop .25s ease-out}
+.promo-modal{width:min(100%,440px);max-width:440px;max-height:calc(100dvh - 32px);margin:auto;border-radius:20px;overflow:hidden auto;position:relative;color:#fff;animation:promoPop .25s ease-out;box-sizing:border-box}
 .promo-modal-theme-default{background:linear-gradient(135deg,#1a0b2e 0%,#2d1b4e 40%,#4c1d95 70%,#831843 100%);
   border:1px solid rgba(168,85,247,.4);box-shadow:0 24px 70px rgba(0,0,0,.55)}
 .promo-modal-theme-fb{background:linear-gradient(135deg,#0a2a5e 0%,#0d47a1 45%,#1877F2 100%);
@@ -47,14 +47,14 @@ foreach ($popups as $pp) {
 .promo-modal-close:hover{background:rgba(255,255,255,.32)}
 .promo-modal-badge{display:inline-flex;align-items:center;gap:6px;background:#f59e0b;color:#111;font-size:11px;font-weight:800;
   letter-spacing:.08em;padding:5px 11px;border-radius:999px;margin-bottom:10px}
-.promo-modal-title{font-size:20px;font-weight:800;line-height:1.3;margin:0 0 6px}
-.promo-modal-sub{font-size:14px;color:#e9d5ff;margin:0 0 14px;line-height:1.55}
-.promo-modal-row{display:flex;gap:12px;align-items:center;margin-bottom:14px}
+.promo-modal-title{font-size:20px;font-weight:800;line-height:1.3;margin:0 0 6px;overflow-wrap:anywhere}
+.promo-modal-sub{font-size:14px;color:#e9d5ff;margin:0 0 14px;line-height:1.55;overflow-wrap:anywhere}
+.promo-modal-row{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;min-width:0}
 .promo-modal-icon{width:52px;height:52px;border-radius:15px;flex-shrink:0;background:#fff;display:grid;place-items:center;
   font-size:26px;overflow:hidden}
 .promo-modal-icon img{width:100%;height:100%;object-fit:cover}
 .promo-modal-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#fff;
-  font-weight:800;font-size:15px;padding:13px 20px;border-radius:14px;text-decoration:none;width:100%}
+  font-weight:800;font-size:15px;padding:13px 20px;border-radius:14px;text-decoration:none;width:100%;box-sizing:border-box;text-align:center;white-space:normal}
 .promo-modal-theme-default .promo-modal-btn{color:#6d28d9}
 .promo-modal-theme-default .promo-modal-btn:hover{background:#f5f3ff;color:#5b21b6}
 .promo-modal-theme-fb .promo-modal-btn{color:#0d47a1}
@@ -65,6 +65,21 @@ foreach ($popups as $pp) {
 .promo-modal-dots{display:flex;gap:6px;justify-content:center;margin-top:12px}
 .promo-modal-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.3);border:0;padding:0;cursor:pointer}
 .promo-modal-dot.active{background:#fff}
+@media (max-width:480px){
+  .promo-modal-overlay{padding:10px;align-items:flex-end}
+  .promo-modal{width:100%;max-width:none;max-height:calc(100dvh - 20px);border-radius:18px}
+  .promo-modal-inner{padding:20px 16px 16px}
+  .promo-modal-close{top:8px;right:8px;width:36px;height:36px;font-size:18px}
+  .promo-modal-row{gap:10px}
+  .promo-modal-icon{width:46px;height:46px;border-radius:13px;font-size:22px}
+  .promo-modal-title{font-size:18px;line-height:1.25}
+  .promo-modal-sub{font-size:13px;line-height:1.45}
+  .promo-modal-btn{font-size:14px;padding:12px 14px;border-radius:12px}
+  .promo-modal-meta{font-size:10px;line-height:1.35}
+}
+@supports (padding:max(0px)){
+  .promo-modal-overlay{padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right));padding-bottom:max(10px,env(safe-area-inset-bottom))}
+}
 </style>
 
 <div class="promo-modal-overlay" id="promo-modal-overlay" role="dialog" aria-modal="true" aria-label="Recommended apps">
