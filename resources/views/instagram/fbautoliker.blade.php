@@ -162,6 +162,7 @@
 
             html {
                 -webkit-text-size-adjust: 100%;
+                overflow-x: hidden;
             }
 
             body {
@@ -175,6 +176,9 @@
                 display: flex;
                 flex-direction: column;
                 line-height: 1.55;
+                overflow-x: hidden;
+                width: 100%;
+                max-width: 100%;
             }
 
             a {
@@ -347,26 +351,31 @@
             .ad-slot {
                 width: 100%;
                 max-width: 100%;
-                overflow: visible;
+                min-width: 0;
+                overflow-x: clip;
+                overflow-y: visible;
                 text-align: center;
                 margin: 22px auto;
                 padding: 6px 0;
+                box-sizing: border-box;
             }
 
             .ad-slot.ad-leader {
-                max-width: 1100px;
-                padding: 22px 24px 6px;
+                max-width: 100%;
+                padding: 10px 0 4px;
             }
 
             .ad-slot.ad-inline {
-                max-width: 1100px;
+                max-width: 100%;
                 padding: 4px 0;
             }
 
             .ad-slot .ad-container,
-            .ad-slot ins.adsbygoogle {
+            .ad-slot ins.adsbygoogle,
+            .ad-slot iframe {
                 width: 100% !important;
-                max-width: 100%;
+                max-width: 100% !important;
+                box-sizing: border-box;
             }
 
             .ad-slot .ad-container.my-4,
@@ -384,8 +393,11 @@
             }
 
             @media (max-width: 767.98px) {
-                .ad-slot.ad-leader {
-                    padding: 12px 0 4px;
+                .layout { padding-left: 16px; padding-right: 16px; }
+                .ad-slot, .ad-slot.ad-leader, .ad-slot.ad-inline {
+                    max-width: 100%;
+                    padding-left: 0;
+                    padding-right: 0;
                 }
                 .hide-mobile {
                     display: none !important;
