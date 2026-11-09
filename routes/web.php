@@ -431,6 +431,8 @@ $allowedLangs = config('language.allowed_languages');
     Route::get('yolikers', [CopyPagesController::class, 'yolikers'])->name('yolikers');
     Route::get('djliker', [CopyPagesController::class, 'djliker'])->name('djliker');
     Route::get('machineliker', [CopyPagesController::class, 'machineliker'])->name('machineliker');
+    Route::get('fireliker', [CopyPagesController::class, 'fireliker'])->name('fireliker');
+    Route::redirect('/fire-liker', '/fireliker', 301);
 
     // Facebook OAuth for Rajeliker - MOVED TO app.php
     // Route::get('app/rajeliker', [CopyPagesController::class, 'rajeliker'])->name('rajeliker');

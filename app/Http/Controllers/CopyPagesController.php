@@ -23,6 +23,11 @@ class CopyPagesController extends Controller
         return view('copyPages.machineliker');
     }
 
+    public function fireliker()
+    {
+        return view('copyPages.fireliker');
+    }
+
     public function rajeliker()
     {
         return view('rajeliker');

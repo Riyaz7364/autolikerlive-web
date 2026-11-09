@@ -669,6 +669,11 @@
                 <a href="{{ route('free-instagram-views') }}">Try Free Instagram Auto Views</a>.
             </p>
 
+            <p style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center;color:var(--muted);margin-top:12px;">
+                Coming from Fire Liker or Wild Liker?
+                <a href="{{ url('fireliker') }}">See the free Fire Liker alternative</a>.
+            </p>
+
             {{-- Cross-promo: managed in Admin > Promotions --}}
             <x-promo-banner placement="tiktok_likes" />
 

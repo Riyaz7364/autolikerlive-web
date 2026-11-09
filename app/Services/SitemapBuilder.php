@@ -49,6 +49,7 @@ class SitemapBuilder
             '/yolikers',
             '/djliker',
             '/machineliker',
+            '/fireliker',
             '/fbsub',
             '/instagram-comment-liker',
             '/session/login',

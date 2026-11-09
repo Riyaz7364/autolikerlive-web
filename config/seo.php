@@ -52,6 +52,12 @@ return [
         'instagram creator tips' => '/auto-liker-instagram',
         // facebook cluster
         'facebook auto followers' => '/facebook-auto-followers',
+        'fire liker' => '/fireliker',
+        'fireliker' => '/fireliker',
+        'fire liker alternative' => '/fireliker',
+        'fireliker tiktok' => '/fireliker',
+        'fire liker tiktok' => '/fireliker',
+        'wild liker' => '/fireliker',
         'fbsub' => '/fbsub',
         'facebook' => '/fbsub',
         'facebook page' => '/fbsub',
