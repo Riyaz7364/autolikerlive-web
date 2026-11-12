@@ -20,7 +20,7 @@
                         </div>
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" role="switch"
-                                   id="network-{{ $network['key'] }}" name="{{ $network['key'] }}" value="1"
+                                   id="network-{{ $network['key'] }}" name="{{ $network['key'] }}_enabled" value="1"
                                    @checked($network['value'])>
                             <label class="form-check-label" for="network-{{ $network['key'] }}">Enabled</label>
                         </div>

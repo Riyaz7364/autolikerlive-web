@@ -1349,11 +1349,6 @@
         <div class="ad-slot ad-leader hide-mobile">
             <x-ads.leaderboard />
         </div>
-        <div class="ad-slot ad-leader show-mobile">
-            <x-ads.mobile-banner />
-        </div>
-
-
         <!-- Tool card -->
         <div class="tool-card">
             <div class="tool-label">
@@ -1685,6 +1680,10 @@
                 </div>
             </div>
         </section>
+
+        <div class="ad-slot ad-leader show-mobile">
+            <x-ads.mobile-banner />
+        </div>
 
         <div class="ad-slot ad-inline">
             <x-ads.in-article />

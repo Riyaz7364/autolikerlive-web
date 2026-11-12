@@ -332,8 +332,6 @@
         </div>
     </header>
 
-    <x-ads.top />
-
     <div class="sb-wrap">
 
         {{-- ============ Hero ============ --}}
