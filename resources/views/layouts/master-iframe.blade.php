@@ -23,7 +23,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="@yield('title')" />
     <meta property="og:description" content="@yield('description')" />
-    <meta property="og:image" content="{{ asset('images/graphic.webp') }}" />
+    <meta property="og:image" content="{{ \App\Support\MetaImages::current() }}" />
     <!-- Bootstrap icons-->
     {{-- Bootstrap icons left in place if needed; removed bootstrap CSS earlier. --}}
     <!-- Core theme CSS (includes Bootstrap)-->

@@ -1,9 +1,17 @@
 @extends('layouts.master-test')
 
-@section('title', 'Fire Liker Alternative 2026 - Free TikTok Likes &amp; Views')
+@section('title', 'Fire Liker 2026 - Free TikTok Likes &amp; Views')
 @section('description', 'Fire Liker is a TikTok auto liker, now Wild Liker. Get 10 free TikTok likes every 15 min and 100 free views every 10 min. No login, no APK.')
 @section('keywords', 'fire liker, fireliker, fire liker alternative, fireliker tiktok, fire liker not working, is fire liker safe, fireliker apk, wild liker, free tiktok likes, free tiktok views, tiktok auto liker, tiktok likes generator')
 @section('body-class', 'fl-page')
+
+@section('favicons')
+    <link rel="icon" type="image/png" href="/favicons/fireliker/files/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicons/fireliker/files/favicon.svg" />
+    <link rel="shortcut icon" href="/favicons/fireliker/files/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/fireliker/files/apple-touch-icon.png" />
+    <link rel="manifest" href="/favicons/fireliker/files/site.webmanifest" />
+@endsection
 
 @push('styles')
     <link rel="canonical" href="{{ request()->url() }}" />
@@ -50,7 +58,7 @@
                 "name": "Is Fire Liker for TikTok?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Yes. Fire Liker (fireliker.com) is a TikTok auto liker for likes, views, fans and shares. It does not officially support Facebook, even though its creator was nicknamed Facebook Wala Guru. This page is the free browser alternative for TikTok likes and views."
+                    "text": "Yes. Fire Liker is a TikTok auto liker for likes, views, fans and shares. It does not officially support Facebook, even though its creator was nicknamed Facebook Wala Guru. This page is the free browser alternative for TikTok likes and views."
                 }
             },
             {
@@ -58,7 +66,7 @@
                 "name": "Is Fire Liker still working in 2026?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "The Fire Liker brand now redirects to Wild Liker, with account login handled on fireliker.net. Users report intrusive ads, delivery drops and account restrictions. This page uses free browser tools instead, so there is no APK to update."
+                    "text": "The Fire Liker brand now redirects to Wild Liker, with account login handled on fireliker. Users report intrusive ads, delivery drops and account restrictions. This page uses free browser tools instead, so there is no APK to update."
                 }
             },
             {
@@ -128,15 +136,14 @@
             line-height: 1.6;
         }
 
-        .fl-page a { color: var(--fire-1); text-decoration: none; }
-        .fl-page a:hover { text-decoration: underline; }
+        
+        .fl-page a:not(.fl-btn):not(.fl-appbtn):not(.fl-store-badge):not(.fl-related):hover { text-decoration: underline; color: #1877f2; text-shadow: 0 0 8px rgba(24, 119, 242, 0.45); }
 
         .fl-wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
 
         /* ===== Hero ===== */
         .fl-hero {
             position: relative;
-            overflow: hidden;
             background:
                 radial-gradient(700px 340px at 15% -20%, rgba(255, 90, 31, .45), transparent 65%),
                 radial-gradient(700px 340px at 88% -10%, rgba(255, 183, 3, .28), transparent 62%),
@@ -508,9 +515,9 @@
         <div class="fl-wrap fl-hero-inner">
             <span class="fl-badge">
                 <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M13.5 1.5s.5 3.5-1.5 6c-2 2.5-4 4-4 7a4.5 4.5 0 009 0c0-1.5-.5-2.5-1-3.5 2.5 1.5 4 4 4 6.5a6.5 6.5 0 11-13 0c0-4.5 3-6.5 4.5-9 1-1.6 1.5-3.5 2-7z"/></svg>
-                Fire Liker Alternative 2026
+                Fire Liker 2026
             </span>
-            <h1>Fire Liker Alternative for <span class="fl-grad">Free TikTok Likes &amp; Views</span></h1>
+            <h1>Fire Liker 2026 for <span class="fl-grad">Free TikTok Likes &amp; Views</span></h1>
             <p class="fl-lead">
                 Fire Liker (Fireliker) is a TikTok-only auto liker &mdash; now running as Wild Liker. Instead of installing
                 another APK, use our free TikTok tools: <strong>10 free likes every 15 minutes</strong> and
@@ -543,7 +550,7 @@
                     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
                     <div>
                         <strong>Important:</strong> Fire Liker is a TikTok auto liker for likes, views, fans and
-                        shares, and the fireliker.com domain now redirects to Wild Liker. This page is the free
+                        shares, and the fireliker domain now redirects to Wild Liker. This page is the free
                         browser alternative for TikTok likes and views &mdash; no account and no APK required.
                     </div>
                 </div>
@@ -554,7 +561,7 @@
             <div class="fl-wrap fl-split">
                 <div class="fl-prose">
                     <span class="fl-eyebrow">The quick answer</span>
-                    <h2>What is Fire Liker (Fireliker)?</h2>
+                    <h2>What is Fire Liker?</h2>
                     <p>
                         <strong>Fire Liker</strong>, also written <strong>Fireliker</strong>, is a web and Android app that
                         launched around 2021. It promises instant TikTok likes, views and fans &mdash; typically
@@ -563,8 +570,8 @@
                         search for <em>Fire Liker Facebook</em>, even though the product itself is built for TikTok.
                     </p>
                     <p>
-                        As of late 2026, <strong>fireliker.com redirects to Wild Liker</strong>, the login is handled on
-                        fireliker.net, and the Android app is still distributed as an APK outside Google Play. Reviews
+                        As of late 2026, <strong>fireliker redirects to Wild Liker</strong>, the login is handled on
+                        fireliker, and the Android app is still distributed as an APK outside Google Play. Reviews
                         across software directories and review blogs are mixed: users like the speed, but report
                         intrusive ads, unstable delivery, account restrictions and privacy concerns around
                         third-party APK installs.
@@ -768,7 +775,7 @@
                     </details>
                     <details>
                         <summary>Is Fire Liker still working in 2026?</summary>
-                        <div class="fl-answer">The Fire Liker brand now redirects to Wild Liker, with account login handled on fireliker.net. Users report intrusive ads, delivery drops and account restrictions. This page uses free browser tools instead, so there is no APK to update.</div>
+                        <div class="fl-answer">The Fire Liker brand now redirects to Wild Liker, with account login handled on fireliker. Users report intrusive ads, delivery drops and account restrictions. This page uses free browser tools instead, so there is no APK to update.</div>
                     </details>
                     <details>
                         <summary>Is Fire Liker safe?</summary>

@@ -13,7 +13,12 @@
     <meta property="og:url" content="{{ url('temp-mail/privacy') }}">
     <meta property="og:title" content="Privacy Policy – Temp Mail (Disposable Email)">
     <meta property="og:description" content="How Waseela collects, uses, and protects information in the Temp Mail – Disposable Email app.">
-    <meta property="og:image" content="{{ asset('images/graphic.webp') }}">
+    <meta property="og:image" content="{{ \App\Support\MetaImages::current() }}">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Privacy Policy – Temp Mail (Disposable Email)">
+    <meta name="twitter:description" content="How Waseela collects, uses, and protects information in the Temp Mail – Disposable Email app.">
+    <meta name="twitter:image" content="{{ \App\Support\MetaImages::current() }}">
 
     <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.webp">
     <link rel="icon" type="image/webp" sizes="32x32" href="/images/favicons/favicon-32x32.webp">

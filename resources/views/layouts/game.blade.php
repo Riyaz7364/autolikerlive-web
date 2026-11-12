@@ -20,12 +20,12 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="@yield('title')" />
     <meta property="og:description" content="@yield('description')" />
-    <meta property="og:image" content="@hasSection('ogimage')@yield('ogimage')@else{{ asset('images/graphic.webp') }}@endif" />
+    <meta property="og:image" content="@hasSection('ogimage')@yield('ogimage')@else{{ \App\Support\MetaImages::current() }}@endif" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="@yield('title')" />
     <meta name="twitter:description" content="@yield('description')" />
-    <meta name="twitter:image" content="@hasSection('ogimage')@yield('ogimage')@else{{ asset('images/graphic.webp') }}@endif" />
+    <meta name="twitter:image" content="@hasSection('ogimage')@yield('ogimage')@else{{ \App\Support\MetaImages::current() }}@endif" />
 
     <link rel="apple-touch-icon" sizes="180x180" href="/images/favicons/apple-touch-icon.webp">
     <link rel="icon" type="image/webp" sizes="32x32" href="/images/favicons/favicon-32x32.webp">

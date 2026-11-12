@@ -44,7 +44,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="@yield('title')" />
     <meta property="og:description" content="@yield('description')" />
-    <meta property="og:image" content="{{ asset('images/graphic.webp') }}" />
+    <meta property="og:image" content="{{ \App\Support\MetaImages::current() }}" />
 
     @yield('javascripts')
     <x-auto-ads />

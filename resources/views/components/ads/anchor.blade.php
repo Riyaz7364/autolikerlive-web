@@ -12,7 +12,8 @@ body.has-anchor{padding-bottom:calc(74px + env(safe-area-inset-bottom,0px))}
     <ins class="adsbygoogle"
          style="display:block;width:100%;max-width:320px;height:50px"
          data-ad-client="ca-pub-8426510303593933"
-         data-ad-slot="5606482216"></ins>
+         data-ad-slot="3895102185"
+         data-full-width-responsive="false"></ins>
     <script>
     (function(){
         var box = document.getElementById('alkAnchorAd');
@@ -28,10 +29,10 @@ body.has-anchor{padding-bottom:calc(74px + env(safe-area-inset-bottom,0px))}
         var fired = false;
         function onScroll(){
             if (fired) return;
-            if (window.scrollY > window.innerHeight * 0.6) { fired = true; push(); window.removeEventListener('scroll', onScroll); }
+            if (window.scrollY > window.innerHeight * 0.15) { fired = true; push(); window.removeEventListener('scroll', onScroll); }
         }
         window.addEventListener('scroll', onScroll, { passive: true });
-        setTimeout(push, 12000);
+        setTimeout(push, 5000);
     })();
     </script>
 </div>

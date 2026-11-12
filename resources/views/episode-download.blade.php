@@ -33,6 +33,13 @@
 .nsx-stats{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 0}
 .nsx-stat{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);padding:8px 12px;border-radius:999px;color:#e9e9f0}
 .nsx-dlcard{margin-top:20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:16px;backdrop-filter:blur(18px);box-shadow:0 18px 40px rgba(0,0,0,.35)}
+.nsx-ad-slot{position:relative;z-index:1;width:100%;max-width:970px;margin:24px auto;padding:0 20px;text-align:center}
+.nsx-ad-slot .ad-container{margin-top:0!important;margin-bottom:0!important}
+.nsx-ad-label{margin:0 0 6px;color:#8b8ba0;font-size:10px;letter-spacing:.08em;text-align:center;text-transform:uppercase}
+.nsx-ad-desktop{display:none}
+.nsx-ad-mobile{display:block}
+@media(min-width:768px){.nsx-ad-desktop{display:block}.nsx-ad-mobile{display:none}}
+@media(min-width:960px){.nsx-ad-slot{padding:0 44px}}
 .nsx-label{font-size:13px;font-weight:800;color:#fff;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .nsx-label a{font-size:12px;color:#ff8a95;font-weight:700;text-decoration:none}
 .nsx-field{display:flex;gap:8px;flex-direction:column}
@@ -168,6 +175,19 @@
         <span class="nsx-stat">📱 Mobile friendly</span>
       </div>
 
+      @if(\App\Support\Ads::unitEnabled('adsense_leaderboard'))
+        <div class="nsx-ad-slot nsx-ad-desktop">
+          <p class="nsx-ad-label">Advertisement</p>
+          <x-ads.leaderboard />
+        </div>
+      @endif
+      @if(\App\Support\Ads::unitEnabled('adsense_mobile_banner'))
+        <div class="nsx-ad-slot nsx-ad-mobile">
+          <p class="nsx-ad-label">Advertisement</p>
+          <x-ads.mobile-banner />
+        </div>
+      @endif
+
       <div class="nsx-dlcard">
         <form method="POST" action="{{ route('netshort-video-downloader.fetch') }}" id="nsx-form">
           @csrf
@@ -180,6 +200,7 @@
           @error('linkId')<div class="nsx-err">{{ $message }}</div>@enderror
           <button type="submit" class="nsx-go">⬇ Find video</button>
         </form>
+
         <p class="nsx-hint">ReelSwipe links keep the encoded source in this field. Press <strong>Find video</strong> to decode, convert, and temporarily cache the MP4 before downloading.</p>
 
         @if ($error)

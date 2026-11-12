@@ -9,7 +9,7 @@
         'facebook-auto-followers', 'auto-friend-request', 'instagram-comment-liker',
         'free-instagram-likes', 'free-instagram-views', 'free-tiktok-views', 'free-tiktok-likes',
         'netshort-video-downloader', 'youtube_thumbnail_extractor', 'sms-bomber',
-        'temp-mail', 'message/view', 'findmyfbid',
+        'temp-mail', 'message/view', 'findmyfbid', 'fireliker',
     ];
     $isToolPage = collect($toolPaths)->contains(fn ($p) => request()->is($p) || request()->is($p . '/*'));
 @endphp
@@ -84,6 +84,7 @@
                         <a href="{{ route('free-instagram-views') }}" role="menuitem">👁️ Instagram Auto Views</a>
                         <a href="{{ route('free-tiktok-views') }}" role="menuitem">🎬 TikTok Views</a>
                         <a href="{{ route('free-tiktok-likes') }}" role="menuitem">🎵 TikTok Likes</a>
+                        <a href="{{ url('fireliker') }}" role="menuitem">🔥 Fire Liker</a>
                         <a href="{{ route('netshort-video-downloader.show') }}" role="menuitem">🎬 NetShort Downloader</a>
                         <a href="{{ route('youtube_thumbnail_extractor') }}" role="menuitem">🖼️ YouTube Thumbnail Extractor</a>
                         <a href="{{ route('sms-bomber') }}" role="menuitem">💬 SMS Bomber</a>
@@ -168,6 +169,7 @@
         <a href="{{ route('free-instagram-views') }}" class="fb-tools-panel-item">👁️ Instagram Auto Views</a>
         <a href="{{ route('free-tiktok-views') }}" class="fb-tools-panel-item">📹 TikTok Views</a>
         <a href="{{ route('free-tiktok-likes') }}" class="fb-tools-panel-item">❤️ TikTok Likes</a>
+        <a href="{{ url('fireliker') }}" class="fb-tools-panel-item">🔥 Fire Liker</a>
         <a href="{{ route('netshort-video-downloader.show') }}" class="fb-tools-panel-item">🎬 NetShort Downloader</a>
         <a href="{{ route('youtube_thumbnail_extractor') }}" class="fb-tools-panel-item">🖼️ YouTube Thumbnail Extractor</a>
         <a href="{{ route('sms-bomber') }}" class="fb-tools-panel-item">💬 SMS Bomber</a>

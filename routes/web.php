@@ -215,6 +215,10 @@ $allowedLangs = config('language.allowed_languages');
         Route::get('/admin/ads', [\App\Http\Controllers\AdsController::class, 'index'])->name('admin.ads.index');
         Route::put('/admin/ads', [\App\Http\Controllers\AdsController::class, 'update'])->name('admin.ads.update');
 
+        // Meta Images — per-route Open Graph / Twitter share images
+        Route::get('/admin/meta-images', [\App\Http\Controllers\MetaImageController::class, 'index'])->name('admin.meta-images.index');
+        Route::put('/admin/meta-images/{metaImage}', [\App\Http\Controllers\MetaImageController::class, 'update'])->name('admin.meta-images.update');
+
         // App Updates (APK releases per app, looked up by app_name)
         Route::get('/admin/app-updates', [\App\Http\Controllers\AppReleaseController::class, 'index'])->name('admin.app-releases.index');
         Route::get('/admin/app-updates/create', [\App\Http\Controllers\AppReleaseController::class, 'create'])->name('admin.app-releases.create');

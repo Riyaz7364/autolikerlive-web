@@ -1,16 +1,20 @@
+@php
+    $promoVideoFiles = glob(storage_path('app/public/promo_videos/*.mp4')) ?: [];
+    $promoVideoUrl = $promoVideoFiles
+        ? asset('storage/promo_videos/' . basename($promoVideoFiles[array_rand($promoVideoFiles)]))
+        : null;
+@endphp
 <div id="video-ad-gate" class="video-ad-gate" hidden>
     <div class="video-ad-gate__backdrop"></div>
     <section class="video-ad-gate__dialog" role="dialog" aria-modal="true" aria-labelledby="video-ad-gate-title">
         <button type="button" class="video-ad-gate__close" aria-label="Close video advertisement">&times;</button>
         <h2 id="video-ad-gate-title">Watch a video ad to continue</h2>
-        <p>Complete the video advertisement to submit your request.</p>
+        <p>Watch the promotion video to submit your request.</p>
         <div class="video-ad-gate__stage" hidden>
             <video class="video-ad-gate__video" playsinline></video>
-            <div class="video-ad-gate__ad-container"></div>
-            <button type="button" class="video-ad-gate__skip" hidden>Skip ad</button>
         </div>
-        <p class="video-ad-gate__status" role="status" aria-live="polite">Loading video advertisement...</p>
-        <button type="button" class="video-ad-gate__play" disabled>Play video ad</button>
+        <p class="video-ad-gate__status" role="status" aria-live="polite">Ready to play.</p>
+        <button type="button" class="video-ad-gate__play">Play video</button>
         <button type="button" class="video-ad-gate__cancel">Cancel request</button>
     </section>
 </div>
@@ -25,11 +29,7 @@
     .video-ad-gate__dialog p { margin: 8px 0 16px; color: #d1d5db; }
     .video-ad-gate__close { position: absolute; top: 10px; right: 12px; border: 0; background: transparent; color: #fff; font-size: 28px; cursor: pointer; }
     .video-ad-gate__stage { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; background: #000; }
-    .video-ad-gate__video,
-    .video-ad-gate__ad-container { position: absolute; inset: 0; width: 100%; height: 100%; }
-    .video-ad-gate__video { object-fit: contain; }
-    .video-ad-gate__skip { position: absolute; z-index: 3; top: 12px; right: 12px; min-height: 44px; padding: 10px 16px; border: 1px solid rgba(255,255,255,.7); border-radius: 6px; background: rgba(0,0,0,.8); color: #fff; font: 700 15px Arial, sans-serif; cursor: pointer; }
-    .video-ad-gate__skip[hidden] { display: none !important; }
+    .video-ad-gate__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; cursor: pointer; }
     .video-ad-gate__status { min-height: 1.4em; }
     .video-ad-gate__play,
     .video-ad-gate__cancel { min-height: 44px; margin: 4px; padding: 10px 18px; border: 0; border-radius: 8px; font-weight: 700; cursor: pointer; }
@@ -57,22 +57,18 @@
 <script>
     (function () {
         var mode = @json($mode ?? 'forms');
-        var adTagUrl = 'https://bid.onclckstr.com/vast?spot_id=6107279';
+        var promoVideo = @json($promoVideoUrl);
         var gate = document.getElementById('video-ad-gate');
         var stage = gate.querySelector('.video-ad-gate__stage');
         var video = gate.querySelector('.video-ad-gate__video');
-        var adContainer = gate.querySelector('.video-ad-gate__ad-container');
         var status = gate.querySelector('.video-ad-gate__status');
         var playButton = gate.querySelector('.video-ad-gate__play');
-        var skipButton = gate.querySelector('.video-ad-gate__skip');
         var pendingAction = null;
         var activeCleanup = null;
-        var currentAdsManager = null;
-        var sdkReady = false;
-        var sdkFailed = false;
         var previousOverflow = '';
         var allowedForms = new WeakSet();
         var allowedButtons = new WeakSet();
+        var playlistSettled = true;
 
         function setStatus(message) {
             status.textContent = message;
@@ -89,11 +85,9 @@
             document.body.style.overflow = 'hidden';
             gate.hidden = false;
             playButton.hidden = false;
-            playButton.disabled = !sdkReady;
+            playButton.disabled = false;
             stage.hidden = true;
-            setStatus(sdkFailed
-                ? 'The video advertisement could not load. Refresh the page and try again.'
-                : (sdkReady ? 'Press play and watch the complete advertisement.' : 'Loading video advertisement...'));
+            setStatus('Press play and watch the video to continue.');
         }
 
         function closeGate() {
@@ -155,12 +149,29 @@
             }
         }
 
-        function runAd() {
-            if (!sdkReady || !window.google || !window.google.ima) {
-                setStatus('The video advertisement is not ready yet. Please try again.');
+        function playPromoVideo() {
+            if (playlistSettled) return;
+            if (!promoVideo) {
+                finishPlaylist(false, 'No promotion video is available right now. Please try again.');
                 return;
             }
+            setStatus('Playing video...');
+            video.src = promoVideo;
+            video.load();
+            var playPromise = video.play();
+            if (playPromise && typeof playPromise.catch === 'function') {
+                playPromise.catch(function (error) {
+                    console.error('Could not play the promotion video:', error);
+                    finishPlaylist(false, 'The video could not play. Please try again.');
+                });
+            }
+        }
 
+        function finishPlaylist(success, message) {
+            if (activeCleanup) activeCleanup(success, message, success);
+        }
+
+        function runAd() {
             var dialog = gate.querySelector('.video-ad-gate__dialog');
             gate.classList.add('is-fullscreen');
             var requestFullscreen = dialog.requestFullscreen || dialog.webkitRequestFullscreen;
@@ -179,111 +190,29 @@
 
             playButton.hidden = true;
             stage.hidden = false;
-            skipButton.hidden = true;
-            setStatus('Starting advertisement...');
-
-            var ima = window.google.ima;
-            var adsManager = null;
-            var adsLoader = null;
-            var displayContainer = null;
-            var completedAds = 0;
-            var skipped = false;
-            var settled = false;
-            var timeout = window.setTimeout(function () {
-                cleanup(false, 'The advertisement timed out. Please try again.');
-            }, 60000);
+            playlistSettled = false;
 
             function cleanup(success, message, resume) {
-                if (settled) return;
-                settled = true;
-                window.clearTimeout(timeout);
+                if (playlistSettled) return;
+                playlistSettled = true;
                 if (activeCleanup === cleanup) activeCleanup = null;
-
-                try {
-                    if (adsManager) adsManager.destroy();
-                } catch (error) {
-                    console.error('Could not destroy the video ad manager:', error);
-                }
-                if (currentAdsManager === adsManager) currentAdsManager = null;
-                try {
-                    if (adsLoader) adsLoader.destroy();
-                } catch (error) {
-                    console.error('Could not destroy the video ad loader:', error);
-                }
 
                 video.pause();
                 video.removeAttribute('src');
                 video.load();
-                adContainer.replaceChildren();
                 stage.hidden = true;
-                skipButton.hidden = true;
 
                 if (success && resume) {
                     continueRequest();
                 } else if (!gate.hidden) {
                     playButton.hidden = false;
-                    playButton.disabled = !sdkReady;
-                    setStatus(message || 'The advertisement was not completed. Watch it to continue.');
+                    playButton.disabled = false;
+                    setStatus(message || 'The video was not completed. Watch it to continue.');
                 }
             }
 
             activeCleanup = cleanup;
-
-            try {
-                displayContainer = new ima.AdDisplayContainer(adContainer, video);
-                displayContainer.initialize();
-                adsLoader = new ima.AdsLoader(displayContainer);
-
-                adsLoader.addEventListener(ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED, function (event) {
-                    if (settled) return;
-                    try {
-                        adsManager = event.getAdsManager(video);
-                        currentAdsManager = adsManager;
-                        adsManager.addEventListener(ima.AdErrorEvent.Type.AD_ERROR, function (error) {
-                            console.error('IMA video ad error:', error && error.getError ? error.getError() : error);
-                            cleanup(false, 'The advertisement could not play. Please try again.');
-                        });
-                        adsManager.addEventListener(ima.AdEvent.Type.COMPLETE, function () {
-                            completedAds++;
-                        });
-                        adsManager.addEventListener(ima.AdEvent.Type.SKIPPABLE_STATE_CHANGED, function () {
-                            skipButton.hidden = !adsManager.getAdSkippableState();
-                        });
-                        adsManager.addEventListener(ima.AdEvent.Type.SKIPPED, function () {
-                            skipped = true;
-                            cleanup(true, '', true);
-                        });
-                        adsManager.addEventListener(ima.AdEvent.Type.ALL_ADS_COMPLETED, function () {
-                            cleanup(completedAds > 0 && !skipped, 'Please watch the complete advertisement to continue.', true);
-                        });
-
-                        var bounds = adContainer.getBoundingClientRect();
-                        adsManager.init(Math.max(1, bounds.width), Math.max(1, bounds.height), ima.ViewMode.NORMAL);
-                        adsManager.start();
-                        setStatus('Advertisement playing...');
-                    } catch (error) {
-                        console.error('Could not start the IMA video ad:', error);
-                        cleanup(false, 'The advertisement could not start. Please try again.');
-                    }
-                });
-                adsLoader.addEventListener(ima.AdErrorEvent.Type.AD_ERROR, function (error) {
-                    console.error('IMA video ad request error:', error && error.getError ? error.getError() : error);
-                    cleanup(false, 'No advertisement is available right now. Please try again.');
-                });
-
-                var request = new ima.AdsRequest();
-                request.adTagUrl = adTagUrl;
-                request.linearAdSlotWidth = Math.max(1, adContainer.clientWidth);
-                request.linearAdSlotHeight = Math.max(1, adContainer.clientHeight);
-                request.nonLinearAdSlotWidth = Math.max(1, adContainer.clientWidth);
-                request.nonLinearAdSlotHeight = 150;
-                request.setAdWillAutoPlay(true);
-                request.setAdWillPlayMuted(false);
-                adsLoader.requestAds(request);
-            } catch (error) {
-                console.error('Could not initialize the IMA video ad:', error);
-                cleanup(false, 'The advertisement could not start. Please try again.');
-            }
+            playPromoVideo();
         }
 
         document.addEventListener('submit', function (event) {
@@ -325,13 +254,17 @@
         }
 
         playButton.addEventListener('click', runAd);
-        skipButton.addEventListener('click', function () {
-            if (!currentAdsManager || skipButton.hidden) return;
-            try {
-                currentAdsManager.skip();
-            } catch (error) {
-                console.error('Could not skip the video ad:', error);
-            }
+        video.addEventListener('ended', function () {
+            if (playlistSettled) return;
+            finishPlaylist(true, '');
+        });
+        video.addEventListener('error', function () {
+            if (playlistSettled) return;
+            console.error('Promotion video error:', video.error);
+            finishPlaylist(false, 'The video could not play. Please try again.');
+        });
+        video.addEventListener('click', function () {
+            window.location.href = 'https://play.google.com/store/apps/details?id=com.rajeliker';
         });
         gate.querySelector('.video-ad-gate__close').addEventListener('click', closeGate);
         gate.querySelector('.video-ad-gate__cancel').addEventListener('click', closeGate);
@@ -339,25 +272,5 @@
         document.addEventListener('keydown', function (event) {
             if (event.key === 'Escape' && !gate.hidden) closeGate();
         });
-
-        var sdk = document.createElement('script');
-        sdk.src = 'https://imasdk.googleapis.com/js/sdkloader/ima3.js';
-        sdk.async = true;
-        sdk.onload = function () {
-            sdkReady = !!(window.google && window.google.ima);
-            playButton.disabled = !sdkReady;
-            if (pendingAction) {
-                setStatus(sdkReady
-                    ? 'Press play and watch the complete advertisement.'
-                    : 'The video advertisement could not load. Refresh the page and try again.');
-            }
-            sdkFailed = !sdkReady;
-        };
-        sdk.onerror = function () {
-            sdkFailed = true;
-            playButton.disabled = true;
-            if (pendingAction) setStatus('The video advertisement could not load. Refresh the page and try again.');
-        };
-        document.head.appendChild(sdk);
     })();
 </script>

@@ -14,9 +14,11 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="SMS Bomber Free - SMS & Call Bomber" />
     <meta property="og:description" content="Free SMS bomber and call bomber online. Send bulk SMS to your own numbers for testing. Fast, free, no signup." />
+    <meta property="og:image" content="{{ \App\Support\MetaImages::current() }}" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="SMS Bomber Free - SMS & Call Bomber" />
     <meta name="twitter:description" content="Free SMS bomber and call bomber online. Send bulk SMS to your own numbers for testing." />
+    <meta name="twitter:image" content="{{ \App\Support\MetaImages::current() }}" />
 
     <link rel="icon" type="image/png" href="/favicons/bomber/files/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicons/bomber/files/favicon.svg" />
@@ -28,7 +30,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://www.google.com/recaptcha/api.js?render=6Le9PSErAAAAAHw5ToZq73TKSIqMwmuPi7y4wZkj" async defer></script>
-    <x-auto-ads />
 
     <script type="application/ld+json">
     {

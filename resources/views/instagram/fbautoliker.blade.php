@@ -19,14 +19,14 @@
     <meta property="og:title" content="FB Auto Liker 1000 Likes - Free Facebook Likes Instantly" />
     <meta property="og:description"
         content="Get 1000 free Facebook likes instantly with our auto liker tool. Boost your Facebook posts with real reactions from active users. No password needed, 100% safe and free." />
-    <meta property="og:image" content="{{ url('/images/fb-liker-1000-likes.webp') }}" />
+    <meta property="og:image" content="{{ \App\Support\MetaImages::current(url('/images/fb-liker-1000-likes.webp')) }}" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="{{ Request::url() }}" />
     <meta name="twitter:title" content="FB Auto Liker 1000 Likes - Free Facebook Likes Instantly" />
     <meta name="twitter:description"
         content="Get 1000 free Facebook likes instantly with our auto liker tool. Boost your Facebook posts with real reactions from active users." />
-    <meta name="twitter:image" content="{{ url('/images/fb-liker-1000-likes.webp') }}" />
+    <meta name="twitter:image" content="{{ \App\Support\MetaImages::current(url('/images/fb-liker-1000-likes.webp')) }}" />
 
     {{-- CWV 2026-09-29: external Inter webfont removed (2 preconnects + CSS +
     5 font files on the critical path). System stack renders identically
@@ -65,7 +65,7 @@
         "url": "https://autolikerlive.com"
         },
         "url": "{{ Request::url() }}",
-        "image": "{{ url('/images/fb-liker-1000-likes.webp') }}"
+        "image": "{{ \App\Support\MetaImages::current(url('/images/fb-liker-1000-likes.webp')) }}"
         }
         </script>
 
@@ -1349,7 +1349,7 @@
         <div class="ad-slot ad-leader hide-mobile">
             <x-ads.leaderboard />
         </div>
-        <div class="ad-slot show-mobile">
+        <div class="ad-slot ad-leader show-mobile">
             <x-ads.mobile-banner />
         </div>
 
@@ -1363,7 +1363,7 @@
                 </svg>
                 {{ $isAndroidUser ? 'Get the AutoLikerLive Android app' : 'Enter your Facebook Profile URL to get 1000 free likes' }}
             </div>
-            @unless ($isAndroidUser)
+            @unless (false)
                 <form method="POST" action="{{ route('login.facebook') }}" class="tool-form">
                     @csrf
                     <div class="input-row">
@@ -1484,6 +1484,10 @@
                     <span class="app-download-note">Available for Android devices</span>
                 </div>
             @endunless
+        </div>
+
+        <div class="ad-slot ad-result">
+            <x-ads.result-rectangle />
         </div>
 
         <!-- How it works -->

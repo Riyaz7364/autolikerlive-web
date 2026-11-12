@@ -15,12 +15,12 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Free TikTok Views - Get 100 Free Views Every 10 Minutes | AutoLikerLive" />
     <meta property="og:description" content="Get 100 free TikTok views instantly. Boost your TikTok video visibility with our free auto views tool. Fast delivery, no login required." />
-    <meta property="og:image" content="{{ asset('images/free-tiktok-views.png') }}" />
+    <meta property="og:image" content="{{ \App\Support\MetaImages::current() }}" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="{{ Request::url() }}" />
     <meta name="twitter:title" content="Free TikTok Views - Get 100 Free Views Every 10 Minutes" />
     <meta name="twitter:description" content="Get 100 free TikTok views instantly. Boost your TikTok video visibility with our free auto views tool." />
-    <meta name="twitter:image" content="{{ asset('images/free-tiktok-views.png') }}" />
+    <meta name="twitter:image" content="{{ \App\Support\MetaImages::current() }}" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -57,7 +57,7 @@
     "url": "https://autolikerlive.com"
   },
   "url": "{{ Request::url() }}",
-  "image": "{{ asset('images/free-tiktok-views.png') }}"
+  "image": "{{ \App\Support\MetaImages::current() }}"
 }
 </script>
 
@@ -252,6 +252,32 @@
             height: 4px;
             border-radius: 22px 22px 0 0;
             background: linear-gradient(90deg, var(--tt-red), var(--tt-cyan));
+        }
+
+        /* Active-area ads: sticky rail beside the tool on desktop, inline banner on mobile */
+        .tool-row {
+            display: grid;
+            grid-template-columns: minmax(0, 680px);
+            gap: 26px;
+            justify-content: center;
+            align-items: start;
+            width: 100%;
+        }
+        .tool-row.has-rail {
+            grid-template-columns: minmax(0, 680px) 300px;
+        }
+        .tool-rail {
+            position: sticky;
+            top: 84px;
+            width: 300px;
+        }
+        .tool-ad-mobile { display: none; }
+        @media (max-width: 1080px) {
+            .tool-row, .tool-row.has-rail { grid-template-columns: minmax(0, 680px); }
+            .tool-rail { display: none; }
+        }
+        @media (max-width: 767.98px) {
+            .tool-ad-mobile { display: block; }
         }
         .tool-label {
             display: flex;
@@ -551,7 +577,8 @@
     <!-- ============ Main layout ============ -->
     <div class="layout">
 
-            <!-- Tool card -->
+            <!-- Tool card + active-area ad rail -->
+            <div class="tool-row{{ \App\Support\Ads::unitEnabled('adsense_sidebar') ? ' has-rail' : '' }}">
             <div class="tool-card">
                 <div class="tool-label">
                     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 5.82s.51.5 0 0A4.278 4.278 0 0 1 15.54 3h-3.09v12.4a2.592 2.592 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6 0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64 0 3.33 2.76 5.7 5.69 5.7 3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3s-1.88.09-3.24-1.48z"/></svg>
@@ -581,6 +608,13 @@
                         <span>Example: <code>https://www.tiktok.com/@user/video/1234567890</code></span>
                     </div>
 
+                    {{-- Active-area mobile banner: stays beside the form on phones --}}
+                    @if(\App\Support\Ads::unitEnabled('adsense_mobile_banner'))
+                    <div class="tool-ad-slot tool-ad-mobile">
+                        <x-ads.mobile-banner />
+                    </div>
+                    @endif
+
                     @if ($errors->any())
                         <div class="result fail">
                             <p>{{ $errors->first() }}</p>
@@ -605,6 +639,14 @@
                 <p style="color: var(--muted); font-size: 12px; text-align: center; margin-top: 10px;">Results may vary depending on TikTok activity. Use responsibly.</p>
             </div>
 
+            {{-- Sticky desktop rail: keeps an ad in view while the tool is used --}}
+            @if(\App\Support\Ads::unitEnabled('adsense_sidebar'))
+            <aside class="tool-rail" aria-label="Advertisement">
+                <x-ads.sidebar />
+            </aside>
+            @endif
+            </div>
+
             <p style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center;color:var(--muted);">
                 Need views for an Instagram post or reel?
                 <a href="{{ route('free-instagram-views') }}">Try Free Instagram Auto Views</a>.
@@ -617,7 +659,6 @@
 
             <!-- Ads -->
             <div class="ad-slot ad-leader hide-mobile"><x-ads.leaderboard /></div>
-            <div class="ad-slot show-mobile"><x-ads.mobile-banner /></div>
 
             {{-- Cross-promo: managed in Admin > Promotions --}}
             <x-promo-banner placement="tiktok_views" />

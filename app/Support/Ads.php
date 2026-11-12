@@ -35,6 +35,7 @@ class Ads
     public const UNIT_ADSENSE_LEADERBOARD = 'adsense_leaderboard';
     public const UNIT_ADSENSE_MOBILE_BANNER = 'adsense_mobile_banner';
     public const UNIT_ADSENSE_SIDEBAR = 'adsense_sidebar';
+    public const UNIT_ADSENSE_RESULT_RECTANGLE = 'adsense_result_rectangle';
     public const UNIT_ADSENSE_IN_ARTICLE = 'adsense_in_article';
     public const UNIT_ADSENSE_ANCHOR = 'adsense_anchor';
     public const UNIT_ADSENSE_AUTO_ADS = 'adsense_auto_ads';
@@ -111,6 +112,32 @@ class Ads
             : (bool) config('ads.adsterra_enabled', true);
 
         return $default;
+    }
+
+    /**
+     * True when at least one AdSense feature needs the shared AdSense library.
+     */
+    public static function adsenseLibraryNeeded(): bool
+    {
+        if (!self::networkEnabled(self::NETWORK_ADSENSE)) {
+            return false;
+        }
+
+        foreach ([
+            self::UNIT_ADSENSE_AUTO_ADS,
+            self::UNIT_ADSENSE_LEADERBOARD,
+            self::UNIT_ADSENSE_MOBILE_BANNER,
+            self::UNIT_ADSENSE_SIDEBAR,
+            self::UNIT_ADSENSE_RESULT_RECTANGLE,
+            self::UNIT_ADSENSE_IN_ARTICLE,
+            self::UNIT_ADSENSE_ANCHOR,
+        ] as $unit) {
+            if (self::unitEnabled($unit)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -214,6 +241,12 @@ class Ads
                 'network' => self::NETWORK_ADSENSE,
                 'description' => 'Sidebar rectangle (300x250) shown beside content.',
             ],
+            self::UNIT_ADSENSE_RESULT_RECTANGLE => [
+                'key' => self::UNIT_ADSENSE_RESULT_RECTANGLE,
+                'label' => 'AdSense Result Rectangle',
+                'network' => self::NETWORK_ADSENSE,
+                'description' => 'Result rectangle (300x250) shown below tool results and success messages.',
+            ],
             self::UNIT_ADSENSE_IN_ARTICLE => [
                 'key' => self::UNIT_ADSENSE_IN_ARTICLE,
                 'label' => 'AdSense In-Article',
@@ -230,7 +263,7 @@ class Ads
                 'key' => self::UNIT_ADSENSE_AUTO_ADS,
                 'label' => 'Google Auto Ads',
                 'network' => self::NETWORK_ADSENSE,
-                'description' => 'Auto ads script injected in the header (no placement code required — AdSense auto-places).',
+                'description' => 'Loads the AdSense library and enables Auto Ads. The library also loads automatically when any manual AdSense unit is active.',
             ],
 
             // Adsterra units

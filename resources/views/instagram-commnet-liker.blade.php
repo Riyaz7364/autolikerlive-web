@@ -17,13 +17,13 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="{{ __('messages.igCommentLiker.meta_title') }}" />
     <meta property="og:description" content="{{ __('messages.igCommentLiker.meta_desc') }}" />
-    <meta property="og:image" content="{{ url('/storage/instaliker_logo.webp') }}" />
+    <meta property="og:image" content="{{ \App\Support\MetaImages::current(url('/storage/instaliker_logo.webp')) }}" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="{{ Request::url() }}" />
     <meta name="twitter:title" content="{{ __('messages.igCommentLiker.meta_title') }}" />
     <meta name="twitter:description" content="{{ __('messages.igCommentLiker.meta_desc') }}" />
-    <meta name="twitter:image" content="{{ url('/storage/instaliker/app_logo.webp') }}" />
+    <meta name="twitter:image" content="{{ \App\Support\MetaImages::current(url('/storage/instaliker/app_logo.webp')) }}" />
 
     <link rel="apple-touch-icon" sizes="180x180" href="{{ url('/storage/instaliker/apple-touch-icon.png') }}">
     <link rel="icon" type="image/svg+xml" href="{{ url('/storage/instaliker/favicon.svg') }}" />
@@ -314,6 +314,8 @@
             <div class="ad-slot"><x-ads.leaderboard /></div>
             <div class="ad-slot"><x-ads.mobile-banner /></div>
         </div>
+
+        <x-ads.result-rectangle />
 
         {{-- Official app of this page — details pulled from Admin > App Updates (instaliker) --}}
         <section class="icl-card" aria-labelledby="icl-app">

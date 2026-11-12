@@ -14,13 +14,13 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="{{ __('messages.tempMail.meta_title') }}" />
     <meta property="og:description" content="{{ __('messages.tempMail.meta_desc') }}" />
-    <meta property="og:image" content="https://www.autolikerlive.com/blog/storage/uploads/2025/05/ChatGPT-Image-May-1-2025-08_11_55-AM.webp" />
+    <meta property="og:image" content="{{ \App\Support\MetaImages::current() }}" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="{{ Request::url() }}" />
     <meta name="twitter:title" content="{{ __('messages.tempMail.meta_title') }}" />
     <meta name="twitter:description" content="{{ __('messages.tempMail.meta_desc') }}" />
-    <meta name="twitter:image" content="https://www.autolikerlive.com/blog/storage/uploads/2025/05/ChatGPT-Image-May-1-2025-08_11_55-AM.webp" />
+    <meta name="twitter:image" content="{{ \App\Support\MetaImages::current() }}" />
 
     <link rel="icon" type="image/png" href="{{ url('/storage/temp-mail/favicon-96x96.png') }}" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="{{ url('/storage/temp-mail/favicon.svg') }}" />
@@ -71,7 +71,7 @@
     "url": "https://autolikerlive.com"
   },
   "url": "{{ Request::url() }}",
-  "image": "https://www.autolikerlive.com/blog/storage/uploads/2025/05/ChatGPT-Image-May-1-2025-08_11_55-AM.webp"
+  "image": "{{ \App\Support\MetaImages::current() }}"
 }
 </script>
 
@@ -260,15 +260,27 @@
         @media (max-width: 620px) { .tm-hero-app { margin-top: 14px; } }
 
         /* ============ Ad slots ============ */
-        .ad-slot { overflow:visible; text-align: center; margin: 22px auto; padding: 6px 0; width:100%;max-width:100%; }
+        .ad-slot { overflow:visible; text-align: center; margin: 14px auto; padding: 6px 0; width:100%;max-width:100%; }
         .ad-slot .ad-container,.ad-slot ins.adsbygoogle{width:100% !important;max-width:100%;}
         .ad-slot .ad-container.my-4,.ad-slot .ad-container.my-3{margin-top:0 !important;margin-bottom:0 !important;}
-        @media (max-width:767.98px){.ad-slot .d-none{display:none !important}.ad-slot .d-md-none{display:block !important}.ad-slot.ad-leader{padding:12px 0 4px}}
-        @media (min-width:768px){.ad-slot .d-none{display:block !important}.ad-slot .d-md-none{display:none !important}.ad-slot .d-md-block{display:block !important}}
-        .ad-slot.ad-leader { max-width: 1220px; padding: 22px 24px 6px; }
+        .ad-slot.ad-leader { max-width: 100%; padding: 8px 0 2px; }
         .side-ad { width: 100%; max-width: 320px; margin: 0 auto; }
         .hide-mobile { display: block; }
         .show-mobile { display: none; }
+        @media (max-width:767.98px){
+            .ad-slot .d-none{display:none !important}
+            .ad-slot .d-md-none{display:block !important}
+            .ad-slot.ad-leader{padding:6px 0 2px}
+            .ad-slot.hide-mobile{display:none !important}
+            .ad-slot.show-mobile{display:block !important}
+        }
+        @media (min-width:768px){
+            .ad-slot .d-none{display:block !important}
+            .ad-slot .d-md-none{display:none !important}
+            .ad-slot .d-md-block{display:block !important}
+            .ad-slot.hide-mobile{display:block !important}
+            .ad-slot.show-mobile{display:none !important}
+        }
 
         /* ============ Main layout ============ */
         .tm-layout {
@@ -287,6 +299,7 @@
             gap: 24px;
             align-items: start;
         }
+        .tm-split.tm-no-ad { grid-template-columns: minmax(0, 1fr); }
         .tm-split-ad {
             display: flex;
             justify-content: center;
@@ -840,12 +853,16 @@
             </div>
 
             {{-- Ads inside the header band — desktop leaderboard / mobile banner --}}
-            <div class="ad-slot ad-leader hide-mobile">
-                <x-ads.leaderboard />
-            </div>
-            <div class="ad-slot ad-leader show-mobile">
-                <x-ads.mobile-banner />
-            </div>
+            @if(\App\Support\Ads::unitEnabled('adsense_leaderboard'))
+                <div class="ad-slot ad-leader hide-mobile">
+                    <x-ads.leaderboard />
+                </div>
+            @endif
+            @if(\App\Support\Ads::unitEnabled('adsense_mobile_banner'))
+                <div class="ad-slot ad-leader show-mobile">
+                    <x-ads.mobile-banner />
+                </div>
+            @endif
         </div>
     </section>
 
@@ -854,7 +871,7 @@
         <main class="tm-main">
 
             <!-- Inbox card + right ad -->
-            <div class="tm-split">
+            <div class="tm-split {{ \App\Support\Ads::unitEnabled('adsense_sidebar') ? '' : 'tm-no-ad' }}">
                 <div class="tm-card">
                     <div class="inbox-head">
                         <h3>
@@ -883,11 +900,13 @@
                         role="status" aria-live="polite"></p>
                 </div>
 
-                <aside class="tm-split-ad">
-                    <div class="side-ad">
-                        <x-ads.sidebar />
-                    </div>
-                </aside>
+                @if(\App\Support\Ads::unitEnabled('adsense_sidebar'))
+                    <aside class="tm-split-ad">
+                        <div class="side-ad">
+                            <x-ads.sidebar />
+                        </div>
+                    </aside>
+                @endif
             </div>
 
             {{-- Full Android app highlight --}}

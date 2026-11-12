@@ -142,6 +142,11 @@
             </div>
         </section>
 
+        {{-- Active-area ad: visible right after the boost form --}}
+        <div class="alk-ad" aria-label="Advertisement">
+            <x-ads.in-article />
+        </div>
+
 
         <!-- Back-to-back repeat modal: same link can't be submitted twice in a row -->
         <div id="repeatModal" style="display:none; position:fixed; inset:0; z-index:2000; align-items:center; justify-content:center; padding:18px; background:rgba(10,25,47,.65);">

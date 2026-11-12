@@ -40,6 +40,9 @@
                     <a class="nav-link {{ $isActive('admin.ads') ? 'active' : '' }}" href="{{ route('admin.ads.index') }}">&#128202; Ads Manager</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link {{ $isActive('admin.meta-images') ? 'active' : '' }}" href="{{ route('admin.meta-images.index') }}">&#128444; Meta Images</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link {{ $isActive('game.editor') ? 'active' : '' }}" href="{{ route('game.editor.list') }}">&#127918; Games Control</a>
                 </li>
                 <li class="nav-item">

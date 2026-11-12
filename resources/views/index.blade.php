@@ -128,6 +128,7 @@
                     <a href="https://play.google.com/store/apps/details?id=com.tempmail.autolikerlive" target="_blank" rel="noopener noreferrer">Temp Mail Android App</a>
                     <a href="{{ route('sms-bomber') }}">SMS Bomber</a>
                     <a href="{{ url('/download') }}">Download App</a>
+                    <a href="https://www.autolikerlive.com/fireliker">Fire Liker</a>
                     @if (isset($linkedPosts) && count($linkedPosts) > 0)
                         @foreach ($linkedPosts as $lp)
                             <a href="{{ url($lp['slug']) }}">{{ $lp['name'] }}</a>

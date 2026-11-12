@@ -14,12 +14,13 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="{{ __('messages.findmyfbid.meta_title') }}" />
     <meta property="og:description" content="{{ __('messages.findmyfbid.meta_desc') }}" />
+    <meta property="og:image" content="{{ \App\Support\MetaImages::current() }}" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="{{ Request::url() }}" />
     <meta name="twitter:title" content="{{ __('messages.findmyfbid.meta_title') }}" />
     <meta name="twitter:description" content="{{ __('messages.findmyfbid.meta_desc') }}" />
-    <meta name="twitter:image" content="https://www.autolikerlive.com/blog/storage/uploads/2025/05/ChatGPT-Image-May-1-2025-08_11_55-AM.webp" />
+    <meta name="twitter:image" content="{{ \App\Support\MetaImages::current() }}" />
 
     <meta name="keywords" content="find facebook id, facebook id finder, fb id finder, facebook profile id, facebook page id, facebook group id, facebook numeric id, facebook graph api id, free facebook id tool" />
 
@@ -33,7 +34,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <x-auto-ads />
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
     <script type="application/ld+json">
@@ -65,7 +65,7 @@
     "url": "https://autolikerlive.com"
   },
   "url": "{{ Request::url() }}",
-  "image": "https://www.autolikerlive.com/blog/storage/uploads/2025/05/ChatGPT-Image-May-1-2025-08_11_55-AM.webp"
+  "image": "{{ \App\Support\MetaImages::current() }}"
 }
 </script>
 
@@ -944,10 +944,6 @@
                     <li><a href="{{ route('instagram.findInstaId') }}">Find Instagram ID<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></a></li>
                     <li><a href="{{ url('auto-liker-1000-likes') }}">FB Auto Liker<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></a></li>
                 </ul>
-            </div>
-
-            <div class="side-ad">
-                <x-ads.sidebar />
             </div>
         </aside>
     </div>

@@ -129,7 +129,7 @@ class TiktokController extends Controller
 
                     break;
                 case 'INSTA_LIKES':
-                    $query['service'] = 5269;
+                    $query['service'] = 4990;
                     $query['quantity'] = 10;
                     $wait = 10;
                     $status = 1;

@@ -15,12 +15,12 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Free Instagram Likes - Get 10 Free Likes Every 10 Minutes | AutoLikerLive" />
     <meta property="og:description" content="Get 10 free Instagram likes instantly. Paste your post link and get free likes every 10 minutes. No login required." />
-    <meta property="og:image" content="{{ asset('images/graphic.webp') }}" />
+    <meta property="og:image" content="{{ \App\Support\MetaImages::current() }}" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="{{ Request::url() }}" />
     <meta name="twitter:title" content="Free Instagram Likes - Get 10 Free Likes Every 10 Minutes" />
     <meta name="twitter:description" content="Get 10 free Instagram likes instantly. Paste your post link and get free likes every 10 minutes." />
-    <meta name="twitter:image" content="{{ asset('images/graphic.webp') }}" />
+    <meta name="twitter:image" content="{{ \App\Support\MetaImages::current() }}" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -57,7 +57,7 @@
     "url": "https://autolikerlive.com"
   },
   "url": "{{ Request::url() }}",
-  "image": "{{ asset('images/graphic.webp') }}"
+  "image": "{{ \App\Support\MetaImages::current() }}"
 }
 </script>
 
@@ -259,6 +259,40 @@
             height: 5px;
             border-radius: 22px 22px 0 0;
             background: var(--grad);
+        }
+
+        /* Active-area ads: sticky rail beside the tool on desktop, inline banner on mobile */
+        .tool-row {
+            display: grid;
+            grid-template-columns: minmax(0, 680px);
+            gap: 26px;
+            justify-content: center;
+            align-items: start;
+            width: 100%;
+        }
+        .tool-row.has-rail {
+            grid-template-columns: minmax(0, 680px) 300px;
+        }
+        .tool-rail {
+            position: sticky;
+            top: 84px;
+            width: 300px;
+        }
+        .tool-ad-slot {
+            margin: 4px 0;
+            padding: 10px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+            overflow: hidden;
+        }
+        .tool-ad-mobile { display: none; }
+        @media (max-width: 1080px) {
+            .tool-row, .tool-row.has-rail { grid-template-columns: minmax(0, 680px); }
+            .tool-rail { display: none; }
+        }
+        @media (max-width: 767.98px) {
+            .tool-ad-mobile { display: block; }
         }
         .tool-label {
             display: flex;
@@ -549,7 +583,8 @@
     <!-- ============ Main layout ============ -->
     <div class="layout">
 
-        <!-- Tool card -->
+        <!-- Tool card + active-area ad rail -->
+        <div class="tool-row{{ \App\Support\Ads::unitEnabled('adsense_sidebar') ? ' has-rail' : '' }}">
         <div class="tool-card">
             <div class="tool-label">
                 {!! $instagramGlyphFilled !!}
@@ -580,6 +615,13 @@
                     <span>Example: <code>https://www.instagram.com/p/C1aBcDeFgHi/</code></span>
                 </div>
 
+                {{-- Active-area mobile banner: stays beside the form on phones --}}
+                @if(\App\Support\Ads::unitEnabled('adsense_mobile_banner'))
+                <div class="tool-ad-slot tool-ad-mobile">
+                    <x-ads.mobile-banner />
+                </div>
+                @endif
+
                 @if ($errors->any())
                     <div class="result fail">
                         <p>{{ $errors->first() }}</p>
@@ -604,14 +646,22 @@
             <p style="color: var(--muted); font-size: 12px; text-align: center; margin-top: 10px;">Results may vary depending on Instagram activity. Use responsibly.</p>
         </div>
 
+        {{-- Sticky desktop rail: keeps an ad in view while the tool is used --}}
+        @if(\App\Support\Ads::unitEnabled('adsense_sidebar'))
+        <aside class="tool-rail" aria-label="Advertisement">
+            <x-ads.sidebar />
+        </aside>
+        @endif
+        </div>
+
+        <!-- Ads -->
+        <div class="ad-slot ad-leader hide-mobile"><x-ads.leaderboard /></div>
+
         <div class="info-section">
             Want free views for your Instagram post or reel?
             <a href="{{ route('free-instagram-views') }}">Try Instagram Auto Views</a>.
         </div>
 
-        <!-- Ads -->
-        <div class="ad-slot ad-leader hide-mobile"><x-ads.leaderboard /></div>
-        <div class="ad-slot show-mobile"><x-ads.mobile-banner /></div>
 
         {{-- Cross-promo: managed in Admin > Promotions --}}
         <x-promo-banner placement="tools" />

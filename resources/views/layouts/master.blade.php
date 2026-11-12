@@ -18,12 +18,12 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="@yield('title')" />
     <meta property="og:description" content="@yield('description')" />
-    <meta property="og:image" content="@hasSection('ogimage')@yield('ogimage')@else{{ asset('images/graphic.webp') }}@endif" />
+    <meta property="og:image" content="@hasSection('ogimage')@yield('ogimage')@else{{ \App\Support\MetaImages::current() }}@endif" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="@yield('title')" />
     <meta name="twitter:description" content="@yield('description')" />
-    <meta name="twitter:image" content="@hasSection('ogimage')@yield('ogimage')@else{{ asset('images/graphic.webp') }}@endif" />
+    <meta name="twitter:image" content="@hasSection('ogimage')@yield('ogimage')@else{{ \App\Support\MetaImages::current() }}@endif" />
 
     @hasSection('favicons')
         @yield('favicons')

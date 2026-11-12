@@ -13,27 +13,30 @@
     <title>@yield('title')</title>
     <meta name=description content="@yield('description')">
     <meta name="keywords" content="@yield('keywords')">
-    <!-- Favicon-->
-    <link rel="apple-touch-icon" sizes="180x180"
-        href="@hasSection('apple-icon')
-{{ url('') }}@yield('apple-icon')
-@else
-/images/favicons/apple-touch-icon.webp
-@endif">
-    <link rel="icon" type="image/webp" sizes="32x32"
-        href="@hasSection('32-icon')
-{{ url('') }}@yield('32-icon')
-@else
-/images/favicons/favicon-32x32.webp
-@endif">
-    <link rel="icon" type="image/webp" sizes="16x16"
-        href="@hasSection('16-icon')
-{{ url('') }}@yield('16-icon')
-@else
-/images/favicons/favicon-16x16.webp
-@endif">
-    <link rel="manifest" href="/images/favicons/site.webmanifest">
-    <link rel="mask-icon" href="/images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+    @hasSection('favicons')
+        @yield('favicons')
+    @else
+        <link rel="apple-touch-icon" sizes="180x180"
+            href="@hasSection('apple-icon')
+        {{ url('') }}@yield('apple-icon')
+        @else
+        /images/favicons/apple-touch-icon.webp
+        @endif">
+        <link rel="icon" type="image/webp" sizes="32x32"
+            href="@hasSection('32-icon')
+        {{ url('') }}@yield('32-icon')
+        @else
+        /images/favicons/favicon-32x32.webp
+        @endif">
+        <link rel="icon" type="image/webp" sizes="16x16"
+            href="@hasSection('16-icon')
+        {{ url('') }}@yield('16-icon')
+        @else
+        /images/favicons/favicon-16x16.webp
+        @endif">
+        <link rel="manifest" href="/images/favicons/site.webmanifest">
+        <link rel="mask-icon" href="/images/favicons/safari-pinned-tab.svg" color="#5bbad5">
+    @endif
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -46,7 +49,7 @@
 
     <meta property="og:image"
         content="@hasSection('ogimage')
-@yield('ogimage')@else{{ asset('images/graphic.webp') }}
+@yield('ogimage')@else{{ \App\Support\MetaImages::current() }}
 @endif" />
     <!-- Bootstrap icons-->
     {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css" rel="stylesheet" /> --}}
@@ -69,6 +72,7 @@ bg-dark
 
 ">
     <x-ads.top />
+    <x-navbar />
     @yield('content')
 
 

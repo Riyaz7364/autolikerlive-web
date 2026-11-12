@@ -14,13 +14,13 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="FBSub – Free Facebook Auto Liker for Likes, Followers & Reactions (2026)" />
     <meta property="og:description" content="Get free Facebook likes, followers, reactions and views with FBSub. No password, no access token — just your public profile link. Up to 1000 likes per submit." />
-    <meta property="og:image" content="{{ asset('images/graphic.webp') }}" />
+    <meta property="og:image" content="{{ \App\Support\MetaImages::current() }}" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="{{ Request::url() }}" />
     <meta name="twitter:title" content="FBSub – Free Facebook Auto Liker for Likes, Followers & Reactions (2026)" />
     <meta name="twitter:description" content="Free FBSub auto liker: likes, followers, reactions & views. No password needed. Up to 1000 likes per submit." />
-    <meta name="twitter:image" content="{{ asset('images/graphic.webp') }}" />
+    <meta name="twitter:image" content="{{ \App\Support\MetaImages::current() }}" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -60,7 +60,7 @@
     "url": "https://autolikerlive.com"
   },
   "url": "{{ Request::url() }}",
-  "image": "{{ asset('images/graphic.webp') }}"
+  "image": "{{ \App\Support\MetaImages::current() }}"
 }
     </script>
 
@@ -648,6 +648,8 @@
             </div>
         </div>
     </section>
+
+    <x-ads.result-rectangle />
 
     <!-- ============ Main layout ============ -->
     <div class="tm-layout">

@@ -40,6 +40,12 @@
         .btn-try { display:block; text-align:center; margin-top:12px; padding:12px; background:#fff; color:#1877f2; border:2px solid #1877f2; border-radius:8px; font-weight:700; font-size:0.95rem; text-decoration:none; }
         .btn-try:hover { background:#1877f2; color:#fff; }
         .footer-note { text-align:center; margin-top:20px; font-size:0.75rem; color:#65676b; }
+        .game-ad-desktop { display:block; }
+        .game-ad-mobile { display:none; }
+        @media (max-width:767px) {
+            .game-ad-desktop { display:none !important; }
+            .game-ad-mobile { display:block !important; }
+        }
     </style>
 </head>
 <body>
@@ -58,25 +64,12 @@
 
         <a href="{{ route('game.show', $game->slug) }}" class="btn-try">{{ $game->og_title ?: 'Try it yourself!' }}</a>
 
-        @if(\App\Support\Ads::unitEnabled('adsense_leaderboard'))
-        <div style="margin-top:20px; text-align:center;">
-            <ins class="adsbygoogle"
-                 style="display:inline-block;width:728px;height:90px"
-                 data-ad-client="ca-pub-8426510303593933"
-                 data-ad-slot="7888884839"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        <div class="game-ad-desktop" style="margin-top:20px;">
+            <x-ads.leaderboard />
         </div>
-        @endif
-
-        @if(\App\Support\Ads::unitEnabled('adsense_mobile_banner'))
-        <div style="margin-top:12px; text-align:center;">
-            <ins class="adsbygoogle"
-                 style="display:inline-block;width:320px;height:50px"
-                 data-ad-client="ca-pub-8426510303593933"
-                 data-ad-slot="5606482216"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        <div class="game-ad-mobile" style="margin-top:12px;">
+            <x-ads.mobile-banner />
         </div>
-        @endif
 
         <div class="footer-note">For entertainment purposes only &bull; autolikerlive.com</div>
     </div>

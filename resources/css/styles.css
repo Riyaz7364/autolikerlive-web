@@ -6888,7 +6888,8 @@ fieldset:disabled .btn {
 }
 .link-light:hover,
 .link-light:focus {
-    color: #f9fafb;
+    color: #1877f2;
+    text-shadow: 0 0 8px rgba(24, 119, 242, 0.45);
 }
 
 .link-dark {

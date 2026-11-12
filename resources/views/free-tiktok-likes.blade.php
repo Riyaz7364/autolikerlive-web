@@ -14,12 +14,12 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Free TikTok Likes - Get Free TikTok Likes Every 15 Minutes | AutoLikerLive" />
     <meta property="og:description" content="Get free TikTok likes instantly. Boost your TikTok engagement with our free auto liker tool. Fast delivery, no login required." />
-    <meta property="og:image" content="{{ asset('images/free-tiktok-likes.png') }}" />
+    <meta property="og:image" content="{{ \App\Support\MetaImages::current() }}" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="{{ Request::url() }}" />
     <meta name="twitter:title" content="Free TikTok Likes - Get Free TikTok Likes Every 15 Minutes" />
     <meta name="twitter:description" content="Get free TikTok likes instantly. Boost your TikTok engagement with our free auto liker tool." />
-    <meta name="twitter:image" content="{{ asset('images/free-tiktok-likes.png') }}" />
+    <meta name="twitter:image" content="{{ \App\Support\MetaImages::current() }}" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -57,7 +57,7 @@
     "url": "https://autolikerlive.com"
   },
   "url": "{{ Request::url() }}",
-  "image": "{{ asset('images/free-tiktok-likes.png') }}"
+  "image": "{{ \App\Support\MetaImages::current() }}"
 }
 </script>
 
@@ -635,11 +635,6 @@
                         <span>Example: <code>https://www.tiktok.com/@user/video/1234567890</code></span>
                     </div>
 
-                    {{-- Ad Slot 2: Inside tool card --}}
-                    <div class="tool-ad-slot">
-                        <x-ads.in-article />
-                    </div>
-
                     @if ($errors->any())
                         <div class="result fail">
                             <p>{{ $errors->first() }}</p>
@@ -662,6 +657,8 @@
                     <span id="timerText">Ready</span>
                 </div>
                 <p style="color: var(--muted); font-size: 12px; text-align: center; margin-top: 10px;">Results may vary depending on TikTok activity. Use responsibly.</p>
+
+                <x-ads.result-rectangle />
             </div>
 
             <p style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center;color:var(--muted);">
@@ -829,11 +826,6 @@
                 </div>
             </section>
 
-    </div>
-
-    {{-- Ad Slot 5: Bottom --}}
-    <div class="ad-slot ad-leader show-mobile">
-        <x-ads.mobile-banner />
     </div>
 
     <!-- ============ Footer ============ -->

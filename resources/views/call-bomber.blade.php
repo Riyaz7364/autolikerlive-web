@@ -14,9 +14,11 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Auto Liker Live Call Bomber | SMS Bomber Tool" />
     <meta property="og:description" content="Auto Liker Live Call Bomber - Professional Call Bomber and SMS Bomber tool for testing call service reliability and delivery rates." />
+    <meta property="og:image" content="{{ \App\Support\MetaImages::current() }}" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Auto Liker Live Call Bomber | SMS Bomber Tool" />
     <meta name="twitter:description" content="Professional Call Bomber and SMS Bomber tool for testing call service reliability and delivery rates." />
+    <meta name="twitter:image" content="{{ \App\Support\MetaImages::current() }}" />
 
     <link rel="icon" type="image/png" href="/favicons/bomber/files/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicons/bomber/files/favicon.svg" />
@@ -28,7 +30,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://www.google.com/recaptcha/api.js?render=6Le7S7kqAAAAAMvSkxFhOxaTZMiosSLf4mHkpCtb" async defer></script>
-    <x-auto-ads />
 
     <script type="application/ld+json">
     {

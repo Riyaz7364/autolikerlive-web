@@ -35,7 +35,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="@yield('title')" />
     <meta property="og:description" content="@yield('description')" />
-    <meta property="og:image" content="{{ asset('images/graphic.webp') }}" />
+    <meta property="og:image" content="{{ \App\Support\MetaImages::current() }}" />
     <!-- Bootstrap icons-->
     <link href="https://icons.getbootstrap.com/assets/font/bootstrap-icons.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet" />
