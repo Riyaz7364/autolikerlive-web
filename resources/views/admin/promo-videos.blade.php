@@ -5,19 +5,70 @@
 
 @section('content')
     @php($oldLinks = old('links', []))
+    @php($addFormOpen = empty($videos) || $errors->has('video') || $errors->has('link'))
+
+    @unless ($uploadDirectoryWritable)
+        <div class="alert alert-danger">
+            The promo video folder <code>storage/app/public/promo_videos</code> is not writable by the web server,
+            so uploads will fail. Make it writable by the PHP user (for example
+            <code>chown -R www-data:www-data storage/app/public/promo_videos</code> and
+            <code>chmod 775 storage/app/public/promo_videos</code>).
+        </div>
+    @endunless
 
     <div class="card shadow-sm border-0 mb-3">
-        <div class="card-body">
-            <p class="text-muted mb-0">
-                These videos are shown randomly by the video gate. Set a link for each video — visitors open
-                that link by clicking the video while it plays.
-            </p>
+        <div class="card-body d-flex flex-wrap gap-3 align-items-center justify-content-between">
+            <div>
+                <div class="fw-bold">Promotion videos</div>
+                <p class="text-muted mb-0 small">
+                    These videos are shown randomly by the video gate. Set a link for each video — visitors open
+                    that link by clicking the video while it plays.
+                </p>
+            </div>
+            <button type="button" class="btn btn-success" data-bs-toggle="collapse"
+                    data-bs-target="#addPromoVideoForm" aria-expanded="{{ $addFormOpen ? 'true' : 'false' }}"
+                    aria-controls="addPromoVideoForm">
+                + Add Promo Video
+            </button>
+        </div>
+
+        <div id="addPromoVideoForm" class="collapse {{ $addFormOpen ? 'show' : '' }}">
+            <div class="card-body border-top">
+                <form method="POST" action="{{ route('admin.promo-videos.store') }}" enctype="multipart/form-data">
+                    @csrf
+
+                    <div class="row g-3">
+                        <div class="col-lg-6">
+                            <label class="form-label fw-semibold" for="promo-video-file">Video file</label>
+                            <input type="file" id="promo-video-file" name="video"
+                                   class="form-control @error('video') is-invalid @enderror"
+                                   accept="video/mp4,.mp4" required>
+                            @error('video')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <div class="form-text">MP4 only. Maximum upload size: {{ $maxUploadMb }} MB.</div>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="form-label fw-semibold" for="promo-video-link">Link to open when clicked</label>
+                            <input type="url" id="promo-video-link" name="link"
+                                   class="form-control @error('link') is-invalid @enderror"
+                                   value="{{ old('link') }}" placeholder="https://example.com">
+                            @error('link')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <div class="form-text">Optional. You can also add or change it below after uploading.</div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-success mt-3">Upload Promo Video</button>
+                </form>
+            </div>
         </div>
     </div>
 
     @if (empty($videos))
         <div class="alert alert-warning">
-            No promotion videos found in <code>storage/app/public/promo_videos</code>.
+            No promotion videos found in <code>storage/app/public/promo_videos</code>. Use the button above to add one.
         </div>
     @else
         <form method="POST" action="{{ route('admin.promo-videos.update') }}">

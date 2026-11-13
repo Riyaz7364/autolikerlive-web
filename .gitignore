@@ -32,4 +32,5 @@ public/google-client-credentials.json
 # Temporary files
 /temp_imagick
 
-/public
+/public/*
+!/public/.user.ini

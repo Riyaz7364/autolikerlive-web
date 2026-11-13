@@ -11,10 +11,19 @@ class PromoVideoController extends Controller
 {
     public function index()
     {
+        $directory = PromoVideos::directory();
+
+        try {
+            File::ensureDirectoryExists($directory, 0775, true);
+        } catch (\Throwable $exception) {
+            report($exception);
+        }
+
         $videos = PromoVideos::all();
         $maxUploadMb = $this->maxUploadMegabytes();
+        $uploadDirectoryWritable = is_dir($directory) && is_writable($directory);
 
-        return view('admin.promo-videos', compact('videos', 'maxUploadMb'));
+        return view('admin.promo-videos', compact('videos', 'maxUploadMb', 'uploadDirectoryWritable'));
     }
 
     public function store(Request $request)
@@ -27,13 +36,21 @@ class PromoVideoController extends Controller
         ]);
 
         $directory = PromoVideos::directory();
-        File::ensureDirectoryExists($directory, 0775, true);
 
         $originalName = pathinfo($request->file('video')->getClientOriginalName(), PATHINFO_FILENAME);
         $baseName = Str::limit(Str::slug($originalName) ?: 'promo-video', 80, '');
         $filename = $baseName.'-'.Str::lower(Str::random(8)).'.mp4';
 
-        $request->file('video')->move($directory, $filename);
+        try {
+            File::ensureDirectoryExists($directory, 0775, true);
+            $request->file('video')->move($directory, $filename);
+        } catch (\Throwable $exception) {
+            report($exception);
+
+            return back()->withErrors([
+                'video' => 'The video could not be saved. Check that the promo video folder is writable.',
+            ]);
+        }
 
         if (! empty($validated['link'])) {
             PromoVideos::saveLinks([$filename => $validated['link']]);
