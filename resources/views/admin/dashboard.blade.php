@@ -43,6 +43,16 @@
     </div>
 </div>
 
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body d-flex flex-wrap gap-3 align-items-center justify-content-between">
+        <div>
+            <div class="fw-bold">Website Leads</div>
+            <div class="text-muted small">Enquiries submitted from the main web solutions page, demo services, and contact forms.</div>
+        </div>
+        <a href="{{ route('admin.website-leads.index') }}" class="btn btn-sm btn-primary">Open Website Leads</a>
+    </div>
+</div>
+
 <div class="card shadow-sm border-0 mb-4" style="border-left:4px solid #7c3aed !important">
     <div class="card-body d-flex flex-wrap gap-3 align-items-center justify-content-between">
         <div>
@@ -114,6 +124,7 @@
                 <a href="{{ route('game.editor.create') }}" class="list-group-item list-group-item-action">+ New Game</a>
                 <a href="{{ route('admin.app-releases.index') }}" class="list-group-item list-group-item-action">App Updates</a>
                 <a href="{{ route('admin.promotions.index') }}" class="list-group-item list-group-item-action">📣 Promotions</a>
+                <a href="{{ route('admin.promo-videos.index') }}" class="list-group-item list-group-item-action">🎬 Promo Videos</a>
                 <a href="{{ route('admin.autoliker-services.index') }}" class="list-group-item list-group-item-action">⚡ AutoLiker Services</a>
             </div>
         </div>

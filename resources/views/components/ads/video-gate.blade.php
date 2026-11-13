@@ -1,8 +1,7 @@
 @php
-    $promoVideoFiles = glob(storage_path('app/public/promo_videos/*.mp4')) ?: [];
-    $promoVideoUrl = $promoVideoFiles
-        ? asset('storage/promo_videos/' . basename($promoVideoFiles[array_rand($promoVideoFiles)]))
-        : null;
+    $promoVideo = \App\Support\PromoVideos::random();
+    $promoVideoUrl = $promoVideo['url'];
+    $promoVideoLink = $promoVideo['link'];
 @endphp
 <div id="video-ad-gate" class="video-ad-gate" hidden>
     <div class="video-ad-gate__backdrop"></div>
@@ -58,6 +57,7 @@
     (function () {
         var mode = @json($mode ?? 'forms');
         var promoVideo = @json($promoVideoUrl);
+        var promoVideoLink = @json($promoVideoLink);
         var gate = document.getElementById('video-ad-gate');
         var stage = gate.querySelector('.video-ad-gate__stage');
         var video = gate.querySelector('.video-ad-gate__video');
@@ -87,7 +87,9 @@
             playButton.hidden = false;
             playButton.disabled = false;
             stage.hidden = true;
-            setStatus('Press play and watch the video to continue.');
+            setStatus(promoVideoLink
+                ? 'Press play and watch the video. Tap the video to open its link.'
+                : 'Press play and watch the video to continue.');
         }
 
         function closeGate() {
@@ -254,6 +256,14 @@
         }
 
         playButton.addEventListener('click', runAd);
+        if (promoVideoLink) {
+            video.style.cursor = 'pointer';
+            video.title = 'Open link';
+        }
+        video.addEventListener('click', function () {
+            if (!promoVideoLink) return;
+            window.open(promoVideoLink, '_blank', 'noopener');
+        });
         video.addEventListener('ended', function () {
             if (playlistSettled) return;
             finishPlaylist(true, '');
@@ -262,9 +272,6 @@
             if (playlistSettled) return;
             console.error('Promotion video error:', video.error);
             finishPlaylist(false, 'The video could not play. Please try again.');
-        });
-        video.addEventListener('click', function () {
-            window.location.href = 'https://play.google.com/store/apps/details?id=com.rajeliker';
         });
         gate.querySelector('.video-ad-gate__close').addEventListener('click', closeGate);
         gate.querySelector('.video-ad-gate__cancel').addEventListener('click', closeGate);

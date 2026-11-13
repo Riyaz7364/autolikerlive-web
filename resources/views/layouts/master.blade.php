@@ -109,6 +109,7 @@
             <div class="footer-links">
                 <a href="{{ url('/') }}">Games</a>
                 <a href="{{ url('services') }}">Free Tools</a>
+                <a href="{{ route('web-solutions') }}">Web Solutions</a>
                 <a href="{{ url('auto-liker-1000-likes') }}">FB Auto Liker</a>
                 <a href="{{ route('youtube_thumbnail_extractor') }}">YouTube Thumbnail</a>
                 <a href="{{ url('privacy') }}">Privacy</a>

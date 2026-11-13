@@ -55,6 +55,12 @@
                     <a class="nav-link {{ $isActive('admin.promotions') ? 'active' : '' }}" href="{{ route('admin.promotions.index') }}">&#128226; Promotions</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link {{ $isActive('admin.promo-videos') ? 'active' : '' }}" href="{{ route('admin.promo-videos.index') }}">&#127909; Promo Videos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ $isActive('admin.website-leads') ? 'active' : '' }}" href="{{ route('admin.website-leads.index') }}">&#128233; Website Leads</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link {{ $isActive('admin.autoliker-services') ? 'active' : '' }}" href="{{ route('admin.autoliker-services.index') }}">&#9889; AutoLiker Services</a>
                 </li>
                 <li class="nav-item">

@@ -114,6 +114,11 @@ Route::prefix('downloader')->group(function () {
     });
 });
 
+// Promotion video for the ReelSwipe video gate and other sites.
+Route::get('/promo-video', [\App\Http\Controllers\Api\PromoVideoController::class, 'show'])
+    ->middleware('throttle:120,1')
+    ->name('api.promo-video');
+
 // App Updates — looked up by app_name key, e.g. /api/app-update/autolikerlive
 Route::get('/app-update/{appName}', [\App\Http\Controllers\AppReleaseController::class, 'apiShow'])
     ->where('appName', '[a-zA-Z0-9_\-]+');
